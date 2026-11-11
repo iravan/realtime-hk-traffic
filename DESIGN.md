@@ -34,13 +34,7 @@ The user can show or hide each mode: MTR, bus, minibus, taxi. Tapping a stop ope
 
 Moving the map asks the server for the stops inside the view. The client does not choose which arrivals are current. It draws what the server last stored.
 
-The page works signed out. Anyone can pan and open stops.
-
-## Saved stops
-
-Sign-in is optional. It exists so a person can keep a short list of stops. Supabase Auth is the only sign-in. The providers are Apple, Google, and Facebook. Email and phone are not offered.
-
-A saved stop belongs to that user. It is not a public profile and it does not change what other people see on the map.
+There is no sign-in. Anyone can pan and open stops.
 
 ## What this does not do yet
 
