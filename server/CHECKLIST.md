@@ -2,7 +2,7 @@
 
 The Rust service. The build spec is [TECH-STACK.md](../TECH-STACK.md). The product is [DESIGN.md](../DESIGN.md). The page list is [CHECKLIST.md](../CHECKLIST.md). This service polls the official feeds, stores the latest snapshot, and answers the public routes. Next.js does not poll. There is no sign-in.
 
-Nothing here is built yet. Redis for local development is `127.0.0.1:6379`.
+The first demo is running locally. Redis for local development is `127.0.0.1:6379`. KMB, the MTR station list, and taxi stands load before Citybus and green minibus, which continue in the background.
 
 A stop id is the publisher's id with a mode prefix, so two feeds cannot collide: `mtr:`, `bus:`, `minibus:`, `taxi:`.
 
@@ -25,14 +25,15 @@ arrivals:{id}                 string, EX from that feed's interval
 
 ## Service
 
-- [ ] Axum and Tokio. One process owns the HTTP routes and the pollers.
-- [ ] Config: Redis URL, bind address, and each poll interval. No feed is called from Next.js.
-- [ ] CORS allows the Next.js origin.
-- [ ] Both routes are public. There is no JWT and no saved-stop key.
+- [x] Axum and Tokio. One process owns the HTTP routes and the catalogue loaders.
+- [x] Config: Redis URL, bind address, and a 60-second arrival cache. No feed is called from Next.js.
+- [x] CORS allows the Next.js origin (`CORS_ORIGINS`, including port 3000 and 3002).
+- [x] Both routes are public. There is no JWT and no saved-stop key.
 
 ## Stops
 
-- [ ] Load the official catalogues for MTR stations, KMB, LWB, Citybus, New Lantao Bus stops, green minibus stops, and taxi stands.
+- [x] Load KMB stops, a fixed MTR station list, and the taxi-stand dataset. Citybus and green minibus catalogues load after the server is already answering.
+- [ ] Finish Citybus and green minibus catalogues, and add New Lantao Bus when its stop list is non-empty.
 - [ ] Write `stop:{id}` with mode, name, and the coordinates from that catalogue.
 - [ ] `GET /stops` returns only the stops inside the box whose mode is in `modes`.
 - [ ] A stop absent from the box is absent from the response. Do not invent ids or coordinates.
