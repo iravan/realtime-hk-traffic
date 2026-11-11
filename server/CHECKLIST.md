@@ -53,10 +53,10 @@ arrivals:{id}                 string, EX from that feed's interval
 
 ## Freshness
 
-- [ ] Each arrivals string uses `EX` from that feed's poll interval, so a dead poller drops the snapshot.
-- [ ] `fetched_at` is the server clock at the successful poll, not a time from the page.
-- [ ] A failed poll does not delete a still-fresh snapshot.
-- [ ] The MTR poll, the bus polls, and the minibus poll run on their own intervals in the same process.
+- [x] The process polls. MTR stations every 60 seconds. A bus or minibus stop every 15 seconds while a browser is subscribed. Each success is written to Redis with `EX 90`.
+- [x] `fetched_at` is the server clock at the successful poll, not a time from the page.
+- [x] A failed poll does not delete a still-fresh snapshot.
+- [x] `GET /stops/{id}/events` is a server-sent event stream. Each new Redis snapshot is published as an `arrivals` event. The page does not poll.
 
 ## Local run
 

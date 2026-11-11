@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AttributionControl, GeoJSONSource, Map as MlMap, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { stopIconImage, stopIconPixelRatio, stopIconUrl, type Mode } from "./stop-icon";
 
-const api = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8787";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const modes = ["mtr", "bus", "minibus", "taxi"] as const;
-type Mode = (typeof modes)[number];
 
 type Stop = {
   id: string;
@@ -14,29 +14,6 @@ type Stop = {
   name: string;
   latitude: number;
   longitude: number;
-};
-
-type Row = {
-  route: string;
-  destination: string;
-  minutes?: number;
-  time?: string;
-};
-
-type Arrivals = {
-  fetched_at?: string;
-  live?: boolean;
-  status?: string;
-  note?: string;
-  rows?: Row[];
-  error?: string;
-};
-
-const colors: Record<Mode, string> = {
-  mtr: "#c44736",
-  bus: "#2f6f4e",
-  minibus: "#c4841d",
-  taxi: "#3d4c8f",
 };
 
 export default function Page() {
@@ -50,15 +27,14 @@ export default function Page() {
   });
   const enabledRef = useRef(enabled);
   enabledRef.current = enabled;
+  const catalogueRef = useRef<Stop[] | null>(null);
   const [stops, setStops] = useState<Stop[]>([]);
   const [selected, setSelected] = useState<Stop | null>(null);
-  const [arrivals, setArrivals] = useState<Arrivals | null>(null);
-  const [arrivalState, setArrivalState] = useState<"idle" | "loading" | "ready" | "error">("idle");
 
   useEffect(() => {
     const node = container.current;
     if (!node || mapRef.current) return;
-    setWorkerUrl("/maplibre-gl-worker.mjs");
+    setWorkerUrl(`${basePath}/maplibre-gl-worker.mjs`);
     const map = new MlMap({
       container: node,
       center: [114.1694, 22.3193],
@@ -82,19 +58,23 @@ export default function Page() {
     });
     map.addControl(new AttributionControl({ compact: false }), "bottom-left");
     map.on("load", () => {
+      for (const mode of modes) {
+        map.addImage(mode, stopIconImage(mode), { pixelRatio: stopIconPixelRatio });
+      }
       map.addSource("stops", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
       });
       map.addLayer({
         id: "stops",
-        type: "circle",
+        type: "symbol",
         source: "stops",
-        paint: {
-          "circle-radius": 6,
-          "circle-color": ["get", "color"],
-          "circle-stroke-width": 1.5,
-          "circle-stroke-color": "#f4efe6",
+        layout: {
+          "icon-image": ["get", "mode"],
+          "icon-anchor": "bottom",
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-size": ["interpolate", ["linear"], ["zoom"], 13, 0.7, 15, 1, 17, 1.2],
         },
       });
       map.on("click", "stops", (event) => {
@@ -102,13 +82,18 @@ export default function Page() {
         const id = feature?.properties?.id;
         if (typeof id !== "string") return;
         const match = stopsRef.current.find((stop) => stop.id === id);
-        if (match) openStop(match);
+        if (match) setSelected(match);
       });
-      map.getCanvas().style.cursor = "pointer";
-      void loadStops(map);
+      map.on("mouseenter", "stops", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "stops", () => {
+        map.getCanvas().style.cursor = "";
+      });
+      drawStops(map);
     });
     map.on("moveend", () => {
-      void loadStops(map);
+      drawStops(map);
     });
     mapRef.current = map;
     return () => {
@@ -120,63 +105,59 @@ export default function Page() {
   const stopsRef = useRef<Stop[]>([]);
   stopsRef.current = stops;
 
-  async function loadStops(map: MlMap) {
+  function drawStops(map: MlMap) {
+    const catalogue = catalogueRef.current;
+    if (!catalogue) return;
     const bounds = map.getBounds();
     const selectedModes = modes.filter((mode) => enabledRef.current[mode]);
-    const params = new URLSearchParams({
-      south: String(bounds.getSouth()),
-      west: String(bounds.getWest()),
-      north: String(bounds.getNorth()),
-      east: String(bounds.getEast()),
-      modes: selectedModes.join(","),
+    const south = bounds.getSouth();
+    const north = bounds.getNorth();
+    const west = bounds.getWest();
+    const east = bounds.getEast();
+    const visible = catalogue.filter(
+      (stop) =>
+        selectedModes.includes(stop.mode) &&
+        stop.latitude >= south &&
+        stop.latitude <= north &&
+        stop.longitude >= west &&
+        stop.longitude <= east,
+    );
+    setStops(visible);
+    const source = map.getSource("stops");
+    if (!source || source.type !== "geojson") return;
+    (source as GeoJSONSource).setData({
+      type: "FeatureCollection",
+      features: visible.map((stop) => ({
+        type: "Feature",
+        properties: { id: stop.id, mode: stop.mode },
+        geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
+      })),
     });
-    try {
-      const response = await fetch(`${api}/stops?${params}`);
-      if (!response.ok) return;
-      const body = (await response.json()) as { stops: Stop[] };
-      setStops(body.stops);
-      const source = map.getSource("stops");
-      if (!source || source.type !== "geojson") return;
-      (source as GeoJSONSource).setData({
-        type: "FeatureCollection",
-        features: body.stops.map((stop) => ({
-          type: "Feature",
-          properties: { id: stop.id, color: colors[stop.mode] ?? "#241f1a" },
-          geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
-        })),
-      });
-    } catch {
-      setStops([]);
-    }
   }
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${basePath}/stops.json`)
+      .then((response) => response.json())
+      .then((body: { stops: Stop[] }) => {
+        if (cancelled) return;
+        catalogueRef.current = body.stops;
+        const map = mapRef.current;
+        if (map?.isStyleLoaded()) drawStops(map);
+      })
+      .catch(() => {
+        if (!cancelled) catalogueRef.current = [];
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
-    void loadStops(map);
+    drawStops(map);
   }, [enabled]);
-
-  async function openStop(stop: Stop) {
-    setSelected(stop);
-    setArrivalState("loading");
-    setArrivals(null);
-    try {
-      const response = await fetch(`${api}/stops/${encodeURIComponent(stop.id)}/arrivals`);
-      const body = (await response.json()) as Arrivals;
-      if (!response.ok) {
-        setArrivals(body);
-        setArrivalState("error");
-        return;
-      }
-      setArrivals(body);
-      setArrivalState("ready");
-    } catch {
-      setArrivals({ error: "The list didn't load." });
-      setArrivalState("error");
-    }
-  }
-
-  const age = arrivals?.fetched_at ? formatAge(arrivals.fetched_at) : "";
 
   return (
     <div className={`visit${selected ? " sheet-open" : ""}`}>
@@ -207,53 +188,26 @@ export default function Page() {
       {selected ? (
         <aside className="sheet">
           <header>
-            <div>
-              <h2>{selected.name}</h2>
-              <p className="mode">{label(selected.mode)}</p>
+            <div className="stop-title">
+              <StopSign mode={selected.mode} />
+              <div>
+                <h2>{selected.name}</h2>
+                <p className="mode">{label(selected.mode)}</p>
+              </div>
             </div>
             <button type="button" onClick={() => setSelected(null)}>
               Close
             </button>
           </header>
-          <div className="body">
-            {arrivalState === "loading" ? <p className="muted">Loading arrivals</p> : null}
-            {arrivalState === "error" ? (
-              <p className="stale">{arrivals?.error ?? "The snapshot is gone."}</p>
-            ) : null}
-            {arrivalState === "ready" && arrivals?.note === "no-arrivals" ? (
-              <p className="muted">There is no arrival list. This is a place to hire a taxi.</p>
-            ) : null}
-            {arrivalState === "ready" && arrivals?.note !== "no-arrivals" ? (
-              <>
-                <p className="muted">
-                  {arrivals?.live === false ? "Not live. Timetable." : "Live"}
-                  {age ? ` · ${age}` : ""}
-                  {arrivals?.status ? ` · ${arrivals.status}` : ""}
-                </p>
-                {(arrivals?.rows ?? []).length === 0 ? (
-                  <p className="muted">No arrivals in this snapshot.</p>
-                ) : (
-                  <ul>
-                    {(arrivals?.rows ?? []).map((row, index) => (
-                      <li key={`${row.route}-${row.destination}-${index}`}>
-                        <strong>
-                          {row.route} {row.destination}
-                        </strong>
-                        <span>
-                          {row.minutes !== undefined ? `${row.minutes} min` : ""}
-                          {row.time ? ` ${row.time}` : ""}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            ) : null}
-          </div>
         </aside>
       ) : null}
     </div>
   );
+}
+
+function StopSign({ mode }: { mode: Mode }) {
+  const src = useMemo(() => stopIconUrl(mode), [mode]);
+  return <img className="stop-sign" src={src} alt="" />;
 }
 
 function label(mode: Mode) {
@@ -263,10 +217,3 @@ function label(mode: Mode) {
   return "Taxi";
 }
 
-function formatAge(fetchedAt: string) {
-  const then = Date.parse(fetchedAt);
-  if (Number.isNaN(then)) return "";
-  const minutes = Math.max(0, Math.round((Date.now() - then) / 60000));
-  if (minutes < 1) return "just now";
-  return `${minutes}m ago`;
-}

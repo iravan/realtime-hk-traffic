@@ -1,24 +1,19 @@
 # Realtime HK Traffic
 
-A live map of Hong Kong public-transport stops. No sign-in.
+A map of Hong Kong public-transport stops. No sign-in.
 
 ## Demo
 
-In one terminal, from `server/`:
+The page loads `web/public/stops.json` when it starts. That file is a saved copy of every MTR station, bus stop, green minibus stop, and taxi stand. The map does not need the API.
 
 ```bash
-cargo run
-```
-
-The API listens on http://127.0.0.1:8787. Redis is `127.0.0.1:6379`. KMB stops, MTR stations, and taxi stands load first. Citybus and green minibus stops follow in the background.
-
-In another terminal, from `web/`:
-
-```bash
+cd web
 bun install
 bun run dev
 ```
 
-Open the URL Bun prints. The map starts at Mong Kok. Turn modes on and off, then tap a stop for arrivals.
+Open the URL Bun prints. The map starts at Mong Kok. Turn modes on and off, then tap a stop.
+
+The published demo is https://iravan.github.io/realtime-hk-traffic/
 
 The lists of remaining work are [CHECKLIST.md](CHECKLIST.md) and [server/CHECKLIST.md](server/CHECKLIST.md).

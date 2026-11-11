@@ -68,6 +68,8 @@ button { cursor: pointer; }
   gap: 1rem;
   border-bottom: 1px solid rgba(28, 25, 21, 0.12);
 }
+.stop-title { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
+.stop-sign { width: 32px; height: 46px; object-fit: contain; flex: none; }
 .sheet h2 { margin: 0; font-size: 1.05rem; }
 .sheet .mode { margin: 0.2rem 0 0; color: #6f675e; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }

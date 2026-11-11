@@ -1,6 +1,6 @@
 # Frontend
 
-The Next.js page. The build spec is [TECH-STACK.md](TECH-STACK.md). The product is [DESIGN.md](DESIGN.md). Bun installs this app. The page does not call data.gov.hk, the bus ETA hosts, or the MTR feed. It draws what Rust last stored. There is no sign-in.
+The Next.js page. The build spec is [TECH-STACK.md](TECH-STACK.md). The product is [DESIGN.md](DESIGN.md). Bun installs this app. The page loads the saved stop list in `web/public/stops.json` when it starts. It does not call the API, data.gov.hk, the bus ETA hosts, or the MTR feed. There is no sign-in.
 
 The first demo is the map in `web/`. The service list is [server/CHECKLIST.md](server/CHECKLIST.md).
 
@@ -24,17 +24,17 @@ GET /stops/{id}/arrivals
 
 ## Stops
 
-- [x] On move end, `GET /stops` for the current view and the modes that are on.
-- [x] Draw one point per stop at the coordinates in the response. The client does not invent an id or a coordinate.
-- [x] Four filters: MTR, bus, minibus, taxi. Hiding a mode drops it from the next request and from the map.
+- [x] On start, load every stop from `web/public/stops.json`.
+- [x] On move end, draw the saved stops in the current view. The page does not call a server.
+- [x] Draw one stop per saved record, at that record's coordinates. The client does not invent an id or a coordinate.
+- [x] Four filters: MTR, bus, minibus, taxi. Hiding a mode drops it from the map.
 - [ ] Several bus poles on the same pavement stay separate points when their ids differ.
 - [ ] Red minibuses are not drawn. Taxis are stands, not moving vehicles.
 - [ ] A stop that is absent from the response is not drawn. Do not keep points from the previous view.
 
 ## Arrivals
 
-- [x] Tapping a stop opens its sheet and loads `GET /stops/{id}/arrivals`.
-- [x] Show a loading state and a failure state. Do not keep the previous stop's rows.
+- [x] Tapping a stop opens its saved name and mode. The static page does not request arrivals.
 - [ ] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time.
 - [ ] Show the age from `fetched_at`.
 - [ ] `live: false` is a timetable. The sheet says the arrival is not live.

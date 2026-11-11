@@ -2,9 +2,11 @@ mod catalog;
 
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderValue, Method, StatusCode};
+use axum::response::sse::{Event, KeepAlive, Sse};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
+use futures::stream::{self, Stream, StreamExt};
 use chrono::{DateTime, Utc};
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
@@ -14,7 +16,8 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_http::cors::CorsLayer;
 
-const ETA_TTL_SECS: u64 = 60;
+const ETA_TTL_SECS: u64 = 90;
+const POLL_SECS: u64 = 15;
 
 #[derive(Clone)]
 struct Stop {
@@ -77,6 +80,7 @@ struct App {
     gmb_routes: RwLock<HashMap<i64, String>>,
     redis: ConnectionManager,
     http: reqwest::Client,
+    watch: std::sync::Mutex<HashMap<String, Vec<tokio::sync::mpsc::Sender<String>>>>,
 }
 
 #[derive(Deserialize)]
@@ -108,9 +112,12 @@ async fn main() {
         gmb_routes: RwLock::new(HashMap::new()),
         redis,
         http,
+        watch: std::sync::Mutex::new(HashMap::new()),
     });
     let startup = app.clone();
     tokio::spawn(async move { load_catalogues(startup).await });
+    let poller = app.clone();
+    tokio::spawn(async move { poll_loop(poller).await });
     let cors_origins = std::env::var("CORS_ORIGINS")
         .unwrap_or_else(|_| {
             "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002"
@@ -123,6 +130,7 @@ async fn main() {
     let router = Router::new()
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
+        .route("/stops/{id}/events", get(events))
         .layer(
             CorsLayer::new()
                 .allow_origin(origins)
@@ -236,49 +244,154 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
             .into_response();
     };
     if stop.mode == "taxi" {
-        let snapshot = Snapshot {
-            fetched_at: String::new(),
-            live: false,
-            status: None,
-            note: Some("no-arrivals".to_string()),
-            rows: Vec::new(),
-        };
-        return Json(snapshot).into_response();
+        return Json(taxi_snapshot()).into_response();
     }
-    let key = format!("arrivals:{id}");
-    let mut redis = app.redis.clone();
-    let cached: Option<String> = redis::cmd("GET")
-        .arg(&key)
-        .query_async(&mut redis)
-        .await
-        .unwrap_or(None);
-    if let Some(cached) = cached {
-        if let Ok(snapshot) = serde_json::from_str::<Snapshot>(&cached) {
-            return Json(snapshot).into_response();
-        }
-    }
-    let fetched = match stop.mode.as_str() {
-        "mtr" => mtr_arrivals(&app.http, &stop).await,
-        "bus" => bus_arrivals(&app.http, &stop).await,
-        "minibus" => minibus_arrivals(&app, &stop).await,
-        _ => None,
-    };
-    let Some(snapshot) = fetched else {
-        return (
+    match read_snapshot(&app, &id).await {
+        Some(body) => (
+            StatusCode::OK,
+            [("content-type", "application/json")],
+            body,
+        )
+            .into_response(),
+        None => (
             StatusCode::NOT_FOUND,
             Json(json!({"error": "snapshot is gone"})),
         )
-            .into_response();
+            .into_response(),
+    }
+}
+
+async fn events(
+    State(app): State<Arc<App>>,
+    Path(id): Path<String>,
+) -> Result<Sse<impl Stream<Item = Result<Event, std::convert::Infallible>>>, Response> {
+    let Some(stop) = app.by_id.read().await.get(&id).cloned() else {
+        return Err((
+            StatusCode::NOT_FOUND,
+            Json(json!({"error": "unknown stop"})),
+        )
+            .into_response());
     };
-    let body = serde_json::to_string(&snapshot).unwrap_or_default();
-    let _: Result<(), _> = redis::cmd("SET")
-        .arg(&key)
-        .arg(body)
+    let (sender, receiver) = tokio::sync::mpsc::channel(8);
+    {
+        let mut watch = app.watch.lock().expect("watch lock");
+        watch.entry(id.clone()).or_default().push(sender);
+    }
+    if stop.mode == "taxi" {
+        publish(&app, &id, &serde_json::to_string(&taxi_snapshot()).unwrap_or_default());
+    } else if let Some(body) = read_snapshot(&app, &id).await {
+        publish(&app, &id, &body);
+    } else {
+        let app = app.clone();
+        tokio::spawn(async move { refresh(&app, &stop).await });
+    }
+    let stream = stream::unfold(receiver, |mut receiver| async move {
+        let message = receiver.recv().await?;
+        Some((Ok(Event::default().event("arrivals").data(message)), receiver))
+    });
+    Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(15))))
+}
+
+async fn poll_loop(app: Arc<App>) {
+    let mut tick = tokio::time::interval(std::time::Duration::from_secs(POLL_SECS));
+    let mut round = 0u64;
+    loop {
+        tick.tick().await;
+        round += 1;
+        let watched = watched_ids(&app);
+        let mut due = Vec::new();
+        {
+            let index = app.by_id.read().await;
+            for id in watched {
+                if let Some(stop) = index.get(&id) {
+                    if stop.mode != "taxi" {
+                        due.push(stop.clone());
+                    }
+                }
+            }
+            if round % 4 == 0 {
+                for stop in index.values() {
+                    if stop.mode == "mtr" && !due.iter().any(|item| item.id == stop.id) {
+                        due.push(stop.clone());
+                    }
+                }
+            }
+        }
+        stream::iter(due)
+            .map(|stop| {
+                let app = app.clone();
+                async move { refresh(&app, &stop).await }
+            })
+            .buffer_unordered(4)
+            .collect::<Vec<_>>()
+            .await;
+    }
+}
+
+async fn refresh(app: &App, stop: &Stop) {
+    let snapshot = match stop.mode.as_str() {
+        "mtr" => mtr_arrivals(&app.http, stop).await,
+        "bus" => bus_arrivals(&app.http, stop).await,
+        "minibus" => minibus_arrivals(app, stop).await,
+        _ => None,
+    };
+    let Some(snapshot) = snapshot else {
+        return;
+    };
+    let Ok(body) = serde_json::to_string(&snapshot) else {
+        return;
+    };
+    let mut redis = app.redis.clone();
+    let saved: Result<(), _> = redis::cmd("SET")
+        .arg(format!("arrivals:{}", stop.id))
+        .arg(&body)
         .arg("EX")
         .arg(ETA_TTL_SECS)
         .query_async(&mut redis)
         .await;
-    Json(snapshot).into_response()
+    if saved.is_err() {
+        eprintln!("redis arrival write failed for {}", stop.id);
+        return;
+    }
+    publish(app, &stop.id, &body);
+}
+
+async fn read_snapshot(app: &App, id: &str) -> Option<String> {
+    let mut redis = app.redis.clone();
+    redis::cmd("GET")
+        .arg(format!("arrivals:{id}"))
+        .query_async(&mut redis)
+        .await
+        .ok()
+        .flatten()
+}
+
+fn watched_ids(app: &App) -> Vec<String> {
+    app.watch
+        .lock()
+        .expect("watch lock")
+        .iter()
+        .filter(|(_, senders)| !senders.is_empty())
+        .map(|(id, _)| id.clone())
+        .collect()
+}
+
+fn publish(app: &App, id: &str, body: &str) {
+    let mut watch = app.watch.lock().expect("watch lock");
+    let Some(senders) = watch.get_mut(id) else {
+        return;
+    };
+    senders.retain(|sender| sender.try_send(body.to_string()).is_ok());
+}
+
+fn taxi_snapshot() -> Snapshot {
+    Snapshot {
+        fetched_at: String::new(),
+        live: false,
+        status: None,
+        note: Some("no-arrivals".to_string()),
+        rows: Vec::new(),
+    }
 }
 
 async fn bus_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
@@ -434,26 +547,7 @@ fn minutes_until(eta: &str) -> Option<i64> {
 }
 
 fn mtr_dest(code: &str) -> String {
-    let label = match code {
-        "TSW" => "荃灣",
-        "CEN" => "中環",
-        "TIK" => "調景嶺",
-        "POA" => "寶琳",
-        "LHP" => "康城",
-        "WHA" => "黃埔",
-        "TUC" => "東涌",
-        "HOK" => "香港",
-        "AWE" => "博覽館",
-        "CHW" => "柴灣",
-        "KET" => "堅尼地城",
-        "SOH" => "海怡半島",
-        "ADM" => "金鐘",
-        "LMC" => "落馬洲",
-        "TUM" => "屯門",
-        "WKS" => "烏溪沙",
-        _ => code,
-    };
-    label.to_string()
+    catalog::mtr_label(code)
 }
 
 fn in_box(lat: f64, lng: f64, south: f64, west: f64, north: f64, east: f64) -> bool {

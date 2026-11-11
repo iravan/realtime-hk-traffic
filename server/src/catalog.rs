@@ -3,6 +3,7 @@ use futures::stream::{self, StreamExt};
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
+use std::sync::OnceLock;
 
 pub async fn kmb_stops(http: &reqwest::Client) -> Vec<Stop> {
     let Ok(body) = http
@@ -277,6 +278,21 @@ pub async fn taxi_stands(http: &reqwest::Client) -> Vec<Stop> {
         }
     }
     stops
+}
+
+pub fn mtr_label(code: &str) -> String {
+    static LABELS: OnceLock<HashMap<String, String>> = OnceLock::new();
+    let labels = LABELS.get_or_init(|| {
+        let raw: Vec<MtrStation> =
+            serde_json::from_str(include_str!("../data/mtr.json")).unwrap_or_default();
+        raw.into_iter()
+            .map(|station| (station.code, station.name_tc))
+            .collect()
+    });
+    labels
+        .get(code)
+        .cloned()
+        .unwrap_or_else(|| code.to_string())
 }
 
 pub fn mtr_stops() -> Vec<Stop> {
