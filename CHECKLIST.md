@@ -2,7 +2,7 @@
 
 The Next.js page. The build spec is [TECH-STACK.md](TECH-STACK.md). The product is [DESIGN.md](DESIGN.md). Bun installs this app. The page does not call data.gov.hk, the bus ETA hosts, or the MTR feed. It draws what Rust last stored. There is no sign-in.
 
-Nothing here is built yet.
+Nothing here is built yet. The service list is [server/CHECKLIST.md](server/CHECKLIST.md).
 
 ```text
 GET /stops?south&west&north&east&modes

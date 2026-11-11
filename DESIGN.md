@@ -38,4 +38,4 @@ There is no sign-in. Anyone can pan and open stops.
 
 ## What this does not do yet
 
-It does not poll a feed, store a stop, or draw the map. The build is specified in [TECH-STACK.md](TECH-STACK.md). The page is listed in [CHECKLIST.md](CHECKLIST.md).
+It does not poll a feed, store a stop, or draw the map. The build is specified in [TECH-STACK.md](TECH-STACK.md). The page is listed in [CHECKLIST.md](CHECKLIST.md). The service is listed in [server/CHECKLIST.md](server/CHECKLIST.md).
