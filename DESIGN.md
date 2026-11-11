@@ -2,7 +2,17 @@
 
 A live map of public-transport stops in Hong Kong. MTR stations, franchised bus stops, green minibus stops, and taxi stands. Open a stop and see the next arrivals that an official feed is publishing now.
 
-This repository is that idea, and it has no app code yet.
+## Goal
+
+Show each public-transport vehicle on the map at its live position. A marker is the vehicle itself, and a newer position replaces the last one.
+
+Franchised buses are the first target. Green minibuses, MTR trains, and taxis are the same goal when a position exists for that vehicle.
+
+The current page draws stops and stations from a saved list. It does not draw a moving vehicle.
+
+Official open data, checked in November 2026, publishes the next arrival at a bus stop or green-minibus stop. Coordinates in those feeds are the stop, not the vehicle. Licensed fleet taxis from Joie and Amigo publish latitude, longitude, and operating status for their own vehicles, about every 30 seconds. Ordinary street taxis are outside that feed.
+
+The source and the method are open. This document does not choose them.
 
 ## Stops
 
