@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AttributionControl, GeoJSONSource, Map as MlMap, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { stopIconImage, stopIconPixelRatio, stopIconUrl, type Mode } from "./stop-icon";
+import { StopSheet } from "./stop-sheet";
+import { modeLabel, stopIconImage, stopIconPixelRatio, type Mode } from "./stop-icon";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const modes = ["mtr", "bus", "minibus", "taxi"] as const;
@@ -180,40 +181,20 @@ export default function Page() {
                 setEnabled((current) => ({ ...current, [mode]: !current[mode] }))
               }
             >
-              {label(mode)}
+              {modeLabel(mode)}
             </button>
           ))}
         </div>
       </div>
       {selected ? (
-        <aside className="sheet">
-          <header>
-            <div className="stop-title">
-              <StopSign mode={selected.mode} />
-              <div>
-                <h2>{selected.name}</h2>
-                <p className="mode">{label(selected.mode)}</p>
-              </div>
-            </div>
-            <button type="button" onClick={() => setSelected(null)}>
-              Close
-            </button>
-          </header>
-        </aside>
+        <StopSheet
+          id={selected.id}
+          mode={selected.mode}
+          name={selected.name}
+          onClose={() => setSelected(null)}
+        />
       ) : null}
     </div>
   );
-}
-
-function StopSign({ mode }: { mode: Mode }) {
-  const src = useMemo(() => stopIconUrl(mode), [mode]);
-  return <img className="stop-sign" src={src} alt="" />;
-}
-
-function label(mode: Mode) {
-  if (mode === "mtr") return "MTR";
-  if (mode === "bus") return "Bus";
-  if (mode === "minibus") return "Minibus";
-  return "Taxi";
 }
 

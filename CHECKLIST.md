@@ -34,14 +34,14 @@ GET /stops/{id}/arrivals
 
 ## Arrivals
 
-- [x] Tapping a stop opens its saved name and mode. The static page does not request arrivals.
-- [ ] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time.
-- [ ] Show the age from `fetched_at`.
-- [ ] `live: false` is a timetable. The sheet says the arrival is not live.
-- [ ] A missing or expired snapshot says the snapshot is gone. The stop stays on the map.
-- [ ] A taxi stand opens its name and says there is no arrival list.
-- [ ] An MTR station lists the next train on each line the feed returned, and the line status when that field is present.
-- [ ] The page does not compute an ETA.
+- [x] Tapping a stop opens its saved name and mode, then asks the server for that stop's arrivals.
+- [x] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time.
+- [x] Show the age from `fetched_at`.
+- [x] `live: false` is a timetable. The sheet says the arrival is not live.
+- [x] A missing or expired snapshot says the snapshot is gone. The stop stays on the map.
+- [x] A taxi stand opens its name and says there is no arrival list.
+- [x] An MTR station lists the next train on each line the feed returned, and the line status when that field is present.
+- [x] The page does not compute an ETA.
 
 ## Checks
 

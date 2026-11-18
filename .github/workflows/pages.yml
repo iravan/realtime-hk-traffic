@@ -28,6 +28,7 @@ jobs:
         working-directory: web
         env:
           NEXT_PUBLIC_BASE_PATH: /realtime-hk-traffic
+          NEXT_PUBLIC_API_BASE: ${{ vars.API_BASE }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/out

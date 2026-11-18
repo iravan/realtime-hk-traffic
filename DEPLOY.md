@@ -15,6 +15,22 @@ Routing: `/api/*` goes to the server with the `/api` prefix stripped by a
   so this only matters for `bun run dev` against a separately hosted API.
 - `PORT` — set by Vercel for containers; the image defaults to `3000`.
 
+## Calling the API from the web app
+
+The sheet calls `GET {apiBase}/stops/{id}/arrivals` and listens to
+`GET {apiBase}/stops/{id}/events` for live pushes. `apiBase` is
+`NEXT_PUBLIC_API_BASE` when set, otherwise `/api` on a Vercel build and empty on
+a static host with a base path — an empty value leaves the sheet showing only
+the stop name and mode.
+
+- On Vercel nothing needs setting: the web app and the API share an origin, so
+  `/api` resolves through the rewrite above.
+- On GitHub Pages there is no API. Set the repository variable `API_BASE` to
+  `https://<your-vercel-deployment>/api` (Settings → Secrets and variables →
+  Actions → Variables); `pages.yml` passes it as `NEXT_PUBLIC_API_BASE`. Then set
+  `CORS_ORIGINS=https://iravan.github.io` on the Vercel project, because the
+  browser now reaches the API cross-origin.
+
 ## Why the server is a container
 
 Vercel's Rust framework builder cross-compiles to `x86_64-unknown-linux-gnu`

@@ -26,6 +26,13 @@ export function stopIconUrl(mode: Mode): string {
 
 export const stopIconPixelRatio = ratio;
 
+export function modeLabel(mode: Mode): string {
+  if (mode === "mtr") return "MTR";
+  if (mode === "bus") return "Bus";
+  if (mode === "minibus") return "Minibus";
+  return "Taxi";
+}
+
 function drawStopIcon(mode: Mode): HTMLCanvasElement {
   const canvas = document.createElement("canvas");
   canvas.width = width * ratio;
