@@ -94,17 +94,42 @@ struct Bounds {
 
 #[tokio::main]
 async fn main() {
-    let redis_url = std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
+    // The Upstash integration on Vercel may inject any of these names.
+    let redis_url = match std::env::var("REDIS_URL")
+        .or_else(|_| std::env::var("KV_URL"))
+        .or_else(|_| std::env::var("UPSTASH_REDIS_URL"))
+    {
+        Ok(url) => url,
+        Err(_) => {
+            eprintln!("no redis url in the environment, trying redis://127.0.0.1:6379");
+            "redis://127.0.0.1:6379".to_string()
+        }
+    };
     // Vercel injects PORT and expects the server to bind on all interfaces.
     let bind = std::env::var("PORT")
         .map(|port| format!("0.0.0.0:{port}"))
         .or_else(|_| std::env::var("BIND"))
         .unwrap_or_else(|_| "127.0.0.1:8787".to_string());
     let client = redis::Client::open(redis_url).expect("redis url");
-    let redis = client
-        .get_connection_manager()
-        .await
-        .expect("redis connection");
+    // ConnectionManager retries forever, which on a platform looks like a server
+    // that never starts listening. Bound startup and say why instead.
+    let redis = match tokio::time::timeout(
+        std::time::Duration::from_secs(5),
+        client.get_connection_manager(),
+    )
+    .await
+    {
+        Ok(Ok(manager)) => manager,
+        Ok(Err(error)) => {
+            // Do not print the URL: it carries the password.
+            eprintln!("redis is unreachable, refusing to start: {error}");
+            std::process::exit(1);
+        }
+        Err(_) => {
+            eprintln!("redis did not answer within 5s, refusing to start");
+            std::process::exit(1);
+        }
+    };
     let http = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(20))
         .user_agent("realtime-hk-traffic")

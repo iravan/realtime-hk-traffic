@@ -10,10 +10,22 @@ Routing: `/api/*` goes to the server with the `/api` prefix stripped by a
 
 ## Required environment variables
 
-- `REDIS_URL` — the server exits at startup without it.
+- `REDIS_URL` — **required**. The process refuses to start without a reachable
+  Redis, and Vercel then reports that the server never listened on `PORT`.
+  Both `redis://` and `rediss://` (TLS, what managed providers hand out) work.
+  Fastest path: add **Upstash Redis** from the Vercel Marketplace (Storage →
+  Marketplace), then copy its TLS connection string into a `REDIS_URL`
+  environment variable for Production. The integration may name its own
+  variables (`KV_URL`, `UPSTASH_REDIS_URL`, …); point `REDIS_URL` at that value.
 - `CORS_ORIGINS` — optional. Public traffic is same-origin through the rewrite,
-  so this only matters for `bun run dev` against a separately hosted API.
-- `PORT` — set by Vercel for containers; the image defaults to `3000`.
+  so this only matters for `bun run dev` or the GitHub Pages build reaching the
+  API cross-origin. Comma-separated origins.
+- `PORT` — injected by Vercel (`80` for container services). The image defaults
+  to `3000` for local runs.
+
+If Redis is missing or unreachable the container now exits within 5s and prints
+`redis is unreachable, refusing to start` or `redis did not answer within 5s` to
+stderr, instead of hanging until the platform's startup timeout.
 
 ## Calling the API from the web app
 
