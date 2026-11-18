@@ -16,14 +16,7 @@
       "source": "/api/:path*",
       "destination": {
         "service": "server"
-      },
-      "transforms": [
-        {
-          "type": "request.path",
-          "op": "set",
-          "args": "/:path*"
-        }
-      ]
+      }
     },
     {
       "source": "/(.*)",

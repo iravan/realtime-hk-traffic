@@ -156,10 +156,14 @@ async fn main() {
         .split(',')
         .filter_map(|origin| origin.trim().parse().ok())
         .collect();
-    let router = Router::new()
+    let api = Router::new()
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
-        .route("/stops/{id}/events", get(events))
+        .route("/stops/{id}/events", get(events));
+    // Vercel hands the service the /api prefix, so answer on both shapes.
+    let router = Router::new()
+        .merge(api.clone())
+        .nest("/api", api)
         .layer(
             CorsLayer::new()
                 .allow_origin(origins)
