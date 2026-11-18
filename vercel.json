@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "server": {
+      "root": "server",
+      "runtime": "container",
+      "entrypoint": "Dockerfile"
+    },
+    "web": {
+      "root": "web",
+      "framework": "nextjs"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": {
+        "service": "server"
+      },
+      "transforms": [
+        {
+          "type": "request.path",
+          "op": "set",
+          "args": "/:path*"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
+  ]
+}

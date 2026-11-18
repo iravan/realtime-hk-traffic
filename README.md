@@ -16,4 +16,6 @@ Open the URL Bun prints. The map starts at Mong Kok. Turn modes on and off, then
 
 The published demo is https://iravan.github.io/realtime-hk-traffic/
 
+Vercel deployment notes are in [DEPLOY.md](DEPLOY.md).
+
 The lists of remaining work are [CHECKLIST.md](CHECKLIST.md) and [server/CHECKLIST.md](server/CHECKLIST.md).

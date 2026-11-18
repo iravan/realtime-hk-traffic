@@ -95,7 +95,11 @@ struct Bounds {
 #[tokio::main]
 async fn main() {
     let redis_url = std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
-    let bind = std::env::var("BIND").unwrap_or_else(|_| "127.0.0.1:8787".to_string());
+    // Vercel injects PORT and expects the server to bind on all interfaces.
+    let bind = std::env::var("PORT")
+        .map(|port| format!("0.0.0.0:{port}"))
+        .or_else(|_| std::env::var("BIND"))
+        .unwrap_or_else(|_| "127.0.0.1:8787".to_string());
     let client = redis::Client::open(redis_url).expect("redis url");
     let redis = client
         .get_connection_manager()
