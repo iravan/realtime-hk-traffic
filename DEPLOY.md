@@ -5,8 +5,9 @@
 - `web/` — static Next.js export (`output: "export"`)
 - `server/` — container built from `server/Dockerfile`
 
-Routing: `/api/*` goes to the server with the `/api` prefix stripped by a
-`request.path` transform, and every other path goes to the web app.
+Routing: `/api/*` goes to the server and every other path goes to the web app.
+Requests reach the server with the `/api` prefix intact, so the router mounts
+its routes both at `/stops` and under `/api`.
 
 ## Required environment variables
 
