@@ -44,6 +44,23 @@ the stop name and mode.
   `CORS_ORIGINS=https://iravan.github.io` on the Vercel project, because the
   browser now reaches the API cross-origin.
 
+## Stop catalogue
+
+`server/data/stops.json` is compiled into the binary and seeded at boot, so
+every stop is addressable immediately. Live KMB, Citybus and taxi lists are
+still fetched and override the seed by id; a stop seen twice is refreshed, not
+listed twice.
+
+The green-minibus crawl is the reason the seed exists: it takes thousands of
+requests to data.etagmb.gov.hk and cannot finish inside a function that is
+frozen between requests, so without the seed the catalogue had no minibus
+stops at all and every minibus id answered `{"error":"unknown stop"}`. The
+crawl still runs in the background on a best-effort basis, to label minibus
+arrivals with their route number.
+
+Regenerate the seed (and `web/public/stops.json`) from a running server when
+the catalogue changes.
+
 ## Why the server is a container
 
 Vercel's Rust framework builder cross-compiles to `x86_64-unknown-linux-gnu`

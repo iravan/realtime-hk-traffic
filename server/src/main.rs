@@ -176,6 +176,9 @@ async fn main() {
 }
 
 async fn load_catalogues(app: Arc<App>) {
+    let bundled = catalog::bundled_stops();
+    eprintln!("bundled stops {}", bundled.len());
+    remember_local(&app, bundled).await;
     let mtr = catalog::mtr_stops();
     remember(&app, mtr).await;
     let kmb = catalog::kmb_stops(&app.http).await;
@@ -203,10 +206,24 @@ async fn remember(app: &App, stops: Vec<Stop>) {
     if stops.is_empty() {
         return;
     }
+    cache_stops(app, &stops).await;
+    index_stops(app, stops).await;
+}
+
+// The bundled catalogue already travels in the binary; caching it in redis
+// too would cost tens of thousands of writes on every cold start.
+async fn remember_local(app: &App, stops: Vec<Stop>) {
+    if stops.is_empty() {
+        return;
+    }
+    index_stops(app, stops).await;
+}
+
+async fn cache_stops(app: &App, stops: &[Stop]) {
     let mut redis = app.redis.clone();
     let mut pipe = redis::pipe();
     pipe.atomic();
-    for stop in &stops {
+    for stop in stops {
         let body = json!({
             "mode": stop.mode,
             "name": stop.name,
@@ -221,12 +238,16 @@ async fn remember(app: &App, stops: Vec<Stop>) {
     if pipe.query_async::<()>(&mut redis).await.is_err() {
         eprintln!("redis stop write failed");
     }
+}
+
+async fn index_stops(app: &App, stops: Vec<Stop>) {
     let mut all = app.stops.write().await;
     let mut index = app.by_id.write().await;
     for stop in stops {
-        index.insert(stop.id.clone(), stop.clone());
-        all.push(stop);
+        index.insert(stop.id.clone(), stop);
     }
+    // A stop seen in two sources is refreshed, not listed twice.
+    *all = index.values().cloned().collect();
 }
 
 async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -> Response {

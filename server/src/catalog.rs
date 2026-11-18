@@ -365,3 +365,35 @@ struct MtrStation {
     lng: f64,
     lines: Vec<String>,
 }
+
+#[derive(Deserialize)]
+struct BundledStop {
+    id: String,
+    mode: String,
+    name: String,
+    latitude: f64,
+    longitude: f64,
+}
+
+#[derive(Deserialize)]
+struct BundledStops {
+    stops: Vec<BundledStop>,
+}
+
+/// The whole catalogue, embedded at build time. Fetching it live costs
+/// thousands of requests to data.etagmb.gov.hk, which never finishes inside a
+/// function that is frozen between requests.
+pub fn bundled_stops() -> Vec<Stop> {
+    let parsed: BundledStops = match serde_json::from_str(include_str!("../data/stops.json")) {
+        Ok(parsed) => parsed,
+        Err(error) => {
+            eprintln!("bundled stops unreadable: {error}");
+            return Vec::new();
+        }
+    };
+    parsed
+        .stops
+        .into_iter()
+        .map(|stop| Stop::new(stop.id, &stop.mode, stop.name, stop.latitude, stop.longitude))
+        .collect()
+}
