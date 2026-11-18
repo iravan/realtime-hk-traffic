@@ -300,13 +300,14 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
     if stop.mode == "taxi" {
         return Json(taxi_snapshot()).into_response();
     }
+    if let Some(body) = read_snapshot(&app, &id).await {
+        return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
+    }
+    // A direct caller has no stream to wait on, so fetch once on its behalf
+    // instead of reporting a snapshot that was never asked for.
+    refresh(&app, &stop).await;
     match read_snapshot(&app, &id).await {
-        Some(body) => (
-            StatusCode::OK,
-            [("content-type", "application/json")],
-            body,
-        )
-            .into_response(),
+        Some(body) => (StatusCode::OK, [("content-type", "application/json")], body).into_response(),
         None => (
             StatusCode::NOT_FOUND,
             Json(json!({"error": "snapshot is gone"})),
