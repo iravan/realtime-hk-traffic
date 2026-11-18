@@ -142,6 +142,7 @@ export default function Page() {
   const dotsRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
   const [selected, setSelected] = useState<Stop | null>(null);
+  const [board, setBoard] = useState<Stop | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
   const [hours, setHours] = useState<ServiceHours | null>(null);
   // Null until mount so the static prerender and the first client render agree
@@ -239,17 +240,25 @@ export default function Page() {
         },
       });
       map.on("click", "stops", (event) => {
-        // A closed stop is a grey marker, not a control. Overlapping stops may
-        // put one under the pointer, so look for the first one that is open.
-        const feature = event.features?.find((item) => item.properties?.open === true);
+        // An open stop opens the details sheet; a closed (grey) stop only shows
+        // its route board. Prefer an open stop when pins overlap.
+        const open = event.features?.find((item) => item.properties?.open === true);
+        const closed = event.features?.find((item) => item.properties?.open === false);
+        const feature = open ?? closed;
         const id = feature?.properties?.id;
         if (typeof id !== "string") return;
         const match = stopsRef.current.find((stop) => stop.id === id);
-        if (match) setSelected(match);
+        if (!match) return;
+        if (open) {
+          setSelected(match);
+          setBoard(match);
+        } else {
+          setSelected(null);
+          setBoard(match);
+        }
       });
       map.on("mouseenter", "stops", (event) => {
-        const open = event.features?.some((item) => item.properties?.open === true);
-        map.getCanvas().style.cursor = open ? "pointer" : "";
+        map.getCanvas().style.cursor = event.features?.length ? "pointer" : "";
       });
       map.on("mouseleave", "stops", () => {
         map.getCanvas().style.cursor = "";
@@ -278,8 +287,8 @@ export default function Page() {
 
   useEffect(() => {
     const map = mapRef.current;
-    const routes = selected?.mode === "minibus" ? selected.routes : undefined;
-    if (!map || !selected || !routes || routes.length === 0) return;
+    const routes = board?.mode === "minibus" ? board.routes : undefined;
+    if (!map || !board || !routes || routes.length === 0) return;
     const node = document.createElement("div");
     node.className = "route-board";
     for (const route of routes) {
@@ -289,12 +298,12 @@ export default function Page() {
       node.appendChild(chip);
     }
     const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
-      .setLngLat([selected.longitude, selected.latitude])
+      .setLngLat([board.longitude, board.latitude])
       .addTo(map);
     return () => {
       marker.remove();
     };
-  }, [selected]);
+  }, [board]);
 
   function selectNearest(fix: Fix | null) {
     const catalogue = catalogueRef.current;
@@ -307,7 +316,10 @@ export default function Page() {
       hoursRef.current,
       new Date(),
     );
-    if (nearest) setSelected(nearest);
+    if (nearest) {
+      setSelected(nearest);
+      setBoard(nearest);
+    }
   }
 
   function drawStops(map: MlMap) {
@@ -550,7 +562,10 @@ export default function Page() {
           id={selected.id}
           mode={selected.mode}
           name={selected.name}
-          onClose={() => setSelected(null)}
+          onClose={() => {
+            setSelected(null);
+            setBoard(null);
+          }}
         />
       ) : null}
     </div>
