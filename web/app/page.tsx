@@ -480,10 +480,10 @@ export default function Page() {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     drawStops(map);
-    // Switching tabs must not pick a stop. Drop a selection that belongs to the
-    // mode the user just left, but keep one that still matches.
-    setSelected((current) => (current && current.mode !== active ? null : current));
-    setBoard((current) => (current && current.mode !== active ? null : current));
+    // Switching tabs cancels the picked stop: close the sheet, hide the route
+    // board and clear the highlight.
+    setSelected(null);
+    setBoard(null);
   }, [active]);
 
   // First and last services move the open/closed line while the page is open,
@@ -528,7 +528,11 @@ export default function Page() {
                 data-mode={mode}
                 aria-pressed={active === mode}
                 className={active === mode ? "on" : ""}
-                onClick={() => setActive(mode)}
+                onClick={() => {
+                  setSelected(null);
+                  setBoard(null);
+                  setActive(mode);
+                }}
               >
                 <img src={categoryIcons[mode]} alt="" />
                 {modeLabel(mode)}
