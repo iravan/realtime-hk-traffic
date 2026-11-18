@@ -7,3 +7,5 @@ target
 .next
 out
 .vercel
+.cache
+__pycache__/

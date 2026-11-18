@@ -104,7 +104,10 @@ pub async fn minibus_stops(http: &reqwest::Client) -> (Vec<Stop>, HashMap<i64, S
     let Ok(parsed) = body.json::<Value>().await else {
         return (Vec::new(), route_names);
     };
-    let Some(regions) = parsed.pointer("/data/routes").and_then(|value| value.as_object()) else {
+    let Some(regions) = parsed
+        .pointer("/data/routes")
+        .and_then(|value| value.as_object())
+    else {
         return (Vec::new(), route_names);
     };
     let mut jobs = Vec::new();
@@ -135,14 +138,18 @@ pub async fn minibus_stops(http: &reqwest::Client) -> (Vec<Stop>, HashMap<i64, S
                 };
                 let mut pairs = Vec::new();
                 for variant in variants {
-                    let Some(route_id) = variant.get("route_id").and_then(|value| value.as_i64()) else {
+                    let Some(route_id) = variant.get("route_id").and_then(|value| value.as_i64())
+                    else {
                         continue;
                     };
-                    let Some(directions) = variant.get("directions").and_then(|value| value.as_array()) else {
+                    let Some(directions) =
+                        variant.get("directions").and_then(|value| value.as_array())
+                    else {
                         continue;
                     };
                     for direction in directions {
-                        let Some(seq) = direction.get("route_seq").and_then(|value| value.as_i64()) else {
+                        let Some(seq) = direction.get("route_seq").and_then(|value| value.as_i64())
+                        else {
                             continue;
                         };
                         pairs.push((route_id, code.clone(), seq));
@@ -172,14 +179,20 @@ pub async fn minibus_stops(http: &reqwest::Client) -> (Vec<Stop>, HashMap<i64, S
                 let Ok(parsed) = response.json::<Value>().await else {
                     return Vec::new();
                 };
-                let Some(stops) = parsed.pointer("/data/route_stops").and_then(|value| value.as_array()) else {
+                let Some(stops) = parsed
+                    .pointer("/data/route_stops")
+                    .and_then(|value| value.as_array())
+                else {
                     return Vec::new();
                 };
                 stops
                     .iter()
                     .filter_map(|stop| {
                         let id = stop.get("stop_id")?.as_i64()?;
-                        let name = stop.get("name_tc").and_then(|value| value.as_str()).unwrap_or("");
+                        let name = stop
+                            .get("name_tc")
+                            .and_then(|value| value.as_str())
+                            .unwrap_or("");
                         Some((id, name.to_string()))
                     })
                     .collect::<Vec<_>>()
@@ -204,12 +217,20 @@ pub async fn minibus_stops(http: &reqwest::Client) -> (Vec<Stop>, HashMap<i64, S
                 let url = format!("https://data.etagmb.gov.hk/stop/{id}");
                 let response = http.get(url).send().await.ok()?;
                 let parsed = response.json::<Value>().await.ok()?;
-                let latitude = parsed.pointer("/data/coordinates/wgs84/latitude")?.as_f64()?;
-                let longitude = parsed.pointer("/data/coordinates/wgs84/longitude")?.as_f64()?;
+                let latitude = parsed
+                    .pointer("/data/coordinates/wgs84/latitude")?
+                    .as_f64()?;
+                let longitude = parsed
+                    .pointer("/data/coordinates/wgs84/longitude")?
+                    .as_f64()?;
                 Some(Stop::new(
                     format!("minibus:{id}"),
                     "minibus",
-                    if label.is_empty() { id.to_string() } else { label },
+                    if label.is_empty() {
+                        id.to_string()
+                    } else {
+                        label
+                    },
                     latitude,
                     longitude,
                 ))
@@ -243,7 +264,10 @@ pub async fn taxi_stands(http: &reqwest::Client) -> Vec<Stop> {
         }
         let count = features.len();
         for feature in features {
-            let Some(coords) = feature.pointer("/geometry/coordinates").and_then(|value| value.as_array()) else {
+            let Some(coords) = feature
+                .pointer("/geometry/coordinates")
+                .and_then(|value| value.as_array())
+            else {
                 continue;
             };
             let Some(longitude) = coords.first().and_then(|value| value.as_f64()) else {
@@ -280,6 +304,20 @@ pub async fn taxi_stands(http: &reqwest::Client) -> Vec<Stop> {
     stops
 }
 
+/// Route ids are stable, but the route catalogue that names them is fetched
+/// live. That crawl is best-effort and the feed throttles bursts, so a build
+/// without it would label minibus arrivals with their numeric route id. Keep
+/// the id-to-number map beside the bundled stops and let the live crawl extend
+/// it. The map is derived from the static reference
+/// https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml.
+pub fn bundled_routes() -> HashMap<i64, String> {
+    let raw: HashMap<String, String> =
+        serde_json::from_str(include_str!("../data/gmb-routes.json")).unwrap_or_default();
+    raw.into_iter()
+        .filter_map(|(id, code)| Some((id.parse().ok()?, code)))
+        .collect()
+}
+
 pub fn mtr_label(code: &str) -> String {
     static LABELS: OnceLock<HashMap<String, String>> = OnceLock::new();
     let labels = LABELS.get_or_init(|| {
@@ -296,7 +334,8 @@ pub fn mtr_label(code: &str) -> String {
 }
 
 pub fn mtr_stops() -> Vec<Stop> {
-    let raw: Vec<MtrStation> = serde_json::from_str(include_str!("../data/mtr.json")).unwrap_or_default();
+    let raw: Vec<MtrStation> =
+        serde_json::from_str(include_str!("../data/mtr.json")).unwrap_or_default();
     raw.into_iter()
         .map(|station| {
             let mut stop = Stop::new(
@@ -394,6 +433,14 @@ pub fn bundled_stops() -> Vec<Stop> {
     parsed
         .stops
         .into_iter()
-        .map(|stop| Stop::new(stop.id, &stop.mode, stop.name, stop.latitude, stop.longitude))
+        .map(|stop| {
+            Stop::new(
+                stop.id,
+                &stop.mode,
+                stop.name,
+                stop.latitude,
+                stop.longitude,
+            )
+        })
         .collect()
 }

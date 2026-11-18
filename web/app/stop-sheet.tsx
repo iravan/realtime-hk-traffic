@@ -136,7 +136,7 @@ export function StopSheet({
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
-                      <strong>{row.route}</strong>
+                      {row.route ? <strong>{row.route}</strong> : null}
                       <span>{row.destination}</span>
                       <span> · {row.minutes !== undefined ? `${row.minutes} min` : row.time}</span>
                     </li>

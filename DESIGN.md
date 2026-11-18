@@ -21,7 +21,7 @@ A stop is one place a passenger can board. The map uses the coordinates and the 
 | Mode | What a stop is |
 | --- | --- |
 | MTR | A station. The arrivals are the next trains on the lines that serve it. |
-| Bus | One stop for KMB, LWB, Citybus, or New Lantao Bus. Several poles on the same pavement stay separate stops when the feeds give them separate ids. |
+| Bus | One stop for KMB, LWB, Citybus, or New Lantao Bus. Ids a feed publishes at the same coordinate are one point on the map, and their arrivals are merged. Poles at different coordinates stay separate stops. |
 | Minibus | A green minibus stop. Red minibuses have no official stop list with live arrivals, so they are not drawn. |
 | Taxi | A taxi stand. A stand is a place to hire a taxi. It is not a vehicle. |
 
@@ -36,11 +36,17 @@ The server polls the official feeds and keeps the latest snapshot. The browser d
 
 Each arrival stores when it was fetched. The page shows that age. A snapshot past the feed's useful life is marked stale and stays visible until a newer one replaces it.
 
+## Service hours
+
+`web/public/service-hours.json` holds the static service window for each mode, each MTR station, and each green-minibus route the catalogue names. A stop is drawn as its mode sign only while a window covers the current Hong Kong time. Outside that window it shrinks to a grey dot and does not open its sheet: a grey dot is a location, not a control. A stop with no matching entry keeps its mode default, so a gap in the data never greys a running stop. A window that ends after midnight is written with an end time earlier than its start.
+
+Some bus and minibus routes run overnight. A stop served by one of them carries `night: true` in the stop list, so it stays in its mode colour and clickable for the whole day. `server/scripts/fetch-night-stops.py` derives that flag from the stops of every KMB or Citybus route whose code starts with `N` and every green-minibus route whose timetable covers the small hours. Re-run the script to refresh the flags.
+
 ## Map
 
 One page. OpenStreetMap is the basemap. Stops are points on top of it.
 
-The user can show or hide each mode: MTR, bus, minibus, taxi. Tapping a stop opens its arrivals, soonest first. A stop with no live arrival shows that plainly.
+The user chooses one mode at a time: MTR, bus, minibus, taxi. The map opens on the device location when the browser grants it, and the nearest stop of the chosen mode opens with it; changing mode moves the selection to the nearest stop of that mode. A locate button asks the device again, moves the map back to it, and reselects the nearest stop, so a visitor who has panned away does not have to reload the page. The selected stop is ringed on the map. Tapping a stop opens its arrivals, soonest first. One departure appears once, even when a feed lists it under several service types. A stop with no live arrival shows that plainly.
 
 Moving the map asks the server for the stops inside the view. The client does not choose which arrivals are current. It draws what the server last stored.
 

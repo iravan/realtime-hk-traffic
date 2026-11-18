@@ -29,6 +29,10 @@ Rust is the only poller.
 
 A stop id is the publisher's id, prefixed by the mode so two feeds cannot collide: `mtr:`, `bus:`, `minibus:`, `taxi:`.
 
+Green-minibus route numbers (route id → route number) are taken from the
+static reference `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml`,
+bundled as `server/data/gmb-routes.json` so labels do not depend on the live crawl.
+
 ## Page
 
 One Next.js route. The map component loads only in the browser, because MapLibre uses WebGL. There is no account and no session.

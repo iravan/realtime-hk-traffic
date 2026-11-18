@@ -1,11 +1,15 @@
 export type Mode = "mtr" | "bus" | "minibus" | "taxi";
 
 const colors: Record<Mode, string> = {
-  mtr: "#c44736",
-  bus: "#2f6f4e",
-  minibus: "#c4841d",
-  taxi: "#3d4c8f",
+  mtr: "#11254a",
+  bus: "#e52029",
+  minibus: "#2f7d4f",
+  taxi: "#c8102e",
 };
+
+// Out-of-hours stops are drawn as a muted dot: the map still shows where the
+// stop is without inviting a tap.
+const mutedFill = "#b3aea4";
 
 const width = 44;
 const height = 64;
@@ -26,11 +30,120 @@ export function stopIconUrl(mode: Mode): string {
 
 export const stopIconPixelRatio = ratio;
 
+// A dot stands in for the full sign when a view holds more stops than it can
+// legibly show, and every out-of-hours stop is a dot even in a sparse view. The
+// muted fill keeps the stop's place on the map without inviting a tap.
+export function stopDotImage(mode: Mode, muted = false): ImageData {
+  const size = 20;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, 6, 0, Math.PI * 2);
+  ctx.fillStyle = muted ? mutedFill : colors[mode];
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = paper;
+  ctx.stroke();
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+// A selected sign keeps the whole icon readable: the same artwork, stamped
+// around with a paper and ink outline so the sign itself stands out instead of
+// a separate marker sitting under it. The canvas is padded on the top and sides
+// only, so the point of the pole still lands on the stop when anchored bottom.
+export function stopIconHighlight(mode: Mode): ImageData {
+  const pad = 5;
+  const base = drawStopIcon(mode);
+  const canvas = document.createElement("canvas");
+  canvas.width = (width + pad * 2) * ratio;
+  canvas.height = (height + pad) * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  // Paper first, then ink: the sign's own edge gains a dark rim and a light
+  // gap that lifts it off the basemap.
+  stampOutline(ctx, base, paper, pad, 4.2);
+  stampOutline(ctx, base, ink, pad, 2.6);
+  ctx.drawImage(base, pad, pad, width, height);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+// With dots standing in for signs there is nothing to outline, so the selected
+// dot becomes a target: a paper halo, an ink ring and the mode colour inside.
+export function stopDotHighlight(mode: Mode): ImageData {
+  const size = 28;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  const centre = size / 2;
+  for (const [radius, colour] of [
+    [11.5, paper],
+    [9, ink],
+    [7.4, paper],
+  ] as const) {
+    ctx.beginPath();
+    ctx.arc(centre, centre, radius, 0, Math.PI * 2);
+    ctx.fillStyle = colour;
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.arc(centre, centre, 6, 0, Math.PI * 2);
+  ctx.fillStyle = colors[mode];
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = paper;
+  ctx.stroke();
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
 export function modeLabel(mode: Mode): string {
   if (mode === "mtr") return "MTR";
   if (mode === "bus") return "Bus";
   if (mode === "minibus") return "Minibus";
   return "Taxi";
+}
+
+// Stamping a flat fill of the icon's alpha around it builds a crisp outline
+// that follows every part of the artwork, including the pole and the vehicle.
+function stampOutline(
+  ctx: CanvasRenderingContext2D,
+  base: HTMLCanvasElement,
+  color: string,
+  pad: number,
+  radius: number,
+) {
+  const stamp = silhouette(base, color);
+  const steps = 20;
+  for (let i = 0; i < steps; i += 1) {
+    const angle = (i / steps) * Math.PI * 2;
+    ctx.drawImage(
+      stamp,
+      pad + Math.cos(angle) * radius,
+      pad + Math.sin(angle) * radius,
+      width,
+      height,
+    );
+  }
+}
+
+function silhouette(source: HTMLCanvasElement, color: string): HTMLCanvasElement {
+  const canvas = document.createElement("canvas");
+  canvas.width = source.width;
+  canvas.height = source.height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.drawImage(source, 0, 0);
+  ctx.globalCompositeOperation = "source-in";
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas;
 }
 
 function drawStopIcon(mode: Mode): HTMLCanvasElement {
@@ -44,6 +157,7 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   ctx.lineCap = "round";
 
   const color = colors[mode];
+  const line = ink;
   const cx = width / 2;
   ctx.beginPath();
   ctx.moveTo(cx, 38);
@@ -51,10 +165,10 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   ctx.strokeStyle = paper;
   ctx.lineWidth = 4.4;
   ctx.stroke();
-  ctx.strokeStyle = ink;
+  ctx.strokeStyle = line;
   ctx.lineWidth = 2.2;
   ctx.stroke();
-  ctx.fillStyle = ink;
+  ctx.fillStyle = line;
   ctx.beginPath();
   ctx.ellipse(cx, height - 1.8, 3.6, 1.4, 0, 0, Math.PI * 2);
   ctx.fill();
@@ -71,9 +185,9 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   ctx.stroke();
 
   if (mode === "mtr") drawMtr(ctx, color);
-  if (mode === "bus") drawBus(ctx, color);
-  if (mode === "minibus") drawMinibus(ctx, color);
-  if (mode === "taxi") drawTaxi(ctx, color);
+  if (mode === "bus") drawBus(ctx, color, line);
+  if (mode === "minibus") drawMinibus(ctx, color, line);
+  if (mode === "taxi") drawTaxi(ctx, color, line);
   return canvas;
 }
 
@@ -103,7 +217,7 @@ function drawMtr(ctx: CanvasRenderingContext2D, color: string) {
   ctx.stroke();
 }
 
-function drawBus(ctx: CanvasRenderingContext2D, color: string) {
+function drawBus(ctx: CanvasRenderingContext2D, color: string, line: string) {
   ctx.fillStyle = paper;
   roundRect(ctx, 8, 10, 28, 14, 2.5);
   ctx.fill();
@@ -111,10 +225,10 @@ function drawBus(ctx: CanvasRenderingContext2D, color: string) {
   ctx.fillRect(10.5, 12.4, 5.2, 4.4);
   ctx.fillRect(17.2, 12.4, 5.2, 4.4);
   ctx.fillRect(23.8, 12.4, 5.2, 4.4);
-  wheels(ctx, 14, 30, 24.6);
+  wheels(ctx, 14, 30, 24.6, line);
 }
 
-function drawMinibus(ctx: CanvasRenderingContext2D, color: string) {
+function drawMinibus(ctx: CanvasRenderingContext2D, color: string, line: string) {
   ctx.fillStyle = paper;
   ctx.beginPath();
   ctx.moveTo(11, 25);
@@ -134,10 +248,10 @@ function drawMinibus(ctx: CanvasRenderingContext2D, color: string) {
   ctx.lineTo(23.2, 16.6);
   ctx.closePath();
   ctx.fill();
-  wheels(ctx, 16.5, 28, 25.2);
+  wheels(ctx, 16.5, 28, 25.2, line);
 }
 
-function drawTaxi(ctx: CanvasRenderingContext2D, color: string) {
+function drawTaxi(ctx: CanvasRenderingContext2D, color: string, line: string) {
   ctx.fillStyle = paper;
   roundRect(ctx, 16, 7.4, 12, 4.2, 1);
   ctx.fill();
@@ -170,11 +284,11 @@ function drawTaxi(ctx: CanvasRenderingContext2D, color: string) {
   ctx.lineTo(26.4, 14.2);
   ctx.closePath();
   ctx.fill();
-  wheels(ctx, 14, 30, 26.2);
+  wheels(ctx, 14, 30, 26.2, line);
 }
 
-function wheels(ctx: CanvasRenderingContext2D, x1: number, x2: number, y: number) {
-  ctx.fillStyle = ink;
+function wheels(ctx: CanvasRenderingContext2D, x1: number, x2: number, y: number, line: string) {
+  ctx.fillStyle = line;
   ctx.beginPath();
   ctx.arc(x1, y, 2.05, 0, Math.PI * 2);
   ctx.arc(x2, y, 2.05, 0, Math.PI * 2);

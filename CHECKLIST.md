@@ -27,8 +27,14 @@ GET /stops/{id}/arrivals
 - [x] On start, load every stop from `web/public/stops.json`.
 - [x] On move end, draw the saved stops in the current view. The page does not call a server.
 - [x] Draw one stop per saved record, at that record's coordinates. The client does not invent an id or a coordinate.
-- [x] Four filters: MTR, bus, minibus, taxi. Hiding a mode drops it from the map.
-- [ ] Several bus poles on the same pavement stay separate points when their ids differ.
+- [x] Four tabs: MTR, bus, minibus, taxi. Choosing one shows only that mode.
+- [x] On load, ask the device for its location, mark it on the map, and select the nearest stop of the chosen mode.
+- [x] A locate button asks again, moves the map to that fix, and selects the nearest stop of the chosen mode. A refused fix marks the button.
+- [x] Changing the tab selects the nearest stop of the new mode.
+- [x] The selected stop is marked on the map with a halo, and closing the sheet clears it.
+- [x] Ids that publish the same coordinate are one point, and their arrivals are merged. Poles at different coordinates stay separate stops.
+- [x] Load static service hours from `web/public/service-hours.json`. Outside service hours a stop is grey and does not open.
+- [x] A bus or minibus stop served by an overnight route carries `night: true` and stays open and clickable.
 - [ ] Red minibuses are not drawn. Taxis are stands, not moving vehicles.
 - [ ] A stop that is absent from the response is not drawn. Do not keep points from the previous view.
 

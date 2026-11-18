@@ -6,8 +6,8 @@ use axum::response::sse::{Event, KeepAlive, Sse};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
-use futures::stream::{self, Stream, StreamExt};
 use chrono::{DateTime, Utc};
+use futures::stream::{self, Stream, StreamExt};
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -28,11 +28,14 @@ struct Stop {
     longitude: f64,
     mtr_code: Option<String>,
     mtr_lines: Vec<String>,
+    // Ids of stops that publish the same location, so one pin keeps every feed.
+    member_ids: Vec<String>,
 }
 
 impl Stop {
     fn new(id: String, mode: &str, name: String, latitude: f64, longitude: f64) -> Self {
         Self {
+            member_ids: vec![id.clone()],
             id,
             mode: mode.to_string(),
             name,
@@ -77,6 +80,10 @@ struct Row {
 struct App {
     stops: RwLock<Vec<Stop>>,
     by_id: RwLock<HashMap<String, Stop>>,
+    by_location: RwLock<HashMap<String, String>>,
+    // Member id -> the id that owns that location, so any id the web app holds
+    // still resolves after stops are merged.
+    by_member: RwLock<HashMap<String, String>>,
     gmb_routes: RwLock<HashMap<i64, String>>,
     redis: ConnectionManager,
     http: reqwest::Client,
@@ -138,7 +145,9 @@ async fn main() {
     let app = Arc::new(App {
         stops: RwLock::new(Vec::new()),
         by_id: RwLock::new(HashMap::new()),
-        gmb_routes: RwLock::new(HashMap::new()),
+        by_location: RwLock::new(HashMap::new()),
+        by_member: RwLock::new(HashMap::new()),
+        gmb_routes: RwLock::new(catalog::bundled_routes()),
         redis,
         http,
         watch: std::sync::Mutex::new(HashMap::new()),
@@ -147,11 +156,10 @@ async fn main() {
     tokio::spawn(async move { load_catalogues(startup).await });
     let poller = app.clone();
     tokio::spawn(async move { poll_loop(poller).await });
-    let cors_origins = std::env::var("CORS_ORIGINS")
-        .unwrap_or_else(|_| {
-            "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002"
-                .to_string()
-        });
+    let cors_origins = std::env::var("CORS_ORIGINS").unwrap_or_else(|_| {
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002"
+            .to_string()
+    });
     let origins: Vec<HeaderValue> = cors_origins
         .split(',')
         .filter_map(|origin| origin.trim().parse().ok())
@@ -196,7 +204,9 @@ async fn load_catalogues(app: Arc<App>) {
     remember(&app, citybus).await;
     if let Ok((minibus, routes)) = minibus_task.await {
         eprintln!("minibus stops {}", minibus.len());
-        *app.gmb_routes.write().await = routes;
+        // The bundled map already names every known route; the crawl only adds
+        // routes that appeared after it was generated.
+        app.gmb_routes.write().await.extend(routes);
         remember(&app, minibus).await;
     }
     eprintln!("catalogue ready {}", app.stops.read().await.len());
@@ -243,11 +253,48 @@ async fn cache_stops(app: &App, stops: &[Stop]) {
 async fn index_stops(app: &App, stops: Vec<Stop>) {
     let mut all = app.stops.write().await;
     let mut index = app.by_id.write().await;
+    let mut locations = app.by_location.write().await;
+    let mut members = app.by_member.write().await;
     for stop in stops {
-        index.insert(stop.id.clone(), stop);
+        let key = location_key(&stop);
+        let owner = locations.get(&key).cloned();
+        match owner.and_then(|id| index.get_mut(&id).map(|kept| (id, kept))) {
+            Some((owner, kept)) => {
+                for member in stop.member_ids {
+                    members.insert(member.clone(), owner.clone());
+                    if !kept.member_ids.contains(&member) {
+                        kept.member_ids.push(member);
+                    }
+                }
+                // A live record carries fields the seed does not, such as MTR lines.
+                if !stop.mtr_lines.is_empty() {
+                    kept.mtr_lines = stop.mtr_lines;
+                    kept.mtr_code = stop.mtr_code;
+                    kept.name = stop.name;
+                }
+            }
+            None => {
+                locations.insert(key, stop.id.clone());
+                members.insert(stop.id.clone(), stop.id.clone());
+                index.insert(stop.id.clone(), stop);
+            }
+        }
     }
-    // A stop seen in two sources is refreshed, not listed twice.
+    // One entry per location; a stop seen in two sources is refreshed, not doubled.
     *all = index.values().cloned().collect();
+}
+
+fn location_key(stop: &Stop) -> String {
+    format!("{}:{:.6}:{:.6}", stop.mode, stop.latitude, stop.longitude)
+}
+
+async fn owner_id(app: &App, id: &str) -> String {
+    app.by_member
+        .read()
+        .await
+        .get(id)
+        .cloned()
+        .unwrap_or_else(|| id.to_string())
 }
 
 async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -> Response {
@@ -263,10 +310,13 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
         )
             .into_response();
     }
-    let allowed: Option<Vec<&str>> = bounds
-        .modes
-        .as_deref()
-        .map(|modes| modes.split(',').map(str::trim).filter(|mode| !mode.is_empty()).collect());
+    let allowed: Option<Vec<&str>> = bounds.modes.as_deref().map(|modes| {
+        modes
+            .split(',')
+            .map(str::trim)
+            .filter(|mode| !mode.is_empty())
+            .collect()
+    });
     let stops = app.stops.read().await;
     let mut matched = Vec::new();
     for stop in stops.iter() {
@@ -275,7 +325,14 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
                 continue;
             }
         }
-        if !in_box(stop.latitude, stop.longitude, bounds.south, bounds.west, bounds.north, bounds.east) {
+        if !in_box(
+            stop.latitude,
+            stop.longitude,
+            bounds.south,
+            bounds.west,
+            bounds.north,
+            bounds.east,
+        ) {
             continue;
         }
         matched.push(StopOut {
@@ -290,6 +347,7 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
 }
 
 async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Response {
+    let id = owner_id(&app, &id).await;
     let Some(stop) = app.by_id.read().await.get(&id).cloned() else {
         return (
             StatusCode::NOT_FOUND,
@@ -307,7 +365,9 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
     // instead of reporting a snapshot that was never asked for.
     refresh(&app, &stop).await;
     match read_snapshot(&app, &id).await {
-        Some(body) => (StatusCode::OK, [("content-type", "application/json")], body).into_response(),
+        Some(body) => {
+            (StatusCode::OK, [("content-type", "application/json")], body).into_response()
+        }
         None => (
             StatusCode::NOT_FOUND,
             Json(json!({"error": "snapshot is gone"})),
@@ -320,6 +380,7 @@ async fn events(
     State(app): State<Arc<App>>,
     Path(id): Path<String>,
 ) -> Result<Sse<impl Stream<Item = Result<Event, std::convert::Infallible>>>, Response> {
+    let id = owner_id(&app, &id).await;
     let Some(stop) = app.by_id.read().await.get(&id).cloned() else {
         return Err((
             StatusCode::NOT_FOUND,
@@ -333,7 +394,11 @@ async fn events(
         watch.entry(id.clone()).or_default().push(sender);
     }
     if stop.mode == "taxi" {
-        publish(&app, &id, &serde_json::to_string(&taxi_snapshot()).unwrap_or_default());
+        publish(
+            &app,
+            &id,
+            &serde_json::to_string(&taxi_snapshot()).unwrap_or_default(),
+        );
     } else if let Some(body) = read_snapshot(&app, &id).await {
         publish(&app, &id, &body);
     } else {
@@ -342,7 +407,10 @@ async fn events(
     }
     let stream = stream::unfold(receiver, |mut receiver| async move {
         let message = receiver.recv().await?;
-        Some((Ok(Event::default().event("arrivals").data(message)), receiver))
+        Some((
+            Ok(Event::default().event("arrivals").data(message)),
+            receiver,
+        ))
     });
     Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(15))))
 }
@@ -383,13 +451,62 @@ async fn poll_loop(app: Arc<App>) {
     }
 }
 
-async fn refresh(app: &App, stop: &Stop) {
-    let snapshot = match stop.mode.as_str() {
+async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
+    match stop.mode.as_str() {
         "mtr" => mtr_arrivals(&app.http, stop).await,
         "bus" => bus_arrivals(&app.http, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
         _ => None,
-    };
+    }
+}
+
+fn merge_snapshots(parts: Vec<Snapshot>) -> Option<Snapshot> {
+    if parts.is_empty() {
+        return None;
+    }
+    let mut rows: Vec<Row> = Vec::new();
+    let mut seen = std::collections::HashSet::new();
+    let mut status = None;
+    let mut live = false;
+    for part in &parts {
+        live = live || part.live;
+        if status.is_none() {
+            status = part.status.clone();
+        }
+        for row in &part.rows {
+            let key = (
+                row.route.clone(),
+                row.destination.clone(),
+                row.minutes,
+                row.time.clone(),
+            );
+            if seen.insert(key) {
+                rows.push(row.clone());
+            }
+        }
+    }
+    Some(Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live,
+        status,
+        note: None,
+        rows,
+    })
+}
+
+async fn refresh(app: &App, stop: &Stop) {
+    let mut parts = Vec::new();
+    for member in &stop.member_ids {
+        let mut one = stop.clone();
+        one.id = member.clone();
+        one.member_ids = vec![member.clone()];
+        if let Some(snapshot) = fetch_arrivals(app, &one).await {
+            parts.push(snapshot);
+        }
+    }
+    // A feed can list one departure under several service types; the row shape
+    // has no field for that, so identical arrivals collapse into one.
+    let snapshot = merge_snapshots(parts);
     let Some(snapshot) = snapshot else {
         return;
     };
@@ -461,14 +578,20 @@ async fn bus_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
     let rows_in = parsed.get("data")?.as_array()?;
     let mut rows = Vec::new();
     for item in rows_in {
-        let route = item.get("route").and_then(|value| value.as_str()).unwrap_or("");
+        let route = item
+            .get("route")
+            .and_then(|value| value.as_str())
+            .unwrap_or("");
         let destination = item
             .get("dest_tc")
             .or_else(|| item.get("dest"))
             .and_then(|value| value.as_str())
             .unwrap_or("")
             .to_string();
-        let eta = item.get("eta").and_then(|value| value.as_str()).unwrap_or("");
+        let eta = item
+            .get("eta")
+            .and_then(|value| value.as_str())
+            .unwrap_or("");
         if eta.is_empty() {
             continue;
         }
@@ -505,7 +628,7 @@ async fn minibus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
         let route_id = group.get("route_id").and_then(|value| value.as_i64());
         let route = route_id
             .and_then(|id| names.get(&id).cloned())
-            .unwrap_or_else(|| route_id.map(|id| id.to_string()).unwrap_or_default());
+            .unwrap_or_default();
         let Some(etas) = group.get("eta").and_then(|value| value.as_array()) else {
             continue;
         };
@@ -540,7 +663,9 @@ async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
     let mut rows = Vec::new();
     let mut delayed = false;
     for line in &stop.mtr_lines {
-        let url = format!("https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={line}&sta={code}");
+        let url = format!(
+            "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={line}&sta={code}"
+        );
         let Ok(response) = http.get(url).send().await else {
             continue;
         };
@@ -562,7 +687,10 @@ async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
                     if train.get("valid").and_then(|value| value.as_str()) == Some("N") {
                         continue;
                     }
-                    let dest = train.get("dest").and_then(|value| value.as_str()).unwrap_or("");
+                    let dest = train
+                        .get("dest")
+                        .and_then(|value| value.as_str())
+                        .unwrap_or("");
                     let minutes = train
                         .get("ttnt")
                         .and_then(|value| value.as_str())

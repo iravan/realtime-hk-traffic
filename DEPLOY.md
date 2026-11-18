@@ -55,8 +55,21 @@ The green-minibus crawl is the reason the seed exists: it takes thousands of
 requests to data.etagmb.gov.hk and cannot finish inside a function that is
 frozen between requests, so without the seed the catalogue had no minibus
 stops at all and every minibus id answered `{"error":"unknown stop"}`. The
-crawl still runs in the background on a best-effort basis, to label minibus
-arrivals with their route number.
+crawl still runs in the background on a best-effort basis, to pick up stops
+that changed after the seed was generated.
+
+`server/data/gmb-routes.json` is also compiled into the binary. The ETA feed
+names a route only by an internal `route_id`, and the live crawl that resolves
+those ids throttles easily, so arrivals were labelled with the numeric id
+(`2004033` instead of `49S`). The bundled map names every known route id; the
+live crawl may extend it. Regenerate it with:
+
+```bash
+python3 server/scripts/fetch-minibus-routes.py --routes-only
+```
+
+A full run of that script, without `--routes-only`, also refreshes the stop
+lists' `routes` arrays.
 
 Regenerate the seed (and `web/public/stops.json`) from a running server when
 the catalogue changes.

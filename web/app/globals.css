@@ -1,10 +1,17 @@
 :root {
   --ink: #1c1915;
   --paper: #f4efe6;
-  --mtr: #c44736;
-  --bus: #2f6f4e;
-  --minibus: #c4841d;
-  --taxi: #3d4c8f;
+  /* MTR navy: the wordmark on the MTR logo, also the primary colour of
+     mtr.com.hk. */
+  --mtr: #11254a;
+  /* KMB red, sampled from the KMB logo on kmb.hk. */
+  --bus: #e52029;
+  /* Green minibus roof green, sampled from a green minibus. */
+  --minibus: #2f7d4f;
+  /* Urban taxi red, sampled from an urban taxi. */
+  --taxi: #c8102e;
+  /* Warning, kept apart from the mode colours. */
+  --alert: #b3261e;
 }
 
 * { box-sizing: border-box; }
@@ -33,7 +40,7 @@ button { cursor: pointer; }
   pointer-events: none;
 }
 .chrome > * { pointer-events: auto; }
-.brand, .filters, .sheet {
+.brand, .filters, .notice, .sheet {
   background: rgba(244, 239, 230, 0.96);
   border: 1px solid rgba(28, 25, 21, 0.14);
   box-shadow: 0 12px 32px rgba(28, 25, 21, 0.16);
@@ -41,18 +48,65 @@ button { cursor: pointer; }
 .brand { padding: 0.65rem 0.8rem; }
 .brand h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
-.filters { display: flex; gap: 0.35rem; padding: 0.45rem; }
+.filters { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.45rem; }
 .filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   min-height: 40px;
   border: 0;
   background: transparent;
-  padding: 0 0.7rem;
+  padding: 0 0.6rem;
+  white-space: nowrap;
 }
-.filters button.on { color: #f4efe6; }
+.filters button img { flex: none; display: block; height: 26px; width: auto; }
+.filters button.on { color: #fff; }
 .filters button[data-mode="mtr"].on { background: var(--mtr); }
 .filters button[data-mode="bus"].on { background: var(--bus); }
 .filters button[data-mode="minibus"].on { background: var(--minibus); }
 .filters button[data-mode="taxi"].on { background: var(--taxi); }
+
+/* The tab bar and the notice that hangs beneath it. */
+.channel { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+.notice {
+  max-width: 20rem;
+  padding: 0.5rem 0.7rem 0.55rem;
+  border-left: 3px solid var(--mtr);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+.notice strong { display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.notice span { color: #5d564e; }
+
+.locate {
+  position: absolute;
+  z-index: 5;
+  right: 0.75rem;
+  bottom: calc(env(safe-area-inset-bottom) + 3rem);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(244, 239, 230, 0.96);
+  border: 1px solid rgba(28, 25, 21, 0.14);
+  box-shadow: 0 12px 32px rgba(28, 25, 21, 0.16);
+  color: var(--ink);
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.locate svg { width: 22px; height: 22px; }
+.locate:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.locate:disabled { cursor: progress; }
+.locate[data-state="locating"] svg { animation: locate-pulse 1s ease-in-out infinite; }
+.locate[data-state="error"] { color: var(--alert); border-color: var(--alert); }
+@keyframes locate-pulse {
+  50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .locate { transition: none; }
+  .locate[data-state="locating"] svg { animation: none; opacity: 0.6; }
+}
 
 .sheet {
   position: absolute;
@@ -79,13 +133,41 @@ button { cursor: pointer; }
 .sheet li strong { display: block; }
 .sheet li span { color: #6f675e; font-size: 0.85rem; }
 .muted { color: #6f675e; }
-.stale { color: var(--mtr); }
+.stale { color: var(--alert); }
 
 @media (max-width: 767px) {
   .chrome { flex-direction: column; align-items: flex-start; }
+  .channel { align-items: flex-start; }
   .sheet { left: 0; right: 0; bottom: 0; max-height: 52dvh; }
+  /* The sheet spans the full width at this size, so it would cover the
+     control and any tap meant for it. */
+  .visit.sheet-open .locate { opacity: 0; pointer-events: none; }
 }
 @media (min-width: 768px) {
   .sheet { top: 0.75rem; right: 0.75rem; bottom: 0.75rem; width: 22rem; }
+  /* Keep the control clear of the sheet rather than under it. */
+  .visit.sheet-open .locate { right: calc(22rem + 1.5rem); }
 }
 .maplibregl-ctrl-attrib { background: rgba(244, 239, 230, 0.92); font-size: 11px; }
+
+/* A board listing every route that serves the selected minibus stop, placed
+   to the right of the marker. */
+.route-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  max-width: 13rem;
+  background: var(--paper);
+  border: 1px solid rgba(28, 25, 21, 0.18);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  box-shadow: 0 6px 18px rgba(28, 25, 21, 0.18);
+}
+.route-chip {
+  background: var(--minibus);
+  color: var(--paper);
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
