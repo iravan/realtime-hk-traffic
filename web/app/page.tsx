@@ -12,6 +12,7 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { StopSheet } from "./stop-sheet";
 import {
+  loadVehicleImages,
   modeLabel,
   stopDotHighlight,
   stopDotImage,
@@ -137,6 +138,7 @@ export default function Page() {
   activeRef.current = active;
   const fixRef = useRef<Fix | null>(null);
   const selectedRef = useRef<Stop | null>(null);
+  const boardRef = useRef<Stop | null>(null);
   const catalogueRef = useRef<Stop[] | null>(null);
   const hoursRef = useRef<ServiceHours | null>(null);
   const dotsRef = useRef(false);
@@ -175,7 +177,8 @@ export default function Page() {
       },
     });
     map.addControl(new AttributionControl({ compact: false }), "bottom-left");
-    map.on("load", () => {
+    map.on("load", async () => {
+      await loadVehicleImages(basePath);
       for (const mode of modes) {
         map.addImage(mode, stopIconImage(mode), { pixelRatio: stopIconPixelRatio });
         map.addImage(`${mode}-dot`, stopDotImage(mode), { pixelRatio: stopIconPixelRatio });
@@ -278,12 +281,13 @@ export default function Page() {
   const stopsRef = useRef<Stop[]>([]);
   stopsRef.current = stops;
   selectedRef.current = selected;
+  boardRef.current = board;
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     refreshSelection(map);
-  }, [selected]);
+  }, [selected, board]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -375,10 +379,14 @@ export default function Page() {
 
   function refreshSelection(map: MlMap) {
     if (!map.getLayer("selection")) return;
-    const dots = dotsRef.current;
-    map.setLayoutProperty("selection", "icon-anchor", dots ? "center" : "bottom");
-    map.setLayoutProperty("selection", "icon-size", dots ? selectedDotSize : selectedSignSize);
-    highlightSelection(map, selectedRef.current, dots);
+    const focus = selectedRef.current ?? boardRef.current;
+    // A greyed stop is drawn as a dot, so its highlight is the ringed dot even
+    // in a sparse view; the dense-view threshold forces the dot as well.
+    const dot =
+      dotsRef.current || (focus !== null && !isStopOpen(focus, hoursRef.current, new Date()));
+    map.setLayoutProperty("selection", "icon-anchor", dot ? "center" : "bottom");
+    map.setLayoutProperty("selection", "icon-size", dot ? selectedDotSize : selectedSignSize);
+    highlightSelection(map, focus, dot);
   }
 
 
@@ -475,6 +483,7 @@ export default function Page() {
     // Switching tabs must not pick a stop. Drop a selection that belongs to the
     // mode the user just left, but keep one that still matches.
     setSelected((current) => (current && current.mode !== active ? null : current));
+    setBoard((current) => (current && current.mode !== active ? null : current));
   }, [active]);
 
   // First and last services move the open/closed line while the page is open,

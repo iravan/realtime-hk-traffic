@@ -17,6 +17,27 @@ const ratio = 2;
 const paper = "#fbf7f0";
 const ink = "#241f1a";
 
+const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
+
+// The same SVG artwork the category tabs use, so a stop on the map shows the
+// same vehicle as its tab. Loaded once before the first pin is drawn.
+export async function loadVehicleImages(basePath: string): Promise<void> {
+  const all: Mode[] = ["mtr", "bus", "minibus", "taxi"];
+  await Promise.all(
+    all.map(async (mode) => {
+      try {
+        const image = new Image();
+        image.decoding = "async";
+        image.src = `${basePath}/icons/${mode}.svg`;
+        await image.decode();
+        vehicleImages[mode] = image;
+      } catch {
+        // Missing SVG: drawStopIcon falls back to the canvas vehicle.
+      }
+    }),
+  );
+}
+
 export function stopIconImage(mode: Mode): ImageData {
   const canvas = drawStopIcon(mode);
   const ctx = canvas.getContext("2d");
@@ -177,17 +198,27 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   const sy = 2;
   const sw = 38;
   const sh = 34;
+  // A neutral card behind the full-colour SVG, so the map vehicle reads
+  // exactly like the tab icon instead of a second hand-drawn glyph.
   roundRect(ctx, sx, sy, sw, sh, 8);
-  ctx.fillStyle = color;
+  ctx.fillStyle = paper;
   ctx.fill();
   ctx.lineWidth = 2;
-  ctx.strokeStyle = paper;
+  ctx.strokeStyle = line;
   ctx.stroke();
 
-  if (mode === "mtr") drawMtr(ctx, color);
-  if (mode === "bus") drawBus(ctx, color, line);
-  if (mode === "minibus") drawMinibus(ctx, color, line);
-  if (mode === "taxi") drawTaxi(ctx, color, line);
+  const vehicle = vehicleImages[mode];
+  if (vehicle) {
+    ctx.drawImage(vehicle, 5, 2, 34, 34);
+  } else if (mode === "mtr") {
+    drawMtr(ctx, color);
+  } else if (mode === "bus") {
+    drawBus(ctx, color, line);
+  } else if (mode === "minibus") {
+    drawMinibus(ctx, color, line);
+  } else {
+    drawTaxi(ctx, color, line);
+  }
   return canvas;
 }
 
