@@ -187,8 +187,10 @@ async fn load_catalogues(app: Arc<App>) {
     let bundled = catalog::bundled_stops();
     eprintln!("bundled stops {}", bundled.len());
     remember_local(&app, bundled).await;
+    // MTR arrivals need the station code and lines; attach them before any
+    // network or redis work so a cold first request is never missing them.
     let mtr = catalog::mtr_stops();
-    remember(&app, mtr).await;
+    remember_local(&app, mtr).await;
     let kmb = catalog::kmb_stops(&app.http).await;
     eprintln!("kmb stops {}", kmb.len());
     remember(&app, kmb).await;
