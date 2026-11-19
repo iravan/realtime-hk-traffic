@@ -218,7 +218,6 @@ async fn remember(app: &App, stops: Vec<Stop>) {
     if stops.is_empty() {
         return;
     }
-    cache_stops(app, &stops).await;
     index_stops(app, stops).await;
 }
 
@@ -229,27 +228,6 @@ async fn remember_local(app: &App, stops: Vec<Stop>) {
         return;
     }
     index_stops(app, stops).await;
-}
-
-async fn cache_stops(app: &App, stops: &[Stop]) {
-    let mut redis = app.redis.clone();
-    let mut pipe = redis::pipe();
-    pipe.atomic();
-    for stop in stops {
-        let body = json!({
-            "mode": stop.mode,
-            "name": stop.name,
-            "latitude": stop.latitude,
-            "longitude": stop.longitude,
-        });
-        pipe.cmd("SET")
-            .arg(format!("stop:{}", stop.id))
-            .arg(body.to_string())
-            .ignore();
-    }
-    if pipe.query_async::<()>(&mut redis).await.is_err() {
-        eprintln!("redis stop write failed");
-    }
 }
 
 async fn index_stops(app: &App, stops: Vec<Stop>) {

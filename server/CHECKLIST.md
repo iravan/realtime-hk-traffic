@@ -17,9 +17,7 @@ GET /stops/{id}/arrivals
 `modes` is a comma-separated subset of `mtr`, `bus`, `minibus`, `taxi`. `minutes` is omitted when the feed gives a clock time instead; that row then has `time`. A taxi stand has no arrivals key, and `GET` for it says there is no arrival list.
 
 ```text
-stop:{id}                     string
-                              { "mode", "name", "latitude", "longitude" }
-arrivals:{id}                 string, EX from that feed's interval
+arrivals:{id}                 string, EX 90
                               { "fetched_at", "live", "rows" }
 ```
 
@@ -34,7 +32,7 @@ arrivals:{id}                 string, EX from that feed's interval
 
 - [x] Load KMB stops, a fixed MTR station list, and the taxi-stand dataset. Citybus and green minibus catalogues load after the server is already answering.
 - [ ] Finish Citybus and green minibus catalogues, and add New Lantao Bus when its stop list is non-empty.
-- [ ] Write `stop:{id}` with mode, name, and the coordinates from that catalogue.
+- [x] Keep the stop index in memory (bundled plus live catalogues); Redis only stores arrival snapshots.
 - [ ] `GET /stops` returns only the stops inside the box whose mode is in `modes`.
 - [ ] A stop absent from the box is absent from the response. Do not invent ids or coordinates.
 - [ ] Reject a box that is not finite or whose south is not below north.
