@@ -36,10 +36,84 @@ portal. Add new sources here when the service starts using them.
 The service sends no API key. All feeds are public HTTP GET endpoints except the
 MTR Bus feed, which uses POST.
 
+## What the server actually uses
+
+Short answer: no. Only the rows marked `Yes` in the Rust service column are
+called at runtime. Not every source in this document is polled by the Rust
+service. The rest are bundled, script-generated, web-only, or documented for
+future work.
+
+| Source | Rust service | Scripts | Web | Notes |
+| --- | --- | --- | --- | --- |
+| MTR lines and stations CSV | Indirect | No | No | The server uses bundled `mtr.json`, not the CSV |
+| MTR next train | Yes | No | No | Live station arrivals |
+| MTR Bus and Feeder Bus | No | No | No | Documented only |
+| KMB and LWB stop list | Yes | No | No | Live stop catalogue |
+| KMB and LWB stop detail | No | No | No | Documented only |
+| KMB and LWB route list | No | Yes | No | Night-stop generation |
+| KMB and LWB route detail | No | No | No | Documented only |
+| KMB and LWB route-stop list | No | No | No | Documented only |
+| KMB and LWB route-stop detail | No | Yes | No | Night-stop generation |
+| KMB and LWB stop ETA | Yes | No | No | Live bus arrivals |
+| KMB and LWB route ETA | No | No | No | Documented only |
+| Citybus route, stop, route-stop and ETA | Yes | Partial | No | Server uses all; night-stop script uses route and route-stop |
+| KML_BUS.zip | No | No | No | Documented only |
+| Green minibus route, stop and ETA | Yes | Partial | No | Server uses all; scripts use route and route-stop |
+| ROUTE_GMB.xml | No | No | No | Reference for bundled `gmb-routes.json` |
+| KML_GMB.zip | No | No | No | Documented only |
+| Taxi stands | Yes | No | No | Live stand catalogue |
+| OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
+| `service-hours.json` | No | No | Yes | Web-only stop styling |
+| `mtr-lines.geojson` | No | Generated | Yes | Web-only MTR line layer |
+
+The checked-in stop catalogue is used on both sides: the server reads
+`server/data/stops.json`, and the page reads `web/public/stops.json`.
+
+## Static and dynamic data
+
+**Static** data is checked in, or is publisher catalogue data that changes only
+when routes, stops, schedules or the network change. **Dynamic** data is the
+arrival information that changes continuously and is polled by the service.
+
+### Static or reference data
+
+| Data | Where it lives | Changes when |
+| --- | --- | --- |
+| MTR lines and stations CSV | Publisher reference | The rail network changes |
+| `server/data/mtr.json` | Checked in | Station names, coordinates or lines change |
+| `server/data/stops.json` and `web/public/stops.json` | Checked in | The stop catalogue is regenerated |
+| `server/data/gmb-routes.json` | Checked in | GMB route ids or numbers change |
+| `web/public/service-hours.json` | Checked in | Service schedules change |
+| `web/public/mtr-lines.geojson` | Checked in | Regenerated from OpenStreetMap |
+| `KML_BUS.zip` and `KML_GMB.zip` | Publisher reference archives | Periodic publisher update; not polled |
+| `ROUTE_GMB.xml` | Publisher reference | Periodic publisher update; not polled |
+| KMB and LWB route and stop catalogues | Fetched at startup | Daily, or when routes and stops change |
+| Citybus route and stop catalogues | Fetched at startup | Daily, or when routes and stops change |
+| GMB route and stop catalogues | Fetched at startup | When routes and stops change |
+| Taxi stand locations | Fetched at startup | When stands change |
+
+### Dynamic or live data
+
+| Data | Refresh | Where it lives |
+| --- | --- | --- |
+| MTR next train | Watched stations every 15s; all MTR stations every 60s | Redis snapshot, TTL 90s |
+| KMB and LWB stop ETA | Publisher about every minute; service polls watched stops every 15s | Redis snapshot, TTL 90s |
+| Citybus ETA | Publisher about every minute; service polls watched stops every 15s | Redis snapshot, TTL 90s |
+| GMB stop ETA | Service polls watched stops every 15s | Redis snapshot, TTL 90s |
+| MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
+| Redis snapshots | Written on each successful refresh; expire after 90s | Redis |
+| SSE arrival events | Pushed when a snapshot is refreshed | Browser stream |
+
+Dynamic data is never committed to the repository. The only persisted copy is
+the Redis snapshot, and it expires. Static data is the material a new server
+starts from.
+
 ## MTR lines and stations
 
 The station and line reference is the CSV published by MTR, linked from
 data.gov.hk. It covers the heavy-rail network, **not Light Rail**.
+
+Source dataset: [MTR Lines (except Light Rail) & Stations](https://data.gov.hk/en-data/dataset/mtr-data-routes-fares-barrier-free-facilities/resource/8daba4fe-b879-4a51-8962-27b4cffdc61c).
 
 ```text
 https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv
@@ -120,7 +194,7 @@ Line colours and the human-readable station lists are in [MTR.md](MTR.md).
 Real-time MTR train information. The feed is the MTR Next Train dataset on
 data.gov.hk:
 
-<https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data/resource/103472ed-01be-4dda-92c6-30530dee022f>
+Source dataset: [Real-time MTR train information](https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data/resource/103472ed-01be-4dda-92c6-30530dee022f).
 
 ```text
 https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line={line}&sta={station}
@@ -148,7 +222,7 @@ MTR station once a minute.
 Real-time MTR Bus and Feeder Bus schedule. The feed is the MTR Bus ETA dataset
 on data.gov.hk:
 
-<https://data.gov.hk/en-data/dataset/mtr-mtr_bus-mtr-bus-eta-data/resource/f58a9043-2556-4770-bcdb-0a62ed8d206c>
+Source dataset: [Real-time MTR Bus and Feeder Bus Schedule](https://data.gov.hk/en-data/dataset/mtr-mtr_bus-mtr-bus-eta-data/resource/f58a9043-2556-4770-bcdb-0a62ed8d206c).
 
 The resource is published with an update frequency of every 10 seconds. It is a
 `POST` endpoint, not a `GET`: the route and language go in a JSON body.
@@ -337,6 +411,9 @@ Each item in `data` is read as:
 
 ### Citybus
 
+Source dataset: [Real-time “Next Bus” arrival time and related data of Citybus](https://data.gov.hk/en-data/dataset/ctb-eta-transport-realtime-eta).
+Resources: [Route data](https://data.gov.hk/en-data/dataset/ctb-eta-transport-realtime-eta/resource/06b172c1-0e7b-434a-bdcb-1c0a0abe8328), [Bus Stop data](https://data.gov.hk/en-data/dataset/ctb-eta-transport-realtime-eta/resource/cbc9bfb4-248d-42ba-aba7-1dd5259563f0), [Route-stop data](https://data.gov.hk/en-data/dataset/ctb-eta-transport-realtime-eta/resource/eae263c1-ef5d-4840-a1ff-0b7521febd8b), [ETA data](https://data.gov.hk/en-data/dataset/ctb-eta-transport-realtime-eta/resource/4c5220eb-b4a0-4bd8-a7fe-5b46bc2e5012).
+
 Citybus is loaded in three catalogue steps:
 
 ```text
@@ -363,6 +440,8 @@ The arrival fields are the same ones the KMB feed uses: `route`, `dest_tc` (or
 The Transport Department publishes bus route metadata and stop sequences as a
 ZIP of KML documents. Every route variant has a document with names in
 Traditional Chinese, Simplified Chinese and English.
+
+Source dataset: [Route information of bus (English / Traditional Chinese / Simplified Chinese)](https://data.gov.hk/en-data/dataset/hk-td-tis_24-routes-fares-kml/resource/774aef95-bd93-4f95-9dba-8c109ae7d148).
 
 ```text
 https://static.data.gov.hk/td/routes-fares-kml/KML_BUS.zip
@@ -420,16 +499,18 @@ reference for route labels, fares, stop sequences and multilingual stop names.
 
 ## Green minibus
 
+Source dataset: [Real-time arrival data of green minibuses (GMBs)](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb).
+
 The green-minibus API is `https://data.etagmb.gov.hk`. The service uses five
 resources:
 
-| Endpoint | Fields read |
-| --- | --- |
-| `/route` | `data.routes.{region}[]` route codes |
-| `/route/{region}/{route}` | `data[].route_id` and `data[].directions[].route_seq` |
-| `/route-stop/{route_id}/{route_seq}` | `data.route_stops[].stop_id`, `.name_tc` |
-| `/stop/{stop_id}` | `data.coordinates.wgs84.latitude`, `.longitude` |
-| `/eta/stop/{stop_id}` | `data[].route_id`, `data[].eta[].diff`, `.remarks_tc` |
+| Endpoint | Source resource | Fields read |
+| --- | --- | --- |
+| `/route` | [GMB route list](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/02913a6d-e520-4232-bdd5-eef86a906631) | `data.routes.{region}[]` route codes |
+| `/route/{region}/{route}` | [GMB route data](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/f003e716-e8cf-4511-b315-2a86c9b26ce0) | `data[].route_id` and `data[].directions[].route_seq` |
+| `/route-stop/{route_id}/{route_seq}` | [GMB stop list of specific route](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/b22d3e1a-78a2-40fa-a939-d2dbe5a9a27f) | `data.route_stops[].stop_id`, `.name_tc` |
+| `/stop/{stop_id}` | [GMB stop data](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/77fe99f2-bcfa-4691-a5c0-a4d67484afca) | `data.coordinates.wgs84.latitude`, `.longitude` |
+| `/eta/stop/{stop_id}` | [ETA list of a specific GMB stop](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/09d817d8-470a-4d12-82ff-c09555360c97) | `data[].route_id`, `data[].eta[].diff`, `.remarks_tc` |
 
 The catalogue crawl is expensive and is throttled by the publisher. The
 bundled stop list in `server/data/stops.json` and `web/public/stops.json` is the
@@ -443,6 +524,8 @@ the Transport Department file:
 https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml
 ```
 
+Source dataset: [Routes and fares of public transport (XML), GMB resource](https://data.gov.hk/en-data/dataset/hk-td-tis_14-routes-fares-xml/resource/36ae3d06-17fd-443c-bd7f-a2b543dfc981).
+
 It is bundled as `server/data/gmb-routes.json`, mapping numeric route ids to the
 route numbers printed on the minibus.
 
@@ -450,6 +533,8 @@ route numbers printed on the minibus.
 
 The same Transport Department collection also publishes green-minibus route
 metadata as KML documents:
+
+Source dataset: [Route information of GMB (English / Traditional Chinese / Simplified Chinese)](https://data.gov.hk/en-data/dataset/hk-td-tis_24-routes-fares-kml/resource/bb5a9797-3876-4a04-9e6c-78a06351e69d).
 
 ```text
 https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip
@@ -471,6 +556,8 @@ archive has 779 route ids, the same count as the keys in
 lookup. The service does not read it yet.
 
 ## Taxi stands
+
+Source dataset: [Taxi Stands](https://data.gov.hk/en-data/dataset/hk-td-tis_37-taxi-stands/resource/29635792-e286-402d-92bb-dc8586c649f7).
 
 Taxi stands come from the CSDI feature service linked from data.gov.hk:
 
