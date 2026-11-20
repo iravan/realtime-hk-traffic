@@ -24,7 +24,7 @@ modes:
 | **MTR** | A station | The next train on each line that serves the station, plus line service status when the feed includes it |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
 | **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise the timetable, marked not live |
-| **Ferry** | A ferry pier | The next departure from that pier, for operators that publish a live ETA. Other piers stay on the map and show that nothing is scheduled right now |
+| **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry shows the minutes until departure. Sun Ferry shows the published arrival once the boat has left, and the minutes until departure before that. Other piers stay on the map and show that nothing is scheduled right now |
 | **Taxi** | A taxi stand | The stand's name and location only — Hong Kong publishes no per-vehicle position feed |
 
 Red minibuses, private cars, and live taxi positions are deliberately out of
@@ -45,9 +45,13 @@ scope. Taxi stands are places, not vehicles.
   it; the sheet shows that age. An expired snapshot says the snapshot is gone,
   but the stop stays on the map.
 - **Service hours.** `web/public/service-hours.json` holds the static service
-  window for each mode, MTR station, and green-minibus route. Outside its window
-  a stop shrinks to a grey dot and cannot be opened. Stops served by an
-  overnight route carry `night: true` and stay open and clickable all day.
+  window for each mode, MTR station, green-minibus route, and Star Ferry pier.
+  Outside its window a stop shrinks to a grey dot and cannot be opened. A ferry
+  pier stays coloured and clickable, and its sheet still shows the hours.
+  Stops served by an overnight route carry `night: true` and stay open and
+  clickable all day.
+- **Long waits.** A wait of 60 minutes or more is shown as hours and leftover
+  minutes. A shorter wait stays in minutes.
 - **Merged poles.** Feed ids that publish the same coordinate become one point
   with merged arrivals; poles at different coordinates stay separate stops.
 - **Share a stop.** The stop sheet puts Share and the external-map icon on the
@@ -86,7 +90,7 @@ map. Next.js only renders.
 | MTR | MTR next-train feed on data.gov.hk | Station, line, destination, minutes or clock time, fetch time |
 | Bus | KMB, LWB, Citybus, and New Lantao Bus ETA feeds | Stop id, route, destination, minutes, fetch time |
 | Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus; timetable only when no ETA exists |
-| Ferry | Transport Department pier list, plus Hong Kong & Kowloon Ferry and Sun Ferry ETA feeds | Pier id, name, coordinates, and the next departure where a live feed exists |
+| Ferry | Transport Department pier list, plus Hong Kong & Kowloon Ferry and Sun Ferry ETA feeds | Pier id, name, coordinates, and the live departure or arrival where a feed exists |
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
 The exact endpoints, fields read, checked-in snapshots and request limits are in
@@ -220,7 +224,12 @@ Rewrites `web/public/mtr-lines.geojson` from OpenStreetMap/Overpass.
 ### 6. Service hours
 
 `web/public/service-hours.json` is checked-in schedule data. Update it by hand
-when a mode, station or route changes its service window.
+when a mode, station or route changes its service window. Star Ferry piers are
+route entries keyed by stop id: Central Pier 7 (`ferry:101339`) and Tsim Sha
+Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`) runs
+07:30–23:00. Other piers use the ferry default, 03:00–01:00. On Sundays and
+public holidays the first Wan Chai boat is 07:40; the stored window opens with
+the Monday–Saturday boat.
 
 ### 7. Ferry piers
 

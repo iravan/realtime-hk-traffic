@@ -33,7 +33,7 @@ portal. Add new sources here when the service starts using them.
 | Ferry pier names | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml` | Pier names in TC/SC/EN, joined to coordinates by stop id |
 | Ferry pier coordinates | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query` | Pier coordinates |
 | HKKF ferry ETA | Hong Kong & Kowloon Ferry / data.gov.hk | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | Next departure on an HKKF route |
-| Sun Ferry ETA | Sun Ferry / data.gov.hk | `https://www.sunferry.com.hk/eta/?route={route_code}` | Next departure on a Sun Ferry route |
+| Sun Ferry ETA | Sun Ferry / data.gov.hk | `https://www.sunferry.com.hk/eta/?route={route_code}` | Arrival of the current trip, or the next departure when no arrival is published yet |
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
 
@@ -69,7 +69,7 @@ are script-generated, web-only, or documented for future work.
 | KML_GMB.zip | No | No | No | Documented only |
 | Ferry pier names and coordinates | No | Yes | No | Bundled. The script joins `RSTOP_FERRY.xml` to the CSDI pier layer |
 | HKKF ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
-| Sun Ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
+| Sun Ferry ETA | Yes | No | No | Live arrival or departure for the piers in `ferry-departures.json` |
 | Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
@@ -597,10 +597,28 @@ Those files have no ETA. Two operators publish the next departure by route:
 
 `server/data/ferry-departures.json` says which of those routes leave which
 pier. Opening a mapped pier fetches each of its routes. The sheet shows the
-operator, the destination, and the minutes until that departure. A pier with
-no mapped route still draws, and the sheet says there is no departure right
-now. Fortune Ferry, the Star Ferry, and Discovery Bay are not in that file:
-their ETA hosts were not returning a usable route list when this was wired.
+operator, the destination, and the minutes until that time. A wait of 60
+minutes or more is shown as hours and leftover minutes. A pier with no mapped
+route still draws, and the sheet says there is no departure right now.
+Fortune Ferry, the Star Ferry, and Discovery Bay are not in that file: their
+ETA hosts were not returning a usable route list when this was wired.
+
+Sun Ferry's `depart_time` and `eta` are clocks, not dates. `date_timestamp`
+is when that row was generated. The server takes the occurrence of the clock
+nearest that instant. It uses `eta` when that arrival is still ahead of the
+generated time, because the feed then names the boat that has already left.
+Otherwise it uses `depart_time`. A clock already in the past is dropped. It is
+not moved to the next day. Hong Kong & Kowloon Ferry publishes a real `date`
+with `session_time`, and that pair is the departure.
+
+The Transport Department pier list has no first or last sailing. Service hours
+live in `web/public/service-hours.json`. Every pier except the Star Ferry uses
+the ferry window, 03:00–01:00. Star Ferry piers are route entries keyed by
+stop id, from the operator timetable: Central Pier 7 (`ferry:101339`) and
+Tsim Sha Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`)
+runs 07:30–23:00. On Sundays and public holidays the first Wan Chai boat is
+07:40; the file opens with the Monday–Saturday boat. A ferry pier stays
+coloured and clickable outside its window. The sheet still shows the hours.
 
 `inbound` on the HKKF feed is the sailing towards the route origin (Central,
 or Peng Chau on the Hei Ling Chau route). `outbound` leaves that origin.
@@ -686,7 +704,7 @@ not vehicle positions, so a taxi stand has no arrival rows.
 | `server/data/gmb-routes.json` | Green-minibus route id to route number map |
 | `server/data/ferry-departures.json` | Pier id to HKKF and Sun Ferry departures |
 | `web/app/mtr-line-terminals.json` | Generated line endpoint labels from the MTR CSV |
-| `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
+| `web/public/service-hours.json` | Per-mode, per-station, per-route, and Star Ferry pier service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
 | `web/public/taxi-stands.geojson` | Taxi stand taxi type, joined to `taxi:{OBJECTID}` |
 

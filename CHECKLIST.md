@@ -33,7 +33,7 @@ GET /stops/{id}/arrivals
 - [x] Changing the tab selects the nearest stop of the new mode.
 - [x] The selected stop is marked on the map with a halo, and closing the sheet clears it.
 - [x] Ids that publish the same coordinate are one point, and their arrivals are merged. Poles at different coordinates stay separate stops.
-- [x] Load static service hours from `web/public/service-hours.json`. Outside service hours a stop is grey and does not open.
+- [x] Load static service hours from `web/public/service-hours.json`. Outside service hours a stop is grey and does not open. A ferry pier stays coloured and clickable, and its sheet still shows the hours. Star Ferry piers use their own windows.
 - [x] A bus or minibus stop served by an overnight route carries `night: true` and stays open and clickable.
 - [ ] Red minibuses are not drawn. Taxis are stands, not moving vehicles.
 - [ ] A stop that is absent from the response is not drawn. Do not keep points from the previous view.
@@ -41,7 +41,7 @@ GET /stops/{id}/arrivals
 ## Arrivals
 
 - [x] Tapping a stop opens its saved name and mode, then asks the server for that stop's arrivals.
-- [x] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time.
+- [x] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time. A wait of 60 minutes or more is shown as hours and leftover minutes.
 - [x] Show the age from `fetched_at`.
 - [x] `live: false` is a timetable. The sheet says the arrival is not live.
 - [x] A missing or expired snapshot says the snapshot is gone. The stop stays on the map.
