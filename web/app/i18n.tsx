@@ -34,6 +34,7 @@ export type Messages = {
     locating: string;
     error: string;
   };
+  report: string;
   sheet: {
     close: string;
     share: string;
@@ -114,6 +115,7 @@ const en: Messages = {
     locating: "Finding your location…",
     error: "Could not get your location. Try again.",
   },
+  report: "Report a problem",
   sheet: {
     close: "Close",
     share: "Share",
@@ -162,6 +164,7 @@ const zhHant: Messages = {
     locating: "正在定位…",
     error: "無法取得你的位置，請再試一次。",
   },
+  report: "回報問題",
   sheet: {
     close: "關閉",
     share: "分享",

@@ -1197,29 +1197,52 @@ export default function Page() {
           ) : null}
         </div>
       </div>
-      <button
-        type="button"
-        className="locate"
-        data-state={locateState}
-        disabled={locateState === "locating"}
-        aria-busy={locateState === "locating"}
-        aria-label={t.locate[locateState]}
-        title={t.locate[locateState]}
-        onClick={() => locate(true)}
-      >
-        <svg
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
+      <div className="map-actions">
+        <button
+          type="button"
+          className="locate"
+          data-state={locateState}
+          disabled={locateState === "locating"}
+          aria-busy={locateState === "locating"}
+          aria-label={t.locate[locateState]}
+          title={t.locate[locateState]}
+          onClick={() => locate(true)}
         >
-          <circle cx="12" cy="12" r="6.5" />
-          <path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22" />
-          <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none" />
-        </svg>
-      </button>
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          >
+            <circle cx="12" cy="12" r="6.5" />
+            <path d="M12 2v3.5M12 18.5V22M2 12h3.5M18.5 12H22" />
+            <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none" />
+          </svg>
+        </button>
+        <a
+          className="report"
+          href="https://github.com/iravan/realtime-hk-traffic/issues/new"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t.report}
+          title={t.report}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M5 21V4" />
+            <path d="M5 4h11.5l-2.2 4 2.2 4H5" />
+          </svg>
+        </a>
+      </div>
       {selected ? (
         <StopSheet
           id={selected.id}

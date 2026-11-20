@@ -94,11 +94,18 @@ button { cursor: pointer; }
 .notice.ferry { border-left-color: var(--ferry); }
 .notice span { color: #5d564e; }
 
-.locate {
+.map-actions {
   position: absolute;
   z-index: 5;
   right: 0.75rem;
   bottom: calc(env(safe-area-inset-bottom) + 3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.locate,
+.report {
   display: grid;
   place-items: center;
   width: 44px;
@@ -109,10 +116,13 @@ button { cursor: pointer; }
   border: 1px solid rgba(28, 25, 21, 0.14);
   box-shadow: 0 12px 32px rgba(28, 25, 21, 0.16);
   color: var(--ink);
+  text-decoration: none;
   transition: color 120ms ease, border-color 120ms ease;
 }
-.locate svg { width: 22px; height: 22px; }
-.locate:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.locate svg,
+.report svg { width: 22px; height: 22px; }
+.locate:focus-visible,
+.report:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .locate:disabled { cursor: progress; }
 .locate[data-state="locating"] svg { animation: locate-pulse 1s ease-in-out infinite; }
 .locate[data-state="error"] { color: var(--alert); border-color: var(--alert); }
@@ -120,7 +130,7 @@ button { cursor: pointer; }
   50% { opacity: 0.35; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .locate { transition: none; }
+  .locate, .report { transition: none; }
   .locate[data-state="locating"] svg { animation: none; opacity: 0.6; }
 }
 
@@ -274,12 +284,12 @@ button { cursor: pointer; }
   .sheet { left: 0; right: 0; bottom: 0; max-height: 52dvh; }
   /* The sheet spans the full width at this size, so it would cover the
      control and any tap meant for it. */
-  .visit.sheet-open .locate { opacity: 0; pointer-events: none; }
+  .visit.sheet-open .map-actions { opacity: 0; pointer-events: none; }
 }
 @media (min-width: 768px) {
   .sheet { top: 0.75rem; right: 0.75rem; bottom: 0.75rem; width: 22rem; }
   /* Keep the control clear of the sheet rather than under it. */
-  .visit.sheet-open .locate { right: calc(22rem + 1.5rem); }
+  .visit.sheet-open .map-actions { right: calc(22rem + 1.5rem); }
 }
 .maplibregl-ctrl-attrib { background: rgba(244, 239, 230, 0.92); font-size: 11px; }
 
