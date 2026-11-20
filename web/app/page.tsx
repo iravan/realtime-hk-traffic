@@ -106,7 +106,14 @@ const signSize: ExpressionSpecification = [
 const dotSize: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 12, 0.8, 16, 1.1];
 // A sign hangs from its pole while a dot is centred on the stop, so a view of
 // signs can still hold grey dots without them floating above their point.
-const signAnchor: ExpressionSpecification = ["case", ["get", "open"], "bottom", "center"];
+// MTR station blocks are centred on the station; the other modes hang from a
+// pole, so their open signs are anchored at the bottom.
+const signAnchor: ExpressionSpecification = [
+  "case",
+  ["all", ["get", "open"], ["!=", ["get", "mode"], "mtr"]],
+  "bottom",
+  "center",
+];
 // `icon-size` is a layout property, so MapLibre accepts only one zoom-based
 // `step`/`interpolate` in it. Signs and dots therefore keep separate single
 // curves and `drawStops` swaps between them when the view crosses the dot
@@ -155,6 +162,7 @@ export default function Page() {
   const mapRef = useRef<MlMap | null>(null);
   const clearLineRef = useRef<() => void>(() => {});
   const hoveredLineRef = useRef<string | null>(null);
+  const hoveredStopRef = useRef<string | null>(null);
   const [active, setActive] = useState<Mode>("bus");
   const activeRef = useRef(active);
   activeRef.current = active;
@@ -307,6 +315,25 @@ export default function Page() {
           "icon-size": signSize,
         },
       });
+
+      // Hover highlight for an MTR station block. It sits above the line
+      // layers and below the selected-station highlight.
+      map.addSource("stops-hover", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] },
+      });
+      map.addLayer({
+        id: "stops-hover",
+        type: "symbol",
+        source: "stops-hover",
+        layout: {
+          "icon-image": ["get", "image"],
+          "icon-anchor": "center",
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
+          "icon-size": selectedSignSize,
+        },
+      });
       // Added after every other layer so the selection paints on top: the
       // picked sign is never hidden behind a neighbour or the location dot.
       map.addSource("selection", {
@@ -400,7 +427,7 @@ export default function Page() {
         return node;
       };
 
-      const clearHoveredLine = () => {
+      const clearLine = () => {
         if (hoveredLineRef.current === null && !linePopup.isOpen()) return;
         hoveredLineRef.current = null;
         const hidden: FilterSpecification = [
@@ -412,6 +439,23 @@ export default function Page() {
           if (map.getLayer(id)) map.setFilter(id, hidden);
         }
         linePopup.remove();
+      };
+
+      const clearHoveredStop = () => {
+        if (hoveredStopRef.current === null) return;
+        hoveredStopRef.current = null;
+        const source = map.getSource("stops-hover");
+        if (source && source.type === "geojson") {
+          (source as GeoJSONSource).setData({
+            type: "FeatureCollection",
+            features: [],
+          });
+        }
+      };
+
+      const clearHoveredLine = () => {
+        clearLine();
+        clearHoveredStop();
       };
       clearLineRef.current = clearHoveredLine;
 
@@ -436,7 +480,46 @@ export default function Page() {
         if (!linePopup.isOpen()) linePopup.addTo(map);
       };
 
+      const showHoveredStop = (feature: MapGeoJSONFeature) => {
+        const id = feature.properties?.id;
+        if (typeof id !== "string") return;
+        const stop = stopsRef.current.find((item) => item.id === id);
+        if (!stop || stop.mode !== "mtr") return;
+        if (hoveredStopRef.current === stop.id) return;
+        hoveredStopRef.current = stop.id;
+        const source = map.getSource("stops-hover");
+        if (source && source.type === "geojson") {
+          const feature: GeoJSON.Feature<GeoJSON.Point> = {
+            type: "Feature",
+            properties: {
+              image: selectionImage(map, stop, dotsRef.current),
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [stop.longitude, stop.latitude],
+            },
+          };
+          (source as GeoJSONSource).setData({
+            type: "FeatureCollection",
+            features: [feature],
+          });
+        }
+        map.setLayoutProperty(
+          "stops-hover",
+          "icon-size",
+          dotsRef.current ? selectedDotSize : selectedSignSize,
+        );
+      };
+
       const lineAt = (point: { x: number; y: number }) => {
+        // A station block sits above the lines: if the pointer is on the
+        // block, the station wins over a line passing underneath.
+        if (
+          map.queryRenderedFeatures([point.x, point.y], { layers: ["stops"] })
+            .length > 0
+        ) {
+          return null;
+        }
         // Wider than the painted line, so a finger hits it and so a lane
         // shifted by `lineOffset` stays inside the query box.
         const box: [[number, number], [number, number]] = [
@@ -447,9 +530,15 @@ export default function Page() {
       };
 
       map.on("mousemove", (event) => {
+        if (
+          map.queryRenderedFeatures(event.point, { layers: ["stops"] }).length > 0
+        ) {
+          clearLine();
+          return;
+        }
         const feature = lineAt(event.point);
         if (!feature) {
-          clearHoveredLine();
+          clearLine();
           return;
         }
         map.getCanvas().style.cursor = "pointer";
@@ -465,6 +554,12 @@ export default function Page() {
       });
       map.on("mouseout", clearHoveredLine);
       map.on("movestart", clearHoveredLine);
+
+      map.on("mousemove", "stops", (event) => {
+        const feature = event.features?.[0];
+        if (feature) showHoveredStop(feature);
+      });
+      map.on("mouseleave", "stops", clearHoveredStop);
 
       map.on("click", "stops", (event) => {
         clearLineRef.current();
@@ -491,6 +586,11 @@ export default function Page() {
       map.on("mouseleave", "stops", () => {
         map.getCanvas().style.cursor = "";
       });
+      // Stations must paint above the line layers, so their square hit areas
+      // win over a line passing underneath.
+      map.moveLayer("stops");
+      map.moveLayer("stops-hover");
+      map.moveLayer("selection");
       drawStops(map);
     });
     map.on("moveend", () => {
@@ -625,7 +725,12 @@ export default function Page() {
     // in a sparse view; the dense-view threshold forces the dot as well.
     const dot =
       dotsRef.current || (focus !== null && !isStopOpen(focus, hoursRef.current, new Date()));
-    map.setLayoutProperty("selection", "icon-anchor", dot ? "center" : "bottom");
+    const square = !dot && focus?.mode === "mtr";
+    map.setLayoutProperty(
+      "selection",
+      "icon-anchor",
+      dot || square ? "center" : "bottom",
+    );
     map.setLayoutProperty("selection", "icon-size", dot ? selectedDotSize : selectedSignSize);
     highlightSelection(map, focus, dot);
   }

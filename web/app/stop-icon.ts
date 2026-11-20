@@ -79,9 +79,14 @@ export function stopDotImage(mode: Mode, muted = false): ImageData {
 export function stopIconHighlight(mode: Mode): ImageData {
   const pad = 5;
   const base = drawStopIcon(mode);
+  const baseWidth = base.width / ratio;
+  const baseHeight = base.height / ratio;
+  // A square MTR block is centred on the station, so it needs padding on all
+  // four sides. The other modes keep the pole tip on the station point.
+  const bottomPad = mode === "mtr" ? pad : 0;
   const canvas = document.createElement("canvas");
-  canvas.width = (width + pad * 2) * ratio;
-  canvas.height = (height + pad) * ratio;
+  canvas.width = (baseWidth + pad * 2) * ratio;
+  canvas.height = (baseHeight + pad + bottomPad) * ratio;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("canvas");
   ctx.scale(ratio, ratio);
@@ -89,7 +94,7 @@ export function stopIconHighlight(mode: Mode): ImageData {
   // gap that lifts it off the basemap.
   stampOutline(ctx, base, paper, pad, 4.2);
   stampOutline(ctx, base, ink, pad, 2.6);
-  ctx.drawImage(base, pad, pad, width, height);
+  ctx.drawImage(base, pad, pad, baseWidth, baseHeight);
   return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
@@ -141,6 +146,8 @@ function stampOutline(
   radius: number,
 ) {
   const stamp = silhouette(base, color);
+  const stampWidth = base.width / ratio;
+  const stampHeight = base.height / ratio;
   const steps = 20;
   for (let i = 0; i < steps; i += 1) {
     const angle = (i / steps) * Math.PI * 2;
@@ -148,8 +155,8 @@ function stampOutline(
       stamp,
       pad + Math.cos(angle) * radius,
       pad + Math.sin(angle) * radius,
-      width,
-      height,
+      stampWidth,
+      stampHeight,
     );
   }
 }
@@ -168,6 +175,8 @@ function silhouette(source: HTMLCanvasElement, color: string): HTMLCanvasElement
 }
 
 function drawStopIcon(mode: Mode): HTMLCanvasElement {
+  if (mode === "mtr") return drawMtrBlock();
+
   const canvas = document.createElement("canvas");
   canvas.width = width * ratio;
   canvas.height = height * ratio;
@@ -210,14 +219,50 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   const vehicle = vehicleImages[mode];
   if (vehicle) {
     ctx.drawImage(vehicle, 5, 2, 34, 34);
-  } else if (mode === "mtr") {
-    drawMtr(ctx, color);
   } else if (mode === "bus") {
     drawBus(ctx, color, line);
   } else if (mode === "minibus") {
     drawMinibus(ctx, color, line);
   } else {
     drawTaxi(ctx, color, line);
+  }
+  return canvas;
+}
+
+// MTR stations are square blocks rather than hanging signs: the block is the
+// station, and a square hit area is much easier to tap than a tall pole.
+function drawMtrBlock(): HTMLCanvasElement {
+  const size = width;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+
+  roundRect(ctx, 2, 2, size - 4, size - 4, 3);
+  ctx.fillStyle = paper;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = ink;
+  ctx.stroke();
+
+  // A navy band makes the block read as MTR at a glance, while the vehicle
+  // artwork stays the same as the tab icon.
+  ctx.save();
+  roundRect(ctx, 2, 2, size - 4, size - 4, 3);
+  ctx.clip();
+  ctx.fillStyle = colors.mtr;
+  ctx.fillRect(2, 2, size - 4, 10);
+  ctx.restore();
+
+  const vehicle = vehicleImages.mtr;
+  if (vehicle) {
+    ctx.drawImage(vehicle, 7, 12, 30, 30);
+  } else {
+    drawMtr(ctx, colors.mtr);
   }
   return canvas;
 }
