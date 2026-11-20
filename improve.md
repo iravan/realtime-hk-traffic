@@ -14,7 +14,7 @@ expected impact.
 | P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Done |
 | P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Done |
 | P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Done |
-| P2 | Verify compression and cache headers | Smaller repeat visits | Low | Low | Open |
+| P2 | Verify compression and cache headers | Smaller repeat visits | Low | Low | Done |
 
 ## Measurements
 
@@ -205,21 +205,45 @@ instead of hardcoding terminal names.
 
 ## P2: Verify compression and cache headers
 
-**Problem.** The static files are much smaller when compressed:
+**Status: verified.** GitHub Pages serves gzip for the JSON and GeoJSON assets
+and sends `vary: Accept-Encoding`. It also sends `cache-control: max-age=600`,
+so repeat visits revalidate after ten minutes.
 
-- `stops.json`: 2.28 MB to 569 KB gzip
-- `mtr-lines.geojson`: 678 KB to 159 KB gzip
-- `service-hours.json`: 210 KB to 20 KB gzip
+**Verified headers.**
 
-**Proposed change.**
+| Asset | Raw | Transferred gzip | Cache |
+| --- | ---: | ---: | --- |
+| `stops-bus.json` | 1,388,089 B | 358,774 B | `max-age=600` |
+| `service-hours.json` | 210,287 B | 21,443 B | `max-age=600` |
+| `mtr-lines.geojson` | 678,252 B | 160,147 B | `max-age=600` |
 
-- Confirm the production host serves gzip or Brotli for JSON and GeoJSON.
-- Give versioned static assets a long cache lifetime.
-- Avoid serving uncompressed copies from a static host.
+All three responses also carry `etag`, `last-modified` and
+`vary: Accept-Encoding`.
 
-**Validation.**
+**Vercel.** `https://realtime-hk-traffic.vercel.app` uses Brotli instead of gzip
+(`content-encoding: br`), but currently sends
+`cache-control: public, max-age=0, must-revalidate`. That means repeat visits
+always revalidate. `vercel.json` now sets one-hour caching with background
+revalidation for `stops-*.json`, `service-hours.json` and
+`mtr-lines.geojson`:
 
-- Check the production response headers with `curl -I`.
-- Confirm the transferred size and cache status in browser dev tools.
+```text
+public, max-age=3600, stale-while-revalidate=86400
+```
 
-**Risk.** Low. This is a hosting and caching check, not an application change.
+Recheck after the next deployment:
+
+```bash
+curl -sI --compressed https://realtime-hk-traffic.vercel.app/stops-bus.json
+```
+
+Expect `content-encoding: br` and the new `cache-control` value.
+
+**Conclusion.** Compression is already effective on both hosts. GitHub Pages
+caps static-file caching at ten minutes; Vercel now has a longer policy in
+config. The filenames are not content-hashed, so the cache stays bounded to
+avoid serving stale data indefinitely.
+
+**Recommendation.** Keep the Vercel header policy and recheck it after deploy.
+On GitHub Pages, keep the ten-minute cache because custom headers are not
+available.
