@@ -2,6 +2,7 @@ node_modules
 .next
 out
 public/maplibre-gl-worker.mjs
+public/stops.json
 public/stops-*.json
 .env*
 !.env.example

@@ -68,10 +68,9 @@ are script-generated, web-only, or documented for future work.
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
 | `mtr-lines.geojson` | No | Generated | Yes | Web-only MTR line layer |
 
-The checked-in stop catalogue is used on both sides: the server reads
-`server/data/stops.json`, and the page reads `web/public/stops.json`. The server
-loads the bundled stops first and only refreshes the live catalogues when
-`LIVE_CATALOGUES=1`.
+The checked-in stop catalogue is canonical in `server/data/stops.json`; the page
+reads generated per-mode files under `web/public`. The server loads the bundled
+stops first and only refreshes the live catalogues when `LIVE_CATALOGUES=1`.
 
 ## Static and dynamic data
 
@@ -85,7 +84,7 @@ arrival information that changes continuously and is polled by the service.
 | --- | --- | --- |
 | MTR lines and stations CSV | Publisher reference | The rail network changes |
 | `server/data/mtr.json` | Checked in | Station names, coordinates or lines change |
-| `server/data/stops.json` and `web/public/stops.json` | Checked in | The stop catalogue is regenerated |
+| `server/data/stops.json` | Checked in, canonical | The stop catalogue is regenerated |
 | `server/data/gmb-routes.json` | Checked in | GMB route ids or numbers change |
 | `web/public/service-hours.json` | Checked in | Service schedules change |
 | `web/public/mtr-lines.geojson` | Checked in | Regenerated from OpenStreetMap |
@@ -522,9 +521,8 @@ resources:
 | `/eta/stop/{stop_id}` | [ETA list of a specific GMB stop](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/09d817d8-470a-4d12-82ff-c09555360c97) | `data[].route_id`, `data[].eta[].diff`, `.remarks_tc` |
 
 The catalogue crawl is expensive and is throttled by the publisher. The
-bundled stop list in `server/data/stops.json` and `web/public/stops.json` is the
-baseline; the live crawl can refresh the stop catalogue and extend the
-route-number map at runtime.
+bundled stop list in `server/data/stops.json` is the baseline; the live crawl
+can refresh the stop catalogue and extend the route-number map at runtime.
 
 Route numbers are not the internal `route_id`. The complete static reference is
 the Transport Department file:
@@ -591,9 +589,9 @@ no arrival rows.
 | File | Contents |
 | --- | --- |
 | `server/data/mtr.json` | MTR station codes, names, coordinates, line membership |
-| `server/data/stops.json` | Bundled stop catalogue used by the Rust service |
-| `web/public/stops.json` | The same stop catalogue served to the page |
-| `web/public/stops-*.json` | Generated at build from `stops.json`, one file per mode |
+| `server/data/stops.json` | Canonical bundled stop catalogue used by the Rust service |
+| `web/public/stops.json` | Generated at build from the canonical catalogue |
+| `web/public/stops-*.json` | Generated at build from the canonical catalogue, one file per mode |
 | `server/data/gmb-routes.json` | Green-minibus route id to route number map |
 | `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |

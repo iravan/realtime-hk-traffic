@@ -1,8 +1,15 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const modes = ["mtr", "bus", "minibus", "taxi"];
-const source = JSON.parse(
-  await readFile(new URL("../public/stops.json", import.meta.url), "utf8"),
+const sourceUrl = new URL("../../server/data/stops.json", import.meta.url);
+const sourceText = await readFile(sourceUrl, "utf8");
+const source = JSON.parse(sourceText);
+
+// Keep a generated copy in public for static hosts and for code that still
+// expects the full catalogue. The canonical file is the server one.
+await writeFile(
+  new URL("../public/stops.json", import.meta.url),
+  sourceText,
 );
 
 for (const mode of modes) {

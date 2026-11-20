@@ -11,7 +11,7 @@ expected impact.
 | P0 | Gate startup catalogue crawls | Faster cold start; fewer upstream requests | Medium | Medium | Done |
 | P1 | Lazy-load the MTR line layer | 159 KB gzip less for non-MTR first load | Low | Low | Done |
 | P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Done |
-| P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Open |
+| P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Done |
 | P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Open |
 | P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Open |
 | P2 | Verify compression and cache headers | Smaller repeat visits | Low | Low | Open |
@@ -21,13 +21,14 @@ expected impact.
 | File | Raw | gzip |
 | --- | ---: | ---: |
 | `server/data/stops.json` | 2.28 MB | 569 KB |
-| `web/public/stops.json` | 2.28 MB | 569 KB |
+| `web/public/stops.json` (generated) | 2.28 MB | 569 KB |
 | `web/public/mtr-lines.geojson` | 678 KB | 159 KB |
 | `web/public/service-hours.json` | 210 KB | 20 KB |
 | `server/data/mtr.json` | 11.6 KB | 2.8 KB |
 | `server/data/gmb-routes.json` | 12.3 KB | 3.3 KB |
 
-The two stop catalogues are byte-identical. Per-mode gzip sizes:
+The generated web copy is byte-identical to the canonical server file. Per-mode
+gzip sizes:
 
 | Mode | Stops | gzip |
 | --- | ---: | ---: |
@@ -107,12 +108,13 @@ time.
 
 **Implemented change.**
 
-- Split `web/public/stops.json` into `stops-bus.json`, `stops-minibus.json`,
-  `stops-taxi.json` and `stops-mtr.json` at build time.
+- Copy the canonical `server/data/stops.json` to `web/public/stops.json` at
+  build time.
+- Split it into `stops-bus.json`, `stops-minibus.json`, `stops-taxi.json` and
+  `stops-mtr.json`.
 - Load the active mode first.
 - Prefetch the other modes after the active catalogue is interactive.
-- Keep the full `stops.json` for the server and for compatibility.
-- Ignore the generated per-mode files in Git.
+- Ignore the generated web copy and per-mode files in Git.
 
 **Validation.**
 
@@ -126,21 +128,27 @@ keep tab switches fast.
 
 ## P2: Deduplicate `stops.json`
 
-**Problem.** `server/data/stops.json` and `web/public/stops.json` are
-byte-identical, 2.28 MB each. Both are tracked in the repository.
+**Status: done.** `server/data/stops.json` is now the only tracked stop
+catalogue. `web/public/stops.json` is generated from it during `predev` and
+`prebuild` and ignored by Git.
 
-**Proposed change.**
+**Problem.** `server/data/stops.json` and `web/public/stops.json` were
+byte-identical, 2.28 MB each. Both were tracked in the repository.
 
-- Keep one canonical file and generate the other in a prebuild step.
-- Because the Vercel services use separate roots, a generated copy is safer than
-  a single shared path.
-- Add a CI check that fails if the two files differ.
+**Implemented change.**
+
+- Keep `server/data/stops.json` as the canonical file.
+- Copy it to `web/public/stops.json` in `web/scripts/split-stops.mjs`.
+- Generate the per-mode files from the same canonical copy.
+- Update the minibus and night scripts to write only the canonical file.
+- Ignore the generated web copy and per-mode files in Git.
 
 **Validation.**
 
-- Both service and page still receive the same catalogue.
-- The generated file is reproducible.
-- CI catches a mismatch before deployment.
+- The web build works with no tracked `web/public/stops.json`.
+- The generated copy matches the canonical file.
+- Per-mode files still split correctly.
+- `bunx tsc --noEmit` and `bun run build` pass.
 
 **Risk.** Low. If generation is added to the wrong service root, the build will
 fail before deployment.

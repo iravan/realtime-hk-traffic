@@ -92,8 +92,9 @@ A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
 ## Updating catalogues
 
 The server can pick up the latest official stop lists at startup with
-`LIVE_CATALOGUES=1`, but that only changes the in-memory catalogue. The checked-in
-files under `server/data` and `web/public` must be updated separately.
+`LIVE_CATALOGUES=1`, but that only changes the in-memory catalogue. The canonical
+bundled catalogue is `server/data/stops.json`; the web copy is generated from
+it during the web build.
 
 ### 1. Refresh the base stop list
 
@@ -104,9 +105,9 @@ cd server
 LIVE_CATALOGUES=1 cargo run
 ```
 
-In another terminal, export the merged catalogue and merge it into both stop
-files. The merge keeps existing ids, including ids that share a location, and
-preserves `routes` and `night` fields.
+In another terminal, export the merged catalogue and merge it into
+`server/data/stops.json`. The merge keeps existing ids, including ids that share
+a location, and preserves `routes` and `night` fields.
 
 ```bash
 curl -s 'http://127.0.0.1:8787/stops?south=-90&west=-180&north=90&east=180' -o /tmp/stops-live.json
@@ -122,27 +123,26 @@ live = {
 if not live:
     raise SystemExit("no live stops; wait for catalogue ready and retry")
 
-for name in ("server/data/stops.json", "web/public/stops.json"):
-    path = Path(name)
-    document = json.loads(path.read_text(encoding="utf-8"))
-    known = {stop["id"] for stop in document["stops"]}
+path = Path("server/data/stops.json")
+document = json.loads(path.read_text(encoding="utf-8"))
+known = {stop["id"] for stop in document["stops"]}
 
-    for stop in document["stops"]:
-        fresh = live.get(stop["id"])
-        if fresh:
-            for key in ("mode", "name", "latitude", "longitude"):
-                stop[key] = fresh[key]
+for stop in document["stops"]:
+    fresh = live.get(stop["id"])
+    if fresh:
+        for key in ("mode", "name", "latitude", "longitude"):
+            stop[key] = fresh[key]
 
-    document["stops"].extend(
-        sorted(
-            (stop for stop in live.values() if stop["id"] not in known),
-            key=lambda stop: stop["id"],
-        )
+document["stops"].extend(
+    sorted(
+        (stop for stop in live.values() if stop["id"] not in known),
+        key=lambda stop: stop["id"],
     )
-    path.write_text(
-        json.dumps(document, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
+)
+path.write_text(
+    json.dumps(document, ensure_ascii=False, separators=(",", ":")) + "\n",
+    encoding="utf-8",
+)
 PY
 ```
 
@@ -151,8 +151,9 @@ in. Stops removed upstream are not deleted automatically. Remove them by hand if
 the catalogue has shrunk.
 
 The page loads one mode at a time. `web/scripts/split-stops.mjs` runs before
-dev and build, writes `web/public/stops-{bus,minibus,taxi,mtr}.json`, and those
-per-mode files are ignored by Git.
+dev and build, copies `server/data/stops.json` to `web/public/stops.json`, and
+writes `web/public/stops-{bus,minibus,taxi,mtr}.json`. Both the full web copy and
+the per-mode files are generated and ignored by Git.
 
 ### 2. Minibus route numbers and stop routes
 
@@ -161,8 +162,8 @@ python3 server/scripts/fetch-minibus-routes.py --routes-only
 ```
 
 Rewrites `server/data/gmb-routes.json`. A full run without `--routes-only` also
-refreshes the `routes` arrays in both stop files. Responses are cached under
-`.cache/gmb`; the publisher throttles bursts, so a large refresh may need
+refreshes the `routes` arrays in `server/data/stops.json`. Responses are cached
+under `.cache/gmb`; the publisher throttles bursts, so a large refresh may need
 several runs with `--budget N`.
 
 ### 3. Night-stop flags
@@ -171,9 +172,9 @@ several runs with `--budget N`.
 python3 server/scripts/fetch-night-stops.py
 ```
 
-Rewrites `night` on both stop files. It uses the cached minibus data, so run the
-minibus script first when minibus routes changed. This script also accepts
-`--budget N` and caches responses under `.cache/night`.
+Rewrites `night` on `server/data/stops.json`. It uses the cached minibus data, so
+run the minibus script first when minibus routes changed. This script also
+accepts `--budget N` and caches responses under `.cache/night`.
 
 ### 4. MTR station metadata
 
@@ -197,10 +198,12 @@ when a mode, station or route changes its service window.
 
 ### 7. Check the result
 
-The two stop files must stay identical:
+The web build regenerates the web copy and per-mode files from the canonical
+catalogue:
 
 ```bash
-cmp server/data/stops.json web/public/stops.json
+cd web && bun run build
+cmp public/stops.json ../server/data/stops.json
 ```
 
 Then run the normal checks:
@@ -210,11 +213,12 @@ cd server && cargo fmt --check && cargo check && cargo test
 cd ../web && bunx tsc --noEmit && bun run build
 ```
 
-`server/data/stops.json` is compiled into the server binary, so rebuild and
-redeploy the server after changing it. The web build needs a new static export
-when `web/public/stops.json`, `service-hours.json` or `mtr-lines.geojson`
-changes. Leave `LIVE_CATALOGUES` unset in production unless you want the slower
-live catalogue refresh at startup.
+`server/data/stops.json` is the canonical catalogue and is compiled into the
+server binary, so rebuild and redeploy the server after changing it. The web
+build needs a new static export when `server/data/stops.json`,
+`service-hours.json` or `mtr-lines.geojson` changes. Leave `LIVE_CATALOGUES`
+unset in production unless you want the slower live catalogue refresh at
+startup.
 
 ## HTTP API
 
@@ -256,11 +260,12 @@ bun install
 bun run dev
 ```
 
-Open the URL Bun prints. The demo build loads `web/public/stops.json` and
-`web/public/service-hours.json`, so the map works without the API. In
-development the sheet talks to the Rust server at `http://127.0.0.1:8787`, so
-start the server below for live arrivals. Set `NEXT_PUBLIC_API_BASE` to point
-somewhere else (for example when the server uses another `BIND`).
+Open the URL Bun prints. The demo build loads the generated per-mode stop files
+(`web/public/stops-*.json`) and `web/public/service-hours.json`, so the map works
+without the API. In development the sheet talks to the Rust server at
+`http://127.0.0.1:8787`, so start the server below for live arrivals. Set
+`NEXT_PUBLIC_API_BASE` to point somewhere else (for example when the server uses
+another `BIND`).
 
 ### Server
 

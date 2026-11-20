@@ -4,8 +4,9 @@
 The page greys a stop outside its service hours. Some bus and minibus routes
 run through the small hours, so their stops must stay clickable. This script
 unions the stops of every route that is running at 03:00 and writes
-`"night": true` onto those records in both stop lists. A re-run refreshes the
-flags: a stop that no night route serves loses its flag.
+`"night": true` onto those records in the canonical stop list. A re-run
+refreshes the flags: a stop that no night route serves loses its flag. The web
+copy is generated from the canonical list during the web build.
 
 Night routes come from three places:
 
@@ -240,13 +241,12 @@ def main() -> None:
     print(f"night stops: {len(night)} | requests this run: {state['requests']}")
     if state["missing"]:
         # Writing now would strip the flag from every stop we could not read.
-        print(f"{state['missing']} feeds missing; stop lists left unchanged", file=sys.stderr)
+        print(f"{state['missing']} feeds missing; stop list left unchanged", file=sys.stderr)
         return
 
-    for name in ("web/public/stops.json", "server/data/stops.json"):
-        path = ROOT / name
-        kept, previous = rewrite(path, night)
-        print(f"{name}: {kept} night stops ({previous} before)")
+    path = ROOT / "server" / "data" / "stops.json"
+    kept, previous = rewrite(path, night)
+    print(f"{path.name}: {kept} night stops ({previous} before)")
 
 
 if __name__ == "__main__":

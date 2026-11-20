@@ -10,9 +10,9 @@ Usage:
 
 --budget caps the number of network requests this run makes, so a large refresh
 can be spread over several runs; cached responses are reused. Only a run that
-has every route sequence cached rewrites the stop lists, so the data is never
-half-filled. The stop lists in web/public/stops.json and
-server/data/stops.json gain a `routes` array.
+has every route sequence cached rewrites the stop list, so the data is never
+half-filled. The canonical stop list in server/data/stops.json gains a `routes`
+array; the web copy is generated from it during the web build.
 
 --routes-only stops after rewriting server/data/gmb-routes.json, the route-id
 to route-number map the server uses to label minibus arrivals. The map is
@@ -157,20 +157,19 @@ def main() -> None:
         print("budget reached; run again to continue")
         return
 
-    for name in ("web/public/stops.json", "server/data/stops.json"):
-        path = ROOT / name
-        data = json.loads(path.read_text())
-        hits = 0
-        for stop in data["stops"]:
-            if stop["mode"] != "minibus":
-                continue
-            stop_id = stop["id"].split(":")[1]
-            codes = sorted(by_stop.get(stop_id, []))
-            if codes:
-                stop["routes"] = codes
-                hits += 1
-        path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
-        print(f"{name}: {hits} minibus stops carry route numbers")
+    path = ROOT / "server" / "data" / "stops.json"
+    data = json.loads(path.read_text())
+    hits = 0
+    for stop in data["stops"]:
+        if stop["mode"] != "minibus":
+            continue
+        stop_id = stop["id"].split(":")[1]
+        codes = sorted(by_stop.get(stop_id, []))
+        if codes:
+            stop["routes"] = codes
+            hits += 1
+    path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+    print(f"{path.name}: {hits} minibus stops carry route numbers")
 
 
 if __name__ == "__main__":

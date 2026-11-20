@@ -74,9 +74,9 @@ python3 server/scripts/fetch-minibus-routes.py --routes-only
 A full run of that script, without `--routes-only`, also refreshes the stop
 lists' `routes` arrays.
 
-Regenerate the seed (and `web/public/stops.json`) from a running server when
-the catalogue changes. The runbook is in
-[README.md](README.md#updating-catalogues).
+Regenerate the canonical seed (`server/data/stops.json`) from a running server
+when the catalogue changes. The web copy is generated during the web build; the
+runbook is in [README.md](README.md#updating-catalogues).
 
 ## Why the server is a container
 
