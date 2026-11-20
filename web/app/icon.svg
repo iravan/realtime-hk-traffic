@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Deep Navy Squircle Background -->
+  <path d="M8 2h16c3.3 0 6 2.7 6 6v16c0 3.3-2.7 6-6 6H8c-3.3 0-6-2.7-6-6V8c0-3.3 2.7-6 6-6z" fill="#11254a" />
+  
+  <!-- Top-Left: KMB / Taxi Red -->
+  <circle cx="11" cy="11" r="4" fill="#DC2626" />
+  <!-- Top-Right: Minibus / Ferry Green -->
+  <circle cx="21" cy="11" r="4" fill="#059669" />
+  <!-- Bottom-Left: Tram / Citybus Gold -->
+  <circle cx="11" cy="21" r="4" fill="#FACC15" />
+  <!-- Bottom-Right: Harbour / Rail Blue -->
+  <circle cx="21" cy="21" r="4" fill="#38BDF8" />
+  
+  <!-- White Transit Interchange Crossbar -->
+  <path d="M11 11h10M11 21h10M11 11v10" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.9" />
+</svg>

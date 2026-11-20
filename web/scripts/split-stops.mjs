@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-const modes = ["mtr", "bus", "minibus", "taxi"];
+const modes = ["mtr", "bus", "minibus", "ferry", "taxi"];
 const sourceUrl = new URL("../../server/data/stops.json", import.meta.url);
 const sourceText = await readFile(sourceUrl, "utf8");
 const source = JSON.parse(sourceText);

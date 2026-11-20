@@ -1,11 +1,12 @@
 import { TAXI_COLORS } from "./taxi-colors";
 
-export type Mode = "mtr" | "bus" | "minibus" | "taxi";
+export type Mode = "mtr" | "bus" | "minibus" | "ferry" | "taxi";
 
 const colors: Record<Mode, string> = {
   mtr: "#11254a",
   bus: "#e52029",
   minibus: "#2f7d4f",
+  ferry: "#047857",
   taxi: TAXI_COLORS.urban.primary,
 };
 
@@ -20,6 +21,14 @@ const paper = "#fbf7f0";
 const ink = "#241f1a";
 
 const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
+let ferryBoatImage: HTMLImageElement | undefined;
+
+// Star Ferry piers keep the green mark. Every other pier uses the plain boat.
+const starFerryIds = new Set(["ferry:101119", "ferry:101339", "ferry:101118"]);
+
+export function isStarFerry(id: string): boolean {
+  return starFerryIds.has(id);
+}
 
 export type TaxiKind = "urban" | "nt" | "lantau" | "cross" | "urban-nt" | "urban-cross";
 
@@ -36,8 +45,9 @@ export const taxiKinds = Object.keys(taxiKindColor) as TaxiKind[];
 
 const taxiBitmaps: Partial<Record<TaxiKind, HTMLCanvasElement>> = {};
 
-// The same SVG artwork the category tabs use, so a stop on the map shows the
-// same vehicle as its tab. Loaded once before the first pin is drawn.
+// The category tabs and the map signs share this artwork, except the ferry
+// tab, which keeps the Star Ferry mark while other piers use the plain boat.
+// Loaded once before the first pin is drawn.
 let vehicleLoad: Promise<void> | null = null;
 
 export function loadVehicleImages(basePath: string): Promise<void> {
@@ -46,7 +56,7 @@ export function loadVehicleImages(basePath: string): Promise<void> {
 }
 
 async function loadVehicleImagesOnce(basePath: string): Promise<void> {
-  const all: Mode[] = ["mtr", "bus", "minibus", "taxi"];
+  const all: Mode[] = ["mtr", "bus", "minibus", "ferry", "taxi"];
   await Promise.all(
     all.map(async (mode) => {
       try {
@@ -60,6 +70,15 @@ async function loadVehicleImagesOnce(basePath: string): Promise<void> {
       }
     }),
   );
+  try {
+    const boat = new Image();
+    boat.decoding = "async";
+    boat.src = `${basePath}/icons/ferry-boat.svg`;
+    await boat.decode();
+    ferryBoatImage = boat;
+  } catch {
+    // The canvas ferry stands in for a missing boat file.
+  }
 }
 
 // Each kind is its own SVG. Rasterise it larger than the sign so the map
@@ -242,6 +261,20 @@ export function stopIconUrl(mode: Mode): string {
   return drawStopIcon(mode).toDataURL();
 }
 
+const ferryBoatFill = "#0c6e8a";
+
+export function ferryBoatIconImage(): ImageData {
+  return imageData(drawStopIcon("ferry", ferryBoatImage, ferryBoatFill));
+}
+
+export function ferryBoatIconUrl(): string {
+  return drawStopIcon("ferry", ferryBoatImage, ferryBoatFill).toDataURL();
+}
+
+export function ferryBoatSignHighlight(): ImageData {
+  return stopIconHighlight("ferry", ferryBoatImage, ferryBoatFill);
+}
+
 export const stopIconPixelRatio = ratio;
 
 // A dot stands in for the full sign when a view holds more stops than it can
@@ -269,9 +302,9 @@ export function stopDotImage(mode: Mode, muted = false, fill?: string): ImageDat
 // around with a paper and ink outline so the sign itself stands out instead of
 // a separate marker sitting under it. The canvas is padded on the top and sides
 // only, so the point of the pole still lands on the stop when anchored bottom.
-export function stopIconHighlight(mode: Mode): ImageData {
+export function stopIconHighlight(mode: Mode, vehicle?: CanvasImageSource, fill?: string): ImageData {
   const pad = 5;
-  const base = drawStopIcon(mode);
+  const base = drawStopIcon(mode, vehicle, fill);
   const baseWidth = base.width / ratio;
   const baseHeight = base.height / ratio;
   // A square MTR block is centred on the station, so it needs padding on all
@@ -293,7 +326,7 @@ export function stopIconHighlight(mode: Mode): ImageData {
 
 // With dots standing in for signs there is nothing to outline, so the selected
 // dot becomes a target: a paper halo, an ink ring and the mode colour inside.
-export function stopDotHighlight(mode: Mode): ImageData {
+export function stopDotHighlight(mode: Mode, fill?: string): ImageData {
   const size = 28;
   const canvas = document.createElement("canvas");
   canvas.width = size * ratio;
@@ -314,7 +347,7 @@ export function stopDotHighlight(mode: Mode): ImageData {
   }
   ctx.beginPath();
   ctx.arc(centre, centre, 6, 0, Math.PI * 2);
-  ctx.fillStyle = colors[mode];
+  ctx.fillStyle = fill ?? colors[mode];
   ctx.fill();
   ctx.lineWidth = 2;
   ctx.strokeStyle = paper;
@@ -464,6 +497,8 @@ function drawStopIcon(
     drawBus(ctx, color, line);
   } else if (mode === "minibus") {
     drawMinibus(ctx, color, line);
+  } else if (mode === "ferry") {
+    drawFerry(ctx, color, line);
   } else {
     drawTaxi(ctx, color, line);
   }
@@ -566,6 +601,27 @@ function drawMinibus(ctx: CanvasRenderingContext2D, color: string, line: string)
   ctx.closePath();
   ctx.fill();
   wheels(ctx, 16.5, 28, 25.2, line);
+}
+
+function drawFerry(ctx: CanvasRenderingContext2D, color: string, line: string) {
+  ctx.fillStyle = paper;
+  roundRect(ctx, 10, 12, 22, 10, 1.5);
+  ctx.fill();
+  ctx.fillStyle = color;
+  ctx.fillRect(12.2, 14, 4, 3.2);
+  ctx.fillRect(17.4, 14, 4, 3.2);
+  ctx.fillRect(22.6, 14, 4, 3.2);
+  ctx.strokeStyle = line;
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(8, 24);
+  ctx.lineTo(36, 24);
+  ctx.lineTo(32, 29);
+  ctx.lineTo(12, 29);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.stroke();
 }
 
 function drawTaxi(ctx: CanvasRenderingContext2D, color: string, line: string) {

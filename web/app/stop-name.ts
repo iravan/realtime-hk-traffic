@@ -20,7 +20,8 @@ export function localizeBilingualName(name: string, locale: Locale): string {
 }
 
 export function localizeStopName(name: string, mode: Mode, locale: Locale): string {
-  // The MTR catalogue stores the two names together. Other modes' names come
-  // from feeds that do not always provide a usable English half.
-  return mode === "mtr" ? localizeBilingualName(name, locale) : name;
+  // MTR and ferry catalogues store Chinese and English in one string. Other
+  // modes' feeds do not always include a usable English half, so they stay as
+  // published.
+  return mode === "mtr" || mode === "ferry" ? localizeBilingualName(name, locale) : name;
 }

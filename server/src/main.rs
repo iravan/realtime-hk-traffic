@@ -7,6 +7,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 use chrono::{DateTime, Utc};
+use futures::future::join_all;
 use futures::stream::{self, Stream};
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
@@ -442,6 +443,7 @@ async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
         "mtr" => mtr_arrivals(&app.http, stop).await,
         "bus" => bus_arrivals(&app.http, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
+        "ferry" => ferry_arrivals(&app.http, stop).await,
         _ => None,
     }
 }
@@ -686,6 +688,163 @@ async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
     })
 }
 
+#[derive(Clone, Deserialize)]
+struct FerrySailing {
+    op: String,
+    route: String,
+    #[serde(default)]
+    direction: String,
+    label: String,
+    destination: String,
+}
+
+fn ferry_sailings() -> &'static HashMap<String, Vec<FerrySailing>> {
+    static SAILINGS: std::sync::OnceLock<HashMap<String, Vec<FerrySailing>>> =
+        std::sync::OnceLock::new();
+    SAILINGS.get_or_init(|| {
+        match serde_json::from_str(include_str!("../data/ferry-departures.json")) {
+            Ok(parsed) => parsed,
+            Err(error) => {
+                eprintln!("ferry departures unreadable: {error}");
+                HashMap::new()
+            }
+        }
+    })
+}
+
+async fn ferry_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
+    let pier = stop.id.strip_prefix("ferry:")?;
+    let sailings = ferry_sailings().get(pier).cloned().unwrap_or_default();
+    if sailings.is_empty() {
+        return Some(empty_snapshot());
+    }
+    let fetched = join_all(sailings.iter().map(|sailing| ferry_sailing(http, sailing))).await;
+    if fetched.iter().all(Result::is_err) {
+        return None;
+    }
+    let mut rows = Vec::new();
+    for part in fetched.into_iter().flatten() {
+        rows.extend(part);
+    }
+    rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
+    rows.truncate(16);
+    Some(Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live: true,
+        status: None,
+        note: None,
+        rows,
+    })
+}
+
+fn empty_snapshot() -> Snapshot {
+    Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live: true,
+        status: None,
+        note: None,
+        rows: Vec::new(),
+    }
+}
+
+async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result<Vec<Row>, ()> {
+    let url = match sailing.op.as_str() {
+        "hkkf" => format!(
+            "https://www.hkkfeta.com/opendata/eta/{}/{}",
+            sailing.route, sailing.direction
+        ),
+        "sun" => format!("https://www.sunferry.com.hk/eta/?route={}", sailing.route),
+        _ => return Err(()),
+    };
+    let response = http.get(url).send().await.map_err(|_| ())?;
+    if !response.status().is_success() {
+        return Err(());
+    }
+    let parsed = response.json::<Value>().await.map_err(|_| ())?;
+    let items = parsed.get("data").and_then(|value| value.as_array()).ok_or(())?;
+    let mut clocks = Vec::new();
+    for item in items {
+        let minutes = match sailing.op.as_str() {
+            "hkkf" => hkkf_minutes(item),
+            "sun" => sun_minutes(item, false),
+            _ => None,
+        };
+        clocks.push(minutes);
+    }
+    // Sun Ferry names the next trip. A list that is entirely in the past is
+    // that trip on the following morning, not a departed boat.
+    if sailing.op == "sun" && !clocks.is_empty() && clocks.iter().all(Option::is_none) {
+        clocks = items
+            .iter()
+            .map(|item| sun_minutes(item, true))
+            .collect();
+    }
+    let mut rows = Vec::new();
+    for minutes in clocks.into_iter().flatten() {
+        rows.push(Row {
+            route: sailing.label.clone(),
+            destination: sailing.destination.clone(),
+            minutes: Some(minutes),
+            time: None,
+        });
+    }
+    Ok(rows)
+}
+
+fn hkkf_minutes(item: &Value) -> Option<i64> {
+    let date = item.get("date").and_then(|value| value.as_str())?;
+    let session = item
+        .get("session_time")
+        .and_then(|value| value.as_str())?;
+    clock_minutes(date, session, false)
+}
+
+fn sun_minutes(item: &Value, roll_forward: bool) -> Option<i64> {
+    let depart = item.get("depart_time").and_then(|value| value.as_str())?;
+    let stamped = item
+        .get("date_timestamp")
+        .and_then(|value| value.as_str())
+        .filter(|value| value.len() >= 10);
+    let date = match stamped {
+        Some(value) => &value[..10],
+        None => return None,
+    };
+    clock_minutes(date, depart, roll_forward)
+}
+
+fn clock_minutes(date: &str, clock: &str, roll_forward: bool) -> Option<i64> {
+    let when = hk_stamp(date, clock)?;
+    if let Some(minutes) = minutes_from(when) {
+        return Some(minutes);
+    }
+    if roll_forward {
+        return minutes_from(when + chrono::Duration::days(1));
+    }
+    None
+}
+
+fn hk_stamp(date: &str, clock: &str) -> Option<DateTime<chrono::FixedOffset>> {
+    let mut parts = clock.split(':');
+    let hour: u32 = parts.next()?.parse().ok()?;
+    let minute: u32 = parts.next()?.parse().ok()?;
+    let second: u32 = parts.next().unwrap_or("0").parse().ok()?;
+    let offset = chrono::FixedOffset::east_opt(8 * 3600)?;
+    let day = chrono::NaiveDate::parse_from_str(date, "%Y-%m-%d").ok()?;
+    let time = chrono::NaiveTime::from_hms_opt(hour, minute, second)?;
+    day.and_time(time).and_local_timezone(offset).single()
+}
+
+fn minutes_from(when: DateTime<chrono::FixedOffset>) -> Option<i64> {
+    let seconds = when
+        .with_timezone(&Utc)
+        .signed_duration_since(Utc::now())
+        .num_seconds();
+    if seconds < -90 {
+        return None;
+    }
+    Some((seconds / 60).max(0))
+}
+
 fn minutes_until(eta: &str) -> Option<i64> {
     let when = DateTime::parse_from_rfc3339(eta).ok()?;
     let seconds = when
@@ -707,5 +866,25 @@ fn in_box(lat: f64, lng: f64, south: f64, west: f64, north: f64, east: f64) -> b
         lng >= west && lng <= east
     } else {
         lng >= west || lng <= east
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::hk_stamp;
+
+    #[test]
+    fn ferry_clock_is_hong_kong_time() {
+        let when = hk_stamp("2026-11-21", "04:15").expect("stamp");
+        assert_eq!(when.to_rfc3339(), "2026-11-21T04:15:00+08:00");
+    }
+
+    #[test]
+    fn departed_hkkf_sailing_is_dropped() {
+        let item = serde_json::json!({
+            "date": "2020-01-01",
+            "session_time": "12:15:00"
+        });
+        assert!(super::hkkf_minutes(&item).is_none());
     }
 }

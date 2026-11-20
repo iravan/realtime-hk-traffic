@@ -4,9 +4,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
-import { loadTaxiKindImages, loadVehicleImages, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, ferryBoatIconUrl, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { stopPath } from "./stop-link";
-import { localizeStopName } from "./stop-name";
+import { localizeBilingualName, localizeStopName } from "./stop-name";
 import type { TaxiLabel } from "./taxi-stand";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
@@ -49,6 +49,7 @@ export function StopSheet({
   taxi,
   taxiType,
   taxiHours,
+  serviceHours,
   onClose,
 }: {
   id: string;
@@ -59,6 +60,7 @@ export function StopSheet({
   taxi?: TaxiKind;
   taxiType?: TaxiLabel;
   taxiHours?: TaxiLabel | null;
+  serviceHours?: string | null;
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
@@ -69,12 +71,12 @@ export function StopSheet({
     // A deep link opens the sheet before the SVG artwork has loaded. Drawing
     // then keeps the plain fallback instead of the full sign.
     void Promise.all([loadVehicleImages(basePath), loadTaxiKindImages(basePath)]).then(() => {
-      if (!cancelled) setSign(stopIconUrl(mode));
+      if (!cancelled) setSign(mode === "ferry" && !isStarFerry(id) ? ferryBoatIconUrl() : stopIconUrl(mode));
     });
     return () => {
       cancelled = true;
     };
-  }, [mode, taxi]);
+  }, [id, mode, taxi]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const snapshotRef = useRef<Snapshot | null>(null);
   snapshotRef.current = snapshot;
@@ -216,11 +218,17 @@ export function StopSheet({
       <div className="body">
         {mode === "taxi" ? (
           <>
-            <p className="muted">{t.sheet.taxiHours}</p>
+            <p className="muted">{t.sheet.hours}</p>
             <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
           </>
         ) : apiBase ? (
           <>
+          {serviceHours ? (
+            <>
+              <p className="muted">{t.sheet.hours}</p>
+              <p>{serviceHours}</p>
+            </>
+          ) : null}
           {snapshot?.note === "no-arrivals" ? (
             <p className="muted">{t.sheet.taxiNote}</p>
           ) : snapshot ? (
@@ -233,11 +241,19 @@ export function StopSheet({
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
-                      {row.route && mode !== "mtr" ? <strong>{row.route}</strong> : null}
+                      {row.route && mode !== "mtr" ? (
+                        <strong>
+                          {mode === "ferry" ? localizeBilingualName(row.route, locale) : row.route}
+                        </strong>
+                      ) : null}
                       {mode === "mtr" ? (
                         <StationChip name={row.destination} locale={locale} />
                       ) : (
-                        <span>{row.destination}</span>
+                        <span>
+                          {mode === "ferry"
+                            ? localizeBilingualName(row.destination, locale)
+                            : row.destination}
+                        </span>
                       )}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>

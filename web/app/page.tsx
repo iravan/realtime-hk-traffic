@@ -23,6 +23,9 @@ import {
   stopDotImage,
   stopIconHighlight,
   stopIconImage,
+  ferryBoatIconImage,
+  ferryBoatSignHighlight,
+  isStarFerry,
   taxiDotHighlight,
   taxiSignHighlight,
   stopIconPixelRatio,
@@ -40,14 +43,15 @@ import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const modes = ["mtr", "bus", "minibus", "taxi"] as const;
+const modes = ["mtr", "bus", "minibus", "ferry", "taxi"] as const;
 
-// The four category tabs use their own flat vehicle artwork, served from
+// The category tabs use their own flat vehicle artwork, served from
 // `public/icons`. They are plain files, so they need no canvas at render time.
 const categoryIcons: Record<Mode, string> = {
   mtr: `${basePath}/icons/mtr.svg`,
   bus: `${basePath}/icons/bus.svg`,
   minibus: `${basePath}/icons/minibus.svg`,
+  ferry: `${basePath}/icons/ferry.svg`,
   taxi: `${basePath}/icons/taxi.svg`,
 };
 
@@ -72,6 +76,7 @@ const autoselectRadiusMeters: Record<Mode, number> = {
   mtr: 600,
   bus: 300,
   minibus: 300,
+  ferry: 500,
   taxi: 400,
 };
 
@@ -271,6 +276,10 @@ export default function Page() {
           pixelRatio: stopIconPixelRatio,
         });
       }
+      map.addImage("ferry-boat", ferryBoatIconImage(), { pixelRatio: stopIconPixelRatio });
+      map.addImage("ferry-boat-dot", stopDotImage("ferry", false, "#0c6e8a"), {
+        pixelRatio: stopIconPixelRatio,
+      });
       for (const kind of taxiKinds) {
         map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
         map.addImage(`taxi-${kind}-dot`, taxiDotImage(kind), {
@@ -946,7 +955,12 @@ export default function Page() {
         properties: {
           id: stop.id,
           mode: stop.mode,
-          icon: stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}` : stop.mode,
+          icon:
+            stop.mode === "taxi"
+              ? `taxi-${stop.taxi ?? "urban"}`
+              : stop.mode === "ferry" && !isStarFerry(stop.id)
+                ? "ferry-boat"
+                : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
@@ -1109,11 +1123,15 @@ export default function Page() {
   }, []);
 
   const mtrSchedule = hours?.modes?.mtr ?? [];
+  const ferrySchedule = hours?.modes?.ferry ?? [];
+  const clock = now != null ? clockAt(now, hours?.timezone) : null;
   const mtrClosed =
-    active === "mtr" &&
-    now != null &&
-    mtrSchedule.length > 0 &&
-    !isScheduleOpen(mtrSchedule, clockAt(now, hours?.timezone));
+    active === "mtr" && clock != null && mtrSchedule.length > 0 && !isScheduleOpen(mtrSchedule, clock);
+  const ferryClosed =
+    active === "ferry" &&
+    clock != null &&
+    ferrySchedule.length > 0 &&
+    !isScheduleOpen(ferrySchedule, clock);
 
   return (
     <div className={`visit${selected ? " sheet-open" : ""}`}>
@@ -1161,7 +1179,13 @@ export default function Page() {
           {mtrClosed ? (
             <div className="notice" role="status">
               <strong>{t.mtrClosedTitle}</strong>
-              <span>{t.mtrClosedHours(serviceHoursLabel(mtrSchedule))}</span>
+              <span>{t.closedHours(serviceHoursLabel(mtrSchedule, t.clock, t.nextDayHours))}</span>
+            </div>
+          ) : null}
+          {ferryClosed ? (
+            <div className="notice ferry" role="status">
+              <strong>{t.ferryClosedTitle}</strong>
+              <span>{t.closedHours(serviceHoursLabel(ferrySchedule, t.clock, t.nextDayHours))}</span>
             </div>
           ) : null}
         </div>
@@ -1199,6 +1223,11 @@ export default function Page() {
           taxi={selected.taxi}
           taxiType={selected.taxiType}
           taxiHours={selected.taxiHours}
+          serviceHours={
+            selected.mode === "ferry" && ferrySchedule.length
+              ? serviceHoursLabel(ferrySchedule, t.clock, t.nextDayHours)
+              : null
+          }
           onClose={() => {
             setSelected(null);
             setBoard(null);
@@ -1346,27 +1375,39 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 // board, or the ringed dot that replaces both when the view is dense. Built on
 // first use, then reused from the style.
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
+  const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
   if (dots) {
-    const image =
-      stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}-dot-sel` : `${stop.mode}-dot-sel`;
+    const image = boat
+      ? "ferry-boat-dot-sel"
+      : stop.mode === "taxi"
+        ? `taxi-${stop.taxi ?? "urban"}-dot-sel`
+        : `${stop.mode}-dot-sel`;
     if (!map.hasImage(image)) {
       map.addImage(
         image,
-        stop.mode === "taxi"
-          ? taxiDotHighlight(stop.taxi ?? "urban")
-          : stopDotHighlight(stop.mode),
+        boat
+          ? stopDotHighlight("ferry", "#0c6e8a")
+          : stop.mode === "taxi"
+            ? taxiDotHighlight(stop.taxi ?? "urban")
+            : stopDotHighlight(stop.mode),
         { pixelRatio: stopIconPixelRatio },
       );
     }
     return image;
   }
-  const image = stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}-sel` : `${stop.mode}-sel`;
+  const image = boat
+    ? "ferry-boat-sel"
+    : stop.mode === "taxi"
+      ? `taxi-${stop.taxi ?? "urban"}-sel`
+      : `${stop.mode}-sel`;
   if (!map.hasImage(image)) {
     map.addImage(
       image,
-      stop.mode === "taxi"
-        ? taxiSignHighlight(stop.taxi ?? "urban")
-        : stopIconHighlight(stop.mode),
+      boat
+        ? ferryBoatSignHighlight()
+        : stop.mode === "taxi"
+          ? taxiSignHighlight(stop.taxi ?? "urban")
+          : stopIconHighlight(stop.mode),
       { pixelRatio: stopIconPixelRatio },
     );
   }

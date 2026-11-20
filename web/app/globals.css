@@ -8,6 +8,8 @@
   --bus: #e52029;
   /* Green minibus roof green, sampled from a green minibus. */
   --minibus: #2f7d4f;
+  /* Star Ferry green, sampled from the ferry sign. */
+  --ferry: #047857;
   /* Urban taxi red, sampled from an urban taxi. */
   --taxi: #c8102e;
   /* Warning, kept apart from the mode colours. */
@@ -76,6 +78,7 @@ button { cursor: pointer; }
 .filters button[data-mode="mtr"].on { background: var(--mtr); }
 .filters button[data-mode="bus"].on { background: var(--bus); }
 .filters button[data-mode="minibus"].on { background: var(--minibus); }
+.filters button[data-mode="ferry"].on { background: var(--ferry); }
 .filters button[data-mode="taxi"].on { background: var(--taxi); }
 
 /* The tab bar and the notice that hangs beneath it. */
@@ -88,6 +91,7 @@ button { cursor: pointer; }
   line-height: 1.35;
 }
 .notice strong { display: block; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.notice.ferry { border-left-color: var(--ferry); }
 .notice span { color: #5d564e; }
 
 .locate {

@@ -100,10 +100,22 @@ export function isScheduleOpen(schedule: Schedule, clock: Clock): boolean {
   return schedule.some((window) => isWindowOpen(window, clock));
 }
 
-// Human label for a schedule's windows, e.g. "05:50–01:00". A window that
-// closes after midnight keeps its published times.
-export function serviceHoursLabel(schedule: Schedule): string {
-  return schedule.map((window) => `${window.from}–${window.to}`).join(", ");
+// Human label for a schedule's windows. Times are formatted by the caller.
+// When the close is earlier than the open, `overnight` marks that end as the
+// next day.
+export function serviceHoursLabel(
+  schedule: Schedule,
+  formatTime: (value: string) => string,
+  overnight: (from: string, to: string) => string,
+): string {
+  return schedule
+    .map((window) => {
+      const from = formatTime(window.from);
+      const to = formatTime(window.to);
+      if (minutesOf(window.to) < minutesOf(window.from)) return overnight(from, to);
+      return `${from}–${to}`;
+    })
+    .join(", ");
 }
 
 // Resolution order: the station's own hours, then any route entry the stop

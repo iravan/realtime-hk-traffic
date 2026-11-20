@@ -25,7 +25,10 @@ export type Messages = {
   mode: Record<Mode, string>;
   switchLanguage: string;
   mtrClosedTitle: string;
-  mtrClosedHours: (hours: string) => string;
+  ferryClosedTitle: string;
+  closedHours: (hours: string) => string;
+  clock: (value: string) => string;
+  nextDayHours: (from: string, to: string) => string;
   locate: {
     idle: string;
     locating: string;
@@ -43,6 +46,7 @@ export type Messages = {
     amap: string;
     openStreetMap: string;
     taxiNote: string;
+    hours: string;
     taxiHours: string;
     taxiAllDay: string;
     delayed: string;
@@ -62,14 +66,41 @@ export type Messages = {
   };
 };
 
+function clockParts(value: string): { hour: number; minute: string } {
+  const [hourText, minuteText] = value.split(":");
+  let hour = Number(hourText);
+  if (hour === 24) hour = 0;
+  return { hour, minute: (minuteText ?? "00").slice(0, 2).padStart(2, "0") };
+}
+
+function englishClock(value: string): string {
+  const { hour, minute } = clockParts(value);
+  const suffix = hour < 12 ? "am" : "pm";
+  const shown = hour % 12 || 12;
+  return `${shown}:${minute} ${suffix}`;
+}
+
+function chineseClock(value: string): string {
+  const { hour, minute } = clockParts(value);
+  if (hour === 0) return `午夜12:${minute}`;
+  if (hour < 6) return `凌晨${hour}:${minute}`;
+  if (hour < 12) return `上午${hour}:${minute}`;
+  if (hour === 12) return `中午12:${minute}`;
+  if (hour < 18) return `下午${hour - 12}:${minute}`;
+  return `晚上${hour - 12}:${minute}`;
+}
+
 const en: Messages = {
   appTitle: "Realtime HK Traffic",
   brand: "Hong Kong Traffic",
   stopsInView: (count) => `${count} stop${count === 1 ? "" : "s"} in view`,
-  mode: { mtr: "MTR", bus: "Bus", minibus: "Minibus", taxi: "Taxi" },
+  mode: { mtr: "MTR", bus: "Bus", minibus: "Minibus", ferry: "Ferry", taxi: "Taxi" },
   switchLanguage: "Switch language",
   mtrClosedTitle: "MTR has stopped for the night",
-  mtrClosedHours: (hours) => `Service hours ${hours} Hong Kong time`,
+  ferryClosedTitle: "Ferries have stopped for the night",
+  closedHours: (hours) => `Service hours ${hours}, Hong Kong time`,
+  clock: englishClock,
+  nextDayHours: (from, to) => `${from}–${to} (next day)`,
   locate: {
     idle: "Show my location",
     locating: "Finding your location…",
@@ -87,6 +118,7 @@ const en: Messages = {
     amap: "Amap",
     openStreetMap: "OpenStreetMap",
     taxiNote: "A taxi stand has no arrival list.",
+    hours: "Working hours",
     taxiHours: "Working hours",
     taxiAllDay: "Open all day",
     delayed: "Delayed",
@@ -110,10 +142,13 @@ const zhHant: Messages = {
   appTitle: "香港交通",
   brand: "香港交通",
   stopsInView: (count) => `畫面中有 ${count} 個站點`,
-  mode: { mtr: "港鐵", bus: "巴士", minibus: "小巴", taxi: "的士" },
+  mode: { mtr: "港鐵", bus: "巴士", minibus: "小巴", ferry: "渡輪", taxi: "的士" },
   switchLanguage: "切換語言",
   mtrClosedTitle: "港鐵已收車",
-  mtrClosedHours: (hours) => `服務時間 ${hours}（香港時間）`,
+  ferryClosedTitle: "渡輪已收船",
+  closedHours: (hours) => `服務時間 ${hours}（香港時間）`,
+  clock: chineseClock,
+  nextDayHours: (from, to) => `${from}–翌日${to}`,
   locate: {
     idle: "顯示我的位置",
     locating: "正在定位…",
@@ -131,6 +166,7 @@ const zhHant: Messages = {
     amap: "高德地圖",
     openStreetMap: "OpenStreetMap",
     taxiNote: "的士站沒有到站時間。",
+    hours: "服務時間",
     taxiHours: "開放時間",
     taxiAllDay: "全日開放",
     delayed: "延誤",

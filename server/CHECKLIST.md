@@ -4,7 +4,7 @@ The Rust service. The build spec is [TECH-STACK.md](../TECH-STACK.md). The produ
 
 The first demo is running locally. Redis for local development is `127.0.0.1:6379`. KMB, the MTR station list, and taxi stands load before Citybus and green minibus, which continue in the background.
 
-A stop id is the publisher's id with a mode prefix, so two feeds cannot collide: `mtr:`, `bus:`, `minibus:`, `taxi:`.
+A stop id is the publisher's id with a mode prefix, so two feeds cannot collide: `mtr:`, `bus:`, `minibus:`, `ferry:`, `taxi:`.
 
 ```text
 GET /stops?south&west&north&east&modes
@@ -14,7 +14,7 @@ GET /stops/{id}/arrivals
     { "fetched_at", "live", "rows": [ { "route", "destination", "minutes" } ] }
 ```
 
-`modes` is a comma-separated subset of `mtr`, `bus`, `minibus`, `taxi`. `minutes` is omitted when the feed gives a clock time instead; that row then has `time`. A taxi stand has no arrivals key, and `GET` for it says there is no arrival list.
+`modes` is a comma-separated subset of `mtr`, `bus`, `minibus`, `ferry`, `taxi`. `minutes` is omitted when the feed gives a clock time instead; that row then has `time`. A taxi stand has no arrivals key, and `GET` for it says there is no arrival list. A ferry pier with no live operator feed returns an empty row list.
 
 ```text
 arrivals:{id}                 string, EX 90

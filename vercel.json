@@ -25,6 +25,10 @@
       "destination": { "service": "web", "path": "/" }
     },
     {
+      "source": "/ferry/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
       "source": "/taxi/:path*",
       "destination": { "service": "web", "path": "/" }
     },
@@ -44,6 +48,15 @@
   "headers": [
     {
       "source": "/stops-bus.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/stops-ferry.json",
       "headers": [
         {
           "key": "Cache-Control",

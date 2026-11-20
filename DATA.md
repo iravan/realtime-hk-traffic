@@ -30,6 +30,10 @@ portal. Add new sources here when the service starts using them.
 | Green minibus | data.gov.hk | `https://data.etagmb.gov.hk/...` | Stops, routes and live arrivals |
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Green minibus route numbers | data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml` | Route id to route number labels |
+| Ferry pier names | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml` | Pier names in TC/SC/EN, joined to coordinates by stop id |
+| Ferry pier coordinates | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query` | Pier coordinates |
+| HKKF ferry ETA | Hong Kong & Kowloon Ferry / data.gov.hk | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | Next departure on an HKKF route |
+| Sun Ferry ETA | Sun Ferry / data.gov.hk | `https://www.sunferry.com.hk/eta/?route={route_code}` | Next departure on a Sun Ferry route |
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
 
@@ -63,6 +67,9 @@ are script-generated, web-only, or documented for future work.
 | GMB route and stop catalogues | Optional | Partial | No | Bundled by default; live crawl with `LIVE_CATALOGUES=1`; scripts use route and route-stop |
 | ROUTE_GMB.xml | No | No | No | Reference for bundled `gmb-routes.json` |
 | KML_GMB.zip | No | No | No | Documented only |
+| Ferry pier names and coordinates | No | Yes | No | Bundled. The script joins `RSTOP_FERRY.xml` to the CSDI pier layer |
+| HKKF ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
+| Sun Ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
 | Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
@@ -87,6 +94,7 @@ map stop is opened, not on a timer.
 | `server/data/mtr.json` | Checked in | Station names, coordinates or lines change |
 | `server/data/stops.json` | Checked in, canonical | The stop catalogue is regenerated |
 | `server/data/gmb-routes.json` | Checked in | GMB route ids or numbers change |
+| `server/data/ferry-departures.json` | Checked in | An HKKF or Sun Ferry route changes pier |
 | `web/public/service-hours.json` | Checked in | Service schedules change |
 | `web/public/mtr-lines.geojson` | Checked in | Regenerated from OpenStreetMap |
 | `KML_BUS.zip` and `KML_GMB.zip` | Publisher reference archives | Periodic publisher update; not polled |
@@ -105,6 +113,7 @@ map stop is opened, not on a timer.
 | KMB and LWB stop ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
+| HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
 | Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
 | SSE arrival events | Pushed with the snapshot from that click | Browser stream |
@@ -567,6 +576,35 @@ archive has 779 route ids, the same count as the keys in
 `server/data/gmb-routes.json`, so it can be used as a static multilingual route
 lookup. The service does not read it yet.
 
+## Ferry piers and departures
+
+A ferry stop is a pier, not a vehicle. The map uses the Transport Department
+stop sequence for names and the CSDI pier layer for coordinates. Both are
+joined on `STOP_ID`. `server/scripts/fetch-ferry-stops.py` writes one
+`ferry:{STOP_ID}` row per pier that has both.
+
+```text
+https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml
+https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query?where=1%3D1&outFields=STOP_ID&outSR=4326&f=geojson
+```
+
+Those files have no ETA. Two operators publish the next departure by route:
+
+| Operator | Endpoint | What a row uses |
+| --- | --- | --- |
+| Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | `date` and `session_time` as the departure from the origin pier of that direction |
+| Sun Ferry | `https://www.sunferry.com.hk/eta/?route={route_code}` | `depart_time` on the date in `date_timestamp` |
+
+`server/data/ferry-departures.json` says which of those routes leave which
+pier. Opening a mapped pier fetches each of its routes. The sheet shows the
+operator, the destination, and the minutes until that departure. A pier with
+no mapped route still draws, and the sheet says there is no departure right
+now. Fortune Ferry, the Star Ferry, and Discovery Bay are not in that file:
+their ETA hosts were not returning a usable route list when this was wired.
+
+`inbound` on the HKKF feed is the sailing towards the route origin (Central,
+or Peng Chau on the Hei Ling Chau route). `outbound` leaves that origin.
+
 ## Taxi stands
 
 Source dataset: [Taxi Stands](https://data.gov.hk/en-data/dataset/hk-td-tis_37-taxi-stands/resource/29635792-e286-402d-92bb-dc8586c649f7).
@@ -646,6 +684,7 @@ not vehicle positions, so a taxi stand has no arrival rows.
 | `web/public/stops.json` | Generated at build from the canonical catalogue |
 | `web/public/stops-*.json` | Generated at build from the canonical catalogue, one file per mode |
 | `server/data/gmb-routes.json` | Green-minibus route id to route number map |
+| `server/data/ferry-departures.json` | Pier id to HKKF and Sun Ferry departures |
 | `web/app/mtr-line-terminals.json` | Generated line endpoint labels from the MTR CSV |
 | `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
@@ -658,6 +697,7 @@ Generation scripts:
 | `server/scripts/fetch-minibus-routes.py` | Green-minibus route, route-stop and stop API |
 | `server/scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
 | `server/scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
+| `server/scripts/fetch-ferry-stops.py` | Ferry stop sequence, CSDI pier coordinates, and the checked-in departure map |
 
 ## Caching
 
@@ -684,6 +724,8 @@ we like; it means the spec does not state one.
 | KMB and LWB stop ETA | About every minute | The stop-ETA spec lists HTTP 200 and 422. It does not publish a rate limit |
 | Citybus next bus | About every minute | The Next Bus API spec returns HTTP 429, "Processing too many requests", and does not publish a threshold |
 | GMB stop ETA | Live ETA on `/eta/stop/{stop_id}` | No numeric cap published for that endpoint. The catalogue crawl is throttled by the publisher |
+| HKKF ferry ETA | About every minute | The API spec returns HTTP 429 and does not publish a threshold |
+| Sun Ferry ETA | About every minute | No numeric cap on the dataset page |
 | MTR Bus and Feeder Bus | Every 10 seconds. `appRefreshTimeInSecond` is the suggested refresh. Not called by this service | The API spec returns HTTP 429 Too Many Requests and does not publish a count |
 
 A click inside the 90-second Redis TTL does not add an upstream request.

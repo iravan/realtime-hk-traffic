@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Smoke Funnel (Star Ferry Green with Cream Band) -->
+  <path d="M10.4 6.2c0-.7.5-1.2 1.2-1.2h.8c.7 0 1.2.5 1.2 1.2v1.6h-3.2V6.2z" fill="#047857" stroke="#1E293B" stroke-width="1.1" stroke-linejoin="round" />
+  <path d="M10.5 6.3h3" stroke="#FDE68A" stroke-width="0.9" />
+
+  <!-- Upper Passenger Deck (White Cabin & Rounded Roof) -->
+  <path d="M5.4 12.2c.4-1.8 1-3.2 1.8-3.9.6-.5 1.3-.7 2.2-.7h5.2c.9 0 1.6.2 2.2.7.8.7 1.4 2.1 1.8 3.9H5.4z" fill="#FFFFFF" stroke="#1E293B" stroke-width="1.2" stroke-linejoin="round" />
+
+  <!-- Rounded Cabin Windows -->
+  <path d="M7.3 11.4c.3-.9.6-1.7 1-2.1.2-.2.4-.3.7-.3h1.8v2.4H7.3z" fill="#1E293B" />
+  <path d="M13.2 9h1.8c.3 0 .5.1.7.3.4.4.7 1.2 1 2.1h-3.5V9z" fill="#1E293B" />
+  <circle cx="12" cy="10.2" r="0.8" fill="#1E293B" />
+
+  <!-- Main Lower Hull (Star Ferry Green with Cream Sheer Stripe) -->
+  <path d="M2.4 13.4c0-.7.6-1.2 1.3-1.2h16.6c.7 0 1.3.5 1.3 1.2 0 .6-.2 1.2-.6 1.7l-1.5 2c-.5.6-1.2.9-2 .9H6.5c-.8 0-1.5-.3-2-.9l-1.5-2c-.4-.5-.6-1.1-.6-1.7z" fill="#047857" stroke="#1E293B" stroke-width="1.2" stroke-linejoin="round" />
+  <path d="M3.2 13.7c5.9.2 11.7.2 17.6 0" stroke="#FDE68A" stroke-width="0.9" stroke-linecap="round" />
+
+  <!-- Rounded Portholes -->
+  <circle cx="8" cy="15.5" r="0.7" fill="#FEF08A" />
+  <circle cx="12" cy="15.5" r="0.7" fill="#FEF08A" />
+  <circle cx="16" cy="15.5" r="0.7" fill="#FEF08A" />
+
+  <!-- Smooth Harbor Wave Line -->
+  <path d="M2.5 19.6c1.6.7 3.2.7 4.8 0 1.6-.7 3.2-.7 4.7 0 1.6.7 3.2.7 4.8 0 1.5-.7 3.1-.7 4.7 0" fill="none" stroke="#0284C7" stroke-width="1.3" stroke-linecap="round" />
+</svg>

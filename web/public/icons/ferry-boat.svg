@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Funnel -->
+  <rect x="14.2" y="4.6" width="2.4" height="4.2" rx="0.4" fill="#0c6e8a" stroke="#334155" stroke-width="1.1" />
+  <!-- Cabin -->
+  <path d="M6.6 14.6V10.2A1.4 1.4 0 0 1 8 8.8h8.2a1.4 1.4 0 0 1 1.4 1.4v4.4H6.6z" fill="#E2E8F0" stroke="#334155" stroke-width="1.2" />
+  <rect x="8" y="10.4" width="2.1" height="2" rx="0.3" fill="#1E293B" />
+  <rect x="11" y="10.4" width="2.1" height="2" rx="0.3" fill="#1E293B" />
+  <rect x="14" y="10.4" width="2.1" height="2" rx="0.3" fill="#1E293B" />
+  <!-- Hull -->
+  <path d="M2.6 14.6h18.8l-1.7 3.4a1.8 1.8 0 0 1-1.6 1H5.9a1.8 1.8 0 0 1-1.6-1L2.6 14.6z" fill="#0c6e8a" stroke="#334155" stroke-width="1.2" />
+</svg>

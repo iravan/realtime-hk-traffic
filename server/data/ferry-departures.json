@@ -1,0 +1,196 @@
+{
+  "101101": [
+    {
+      "op": "sun",
+      "route": "CCCE",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "中環 Central"
+    },
+    {
+      "op": "sun",
+      "route": "IICHCCMW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "芝麻灣 Chi Ma Wan"
+    },
+    {
+      "op": "sun",
+      "route": "IICHCMUW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "梅窩 Mui Wo"
+    }
+  ],
+  "101102": [
+    {
+      "op": "sun",
+      "route": "CECC",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "長洲 Cheung Chau"
+    }
+  ],
+  "101107": [
+    {
+      "op": "sun",
+      "route": "MWCE",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "中環 Central"
+    },
+    {
+      "op": "sun",
+      "route": "IIMUWPEC",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "坪洲 Peng Chau"
+    },
+    {
+      "op": "sun",
+      "route": "IIMUWCMW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "芝麻灣 Chi Ma Wan"
+    },
+    {
+      "op": "sun",
+      "route": "IIMUWCHC",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "長洲 Cheung Chau"
+    }
+  ],
+  "101108": [
+    {
+      "op": "hkkf",
+      "route": "3",
+      "direction": "outbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "坪洲 Peng Chau"
+    },
+    {
+      "op": "sun",
+      "route": "CEMW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "梅窩 Mui Wo"
+    }
+  ],
+  "101109": [
+    {
+      "op": "hkkf",
+      "route": "3",
+      "direction": "inbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "中環 Central"
+    },
+    {
+      "op": "hkkf",
+      "route": "4",
+      "direction": "outbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "喜靈洲 Hei Ling Chau"
+    },
+    {
+      "op": "sun",
+      "route": "IIPECMUW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "梅窩 Mui Wo"
+    }
+  ],
+  "101110": [
+    {
+      "op": "sun",
+      "route": "NPHH",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "紅磡 Hung Hom"
+    },
+    {
+      "op": "sun",
+      "route": "NPKC",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "九龍城 Kowloon City"
+    }
+  ],
+  "101111": [
+    {
+      "op": "sun",
+      "route": "HHNP",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "北角 North Point"
+    }
+  ],
+  "101112": [
+    {
+      "op": "sun",
+      "route": "KCNP",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "北角 North Point"
+    }
+  ],
+  "101115": [
+    {
+      "op": "sun",
+      "route": "IICMWMUW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "梅窩 Mui Wo"
+    },
+    {
+      "op": "sun",
+      "route": "IICMWCHC",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "長洲 Cheung Chau"
+    }
+  ],
+  "101123": [
+    {
+      "op": "hkkf",
+      "route": "2",
+      "direction": "inbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "中環 Central"
+    }
+  ],
+  "101126": [
+    {
+      "op": "hkkf",
+      "route": "1",
+      "direction": "outbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "索罟灣 Sok Kwu Wan"
+    },
+    {
+      "op": "hkkf",
+      "route": "2",
+      "direction": "outbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "榕樹灣 Yung Shue Wan"
+    }
+  ],
+  "101324": [
+    {
+      "op": "hkkf",
+      "route": "4",
+      "direction": "inbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "坪洲 Peng Chau"
+    }
+  ],
+  "101348": [
+    {
+      "op": "hkkf",
+      "route": "1",
+      "direction": "inbound",
+      "label": "港九小輪 HK & Kowloon Ferry",
+      "destination": "中環 Central"
+    }
+  ]
+}

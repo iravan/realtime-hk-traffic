@@ -1,6 +1,6 @@
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-const modes = ["mtr", "bus", "minibus", "taxi"];
+const modes = ["mtr", "bus", "minibus", "ferry", "taxi"];
 
 // A share link is the stop id with slashes instead of colons:
 // bus:kmb:001234 becomes /bus/kmb/001234/

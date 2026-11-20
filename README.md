@@ -2,9 +2,9 @@
 # Realtime HK Traffic
 
 A live map of public-transport stops in Hong Kong. MTR stations, franchised bus
-stops, green minibus stops, and taxi stands are drawn as points on an
-OpenStreetMap basemap. Tap a stop to see the next arrivals that an official feed
-is publishing right now.
+stops, green minibus stops, ferry piers, and taxi stands are drawn as points on
+an OpenStreetMap basemap. Tap a stop to see the next arrivals that an official
+feed is publishing right now.
 
 There is no sign-in. Every visitor can pan the map and open any stop.
 
@@ -16,7 +16,7 @@ There is no sign-in. Every visitor can pan the map and open any stop.
 ## What it does
 
 The page opens on the device location (when the browser grants it) and selects
-the nearest stop of the chosen mode. Four tabs switch between the transport
+the nearest stop of the chosen mode. Five tabs switch between the transport
 modes:
 
 | Mode | A stop is | What an arrival shows |
@@ -24,6 +24,7 @@ modes:
 | **MTR** | A station | The next train on each line that serves the station, plus line service status when the feed includes it |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
 | **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise the timetable, marked not live |
+| **Ferry** | A ferry pier | The next departure from that pier, for operators that publish a live ETA. Other piers stay on the map and show that nothing is scheduled right now |
 | **Taxi** | A taxi stand | The stand's name and location only — Hong Kong publishes no per-vehicle position feed |
 
 Red minibuses, private cars, and live taxi positions are deliberately out of
@@ -85,17 +86,18 @@ map. Next.js only renders.
 | MTR | MTR next-train feed on data.gov.hk | Station, line, destination, minutes or clock time, fetch time |
 | Bus | KMB, LWB, Citybus, and New Lantao Bus ETA feeds | Stop id, route, destination, minutes, fetch time |
 | Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus; timetable only when no ETA exists |
+| Ferry | Transport Department pier list, plus Hong Kong & Kowloon Ferry and Sun Ferry ETA feeds | Pier id, name, coordinates, and the next departure where a live feed exists |
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
 The exact endpoints, fields read, checked-in snapshots and request limits are in
 [DATA.md](DATA.md).
 
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
-`mtr:`, `bus:`, `minibus:`, `taxi:`.
+`mtr:`, `bus:`, `minibus:`, `ferry:`, `taxi:`.
 
 The same id is the share link, with slashes instead of colons and a trailing
 slash: `/mtr/CEN/`, `/bus/kmb/{stop}/`, `/bus/ctb/{stop}/`, `/minibus/{id}/`,
-`/taxi/{id}/`. Opening that path selects the stop and moves the map so the
+`/ferry/{id}/`, `/taxi/{id}/`. Opening that path selects the stop and moves the map so the
 whole sign stays clear of the sheet. An older `?stop=` link still opens the
 stop, then the address bar switches to the slash form. Closing the sheet or
 changing mode returns the address to `/`. On Vercel those paths are rewritten
@@ -164,7 +166,7 @@ the catalogue has shrunk.
 
 The page loads one mode at a time. `web/scripts/split-stops.mjs` runs before
 dev and build, copies `server/data/stops.json` to `web/public/stops.json`, and
-writes `web/public/stops-{bus,minibus,taxi,mtr}.json`. Both the full web copy and
+writes `web/public/stops-{bus,minibus,ferry,taxi,mtr}.json`. Both the full web copy and
 the per-mode files are generated and ignored by Git.
 
 ### 2. Minibus route numbers and stop routes
@@ -220,6 +222,18 @@ Rewrites `web/public/mtr-lines.geojson` from OpenStreetMap/Overpass.
 `web/public/service-hours.json` is checked-in schedule data. Update it by hand
 when a mode, station or route changes its service window.
 
+### 7. Ferry piers
+
+```bash
+python3 server/scripts/fetch-ferry-stops.py
+```
+
+Rewrites the `ferry:` rows in `server/data/stops.json` from the Transport
+Department stop sequence and the CSDI pier coordinates, and rewrites
+`server/data/ferry-departures.json`. That file maps a pier to the Hong Kong &
+Kowloon Ferry and Sun Ferry routes that leave it. Rebuild the server after
+either file changes.
+
 ### 7. Check the result
 
 The web build regenerates the web copy and per-mode files from the canonical
@@ -259,7 +273,7 @@ GET /stops/{id}/arrivals
 GET /stops/{id}/events      Server-sent events; each new snapshot is an `arrivals` event
 ```
 
-`modes` is a comma-separated subset of `mtr,bus,minibus,taxi`. `minutes` is
+`modes` is a comma-separated subset of `mtr,bus,minibus,ferry,taxi`. `minutes` is
 omitted when a feed gives a clock time instead; that row then has `time`. A taxi
 stand returns a name-only snapshot and has no arrivals key. An unknown id is a
 404; an expired snapshot is reported as gone, not as an empty timetable.
@@ -323,7 +337,7 @@ web/                 Next.js app (static export)
 server/              Rust API (Axum + Tokio)
   src/main.rs        Routes and feed fetchers
   src/catalog.rs     Stop catalogues and bundled route data
-  data/              Bundled stop seed and green-minibus route map
+  data/              Bundled stop seed, green-minibus route map, ferry departures
   scripts/           Catalogue and night-stop generators
 ```
 

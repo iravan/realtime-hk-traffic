@@ -12,7 +12,7 @@ GET /stops/{id}/arrivals
     { "fetched_at", "live", "rows": [ { "route", "destination", "minutes" } ] }
 ```
 
-`id` is the publisher's id with a mode prefix: `mtr:`, `bus:`, `minibus:`, or `taxi:`. `modes` is the subset the user has switched on. `minutes` is absent when the feed gives a clock time instead. A taxi stand has no arrivals document.
+`id` is the publisher's id with a mode prefix: `mtr:`, `bus:`, `minibus:`, `ferry:`, or `taxi:`. `modes` is the subset the user has switched on. `minutes` is absent when the feed gives a clock time instead. A taxi stand has no arrivals document.
 
 ## App
 
@@ -27,7 +27,7 @@ GET /stops/{id}/arrivals
 - [x] On start, load the active mode's stops from the generated per-mode file.
 - [x] On move end, draw the saved stops in the current view. The page does not call a server.
 - [x] Draw one stop per saved record, at that record's coordinates. The client does not invent an id or a coordinate.
-- [x] Four tabs: MTR, bus, minibus, taxi. Choosing one shows only that mode.
+- [x] Five tabs: MTR, bus, minibus, ferry, taxi. Choosing one shows only that mode.
 - [x] On load, ask the device for its location, mark it on the map, and select the nearest stop of the chosen mode.
 - [x] A locate button asks again, moves the map to that fix, and selects the nearest stop of the chosen mode. A refused fix marks the button.
 - [x] Changing the tab selects the nearest stop of the new mode.
