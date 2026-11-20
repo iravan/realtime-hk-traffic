@@ -9,3 +9,4 @@ out
 .vercel
 .cache
 __pycache__/
+graphify-out
