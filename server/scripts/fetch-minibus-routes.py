@@ -15,8 +15,11 @@ half-filled. The canonical stop list in server/data/stops.json gains a `routes`
 array; the web copy is generated from it during the web build.
 
 --routes-only stops after rewriting server/data/gmb-routes.json, the route-id
-to route-number map the server uses to label minibus arrivals. The map is
-written only when every route detail is cached.
+to route-number map the server uses to label minibus arrivals. The map is built
+from KML_GMB.zip, so this mode makes no API requests. A full run also merges the
+API route details over the KML map to pick up routes added after the archive.
+
+--refresh-kml ignores the cached KML_GMB.zip and downloads it again.
 """
 
 import argparse
@@ -26,9 +29,12 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import xml.etree.ElementTree as ET
+import zipfile
 from pathlib import Path
 
 BASE = "https://data.etagmb.gov.hk"
+KML_URL = "https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip"
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = ROOT / ".cache" / "gmb"
 UA = "realtime-hk-traffic/0.1 (stop catalogue refresh)"
@@ -115,27 +121,69 @@ def pairs_from_routes() -> tuple[list[list], int, int]:
     return pairs, resolved, total
 
 
-def write_route_map(pairs: list[list]) -> None:
-    by_id = {int(route_id): code for route_id, _seq, code in pairs}
-    body = "{" + ",".join(f'"{route_id}":"{code}"' for route_id, code in sorted(by_id.items())) + "}\n"
+def write_route_map(routes: dict[int, str]) -> None:
+    body = "{" + ",".join(f'"{route_id}":"{code}"' for route_id, code in sorted(routes.items())) + "}\n"
     path = ROOT / "server" / "data" / "gmb-routes.json"
     path.write_text(body)
-    print(f"{path.name}: {len(by_id)} route ids carry a route number")
+    print(f"{path.name}: {len(routes)} route ids carry a route number")
+
+
+def fetch_kml(refresh: bool) -> Path:
+    path = CACHE / "KML_GMB.zip"
+    if path.exists() and not refresh:
+        return path
+    CACHE.mkdir(parents=True, exist_ok=True)
+    print("downloading KML_GMB.zip", flush=True)
+    request = urllib.request.Request(KML_URL, headers={"User-Agent": UA})
+    with urllib.request.urlopen(request, timeout=60, context=CTX) as response:
+        path.write_bytes(response.read())
+    return path
+
+
+def route_map_from_kml(path: Path) -> dict[int, str]:
+    routes: dict[int, str] = {}
+    with zipfile.ZipFile(path) as archive:
+        for name in archive.namelist():
+            if not name.endswith(".kml"):
+                continue
+            root = ET.fromstring(archive.read(name))
+            values: dict[str, str] = {}
+            for data in root.iter():
+                if not data.tag.endswith("Data"):
+                    continue
+                key = data.attrib.get("name")
+                if key not in ("routeId", "routeNameC") or key in values:
+                    continue
+                value = next((child for child in data if child.tag.endswith("value")), None)
+                if value is not None:
+                    values[key] = (value.text or "").strip()
+            route_id = values.get("routeId")
+            code = values.get("routeNameC")
+            if route_id and code:
+                routes[int(route_id)] = code
+    if not routes:
+        raise SystemExit("KML_GMB.zip had no route ids")
+    return routes
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--budget", type=int, default=None)
     parser.add_argument("--routes-only", action="store_true")
+    parser.add_argument("--refresh-kml", action="store_true")
     args = parser.parse_args()
+
+    kml_routes = route_map_from_kml(fetch_kml(args.refresh_kml))
+    write_route_map(kml_routes)
+    if args.routes_only:
+        return
 
     pairs, resolved, total = pairs_from_routes()
     if resolved == total:
-        write_route_map(pairs)
+        api_routes = {int(route_id): code for route_id, _seq, code in pairs}
+        write_route_map({**kml_routes, **api_routes})
     else:
-        print(f"route map not rewritten: {resolved}/{total} route details cached")
-    if args.routes_only:
-        return
+        print(f"route map kept from KML; {resolved}/{total} API route details cached")
     by_stop: dict[str, set[str]] = {}
     done = 0
     exhausted = False

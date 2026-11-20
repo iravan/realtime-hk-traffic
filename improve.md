@@ -12,7 +12,7 @@ expected impact.
 | P1 | Lazy-load the MTR line layer | 159 KB gzip less for non-MTR first load | Low | Low | Done |
 | P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Done |
 | P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Done |
-| P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Open |
+| P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Done |
 | P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Open |
 | P2 | Verify compression and cache headers | Smaller repeat visits | Low | Low | Open |
 
@@ -155,24 +155,28 @@ fail before deployment.
 
 ## P2: Generate the GMB route map offline
 
+**Status: done.** `fetch-minibus-routes.py --routes-only` now builds
+`gmb-routes.json` from `KML_GMB.zip` and exits without calling the GMB API. A
+full run seeds from KML, then merges API details to pick up new routes.
+
 **Problem.** `server/data/gmb-routes.json` maps 779 numeric route ids to route
 numbers. `KML_GMB.zip` contains the same 779 route ids, and `ROUTE_GMB.xml`
-contains the official route and fare reference. The current generation script
-uses the throttled GMB API to build the map.
+contains the official route and fare reference. The generation script previously
+used the throttled GMB API to build the map.
 
-**Proposed change.**
+**Implemented change.**
 
-- Generate `gmb-routes.json` from `KML_GMB.zip` or `ROUTE_GMB.xml`.
-- Keep the API crawl only for detecting routes that appeared after the archive.
-- Add a check that every route id used by the API has a map entry.
+- Download and cache `KML_GMB.zip` under `.cache/gmb`.
+- Parse `routeId` and `routeNameC` from every KML document.
+- Write `gmb-routes.json` from the KML map.
+- `--routes-only` returns before any API call.
+- A full run merges API route details over the KML map for new routes.
 
 **Validation.**
 
-- Generated map matches the current `gmb-routes.json` keys and values.
-- Minibus arrivals render the printed route number, not the numeric id.
-
-**Risk.** Low. Keep the current map in the repository until the new generator
-produces an identical result.
+- Generated map matches the current `gmb-routes.json` keys and values exactly.
+- The offline run writes 779 route ids.
+- Minibus arrivals still render printed route numbers, not numeric ids.
 
 ## P2: Generate MTR stop entries and line terminals
 

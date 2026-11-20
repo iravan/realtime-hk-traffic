@@ -161,10 +161,12 @@ the per-mode files are generated and ignored by Git.
 python3 server/scripts/fetch-minibus-routes.py --routes-only
 ```
 
-Rewrites `server/data/gmb-routes.json`. A full run without `--routes-only` also
-refreshes the `routes` arrays in `server/data/stops.json`. Responses are cached
-under `.cache/gmb`; the publisher throttles bursts, so a large refresh may need
-several runs with `--budget N`.
+Builds `server/data/gmb-routes.json` from the cached `KML_GMB.zip` and exits
+without calling the GMB API. A full run without `--routes-only` also refreshes
+the `routes` arrays in `server/data/stops.json` and merges API route details over
+the KML map for new routes. Responses are cached under `.cache/gmb`; the
+publisher throttles bursts, so a large refresh may need several runs with
+`--budget N`. Use `--refresh-kml` to download the KML archive again.
 
 ### 3. Night-stop flags
 

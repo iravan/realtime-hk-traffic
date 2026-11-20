@@ -534,7 +534,8 @@ https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml
 Source dataset: [Routes and fares of public transport (XML), GMB resource](https://data.gov.hk/en-data/dataset/hk-td-tis_14-routes-fares-xml/resource/36ae3d06-17fd-443c-bd7f-a2b543dfc981).
 
 It is bundled as `server/data/gmb-routes.json`, mapping numeric route ids to the
-route numbers printed on the minibus.
+route numbers printed on the minibus. Generate the map offline from
+`KML_GMB.zip`; the GMB API crawl only merges routes newer than the archive.
 
 ### GMB route information archive
 
