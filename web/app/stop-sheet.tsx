@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { modeLabel, stopIconUrl, type Mode } from "./stop-icon";
+import { useI18n, type Messages } from "./i18n";
+import { stopIconUrl, type Mode } from "./stop-icon";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
@@ -37,6 +38,7 @@ export function StopSheet({
   name: string;
   onClose: () => void;
 }) {
+  const { t } = useI18n();
   const sign = useMemo(() => stopIconUrl(mode), [mode]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const snapshotRef = useRef<Snapshot | null>(null);
@@ -105,7 +107,7 @@ export function StopSheet({
   }, []);
 
   const rows = snapshot ? soonestFirst(snapshot.rows) : [];
-  const age = snapshot ? ageOf(snapshot.fetched_at, now) : "";
+  const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
 
   return (
@@ -115,39 +117,39 @@ export function StopSheet({
           <img className="stop-sign" src={sign} alt="" />
           <div>
             <h2>{name}</h2>
-            <p className="mode">{modeLabel(mode)}</p>
+            <p className="mode">{t.mode[mode]}</p>
           </div>
         </div>
         <button type="button" onClick={onClose}>
-          Close
+          {t.sheet.close}
         </button>
       </header>
       {apiBase ? (
         <div className="body">
           {snapshot?.note === "no-arrivals" ? (
-            <p className="muted">A taxi stand has no arrival list.</p>
+            <p className="muted">{t.sheet.taxiNote}</p>
           ) : snapshot ? (
             <>
-              {snapshot.status === "delayed" ? <p className="stale">Delayed</p> : null}
-              {timetable ? <p className="muted">Not live. These are timetable times.</p> : null}
+              {snapshot.status === "delayed" ? <p className="stale">{t.sheet.delayed}</p> : null}
+              {timetable ? <p className="muted">{t.sheet.timetable}</p> : null}
               {rows.length === 0 ? (
-                <p className="muted">No arrivals right now.</p>
+                <p className="muted">{t.sheet.noArrivals}</p>
               ) : (
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
                       {row.route ? <strong>{row.route}</strong> : null}
                       <span>{row.destination}</span>
-                      <span> · {row.minutes !== undefined ? `${row.minutes} min` : row.time}</span>
+                      <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                   ))}
                 </ul>
               )}
-              {age ? <p className="muted">Updated {age}</p> : null}
+              {age ? <p className="muted">{t.sheet.updated(age)}</p> : null}
             </>
           ) : (
             <p className={state === "error" || state === "gone" ? "stale" : "muted"}>
-              {copy(state)}
+              {copy(state, t)}
             </p>
           )}
         </div>
@@ -156,11 +158,11 @@ export function StopSheet({
   );
 }
 
-function copy(state: State): string {
-  if (state === "gone") return "The snapshot is gone.";
-  if (state === "error") return "The arrivals feed did not answer.";
-  if (state === "waiting") return "Waiting for the live feed…";
-  return "Loading arrivals…";
+function copy(state: State, t: Messages): string {
+  if (state === "gone") return t.sheet.gone;
+  if (state === "error") return t.sheet.feedError;
+  if (state === "waiting") return t.sheet.waiting;
+  return t.sheet.loading;
 }
 
 function soonestFirst(rows: Row[]): Row[] {
@@ -172,12 +174,12 @@ function soonestFirst(rows: Row[]): Row[] {
   });
 }
 
-function ageOf(fetchedAt: string, now: number): string {
+function ageOf(fetchedAt: string, now: number, t: Messages): string {
   const then = Date.parse(fetchedAt);
   if (Number.isNaN(then)) return "";
   const seconds = Math.max(0, Math.round((now - then) / 1000));
-  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 60) return t.age.seconds(seconds);
   const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return `${minutes} min ago`;
-  return `${Math.round(minutes / 60)} h ago`;
+  if (minutes < 60) return t.age.minutes(minutes);
+  return t.age.hours(Math.round(minutes / 60));
 }

@@ -129,12 +129,6 @@ export function stopDotHighlight(mode: Mode): ImageData {
   return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-export function modeLabel(mode: Mode): string {
-  if (mode === "mtr") return "MTR";
-  if (mode === "bus") return "Bus";
-  if (mode === "minibus") return "Minibus";
-  return "Taxi";
-}
 
 // Stamping a flat fill of the icon's alpha around it builds a crisp outline
 // that follows every part of the artwork, including the pole and the vehicle.

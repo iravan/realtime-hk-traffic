@@ -48,6 +48,18 @@ button { cursor: pointer; }
 .brand { padding: 0.65rem 0.8rem; }
 .brand h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
+.brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
+.lang-toggle {
+  min-height: 26px;
+  padding: 0 0.5rem;
+  border: 1px solid rgba(28, 25, 21, 0.25);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+.lang-toggle:hover { background: rgba(28, 25, 21, 0.06); }
+.lang-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .filters { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.45rem; }
 .filters button {
   display: inline-flex;
@@ -202,5 +214,22 @@ button { cursor: pointer; }
   color: #5d564e;
   font-size: 0.78rem;
   line-height: 1.35;
+}
+
+/* The station name shown on hover or tap of an MTR sign. Navy matches the
+   station block, so the label reads as part of the same sign. */
+.stop-popup .maplibregl-popup-content {
+  background: var(--mtr);
+  color: var(--paper);
+  border-radius: 0.45rem;
+  padding: 0.3rem 0.6rem 0.35rem;
+  box-shadow: 0 10px 26px rgba(28, 25, 21, 0.3);
+}
+.stop-popup .maplibregl-popup-tip { border-top-color: var(--mtr); }
+.stop-name {
+  max-width: 15rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
 }
 

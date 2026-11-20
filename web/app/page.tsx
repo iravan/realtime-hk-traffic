@@ -15,9 +15,9 @@ import {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { StopSheet } from "./stop-sheet";
+import { useI18n } from "./i18n";
 import {
   loadVehicleImages,
-  modeLabel,
   stopDotHighlight,
   stopDotImage,
   stopIconHighlight,
@@ -158,9 +158,11 @@ type Fix = { latitude: number; longitude: number };
 type LocateState = "idle" | "locating" | "error";
 
 export default function Page() {
+  const { locale, t, toggleLocale } = useI18n();
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MlMap | null>(null);
   const clearLineRef = useRef<() => void>(() => {});
+  const hideStopNameRef = useRef<() => void>(() => {});
   const hoveredLineRef = useRef<string | null>(null);
   const hoveredStopRef = useRef<string | null>(null);
   const [active, setActive] = useState<Mode>("bus");
@@ -394,6 +396,32 @@ export default function Page() {
         maxWidth: "300px",
       });
 
+      // The station name follows the pointer on desktop and a tap on a phone,
+      // so a sign can be read without opening its sheet. A tap pins the name
+      // until the map moves, the tab changes, or another spot is picked.
+      const stopPopup = new Popup({
+        className: "stop-popup",
+        closeButton: false,
+        closeOnClick: false,
+        offset: 30,
+        maxWidth: "260px",
+      });
+      let stopNamePinned = false;
+
+      const showStopName = (stop: Stop) => {
+        const node = document.createElement("div");
+        node.className = "stop-name";
+        node.textContent = stop.name;
+        stopPopup.setDOMContent(node).setLngLat([stop.longitude, stop.latitude]);
+        if (!stopPopup.isOpen()) stopPopup.addTo(map);
+      };
+
+      const hideStopName = () => {
+        stopNamePinned = false;
+        if (stopPopup.isOpen()) stopPopup.remove();
+      };
+      hideStopNameRef.current = hideStopName;
+
       const lineTooltip = (feature: MapGeoJSONFeature) => {
         const properties = feature.properties ?? {};
         const ref = typeof properties.ref === "string" ? properties.ref : "";
@@ -451,6 +479,8 @@ export default function Page() {
             features: [],
           });
         }
+        // A name pinned by a tap outlives the pointer leaving the sign.
+        if (!stopNamePinned) hideStopName();
       };
 
       const clearHoveredLine = () => {
@@ -509,6 +539,7 @@ export default function Page() {
           "icon-size",
           dotsRef.current ? selectedDotSize : selectedSignSize,
         );
+        showStopName(stop);
       };
 
       const lineAt = (point: { x: number; y: number }) => {
@@ -545,6 +576,12 @@ export default function Page() {
         showHoveredLine(feature, event.lngLat);
       });
       map.on("click", (event) => {
+        // A tap on the open map drops a pinned station name.
+        if (
+          map.queryRenderedFeatures(event.point, { layers: ["stops"] }).length === 0
+        ) {
+          hideStopName();
+        }
         const feature = lineAt(event.point);
         if (feature) {
           showHoveredLine(feature, event.lngLat);
@@ -553,7 +590,10 @@ export default function Page() {
         }
       });
       map.on("mouseout", clearHoveredLine);
-      map.on("movestart", clearHoveredLine);
+      map.on("movestart", () => {
+        hideStopName();
+        clearHoveredLine();
+      });
 
       map.on("mousemove", "stops", (event) => {
         const feature = event.features?.[0];
@@ -572,6 +612,12 @@ export default function Page() {
         if (typeof id !== "string") return;
         const match = stopsRef.current.find((stop) => stop.id === id);
         if (!match) return;
+        if (match.mode === "mtr") {
+          stopNamePinned = true;
+          showStopName(match);
+        } else {
+          hideStopName();
+        }
         if (open) {
           setSelected(match);
           setBoard(match);
@@ -824,6 +870,7 @@ export default function Page() {
 
   useEffect(() => {
     clearLineRef.current();
+    hideStopNameRef.current();
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     drawStops(map);
@@ -863,8 +910,19 @@ export default function Page() {
       </div>
       <div className="chrome">
         <div className="brand">
-          <h1>香港交通</h1>
-          <p>{stops.length} stops in view</p>
+          <div className="brand-head">
+            <h1>{t.brand}</h1>
+            <button
+              type="button"
+              className="lang-toggle"
+              onClick={toggleLocale}
+              aria-label={t.switchLanguage}
+              title={t.switchLanguage}
+            >
+              {locale === "en" ? "中文" : "EN"}
+            </button>
+          </div>
+          <p>{t.stopsInView(stops.length)}</p>
         </div>
         <div className="channel">
           <div className="filters">
@@ -882,14 +940,14 @@ export default function Page() {
                 }}
               >
                 <img src={categoryIcons[mode]} alt="" />
-                {modeLabel(mode)}
+                {t.mode[mode]}
               </button>
             ))}
           </div>
           {mtrClosed ? (
             <div className="notice" role="status">
-              <strong>MTR has stopped for the night</strong>
-              <span>Service hours {serviceHoursLabel(mtrSchedule)} Hong Kong time</span>
+              <strong>{t.mtrClosedTitle}</strong>
+              <span>{t.mtrClosedHours(serviceHoursLabel(mtrSchedule))}</span>
             </div>
           ) : null}
         </div>
@@ -900,8 +958,8 @@ export default function Page() {
         data-state={locateState}
         disabled={locateState === "locating"}
         aria-busy={locateState === "locating"}
-        aria-label={locateLabel(locateState)}
-        title={locateLabel(locateState)}
+        aria-label={t.locate[locateState]}
+        title={t.locate[locateState]}
         onClick={() => locate(true)}
       >
         <svg
@@ -930,13 +988,6 @@ export default function Page() {
       ) : null}
     </div>
   );
-}
-
-
-function locateLabel(state: LocateState): string {
-  if (state === "locating") return "Finding your location…";
-  if (state === "error") return "Could not get your location. Try again.";
-  return "Show my location";
 }
 
 function inHongKong(fix: Fix): boolean {
