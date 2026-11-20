@@ -229,7 +229,11 @@ route entries keyed by stop id: Central Pier 7 (`ferry:101339`) and Tsim Sha
 Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`) runs
 07:30–23:00. Other piers use the ferry default, 03:00–01:00. On Sundays and
 public holidays the first Wan Chai boat is 07:40; the stored window opens with
-the Monday–Saturday boat.
+the Monday–Saturday boat. A ferry sheet lists destination, first boat, and
+last boat from `web/public/ferry-services.json` when that pier is in the
+file, including the Lamma and outlying kaitos that publish those times, and
+keeps this window only when it is not. Rebuild that file with
+`python3 server/scripts/fetch-ferry-berths.py`.
 
 ### 7. Ferry piers
 

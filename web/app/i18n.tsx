@@ -29,6 +29,7 @@ export type Messages = {
   closedHours: (hours: string) => string;
   clock: (value: string) => string;
   nextDayHours: (from: string, to: string) => string;
+  nextDayTime: (time: string) => string;
   locate: {
     idle: string;
     locating: string;
@@ -48,6 +49,9 @@ export type Messages = {
     openStreetMap: string;
     taxiNote: string;
     hours: string;
+    destination: string;
+    firstBoat: string;
+    lastBoat: string;
     taxiHours: string;
     taxiAllDay: string;
     delayed: string;
@@ -110,6 +114,7 @@ const en: Messages = {
   closedHours: (hours) => `Service hours ${hours}, Hong Kong time`,
   clock: englishClock,
   nextDayHours: (from, to) => `${from}–${to} (next day)`,
+  nextDayTime: (time) => `${time} (next day)`,
   locate: {
     idle: "Show my location",
     locating: "Finding your location…",
@@ -129,6 +134,9 @@ const en: Messages = {
     openStreetMap: "OpenStreetMap",
     taxiNote: "A taxi stand has no arrival list.",
     hours: "Working hours",
+    destination: "Destination",
+    firstBoat: "First",
+    lastBoat: "Last",
     taxiHours: "Working hours",
     taxiAllDay: "Open all day",
     delayed: "Delayed",
@@ -159,6 +167,7 @@ const zhHant: Messages = {
   closedHours: (hours) => `服務時間 ${hours}（香港時間）`,
   clock: chineseClock,
   nextDayHours: (from, to) => `${from}–翌日${to}`,
+  nextDayTime: (time) => `翌日${time}`,
   locate: {
     idle: "顯示我的位置",
     locating: "正在定位…",
@@ -178,6 +187,9 @@ const zhHant: Messages = {
     openStreetMap: "OpenStreetMap",
     taxiNote: "的士站沒有到站時間。",
     hours: "服務時間",
+    destination: "目的地",
+    firstBoat: "頭班",
+    lastBoat: "尾班",
     taxiHours: "開放時間",
     taxiAllDay: "全日開放",
     delayed: "延誤",

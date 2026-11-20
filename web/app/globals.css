@@ -140,6 +140,8 @@ button { cursor: pointer; }
   display: flex;
   flex-direction: column;
   min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 .sheet header, .sheet .body { padding: 0.85rem 1rem; }
 .sheet header {
@@ -147,7 +149,7 @@ button { cursor: pointer; }
   z-index: 1;
   border-bottom: 1px solid rgba(28, 25, 21, 0.12);
 }
-.sheet-actions { display: flex; align-items: center; flex: none; margin-left: auto; gap: 0.15rem; }
+.sheet-actions { display: flex; align-items: center; flex: none; gap: 0; }
 .sheet header.station .mode,
 .sheet header.station button { color: inherit; }
 .sheet header button {
@@ -188,16 +190,20 @@ button { cursor: pointer; }
   border: 0;
   border-image: none;
 }
-.stop-title { display: flex; align-items: flex-start; gap: 0.65rem; min-width: 0; }
-.stop-name { flex: 1; min-width: 0; }
-.stop-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
-.mode-line { display: flex; align-items: center; gap: 0.5rem; }
+.stop-title { display: flex; align-items: flex-start; gap: 0.65rem; min-width: 0; max-width: 100%; }
+.sheet .stop-name { flex: 1; min-width: 0; }
+.stop-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.35rem; }
+.stop-copy { min-width: 0; }
 .stop-sign { display: block; width: 32px; height: 46px; object-fit: contain; flex: none; }
 .taxi-sign { width: 36px; height: 36px; align-self: center; }
-.sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; }
+.sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
 .sheet .mode { margin: 0; min-width: 0; color: #6f675e; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
 .sheet .body { overflow: auto; }
+.ferry-services { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.85rem; }
+.ferry-services th, .ferry-services td { padding: 0.28rem 0.45rem 0.28rem 0; vertical-align: top; text-align: left; white-space: pre-line; overflow-wrap: anywhere; }
+.ferry-services th:first-child, .ferry-services td:first-child { width: 40%; }
+.ferry-services th { color: #6f675e; font-weight: 600; }
 .sheet .sheet-icon {
   display: grid;
   place-items: center;
@@ -368,7 +374,7 @@ button { cursor: pointer; }
   border-color: color-mix(in srgb, var(--ink) 18%, transparent);
 }
 .stop-popup.taxi-type .maplibregl-popup-tip { border-top-color: var(--paper); }
-.stop-name {
+.stop-popup .stop-name {
   max-width: 15rem;
   font-size: 0.85rem;
   font-weight: 600;

@@ -40,6 +40,14 @@ type Snapshot = {
 
 type State = "loading" | "waiting" | "gone" | "error";
 
+type FerryText = { zh: string; en: string };
+
+type FerryService = {
+  destination: string;
+  first: FerryText;
+  last: FerryText;
+};
+
 export function StopSheet({
   id,
   mode,
@@ -65,6 +73,22 @@ export function StopSheet({
 }) {
   const { locale, t } = useI18n();
   const [sign, setSign] = useState<string | null>(null);
+  const [sailings, setSailings] = useState<FerryService[] | null>(null);
+  useEffect(() => {
+    if (mode !== "ferry") return;
+    let cancelled = false;
+    fetch(`${basePath}/ferry-services.json`)
+      .then((response) => response.json())
+      .then((body: Record<string, FerryService[]>) => {
+        if (!cancelled) setSailings(body[id] ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setSailings([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, mode]);
   useEffect(() => {
     if (mode === "taxi" && taxi) return;
     let cancelled = false;
@@ -175,20 +199,18 @@ export function StopSheet({
           )}
           <div className="stop-name">
             <div className="stop-heading">
-              <h2>{localizeStopName(name, mode, locale)}</h2>
-              <button type="button" onClick={onClose}>
-                {t.sheet.close}
-              </button>
-            </div>
-            <div className="mode-line">
-              <p className="mode">
-                {mode === "taxi" && taxiType
-                  ? locale === "en"
-                    ? taxiType.en
-                    : taxiType.tc
-                  : t.mode[mode]}
-              </p>
+              <div className="stop-copy">
+                <h2>{localizeStopName(name, mode, locale)}</h2>
+                <p className="mode">
+                  {mode === "taxi" && taxiType
+                    ? locale === "en"
+                      ? taxiType.en
+                      : taxiType.tc
+                    : t.mode[mode]}
+                </p>
+              </div>
               <div className="sheet-actions">
+
                 <ShareStop
                   id={id}
                   label={t.sheet.share}
@@ -210,6 +232,9 @@ export function StopSheet({
                     ["osm", t.sheet.openStreetMap],
                   ]}
                 />
+                <button type="button" onClick={onClose}>
+                  {t.sheet.close}
+                </button>
               </div>
             </div>
           </div>
@@ -223,7 +248,29 @@ export function StopSheet({
           </>
         ) : apiBase ? (
           <>
-          {serviceHours ? (
+          {mode === "ferry" && sailings === null ? null : sailings && sailings.length > 0 ? (
+            <table className="ferry-services">
+              <thead>
+                <tr>
+                  <th>{t.sheet.destination}</th>
+                  <th>{t.sheet.firstBoat}</th>
+                  <th>{t.sheet.lastBoat}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sailings.map((sailing, index) => {
+                  const text = locale === "en" ? "en" : "zh";
+                  return (
+                    <tr key={`${sailing.destination}-${index}`}>
+                      <td>{localizeBilingualName(sailing.destination, locale)}</td>
+                      <td>{formatFerryWhen(sailing.first[text], t)}</td>
+                      <td>{formatFerryLast(sailing.first[text], sailing.last[text], t)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : serviceHours ? (
             <>
               <p className="muted">{t.sheet.hours}</p>
               <p>{serviceHours}</p>
@@ -469,6 +516,27 @@ function StationChip({ name, locale }: { name: string; locale: Locale }) {
       {localizeStopName(name, "mtr", locale)}
     </span>
   );
+}
+
+function formatFerryWhen(value: string, t: Messages): string {
+  return value
+    .split("\n")
+    .map((line) => line.replace(/(\d{1,2}):(\d{2})/g, (_match, hour, minute) => t.clock(`${hour.padStart(2, "0")}:${minute}`)))
+    .join("\n");
+}
+
+function bareClock(value: string): number | null {
+  const match = value.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return null;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function formatFerryLast(first: string, last: string, t: Messages): string {
+  const shown = formatFerryWhen(last, t);
+  const from = bareClock(first);
+  const to = bareClock(last);
+  if (from != null && to != null && to < from) return t.nextDayTime(shown);
+  return shown;
 }
 
 function copy(state: State, t: Messages): string {
