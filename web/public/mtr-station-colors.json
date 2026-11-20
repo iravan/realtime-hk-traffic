@@ -1,0 +1,394 @@
+{
+  "CEN": {
+    "color": "#AA0000",
+    "font": "#FFFFFF"
+  },
+  "ADM": {
+    "color": "#3A86D4",
+    "font": "#FFFFFF"
+  },
+  "TST": {
+    "color": "#FFEF00",
+    "font": "#000000"
+  },
+  "ETS": {
+    "color": "#FFFF00",
+    "font": "#000000"
+  },
+  "JOR": {
+    "color": "#69B72B",
+    "font": "#FFFFFF"
+  },
+  "YMT": {
+    "color": "#CCCCCC",
+    "font": "#000000"
+  },
+  "MOK": {
+    "color": "#BE2700",
+    "font": "#FFFFFF"
+  },
+  "PRE": {
+    "color": "#8674A1",
+    "font": "#FFFFFF"
+  },
+  "SSP": {
+    "color": "#016258",
+    "font": "#FFFFFF"
+  },
+  "CSW": {
+    "color": "#B5A265",
+    "font": "#000000"
+  },
+  "LCK": {
+    "color": "#E04300",
+    "font": "#FFFFFF"
+  },
+  "MEF": {
+    "color": "#1E90FF",
+    "font": "#FFFFFF"
+  },
+  "LAK": {
+    "color": "#BB2200",
+    "font": "#FFFFFF"
+  },
+  "KWF": {
+    "color": "#015437",
+    "font": "#FFFFFF"
+  },
+  "KWH": {
+    "color": "#FFEF00",
+    "font": "#000000"
+  },
+  "TWH": {
+    "color": "#A2B741",
+    "font": "#FFFFFF"
+  },
+  "TSW": {
+    "color": "#BB2200",
+    "font": "#FFFFFF"
+  },
+  "KET": {
+    "color": "#95D0D0",
+    "font": "#000000"
+  },
+  "HKU": {
+    "color": "#B8DA89",
+    "font": "#000000"
+  },
+  "SYP": {
+    "color": "#8B7BA0",
+    "font": "#000000"
+  },
+  "SHW": {
+    "color": "#FFD280",
+    "font": "#6B4513"
+  },
+  "WAC": {
+    "color": "#E1EB2B",
+    "font": "#000000"
+  },
+  "CAB": {
+    "color": "#C8A2C8",
+    "font": "#000000"
+  },
+  "TIH": {
+    "color": "#FF7D00",
+    "font": "#000000"
+  },
+  "FOH": {
+    "color": "#4B8842",
+    "font": "#FFFFFF"
+  },
+  "NOP": {
+    "color": "#E86220",
+    "font": "#000000"
+  },
+  "QUB": {
+    "color": "#00918C",
+    "font": "#FFFFFF"
+  },
+  "TAK": {
+    "color": "#BB2200",
+    "font": "#FFFFFF"
+  },
+  "SWH": {
+    "color": "#FFCC00",
+    "font": "#000000"
+  },
+  "SKW": {
+    "color": "#191970",
+    "font": "#FFFFFF"
+  },
+  "HFC": {
+    "color": "#C01204",
+    "font": "#FFFFFF"
+  },
+  "CHW": {
+    "color": "#38510E",
+    "font": "#FFFFFF"
+  },
+  "WHA": {
+    "color": "#AECFF0",
+    "font": "#000000"
+  },
+  "HOM": {
+    "color": "#A2CF5A",
+    "font": "#000000"
+  },
+  "SKM": {
+    "color": "#669933",
+    "font": "#FFFFFF"
+  },
+  "KOT": {
+    "color": "#007FFF",
+    "font": "#FFFFFF"
+  },
+  "LOF": {
+    "color": "#579E2F",
+    "font": "#000000"
+  },
+  "WTS": {
+    "color": "#FFFF00",
+    "font": "#000000"
+  },
+  "DIH": {
+    "color": "#000000",
+    "font": "#FFFFFF"
+  },
+  "CHH": {
+    "color": "#27408B",
+    "font": "#FFFFFF"
+  },
+  "KOB": {
+    "color": "#C80815",
+    "font": "#FFFFFF"
+  },
+  "NTK": {
+    "color": "#A4BF8B",
+    "font": "#FFFFFF"
+  },
+  "KWT": {
+    "color": "#FFFFFF",
+    "font": "#000000"
+  },
+  "LAT": {
+    "color": "#0083BE",
+    "font": "#FFFFFF"
+  },
+  "YAT": {
+    "color": "#FFEF00",
+    "font": "#000000"
+  },
+  "TIK": {
+    "color": "#DCD144",
+    "font": "#000000"
+  },
+  "TKO": {
+    "color": "#E60012",
+    "font": "#FFFFFF"
+  },
+  "LHP": {
+    "color": "#826F79",
+    "font": "#FFFFFF"
+  },
+  "HAH": {
+    "color": "#2EA9DF",
+    "font": "#000000"
+  },
+  "POA": {
+    "color": "#F28500",
+    "font": "#000000"
+  },
+  "HOK": {
+    "color": "#FFFAFA",
+    "font": "#000000"
+  },
+  "KOW": {
+    "color": "#ACA28A",
+    "font": "#000000"
+  },
+  "OLY": {
+    "color": "#4584C4",
+    "font": "#000000"
+  },
+  "NAC": {
+    "color": "#F0EE86",
+    "font": "#000000"
+  },
+  "TSY": {
+    "color": "#A1C6CA",
+    "font": "#000000"
+  },
+  "TUC": {
+    "color": "#6A5ACD",
+    "font": "#000000"
+  },
+  "AIR": {
+    "color": "#808080",
+    "font": "#000000"
+  },
+  "AWE": {
+    "color": "#FFFFFF",
+    "font": "#000000"
+  },
+  "HUH": {
+    "color": "#F08080",
+    "font": "#000000"
+  },
+  "EXC": {
+    "color": "#94A8B0",
+    "font": "#FFFFFF"
+  },
+  "TAW": {
+    "color": "#05117E",
+    "font": "#FFFFFF"
+  },
+  "SHT": {
+    "color": "#BB7796",
+    "font": "#FFFFFF"
+  },
+  "FAN": {
+    "color": "#9ACD32",
+    "font": "#FFFFFF"
+  },
+  "LMC": {
+    "color": "#009E9B",
+    "font": "#FFFFFF"
+  },
+  "OCP": {
+    "color": "#00BFFF",
+    "font": "#FFFFFF"
+  },
+  "WCH": {
+    "color": "#FFFF00",
+    "font": "#000000"
+  },
+  "SOH": {
+    "color": "#74B11B",
+    "font": "#FFFFFF"
+  },
+  "LET": {
+    "color": "#FF7F00",
+    "font": "#FFFFFF"
+  },
+  "SUN": {
+    "color": "#808080",
+    "font": "#C0C0C0"
+  },
+  "DIS": {
+    "color": "#005533",
+    "font": "#D4AF37"
+  },
+  "MKK": {
+    "color": "#006400",
+    "font": "#FFFFFF"
+  },
+  "FOT": {
+    "color": "#FFA500",
+    "font": "#FFFFFF"
+  },
+  "RAC": {
+    "color": "#15AE69",
+    "font": "#FFFFFF"
+  },
+  "UNI": {
+    "color": "#00BFFF",
+    "font": "#FFFFFF"
+  },
+  "TAP": {
+    "color": "#976E9A",
+    "font": "#FFFFFF"
+  },
+  "TWO": {
+    "color": "#C89F05",
+    "font": "#FFFFFF"
+  },
+  "SHS": {
+    "color": "#F6A600",
+    "font": "#FFFFFF"
+  },
+  "LOW": {
+    "color": "#8DC476",
+    "font": "#FFFFFF"
+  },
+  "HIK": {
+    "color": "#8FBE6C",
+    "font": "#182F4F"
+  },
+  "CKT": {
+    "color": "#FFD280",
+    "font": "#000000"
+  },
+  "STW": {
+    "color": "#FFC0CB",
+    "font": "#000000"
+  },
+  "CIO": {
+    "color": "#FFBF00",
+    "font": "#000000"
+  },
+  "SHM": {
+    "color": "#FBEC5D",
+    "font": "#000000"
+  },
+  "TSH": {
+    "color": "#48D1CC",
+    "font": "#000000"
+  },
+  "HEO": {
+    "color": "#87CEFA",
+    "font": "#000000"
+  },
+  "MOS": {
+    "color": "#E0B0FF",
+    "font": "#000000"
+  },
+  "WKS": {
+    "color": "#954535",
+    "font": "#FFFFFF"
+  },
+  "KAT": {
+    "color": "#FF8C00",
+    "font": "#000000"
+  },
+  "SUW": {
+    "color": "#D08A00",
+    "font": "#000000"
+  },
+  "TKW": {
+    "color": "#A9E2F3",
+    "font": "#000000"
+  },
+  "AUS": {
+    "color": "#B45529",
+    "font": "#FFFFFF"
+  },
+  "TWW": {
+    "color": "#A81C07",
+    "font": "#FFFFFF"
+  },
+  "KSR": {
+    "color": "#CC5500",
+    "font": "#FFFFFF"
+  },
+  "YUL": {
+    "color": "#40F5F5",
+    "font": "#000000"
+  },
+  "LOP": {
+    "color": "#FFB3BF",
+    "font": "#000000"
+  },
+  "TIS": {
+    "color": "#FC8A17",
+    "font": "#000000"
+  },
+  "SIH": {
+    "color": "#7FFFD4",
+    "font": "#000000"
+  },
+  "TUM": {
+    "color": "#035F94",
+    "font": "#FFFFFF"
+  }
+}

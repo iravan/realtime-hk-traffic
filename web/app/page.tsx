@@ -26,6 +26,7 @@ import {
   type Mode,
 } from "./stop-icon";
 import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
+import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
@@ -409,6 +410,17 @@ export default function Page() {
         node.textContent = localizeStopName(stop.name, stop.mode, localeRef.current);
         stopPopup.setDOMContent(node).setLngLat([stop.longitude, stop.latitude]);
         if (!stopPopup.isOpen()) stopPopup.addTo(map);
+        const station = mtrStationColor(stop.id);
+        const popup = stopPopup.getElement();
+        if (!popup) return;
+        popup.classList.toggle("station-badge-chh", station?.badge === "station-badge-chh");
+        if (station && !station.badge) {
+          popup.style.setProperty("--stop-bg", station.color);
+          popup.style.setProperty("--stop-fg", station.font);
+        } else {
+          popup.style.removeProperty("--stop-bg");
+          popup.style.removeProperty("--stop-fg");
+        }
       };
 
       const hideStopName = () => {
@@ -442,9 +454,33 @@ export default function Page() {
         if (terminals) {
           const ends = document.createElement("div");
           ends.className = "line-tooltip-terminals";
-          const from = localizeBilingualName(terminals.from, localeRef.current);
-          const to = localizeBilingualName(terminals.to, localeRef.current);
-          ends.textContent = `${from} ↔ ${to}`;
+          const locale = localeRef.current;
+          const chip = (label: string) => {
+            const node = document.createElement("span");
+            const color = mtrDestinationColor(label);
+            node.className = color?.badge ? `station-chip ${color.badge}` : "station-chip";
+            node.textContent = localizeBilingualName(label, locale);
+            if (color && !color.badge) {
+              node.style.background = color.color;
+              node.style.color = color.font;
+            }
+            return node;
+          };
+          const appendEnd = (value: string) => {
+            value.split(" / ").forEach((part, index) => {
+              if (index > 0) {
+                const or = document.createElement("span");
+                or.textContent = "/";
+                ends.appendChild(or);
+              }
+              ends.appendChild(chip(part.trim()));
+            });
+          };
+          appendEnd(terminals.from);
+          const arrow = document.createElement("span");
+          arrow.textContent = "↔";
+          ends.appendChild(arrow);
+          appendEnd(terminals.to);
           text.appendChild(ends);
         }
 

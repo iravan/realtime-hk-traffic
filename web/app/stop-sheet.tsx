@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useI18n, type Messages } from "./i18n";
+import { useI18n, type Locale, type Messages } from "./i18n";
+import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { stopIconUrl, type Mode } from "./stop-icon";
 import { localizeStopName } from "./stop-name";
 
@@ -118,10 +119,18 @@ export function StopSheet({
   const rows = snapshot ? soonestFirst(snapshot.rows) : [];
   const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
+  const station = mode === "mtr" ? mtrStationColor(id) : null;
 
   return (
     <aside className="sheet">
-      <header>
+      <header
+        className={station ? ["station", station.badge].filter(Boolean).join(" ") : undefined}
+        style={
+          station && !station.badge
+            ? { background: station.color, color: station.font }
+            : undefined
+        }
+      >
         <div className="stop-title">
           <img className="stop-sign" src={sign} alt="" />
           <div>
@@ -148,7 +157,11 @@ export function StopSheet({
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
                       {row.route && mode !== "mtr" ? <strong>{row.route}</strong> : null}
-                      <span>{localizeStopName(row.destination, mode, locale)}</span>
+                      {mode === "mtr" ? (
+                        <StationChip name={row.destination} locale={locale} />
+                      ) : (
+                        <span>{row.destination}</span>
+                      )}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                   ))}
@@ -164,6 +177,20 @@ export function StopSheet({
         </div>
       ) : null}
     </aside>
+  );
+}
+
+function StationChip({ name, locale }: { name: string; locale: Locale }) {
+  const color = mtrDestinationColor(name);
+  return (
+    <span
+      className={color?.badge ? `station-chip ${color.badge}` : "station-chip"}
+      style={
+        color && !color.badge ? { background: color.color, color: color.font } : undefined
+      }
+    >
+      {localizeStopName(name, "mtr", locale)}
+    </span>
   );
 }
 

@@ -67,7 +67,116 @@ The Hong Kong Mass Transit Railway (MTR) currently operates **10 main railway li
 
 ---
 
-## 3. Interchange Notes
+## 3. Station tile colours
+
+Each heavy-rail station has its own platform tile colour and a font colour for lettering on that tile. Neither is the line colour in the tables above. Both values are taken from the Chinese Wikipedia template [港铁车站颜色](https://zh.wikipedia.org/zh-hans/Template:%E6%B8%AF%E9%90%B5%E8%BB%8A%E7%AB%99%E9%A1%8F%E8%89%B2). The MTR does not publish this list. The same map is in `web/public/mtr-station-colors.json`.
+
+Choi Hung (`CHH`) keeps the tile `#27408B` and the font `#FFFFFF`, and adds a rainbow. On the arrival header and the map hover label the rainbow runs top to bottom. On a Choi Hung chip it is a stripe along the bottom. The rainbow colours, in order, are `#E60012`, `#F39800`, `#FFF100`, `#009944`, `#00A0E9`, `#1D2088`, `#920783`.
+
+| Code | Station | Tile colour | Font colour |
+| :--- | :--- | :--- | :--- |
+| `CEN` | Central 中環 | `#AA0000` | `#FFFFFF` |
+| `ADM` | Admiralty 金鐘 | `#3A86D4` | `#FFFFFF` |
+| `TST` | Tsim Sha Tsui 尖沙咀 | `#FFEF00` | `#000000` |
+| `ETS` | East Tsim Sha Tsui 尖東 | `#FFFF00` | `#000000` |
+| `JOR` | Jordan 佐敦 | `#69B72B` | `#FFFFFF` |
+| `YMT` | Yau Ma Tei 油麻地 | `#CCCCCC` | `#000000` |
+| `MOK` | Mong Kok 旺角 | `#BE2700` | `#FFFFFF` |
+| `PRE` | Prince Edward 太子 | `#8674A1` | `#FFFFFF` |
+| `SSP` | Sham Shui Po 深水埗 | `#016258` | `#FFFFFF` |
+| `CSW` | Cheung Sha Wan 長沙灣 | `#B5A265` | `#000000` |
+| `LCK` | Lai Chi Kok 荔枝角 | `#E04300` | `#FFFFFF` |
+| `MEF` | Mei Foo 美孚 | `#1E90FF` | `#FFFFFF` |
+| `LAK` | Lai King 荔景 | `#BB2200` | `#FFFFFF` |
+| `KWF` | Kwai Fong 葵芳 | `#015437` | `#FFFFFF` |
+| `KWH` | Kwai Hing 葵興 | `#FFEF00` | `#000000` |
+| `TWH` | Tai Wo Hau 大窩口 | `#A2B741` | `#FFFFFF` |
+| `TSW` | Tsuen Wan 荃灣 | `#BB2200` | `#FFFFFF` |
+| `KET` | Kennedy Town 堅尼地城 | `#95D0D0` | `#000000` |
+| `HKU` | HKU 香港大學 | `#B8DA89` | `#000000` |
+| `SYP` | Sai Ying Pun 西營盤 | `#8B7BA0` | `#000000` |
+| `SHW` | Sheung Wan 上環 | `#FFD280` | `#6B4513` |
+| `WAC` | Wan Chai 灣仔 | `#E1EB2B` | `#000000` |
+| `CAB` | Causeway Bay 銅鑼灣 | `#C8A2C8` | `#000000` |
+| `TIH` | Tin Hau 天后 | `#FF7D00` | `#000000` |
+| `FOH` | Fortress Hill 炮台山 | `#4B8842` | `#FFFFFF` |
+| `NOP` | North Point 北角 | `#E86220` | `#000000` |
+| `QUB` | Quarry Bay 鰂魚涌 | `#00918C` | `#FFFFFF` |
+| `TAK` | Tai Koo 太古 | `#BB2200` | `#FFFFFF` |
+| `SWH` | Sai Wan Ho 西灣河 | `#FFCC00` | `#000000` |
+| `SKW` | Shau Kei Wan 筲箕灣 | `#191970` | `#FFFFFF` |
+| `HFC` | Heng Fa Chuen 杏花邨 | `#C01204` | `#FFFFFF` |
+| `CHW` | Chai Wan 柴灣 | `#38510E` | `#FFFFFF` |
+| `WHA` | Whampoa 黃埔 | `#AECFF0` | `#000000` |
+| `HOM` | Ho Man Tin 何文田 | `#A2CF5A` | `#000000` |
+| `SKM` | Shek Kip Mei 石硤尾 | `#669933` | `#FFFFFF` |
+| `KOT` | Kowloon Tong 九龍塘 | `#007FFF` | `#FFFFFF` |
+| `LOF` | Lok Fu 樂富 | `#579E2F` | `#000000` |
+| `WTS` | Wong Tai Sin 黃大仙 | `#FFFF00` | `#000000` |
+| `DIH` | Diamond Hill 鑽石山 | `#000000` | `#FFFFFF` |
+| `CHH` | Choi Hung 彩虹 | `#27408B` | `#FFFFFF` |
+| `KOB` | Kowloon Bay 九龍灣 | `#C80815` | `#FFFFFF` |
+| `NTK` | Ngau Tau Kok 牛頭角 | `#A4BF8B` | `#FFFFFF` |
+| `KWT` | Kwun Tong 觀塘 | `#FFFFFF` | `#000000` |
+| `LAT` | Lam Tin 藍田 | `#0083BE` | `#FFFFFF` |
+| `YAT` | Yau Tong 油塘 | `#FFEF00` | `#000000` |
+| `TIK` | Tiu Keng Leng 調景嶺 | `#DCD144` | `#000000` |
+| `TKO` | Tseung Kwan O 將軍澳 | `#E60012` | `#FFFFFF` |
+| `LHP` | LOHAS Park 康城 | `#826F79` | `#FFFFFF` |
+| `HAH` | Hang Hau 坑口 | `#2EA9DF` | `#000000` |
+| `POA` | Po Lam 寶琳 | `#F28500` | `#000000` |
+| `HOK` | Hong Kong 香港 | `#FFFAFA` | `#000000` |
+| `KOW` | Kowloon 九龍 | `#ACA28A` | `#000000` |
+| `OLY` | Olympic 奧運 | `#4584C4` | `#000000` |
+| `NAC` | Nam Cheong 南昌 | `#F0EE86` | `#000000` |
+| `TSY` | Tsing Yi 青衣 | `#A1C6CA` | `#000000` |
+| `TUC` | Tung Chung 東涌 | `#6A5ACD` | `#000000` |
+| `AIR` | Airport 機場 | `#808080` | `#000000` |
+| `AWE` | AsiaWorld-Expo 博覽館 | `#FFFFFF` | `#000000` |
+| `HUH` | Hung Hom 紅磡 | `#F08080` | `#000000` |
+| `EXC` | Exhibition Centre 會展 | `#94A8B0` | `#FFFFFF` |
+| `TAW` | Tai Wai 大圍 | `#05117E` | `#FFFFFF` |
+| `SHT` | Sha Tin 沙田 | `#BB7796` | `#FFFFFF` |
+| `FAN` | Fanling 粉嶺 | `#9ACD32` | `#FFFFFF` |
+| `LMC` | Lok Ma Chau 落馬洲 | `#009E9B` | `#FFFFFF` |
+| `OCP` | Ocean Park 海洋公園 | `#00BFFF` | `#FFFFFF` |
+| `WCH` | Wong Chuk Hang 黃竹坑 | `#FFFF00` | `#000000` |
+| `SOH` | South Horizons 海怡半島 | `#74B11B` | `#FFFFFF` |
+| `LET` | Lei Tung 利東 | `#FF7F00` | `#FFFFFF` |
+| `SUN` | Sunny Bay 欣澳 | `#808080` | `#C0C0C0` |
+| `DIS` | Disneyland Resort 迪士尼 | `#005533` | `#D4AF37` |
+| `MKK` | Mong Kok East 旺角東 | `#006400` | `#FFFFFF` |
+| `FOT` | Fo Tan 火炭 | `#FFA500` | `#FFFFFF` |
+| `RAC` | Racecourse 馬場 | `#15AE69` | `#FFFFFF` |
+| `UNI` | University 大學 | `#00BFFF` | `#FFFFFF` |
+| `TAP` | Tai Po Market 大埔墟 | `#976E9A` | `#FFFFFF` |
+| `TWO` | Tai Wo 太和 | `#C89F05` | `#FFFFFF` |
+| `SHS` | Sheung Shui 上水 | `#F6A600` | `#FFFFFF` |
+| `LOW` | Lo Wu 羅湖 | `#8DC476` | `#FFFFFF` |
+| `HIK` | Hin Keng 顯徑 | `#8FBE6C` | `#182F4F` |
+| `CKT` | Che Kung Temple 車公廟 | `#FFD280` | `#000000` |
+| `STW` | Sha Tin Wai 沙田圍 | `#FFC0CB` | `#000000` |
+| `CIO` | City One 第一城 | `#FFBF00` | `#000000` |
+| `SHM` | Shek Mun 石門 | `#FBEC5D` | `#000000` |
+| `TSH` | Tai Shui Hang 大水坑 | `#48D1CC` | `#000000` |
+| `HEO` | Heng On 恆安 | `#87CEFA` | `#000000` |
+| `MOS` | Ma On Shan 馬鞍山 | `#E0B0FF` | `#000000` |
+| `WKS` | Wu Kai Sha 烏溪沙 | `#954535` | `#FFFFFF` |
+| `KAT` | Kai Tak 啟德 | `#FF8C00` | `#000000` |
+| `SUW` | Sung Wong Toi 宋皇臺 | `#D08A00` | `#000000` |
+| `TKW` | To Kwa Wan 土瓜灣 | `#A9E2F3` | `#000000` |
+| `AUS` | Austin 柯士甸 | `#B45529` | `#FFFFFF` |
+| `TWW` | Tsuen Wan West 荃灣西 | `#A81C07` | `#FFFFFF` |
+| `KSR` | Kam Sheung Road 錦上路 | `#CC5500` | `#FFFFFF` |
+| `YUL` | Yuen Long 元朗 | `#40F5F5` | `#000000` |
+| `LOP` | Long Ping 朗屏 | `#FFB3BF` | `#000000` |
+| `TIS` | Tin Shui Wai 天水圍 | `#FC8A17` | `#000000` |
+| `SIH` | Siu Hong 兆康 | `#7FFFD4` | `#000000` |
+| `TUM` | Tuen Mun 屯門 | `#035F94` | `#FFFFFF` |
+
+---
+
+## 4. Interchange Notes
 
 * **Total Heavy Rail Stations:** There are **99 unique stations** across the 10 main lines (accounting for shared interchange stations such as Admiralty, Kowloon Tong, and Tai Wai).
 * **Paid-Area Pedestrian Links:** **Central** (Island / Tsuen Wan Lines) and **Hong Kong** (Tung Chung Line / Airport Express) are connected via underground walkways within the paid area. **Tsim Sha Tsui** (Tsuen Wan Line) and **East Tsim Sha Tsui** (Tuen Ma Line) are also linked via subway walkways (Octopus card holders must tap out and back in within 30 minutes for a continuous fare).◊

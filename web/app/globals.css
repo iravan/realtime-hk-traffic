@@ -134,6 +134,42 @@ button { cursor: pointer; }
   gap: 1rem;
   border-bottom: 1px solid rgba(28, 25, 21, 0.12);
 }
+.sheet header.station .mode,
+.sheet header.station button { color: inherit; }
+.station-chip {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+}
+/* 彩虹 Choi Hung. Chips keep a rainbow stripe. The arrival header and the map
+   hover board are a vertical rainbow in the same colours. The hover rainbow
+   is only the popup content, not the pointer. */
+.station-badge-chh:not(.stop-popup) {
+  background-color: #27408B;
+  color: #FFFFFF;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(
+    to right,
+    #E60012, #F39800, #FFF100, #009944, #00A0E9, #1D2088, #920783
+  ) 1;
+}
+.sheet header.station.station-badge-chh,
+.stop-popup.station-badge-chh .maplibregl-popup-content {
+  background-color: #27408B;
+  background-image: linear-gradient(
+    to bottom,
+    #E60012, #F39800, #FFF100, #009944, #00A0E9, #1D2088, #920783
+  );
+  color: #FFFFFF;
+  border: 0;
+  border-image: none;
+}
 .stop-title { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
 .stop-sign { width: 32px; height: 46px; object-fit: contain; flex: none; }
 .sheet h2 { margin: 0; font-size: 1.05rem; }
@@ -210,22 +246,27 @@ button { cursor: pointer; }
 }
 .line-tooltip-name { font-size: 0.88rem; font-weight: 700; line-height: 1.3; }
 .line-tooltip-terminals {
-  margin-top: 0.15rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.3rem;
   color: #5d564e;
   font-size: 0.78rem;
-  line-height: 1.35;
+  line-height: 1;
 }
 
-/* The station name shown on hover or tap of an MTR sign. Navy matches the
-   station block, so the label reads as part of the same sign. */
+/* The station name shown on hover or tap. Tile and font colours come from
+   the station, set as --stop-bg and --stop-fg on the popup. */
 .stop-popup .maplibregl-popup-content {
-  background: var(--mtr);
-  color: var(--paper);
+  background: var(--stop-bg, var(--mtr));
+  color: var(--stop-fg, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--stop-fg, var(--paper)) 40%, transparent);
   border-radius: 0.45rem;
   padding: 0.3rem 0.6rem 0.35rem;
   box-shadow: 0 10px 26px rgba(28, 25, 21, 0.3);
 }
-.stop-popup .maplibregl-popup-tip { border-top-color: var(--mtr); }
+.stop-popup .maplibregl-popup-tip { border-top-color: var(--stop-bg, var(--mtr)); }
 .stop-name {
   max-width: 15rem;
   font-size: 0.85rem;
