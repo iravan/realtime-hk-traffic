@@ -9,7 +9,7 @@ expected impact.
 | Priority | Item | Main impact | Effort | Risk | Status |
 | --- | --- | --- | --- | --- | --- |
 | P0 | Gate startup catalogue crawls | Faster cold start; fewer upstream requests | Medium | Medium | Done |
-| P1 | Lazy-load the MTR line layer | 159 KB gzip less for non-MTR first load | Low | Low | Open |
+| P1 | Lazy-load the MTR line layer | 159 KB gzip less for non-MTR first load | Low | Low | Done |
 | P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Open |
 | P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Open |
 | P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Open |
@@ -71,22 +71,26 @@ regenerate `server/data/stops.json`.
 
 ## P1: Lazy-load the MTR line layer
 
-**Problem.** `web/app/page.tsx` adds the `mtr-lines` source with
+**Status: done.** `mtr-lines.geojson` is fetched once, when the MTR tab is first
+opened. The bus, minibus and taxi tabs no longer request it.
+
+**Problem.** `web/app/page.tsx` previously added the `mtr-lines` source with
 `web/public/mtr-lines.geojson` during map load. The file is 678 KB raw and
-159 KB gzip, and is fetched even when the default bus tab is active.
+159 KB gzip, and was fetched even when the default bus tab was active.
 
-**Proposed change.**
+**Implemented change.**
 
-- Add the source with an empty `FeatureCollection`.
-- Fetch the GeoJSON once, when the MTR tab is first activated.
-- Keep the result in a ref so tab switches do not refetch it.
-- Keep the existing layer visibility and hover logic.
+- The source starts with an empty `FeatureCollection`.
+- The first MTR draw fetches the GeoJSON and sets it on the source.
+- A ref prevents duplicate fetches across redraws and tab switches.
+- A failed fetch leaves the source empty and retries on the next MTR draw.
 
 **Validation.**
 
-- The bus tab does not request `mtr-lines.geojson`.
+- The bus, minibus and taxi tabs do not request `mtr-lines.geojson`.
 - The first MTR tab activation fetches it once and draws the line layer.
 - Line hover and selection still work.
+- `bunx tsc --noEmit` and `bun run build` pass.
 
 **Risk.** Low. Handle the small window between tab activation and the GeoJSON
 arriving; the layers can stay hidden until the source has data.
