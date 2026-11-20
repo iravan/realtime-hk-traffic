@@ -890,7 +890,10 @@ export default function Page() {
     // Swap the whole layer rather than styling features one by one: every stop
     // in the view has to agree, and a layout change is one redraw.
     const dots = visible.length > dotThreshold;
-    if (dots !== dotsRef.current) {
+    // The style is loaded before the stop icons finish loading, so a catalogue
+    // fetch can draw while this layer is still missing. Leave dotsRef alone
+    // until the layer exists, or the later draw would skip the layout swap.
+    if (dots !== dotsRef.current && map.getLayer("stops")) {
       dotsRef.current = dots;
       map.setLayoutProperty("stops", "icon-image", dots ? dotImage : signImage);
       map.setLayoutProperty("stops", "icon-anchor", dots ? "center" : signAnchor);

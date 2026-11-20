@@ -361,7 +361,7 @@ Each item in `data` is read as:
 | --- | --- |
 | `stop` | Stop id, stored as `bus:kmb:{stop}` |
 | `name_tc`, `name_sc`, `name_en` | Stop name in Traditional Chinese, Simplified Chinese and English |
-| `lat`, `long` | WGS84 coordinates, parsed from strings |
+| `lat`, `long` | WGS84 coordinates, parsed from strings. Stop `4594DE819A18CA80` (天平邨天怡樓) publishes `22.054778`, a transposition of the other Tin Yee House record `22.504778` at the same longitude. The bundled catalogue stores `22.504778`. A live catalogue refresh copies the published value |
 
 Single stop:
 
@@ -611,7 +611,7 @@ the checked-in GeoJSON.
 | `properties.OBJECTID` | Stand id, stored as `taxi:{OBJECTID}` |
 | `properties.Location_TC`, `Location_EN` | Stand name in both languages |
 | `properties.Status_EN`, `Status_TC`, `Status_SC` | Taxi type allowed at the stand. A second line, when present, is that stand's operating hours |
-| `geometry.coordinates` | Longitude and latitude |
+| `geometry.coordinates` | Longitude and latitude. Stand `401` (寶鄉街) is published at Tai Po Tau, about 1.3 km from Po Heung Street. The bundled catalogue stores `22.449300, 114.166865`, the middle of the other stops named for that street. A live catalogue refresh copies the published point |
 
 ### Operating hours
 

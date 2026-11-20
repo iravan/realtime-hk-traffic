@@ -8806,7 +8806,7 @@
 			"type" : "Feature",
 			"geometry" : {
 				"type" : "Point",
-				"coordinates" : [ 114.1563140573, 22.4555226372 ]
+				"coordinates" : [ 114.166865, 22.449300 ]
 			},
 			"properties" : {
 				"OBJECTID" : 401,
