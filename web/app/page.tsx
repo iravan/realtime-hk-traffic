@@ -174,7 +174,8 @@ export default function Page() {
   const fixRef = useRef<Fix | null>(null);
   const selectedRef = useRef<Stop | null>(null);
   const boardRef = useRef<Stop | null>(null);
-  const catalogueRef = useRef<Stop[] | null>(null);
+  const cataloguesRef = useRef<Partial<Record<Mode, Stop[]>>>({});
+  const cataloguePromisesRef = useRef(new Map<Mode, Promise<Stop[]>>());
   const hoursRef = useRef<ServiceHours | null>(null);
   const dotsRef = useRef(false);
   const mtrLinesLoadedRef = useRef(false);
@@ -685,12 +686,55 @@ export default function Page() {
     };
   }, [board]);
 
+  function loadCatalogue(mode: Mode): Promise<Stop[]> {
+    const cached = cataloguesRef.current[mode];
+    if (cached) return Promise.resolve(cached);
+    const pending = cataloguePromisesRef.current.get(mode);
+    if (pending) return pending;
+    const promise = fetch(`${basePath}/stops-${mode}.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`stops-${mode}`);
+        return response.json() as Promise<{ stops: Stop[] }>;
+      })
+      .then((body) => {
+        cataloguesRef.current[mode] = body.stops;
+        return body.stops;
+      })
+      .catch(() => {
+        // Cache the empty result so a failed mode does not loop on every draw.
+        cataloguesRef.current[mode] = [];
+        return [];
+      })
+      .finally(() => {
+        cataloguePromisesRef.current.delete(mode);
+      });
+    cataloguePromisesRef.current.set(mode, promise);
+    return promise;
+  }
+
+  function prefetchOtherModes(current: Mode) {
+    // Let the active mode become interactive first, then fill the cache for the
+    // other tabs. The map does not wait for this.
+    setTimeout(() => {
+      for (const mode of modes) {
+        if (mode !== current) void loadCatalogue(mode);
+      }
+    }, 2000);
+  }
+
   function selectNearest(fix: Fix | null) {
-    const catalogue = catalogueRef.current;
-    if (!fix || !catalogue) return;
+    if (!fix) return;
+    const mode = activeRef.current;
+    const catalogue = cataloguesRef.current[mode];
+    if (!catalogue) {
+      void loadCatalogue(mode).then(() => {
+        if (activeRef.current === mode) selectNearest(fix);
+      });
+      return;
+    }
     const nearest = nearestStop(
       catalogue,
-      activeRef.current,
+      mode,
       fix.latitude,
       fix.longitude,
       hoursRef.current,
@@ -725,11 +769,6 @@ export default function Page() {
   }
 
   function drawStops(map: MlMap) {
-    const catalogue = catalogueRef.current;
-    if (!catalogue) return;
-    const hours = hoursRef.current;
-    const now = new Date();
-    const bounds = map.getBounds();
     const mode = activeRef.current;
     // The rail line is context for the MTR tab only; the other tabs keep the
     // map as uncluttered as it was.
@@ -748,6 +787,15 @@ export default function Page() {
       }
     }
     if (mode === "mtr") ensureMtrLines(map);
+
+    const catalogue = cataloguesRef.current[mode];
+    if (!catalogue) {
+      setStops([]);
+      return;
+    }
+    const hours = hoursRef.current;
+    const now = new Date();
+    const bounds = map.getBounds();
     const south = bounds.getSouth();
     const north = bounds.getNorth();
     const west = bounds.getWest();
@@ -834,18 +882,13 @@ export default function Page() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${basePath}/stops.json`)
-      .then((response) => response.json())
-      .then((body: { stops: Stop[] }) => {
-        if (cancelled) return;
-        catalogueRef.current = body.stops;
-        selectNearest(fixRef.current);
-        const map = mapRef.current;
-        if (map?.isStyleLoaded()) drawStops(map);
-      })
-      .catch(() => {
-        if (!cancelled) catalogueRef.current = [];
-      });
+    void loadCatalogue(activeRef.current).then(() => {
+      if (cancelled) return;
+      selectNearest(fixRef.current);
+      const map = mapRef.current;
+      if (map?.isStyleLoaded()) drawStops(map);
+      prefetchOtherModes(activeRef.current);
+    });
     return () => {
       cancelled = true;
     };
@@ -906,6 +949,16 @@ export default function Page() {
     // board and clear the highlight.
     setSelected(null);
     setBoard(null);
+
+    let cancelled = false;
+    void loadCatalogue(active).then(() => {
+      if (cancelled) return;
+      const current = mapRef.current;
+      if (current?.isStyleLoaded()) drawStops(current);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [active]);
 
   // First and last services move the open/closed line while the page is open,

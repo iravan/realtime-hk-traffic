@@ -10,7 +10,7 @@ expected impact.
 | --- | --- | --- | --- | --- | --- |
 | P0 | Gate startup catalogue crawls | Faster cold start; fewer upstream requests | Medium | Medium | Done |
 | P1 | Lazy-load the MTR line layer | 159 KB gzip less for non-MTR first load | Low | Low | Done |
-| P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Open |
+| P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Done |
 | P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Open |
 | P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Open |
 | P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Open |
@@ -97,22 +97,29 @@ arriving; the layers can stay hidden until the source has data.
 
 ## P1: Split the stop catalogue by mode
 
-**Problem.** The page loads all 14,754 stops at once. The full catalogue is
-2.28 MB raw and 569 KB gzip, while only one mode is drawn at a time.
+**Status: done.** `web/scripts/split-stops.mjs` runs from `predev` and
+`prebuild`, writing one `stops-{mode}.json` per mode. The page loads the active
+mode first and prefetches the other modes after two seconds.
 
-**Proposed change.**
+**Problem.** The page previously loaded all 14,754 stops at once. The full
+catalogue is 2.28 MB raw and 569 KB gzip, while only one mode is drawn at a
+time.
 
-- Generate one catalogue per mode, for example `stops-bus.json`,
-  `stops-minibus.json`, `stops-taxi.json` and `stops-mtr.json`.
+**Implemented change.**
+
+- Split `web/public/stops.json` into `stops-bus.json`, `stops-minibus.json`,
+  `stops-taxi.json` and `stops-mtr.json` at build time.
 - Load the active mode first.
-- Prefetch the other modes when the browser is idle, or on first tab switch.
-- Keep the server catalogue unchanged until the server has the same split.
+- Prefetch the other modes after the active catalogue is interactive.
+- Keep the full `stops.json` for the server and for compatibility.
+- Ignore the generated per-mode files in Git.
 
 **Validation.**
 
-- The default bus tab requests only the bus catalogue.
-- Each tab switch loads the correct file and keeps nearest-stop selection.
-- Empty and loading states are handled on mode switch.
+- The default bus tab requests `stops-bus.json` only, at 357 KB gzip.
+- Each tab requests its own file: minibus 185 KB, taxi 25 KB, MTR 2.6 KB.
+- Mode switching and nearest-stop selection still work.
+- `bunx tsc --noEmit` and `bun run build` pass.
 
 **Risk.** Medium. More files and a small loading state. The idle prefetch should
 keep tab switches fast.

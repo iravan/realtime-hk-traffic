@@ -593,6 +593,7 @@ no arrival rows.
 | `server/data/mtr.json` | MTR station codes, names, coordinates, line membership |
 | `server/data/stops.json` | Bundled stop catalogue used by the Rust service |
 | `web/public/stops.json` | The same stop catalogue served to the page |
+| `web/public/stops-*.json` | Generated at build from `stops.json`, one file per mode |
 | `server/data/gmb-routes.json` | Green-minibus route id to route number map |
 | `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |

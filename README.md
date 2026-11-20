@@ -150,6 +150,10 @@ New stops are appended without `routes` or `night`; the scripts below fill those
 in. Stops removed upstream are not deleted automatically. Remove them by hand if
 the catalogue has shrunk.
 
+The page loads one mode at a time. `web/scripts/split-stops.mjs` runs before
+dev and build, writes `web/public/stops-{bus,minibus,taxi,mtr}.json`, and those
+per-mode files are ignored by Git.
+
 ### 2. Minibus route numbers and stop routes
 
 ```bash
