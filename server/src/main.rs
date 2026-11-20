@@ -7,7 +7,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 use chrono::{DateTime, Utc};
-use futures::stream::{self, Stream, StreamExt};
+use futures::stream::{self, Stream};
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -17,7 +17,6 @@ use tokio::sync::RwLock;
 use tower_http::cors::CorsLayer;
 
 const ETA_TTL_SECS: u64 = 90;
-const POLL_SECS: u64 = 15;
 
 #[derive(Clone)]
 struct Stop {
@@ -154,8 +153,6 @@ async fn main() {
     });
     let startup = app.clone();
     tokio::spawn(async move { load_catalogues(startup).await });
-    let poller = app.clone();
-    tokio::spawn(async move { poll_loop(poller).await });
     let cors_origins = std::env::var("CORS_ORIGINS").unwrap_or_else(|_| {
         "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3002,http://127.0.0.1:3002"
             .to_string()
@@ -435,42 +432,6 @@ async fn events(
     Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(15))))
 }
 
-async fn poll_loop(app: Arc<App>) {
-    let mut tick = tokio::time::interval(std::time::Duration::from_secs(POLL_SECS));
-    let mut round = 0u64;
-    loop {
-        tick.tick().await;
-        round += 1;
-        let watched = watched_ids(&app);
-        let mut due = Vec::new();
-        {
-            let index = app.by_id.read().await;
-            for id in watched {
-                if let Some(stop) = index.get(&id) {
-                    if stop.mode != "taxi" {
-                        due.push(stop.clone());
-                    }
-                }
-            }
-            if round % 4 == 0 {
-                for stop in index.values() {
-                    if stop.mode == "mtr" && !due.iter().any(|item| item.id == stop.id) {
-                        due.push(stop.clone());
-                    }
-                }
-            }
-        }
-        stream::iter(due)
-            .map(|stop| {
-                let app = app.clone();
-                async move { refresh(&app, &stop).await }
-            })
-            .buffer_unordered(4)
-            .collect::<Vec<_>>()
-            .await;
-    }
-}
-
 async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
     match stop.mode.as_str() {
         "mtr" => mtr_arrivals(&app.http, stop).await,
@@ -556,16 +517,6 @@ async fn read_snapshot(app: &App, id: &str) -> Option<String> {
         .await
         .ok()
         .flatten()
-}
-
-fn watched_ids(app: &App) -> Vec<String> {
-    app.watch
-        .lock()
-        .expect("watch lock")
-        .iter()
-        .filter(|(_, senders)| !senders.is_empty())
-        .map(|(id, _)| id.clone())
-        .collect()
 }
 
 fn publish(app: &App, id: &str, body: &str) {

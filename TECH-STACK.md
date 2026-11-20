@@ -8,17 +8,17 @@ This is how [DESIGN.md](DESIGN.md) is built. The repository still has no app cod
 | --- | --- | --- |
 | Page | Next.js, package manager Bun | Map, mode filters, stop sheet |
 | Map | MapLibre GL JS, client only | OpenStreetMap raster basemap and the stop layer |
-| API | Rust, Axum, Tokio | Poll the official feeds, serve stops and arrivals |
-| Store | Redis | The latest stop list and the latest arrival snapshot |
-| Clock | Rust process | Polls each feed on its own interval and drops stale snapshots |
+| API | Rust, Axum, Tokio | Fetch a stop when its sheet opens, serve stops and arrivals |
+| Store | Redis | The latest arrival snapshot |
+| Clock | Rust process | Writes `fetched_at` on a click that misses the 90s cache |
 
-The browser never calls data.gov.hk, the bus ETA hosts, or the MTR feed. Those hosts throttle and they are not a page's job. Next.js renders. Rust polls, stores, and answers. Every route is public.
+The browser never calls data.gov.hk, the bus ETA hosts, or the MTR feed. Those hosts throttle and they are not a page's job. Next.js renders. Rust fetches on click, stores, and answers. Every route is public.
 
 The public `tile.openstreetmap.org` images are the basemap for a light deployment, with `© OpenStreetMap contributors` on the map. A public launch moves the basemap to a tile host that allows the traffic. The stops are drawn by this app either way.
 
 ## Feeds
 
-Rust is the only poller.
+Rust is the only component that calls a feed.
 
 | Mode | Publisher | What is stored |
 | --- | --- | --- |
@@ -62,12 +62,12 @@ arrivals:{id}                 string, EX 90
 
 `rows` is the next arrivals. For a taxi stand the arrivals key is absent. For a green minibus stop with only a timetable, `live` is false and the rows are the scheduled times.
 
-The poller writes `arrivals:{id}` with a 90-second expiry. The stop index lives in memory (bundled, optionally refreshed from live catalogues), not in Redis. A reader never computes an ETA. If `arrivals:{id}` has expired, the stop is still on the map and the sheet says the snapshot is gone. See [REDIS.md](REDIS.md).
+A click that misses the cache writes `arrivals:{id}` with a 90-second expiry. The stop index lives in memory (bundled, optionally refreshed from live catalogues), not in Redis. A reader never computes an ETA. If `arrivals:{id}` has expired, the stop is still on the map and the next click fetches again. See [REDIS.md](REDIS.md).
 
 ## First build
 
 1. Stop list for all four modes, from the official catalogues, drawn on the map.
-2. Rust poller for MTR next train and for franchised-bus ETA. Redis holds the snapshot. The sheet reads it.
+2. Click fetch for MTR next train and for franchised-bus ETA. Redis holds the snapshot. The sheet reads it.
 3. Green minibus ETA where the feed has it, and timetable-only where it does not.
 4. Taxi stands as places, with no vehicle layer.
 5. Redis on `127.0.0.1:6379` for local development. The page is installed with Bun.

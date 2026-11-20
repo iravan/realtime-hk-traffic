@@ -1,9 +1,9 @@
 # Data sources
 
 Realtime HK Traffic is built from official Hong Kong transport open data. The
-Rust service is the only component that calls these hosts: it polls them, keeps
-the latest arrival snapshot in Redis, and serves the page. The browser never
-calls the feeds directly.
+Rust service is the only component that calls these hosts. It fetches a stop
+when the map sheet asks, keeps that arrival snapshot in Redis for 90 seconds,
+and serves the page. The browser never calls the feeds directly.
 
 This page lists the sources this repository uses, the fields it reads, and the
 files it keeps in the repository. It is not an index of every dataset on the
@@ -76,7 +76,8 @@ stops first and only refreshes the live catalogues when `LIVE_CATALOGUES=1`.
 
 **Static** data is checked in, or is publisher catalogue data that changes only
 when routes, stops, schedules or the network change. **Dynamic** data is the
-arrival information that changes continuously and is polled by the service.
+arrival information that changes continuously. The service fetches it when a
+map stop is opened, not on a timer.
 
 ### Static or reference data
 
@@ -99,13 +100,13 @@ arrival information that changes continuously and is polled by the service.
 
 | Data | Refresh | Where it lives |
 | --- | --- | --- |
-| MTR next train | Watched stations every 15s; all MTR stations every 60s | Redis snapshot, TTL 90s |
-| KMB and LWB stop ETA | Publisher about every minute; service polls watched stops every 15s | Redis snapshot, TTL 90s |
-| Citybus ETA | Publisher about every minute; service polls watched stops every 15s | Redis snapshot, TTL 90s |
-| GMB stop ETA | Service polls watched stops every 15s | Redis snapshot, TTL 90s |
+| MTR next train | Publisher every 10 seconds; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
+| KMB and LWB stop ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
+| Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
+| GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
-| Redis snapshots | Written on each successful refresh; expire after 90s | Redis |
-| SSE arrival events | Pushed when a snapshot is refreshed | Browser stream |
+| Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
+| SSE arrival events | Pushed with the snapshot from that click | Browser stream |
 
 Dynamic data is never committed to the repository. The only persisted copy is
 the Redis snapshot, and it expires. Static data is the material a new server
@@ -224,8 +225,8 @@ Fields the service reads:
 | `time` | Scheduled clock time; the page shows the time portion |
 | `isdelay` | `Y` marks the whole station snapshot as delayed |
 
-The service calls this for watched MTR stations every 15 seconds, and for every
-MTR station once a minute.
+The service calls this when a station is opened and Redis has no snapshot for
+it. A click inside the 90-second cache returns the stored snapshot.
 
 ## MTR Bus and Feeder Bus
 
@@ -608,16 +609,34 @@ Generation scripts:
 | `server/scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
 | `server/scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
 
-## Caching and polling
+## Caching
 
-- The service polls watched stops every 15 seconds. All MTR stations are
-  refreshed once a minute.
-- Each snapshot is written to Redis as `arrivals:{stop_id}` with a 90-second
-  expiry.
-- The web page reads `/stops/{id}/arrivals` and listens to
-  `/stops/{id}/events`; it does not contact the publishers.
+- There is no background poll. Opening a stop calls `GET /stops/{id}/arrivals`.
+  If `arrivals:{stop_id}` is still in Redis, that body is returned and the
+  publisher is not called.
+- A missing key fetches that stop once and writes `arrivals:{stop_id}` with a
+  90-second expiry.
+- The page also listens to `/stops/{id}/events` for the snapshot from that
+  fetch. The stream does not schedule another fetch.
 
 See [REDIS.md](REDIS.md) for the snapshot keys and expiry details.
+
+## Live feed request limits
+
+None of the arrival feeds this service calls publishes a numeric
+requests-per-minute cap. The figures below are what the publisher pages and
+API specs actually say. A missing number is not a licence to call as fast as
+we like; it means the spec does not state one.
+
+| Feed | Publisher freshness | Request cap |
+| --- | --- | --- |
+| MTR next train | Dataset page: every 10 seconds | No numeric cap on the [dataset page](https://data.gov.hk/en-data/dataset/mtr-data2-nexttrain-data/resource/103472ed-01be-4dda-92c6-30530dee022f) |
+| KMB and LWB stop ETA | About every minute | The stop-ETA spec lists HTTP 200 and 422. It does not publish a rate limit |
+| Citybus next bus | About every minute | The Next Bus API spec returns HTTP 429, "Processing too many requests", and does not publish a threshold |
+| GMB stop ETA | Live ETA on `/eta/stop/{stop_id}` | No numeric cap published for that endpoint. The catalogue crawl is throttled by the publisher |
+| MTR Bus and Feeder Bus | Every 10 seconds. `appRefreshTimeInSecond` is the suggested refresh. Not called by this service | The API spec returns HTTP 429 Too Many Requests and does not publish a count |
+
+A click inside the 90-second Redis TTL does not add an upstream request.
 
 ## Not from data.gov.hk
 
@@ -661,7 +680,7 @@ flowchart TB
   subgraph Server["Rust service"]
     direction TB
     Catalog["1. Build stop catalogue"]
-    Poll["2. Poll feeds and build snapshots"]
+    Fetch["2. Fetch a stop when its sheet opens"]
   end
 
   subgraph Storage["Redis"]
@@ -687,9 +706,9 @@ flowchart TB
 
   Repo --> Catalog
   LiveStops -.-> Catalog
-  Catalog --> Poll
-  LiveArrivals --> Poll
-  Poll --> Cache
+  Catalog --> Fetch
+  LiveArrivals --> Fetch
+  Fetch --> Cache
   Cache --> Endpoints
   Endpoints --> Sheet
   Repo --> Map
@@ -702,11 +721,12 @@ the service uses the bundled stop catalogue.
 
 ### One arrival request
 
-The service may already have a snapshot from its background poll. If not, the
-request triggers a fetch and stores the result before answering.
+If Redis still holds this stop, the request returns that snapshot and does not
+call the feed. If the key is missing, the request fetches once and stores the
+result before answering.
 
-The page also opens an SSE stream, so later snapshots for that stop arrive
-without another request.
+The page also opens an SSE stream. That stream receives the snapshot from this
+click. Nothing fetches again until a later click finds the key gone.
 
 ```mermaid
 sequenceDiagram

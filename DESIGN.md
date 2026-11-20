@@ -27,7 +27,7 @@ A stop is one place a passenger can board. The map uses the coordinates and the 
 
 ## What is live
 
-The server polls the official feeds and keeps the latest snapshot. The browser does not call those feeds itself.
+The server fetches an official feed when a stop is opened, and keeps that snapshot for 90 seconds. The browser does not call those feeds itself.
 
 - **MTR.** Next train on each line at the station, and the line service status when the feed includes it. Source: the MTR next-train feed on data.gov.hk.
 - **Bus.** Estimated minutes until the next buses at that stop, the route number, the destination, and the time the estimate was fetched. Sources: the KMB and LWB feeds, and the Citybus and New Lantao Bus feeds, published for the Transport Department.

@@ -85,8 +85,8 @@ with `cargo zigbuild`. Builds of this project failed before compiling anything
 with `error: no such command: zigbuild`, because `cargo-zigbuild` was missing
 from the build environment. `server/Dockerfile` builds the binary in a plain
 Rust image and runs it on `debian:bookworm-slim`, which does not depend on that
-toolchain. It also suits this server better: the background poll loop and the
-SSE `/events` stream are a poor fit for serverless functions.
+toolchain. It also suits this server better: the SSE `/events` stream is a
+long-lived connection, which is a poor fit for serverless functions.
 
 ## Fallbacks if container services are unavailable
 

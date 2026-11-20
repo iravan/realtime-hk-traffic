@@ -1,6 +1,6 @@
 # Backend
 
-The Rust service. The build spec is [TECH-STACK.md](../TECH-STACK.md). The product is [DESIGN.md](../DESIGN.md). The page list is [CHECKLIST.md](../CHECKLIST.md). This service polls the official feeds, stores the latest snapshot, and answers the public routes. Next.js does not poll. There is no sign-in.
+The Rust service. The build spec is [TECH-STACK.md](../TECH-STACK.md). The product is [DESIGN.md](../DESIGN.md). The page list is [CHECKLIST.md](../CHECKLIST.md). This service fetches an official feed when a stop is opened, stores that snapshot, and answers the public routes. Next.js does not call the feeds. There is no sign-in.
 
 The first demo is running locally. Redis for local development is `127.0.0.1:6379`. KMB, the MTR station list, and taxi stands load before Citybus and green minibus, which continue in the background.
 
@@ -51,10 +51,10 @@ arrivals:{id}                 string, EX 90
 
 ## Freshness
 
-- [x] The process polls. MTR stations every 60 seconds. A bus or minibus stop every 15 seconds while a browser is subscribed. Each success is written to Redis with `EX 90`.
-- [x] `fetched_at` is the server clock at the successful poll, not a time from the page.
-- [x] A failed poll does not delete a still-fresh snapshot.
-- [x] `GET /stops/{id}/events` is a server-sent event stream. Each new Redis snapshot is published as an `arrivals` event. The page does not poll.
+- [x] There is no background poll. A click with no cached snapshot fetches that stop once and writes Redis with `EX 90`.
+- [x] `fetched_at` is the server clock at that fetch, not a time from the page.
+- [x] A failed fetch does not delete a still-fresh snapshot.
+- [x] `GET /stops/{id}/events` is a server-sent event stream. The snapshot from that click is published as an `arrivals` event. The page does not call the feeds.
 
 ## Local run
 
@@ -70,4 +70,4 @@ arrivals:{id}                 string, EX 90
 - [ ] A green minibus timetable is returned with `live` false.
 - [ ] A taxi stand is on the map and has no arrival rows and no vehicle position.
 - [ ] After the arrivals key expires, the stop remains and the arrivals route reports the snapshot gone.
-- [ ] A failed poll leaves the previous unexpired snapshot in place.
+- [ ] A failed fetch leaves the previous unexpired snapshot in place.

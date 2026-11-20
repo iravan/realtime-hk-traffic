@@ -54,7 +54,7 @@ scope. Taxi stands are places, not vehicles.
 
 ```mermaid
 flowchart LR
-    A[Official feeds<br/>data.gov.hk, KMB/LWB, Citybus/NLB] -->|poll| B[Rust service<br/>Axum + Tokio]
+    A[Official feeds<br/>data.gov.hk, KMB/LWB, Citybus/NLB] -->|fetch on click| B[Rust service<br/>Axum + Tokio]
     B -->|write snapshot TTL 90s| C[(Redis)]
     B -->|GET /stops, /arrivals, /events| D[Next.js page<br/>MapLibre GL]
     C -->|read snapshot| B
@@ -62,17 +62,17 @@ flowchart LR
 ```
 
 The browser never calls data.gov.hk, the bus ETA hosts, or the MTR feed — those
-hosts throttle and polling is not a page's job. The Rust process polls each feed
-on its own interval, drops stale snapshots, and answers the map. Next.js only
-renders.
+hosts throttle and fetching is not a page's job. The Rust process fetches a
+stop when its sheet opens, keeps the snapshot for 90 seconds, and answers the
+map. Next.js only renders.
 
 | Piece | Choice | Role |
 | --- | --- | --- |
 | Page | Next.js, package manager Bun | Map, mode filters, stop sheet |
 | Map | MapLibre GL JS, client only | OpenStreetMap raster basemap and stop layer |
-| API | Rust, Axum, Tokio | Poll feeds, serve stops and arrivals |
+| API | Rust, Axum, Tokio | Fetch a stop on click, serve stops and arrivals |
 | Store | Redis | Latest arrival snapshots |
-| Clock | Rust process | Refreshes watched stops every 15s and all MTR stations about every 60s |
+| Clock | Rust process | Writes `fetched_at` when a click misses the 90s cache |
 
 ## Data sources
 
@@ -83,7 +83,7 @@ renders.
 | Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus; timetable only when no ETA exists |
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
-The exact endpoints, fields read, checked-in snapshots and polling rules are in
+The exact endpoints, fields read, checked-in snapshots and request limits are in
 [DATA.md](DATA.md).
 
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
@@ -309,7 +309,7 @@ web/                 Next.js app (static export)
   public/            stops.json, service-hours.json, MTR line GeoJSON, icons
   scripts/           MapLibre worker copy step
 server/              Rust API (Axum + Tokio)
-  src/main.rs        Routes, poll loop, feed fetchers
+  src/main.rs        Routes and feed fetchers
   src/catalog.rs     Stop catalogues and bundled route data
   data/              Bundled stop seed and green-minibus route map
   scripts/           Catalogue and night-stop generators
