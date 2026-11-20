@@ -27,6 +27,7 @@ import {
 } from "./stop-icon";
 import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
+import lineTerminalsJson from "./mtr-line-terminals.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const modes = ["mtr", "bus", "minibus", "taxi"] as const;
@@ -42,19 +43,9 @@ const categoryIcons: Record<Mode, string> = {
 
 // Terminal stations for the line tooltip. The GeoJSON groups both directions
 // into one feature, so the direction-specific `from`/`to` tags in OSM are not
-// suitable; these are the line endpoints shown on the map.
-const lineTerminals: Record<string, { from: string; to: string }> = {
-  AEL: { from: "香港 Hong Kong", to: "博覽館 AsiaWorld-Expo" },
-  DRL: { from: "欣澳 Sunny Bay", to: "迪士尼 Disneyland Resort" },
-  EAL: { from: "金鐘 Admiralty", to: "羅湖 Lo Wu / 落馬洲 Lok Ma Chau" },
-  ISL: { from: "堅尼地城 Kennedy Town", to: "柴灣 Chai Wan" },
-  KTL: { from: "黃埔 Whampoa", to: "調景嶺 Tiu Keng Leng" },
-  SIL: { from: "金鐘 Admiralty", to: "海怡半島 South Horizons" },
-  TCL: { from: "香港 Hong Kong", to: "東涌 Tung Chung" },
-  TKL: { from: "北角 North Point", to: "寶琳 Po Lam / 康城 LOHAS Park" },
-  TML: { from: "屯門 Tuen Mun", to: "烏溪沙 Wu Kai Sha" },
-  TWL: { from: "中環 Central", to: "荃灣 Tsuen Wan" },
-};
+// suitable. The values are generated from the MTR CSV by
+// server/scripts/build-mtr-catalogue.py.
+const lineTerminals: Record<string, { from: string; to: string }> = lineTerminalsJson;
 
 // The home view. A fix from outside Hong Kong must not drag the map away from
 // it, so the same centre and zoom open the app and reset it.

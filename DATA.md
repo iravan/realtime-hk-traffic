@@ -193,7 +193,9 @@ That file has 98 stations. It includes `RAC` (馬場 Racecourse), which the CSV
 does not list, and adds the latitude, longitude and line membership needed to
 draw station pins and query the next-train feed. `catalog::mtr_stops()` reads it
 to build `mtr:` stops, and `catalog::mtr_label()` uses the names to label train
-destinations.
+destinations. `server/scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
+`stops.json` and writes `web/app/mtr-line-terminals.json` from this file and the
+CSV.
 
 Line colours and the human-readable station lists are in [MTR.md](MTR.md).
 
@@ -594,6 +596,7 @@ no arrival rows.
 | `web/public/stops.json` | Generated at build from the canonical catalogue |
 | `web/public/stops-*.json` | Generated at build from the canonical catalogue, one file per mode |
 | `server/data/gmb-routes.json` | Green-minibus route id to route number map |
+| `web/app/mtr-line-terminals.json` | Generated line endpoint labels from the MTR CSV |
 | `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
 

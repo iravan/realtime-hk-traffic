@@ -13,7 +13,7 @@ expected impact.
 | P1 | Split the stop catalogue by mode | About 212 KB gzip less on first bus load | Medium | Medium | Done |
 | P2 | Deduplicate `stops.json` | Up to 2.28 MB less tracked duplication | Low | Low | Done |
 | P2 | Generate the GMB route map offline | Fewer throttled API calls | Low | Low | Done |
-| P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Open |
+| P2 | Generate MTR stop entries and line terminals | Single source of truth | Low | Low | Done |
 | P2 | Verify compression and cache headers | Smaller repeat visits | Low | Low | Open |
 
 ## Measurements
@@ -180,19 +180,26 @@ used the throttled GMB API to build the map.
 
 ## P2: Generate MTR stop entries and line terminals
 
-**Problem.** The 98 MTR stops appear in both `server/data/mtr.json` and
-`stops.json`. Line terminal names are also hardcoded in `web/app/page.tsx`.
+**Status: done.** `server/scripts/build-mtr-catalogue.py` syncs the `mtr:` rows
+in `server/data/stops.json` from `mtr.json` and generates
+`web/app/mtr-line-terminals.json` from the MTR CSV. The page imports the JSON
+instead of hardcoding terminal names.
 
-**Proposed change.**
+**Problem.** The 98 MTR stops appeared in both `server/data/mtr.json` and
+`stops.json`. Line terminal names were hardcoded in `web/app/page.tsx`.
 
-- Generate the MTR subset of the stop catalogue from `server/data/mtr.json`.
-- Generate the line terminal labels from the same station data or the MTR CSV.
-- Keep one checked-in source of station names, coordinates and lines.
+**Implemented change.**
+
+- Build the MTR subset of the stop catalogue from `server/data/mtr.json`.
+- Derive terminal labels from the MTR CSV and the station lookup.
+- Write `web/app/mtr-line-terminals.json` and import it in the page.
+- Add `--refresh` to download the CSV again instead of using the cache.
 
 **Validation.**
 
-- MTR stop count, names and coordinates match the current catalogue.
-- Line tooltips show the same endpoints as today.
+- The script reports 98 MTR stops with 0 changes against the current catalogue.
+- Generated line terminals match the previous hardcoded labels exactly.
+- The page type-checks and builds with the JSON import.
 
 **Risk.** Low. This is a maintainability change, not a runtime change.
 

@@ -185,6 +185,16 @@ changes line membership, update it from the official
 [MTR lines and stations CSV](https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv).
 Keep the coordinates and include `RAC` (Racecourse), which the CSV omits.
 
+Then sync the bundled stop list and line-terminal labels:
+
+```bash
+python3 server/scripts/build-mtr-catalogue.py
+```
+
+This updates the `mtr:` rows in `server/data/stops.json` and writes
+`web/app/mtr-line-terminals.json`. The CSV is cached under `.cache/mtr`; use
+`--refresh` to download it again.
+
 ### 5. MTR line geometry
 
 ```bash
@@ -218,9 +228,9 @@ cd ../web && bunx tsc --noEmit && bun run build
 `server/data/stops.json` is the canonical catalogue and is compiled into the
 server binary, so rebuild and redeploy the server after changing it. The web
 build needs a new static export when `server/data/stops.json`,
-`service-hours.json` or `mtr-lines.geojson` changes. Leave `LIVE_CATALOGUES`
-unset in production unless you want the slower live catalogue refresh at
-startup.
+`web/app/mtr-line-terminals.json`, `service-hours.json` or `mtr-lines.geojson`
+changes. Leave `LIVE_CATALOGUES` unset in production unless you want the slower
+live catalogue refresh at startup.
 
 ## HTTP API
 
