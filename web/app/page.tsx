@@ -1138,6 +1138,8 @@ export default function Page() {
           id={selected.id}
           mode={selected.mode}
           name={selected.name}
+          latitude={selected.latitude}
+          longitude={selected.longitude}
           taxi={selected.taxi}
           taxiType={selected.taxiType}
           taxiHours={selected.taxiHours}

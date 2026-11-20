@@ -42,6 +42,8 @@ export function StopSheet({
   id,
   mode,
   name,
+  latitude,
+  longitude,
   taxi,
   taxiType,
   taxiHours,
@@ -50,6 +52,8 @@ export function StopSheet({
   id: string;
   mode: Mode;
   name: string;
+  latitude: number;
+  longitude: number;
   taxi?: TaxiKind;
   taxiType?: TaxiLabel;
   taxiHours?: TaxiLabel | null;
@@ -162,17 +166,33 @@ export function StopSheet({
             </p>
           </div>
         </div>
-        <button type="button" onClick={onClose}>
-          {t.sheet.close}
-        </button>
-      </header>
-      {mode === "taxi" ? (
-        <div className="body">
-          <p className="muted">{t.sheet.taxiHours}</p>
-          <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
+        <div className="sheet-actions">
+          <MapMenu
+            latitude={latitude}
+            longitude={longitude}
+            name={localizeStopName(name, mode, locale)}
+            label={t.sheet.otherMaps}
+            maps={[
+              ["google", t.sheet.googleMaps],
+              ["apple", t.sheet.appleMaps],
+              ["baidu", t.sheet.baiduMaps],
+              ["amap", t.sheet.amap],
+              ["osm", t.sheet.openStreetMap],
+            ]}
+          />
+          <button type="button" onClick={onClose}>
+            {t.sheet.close}
+          </button>
         </div>
-      ) : apiBase ? (
-        <div className="body">
+      </header>
+      <div className="body">
+        {mode === "taxi" ? (
+          <>
+            <p className="muted">{t.sheet.taxiHours}</p>
+            <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
+          </>
+        ) : apiBase ? (
+          <>
           {snapshot?.note === "no-arrivals" ? (
             <p className="muted">{t.sheet.taxiNote}</p>
           ) : snapshot ? (
@@ -203,10 +223,100 @@ export function StopSheet({
               {copy(state, t)}
             </p>
           )}
-        </div>
-      ) : null}
+          </>
+        ) : null}
+      </div>
     </aside>
   );
+}
+
+function MapMenu({
+  latitude,
+  longitude,
+  name,
+  label,
+  maps,
+}: {
+  latitude: number;
+  longitude: number;
+  name: string;
+  label: string;
+  maps: [MapChoice, string][];
+}) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setOpen(false);
+  }, [latitude, longitude]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", close);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  return (
+    <div className="map-menu" ref={root}>
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((value) => !value)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 5h5v5" />
+          <path d="M13 11l6-6" />
+          <path d="M19 13v6a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6" />
+        </svg>
+      </button>
+      {open ? (
+        <ul role="menu">
+          {maps.map(([choice, text]) => (
+            <li key={choice} role="none">
+              <a
+                role="menuitem"
+                href={mapUrl(choice, latitude, longitude, name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+type MapChoice = "google" | "apple" | "baidu" | "amap" | "osm";
+
+function mapUrl(choice: MapChoice, latitude: number, longitude: number, name: string): string {
+  const at = `${latitude},${longitude}`;
+  const place = encodeURIComponent(name);
+  if (choice === "google") {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(at)}`;
+  }
+  if (choice === "apple") {
+    return `https://maps.apple.com/?ll=${encodeURIComponent(at)}&q=${place}`;
+  }
+  if (choice === "baidu") {
+    return `https://api.map.baidu.com/marker?location=${encodeURIComponent(at)}&title=${place}&content=${place}&output=html&coord_type=wgs84&src=webapp.realtime-hk-traffic.map`;
+  }
+  if (choice === "amap") {
+    return `https://uri.amap.com/marker?position=${encodeURIComponent(`${longitude},${latitude}`)}&name=${place}&src=realtime-hk-traffic&coordinate=wgs84&callnative=1`;
+  }
+  return `https://www.openstreetmap.org/?mlat=${latitude}&mlon=${longitude}#map=18/${latitude}/${longitude}`;
 }
 
 function taxiIconFiles(kind: TaxiKind): string[] {

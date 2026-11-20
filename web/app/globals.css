@@ -131,9 +131,13 @@ button { cursor: pointer; }
 .sheet header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
+  position: relative;
+  z-index: 1;
   border-bottom: 1px solid rgba(28, 25, 21, 0.12);
 }
+.sheet-actions { display: flex; align-items: flex-start; flex: none; gap: 0.15rem; }
 .sheet header.station .mode,
 .sheet header.station button { color: inherit; }
 .sheet header button {
@@ -181,6 +185,38 @@ button { cursor: pointer; }
 .sheet .mode { margin: 0.2rem 0 0; color: #6f675e; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
 .sheet .body { overflow: auto; }
+.sheet .map-menu { position: relative; }
+.sheet .map-menu button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+.sheet .map-menu svg { width: 20px; height: 20px; }
+.sheet .map-menu ul {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  top: 100%;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: #fbf7f0;
+  color: #241f1a;
+  border: 1px solid rgba(28, 25, 21, 0.16);
+  border-radius: 0.6rem;
+  box-shadow: 0 8px 24px rgba(28, 25, 21, 0.12);
+}
+.sheet .map-menu li { padding: 0; border: 0; }
+.sheet .map-menu a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  color: #241f1a;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.sheet .map-menu a:hover { background: rgba(28, 25, 21, 0.06); border-radius: 0.4rem; }
 .sheet ul { list-style: none; margin: 0; padding: 0; }
 .sheet li { padding: 0.75rem 0; border-bottom: 1px solid rgba(28, 25, 21, 0.12); }
 .sheet li strong { display: block; }

@@ -33,6 +33,12 @@ export type Messages = {
   };
   sheet: {
     close: string;
+    otherMaps: string;
+    googleMaps: string;
+    appleMaps: string;
+    baiduMaps: string;
+    amap: string;
+    openStreetMap: string;
     taxiNote: string;
     taxiHours: string;
     taxiAllDay: string;
@@ -68,6 +74,12 @@ const en: Messages = {
   },
   sheet: {
     close: "Close",
+    otherMaps: "Other maps",
+    googleMaps: "Google Maps",
+    appleMaps: "Apple Maps",
+    baiduMaps: "Baidu Maps",
+    amap: "Amap",
+    openStreetMap: "OpenStreetMap",
     taxiNote: "A taxi stand has no arrival list.",
     taxiHours: "Working hours",
     taxiAllDay: "Open all day",
@@ -103,6 +115,12 @@ const zhHant: Messages = {
   },
   sheet: {
     close: "關閉",
+    otherMaps: "其他地圖",
+    googleMaps: "Google 地圖",
+    appleMaps: "Apple 地圖",
+    baiduMaps: "百度地圖",
+    amap: "高德地圖",
+    openStreetMap: "OpenStreetMap",
     taxiNote: "的士站沒有到站時間。",
     taxiHours: "開放時間",
     taxiAllDay: "全日開放",
