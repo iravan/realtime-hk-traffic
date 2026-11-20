@@ -762,25 +762,14 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
     }
     let parsed = response.json::<Value>().await.map_err(|_| ())?;
     let items = parsed.get("data").and_then(|value| value.as_array()).ok_or(())?;
-    let mut clocks = Vec::new();
+    let mut rows = Vec::new();
     for item in items {
         let minutes = match sailing.op.as_str() {
             "hkkf" => hkkf_minutes(item),
-            "sun" => sun_minutes(item, false),
+            "sun" => sun_minutes(item),
             _ => None,
         };
-        clocks.push(minutes);
-    }
-    // Sun Ferry names the next trip. A list that is entirely in the past is
-    // that trip on the following morning, not a departed boat.
-    if sailing.op == "sun" && !clocks.is_empty() && clocks.iter().all(Option::is_none) {
-        clocks = items
-            .iter()
-            .map(|item| sun_minutes(item, true))
-            .collect();
-    }
-    let mut rows = Vec::new();
-    for minutes in clocks.into_iter().flatten() {
+        let Some(minutes) = minutes else { continue };
         rows.push(Row {
             route: sailing.label.clone(),
             destination: sailing.destination.clone(),
@@ -796,31 +785,67 @@ fn hkkf_minutes(item: &Value) -> Option<i64> {
     let session = item
         .get("session_time")
         .and_then(|value| value.as_str())?;
-    clock_minutes(date, session, false)
+    clock_minutes(date, session)
 }
 
-fn sun_minutes(item: &Value, roll_forward: bool) -> Option<i64> {
-    let depart = item.get("depart_time").and_then(|value| value.as_str())?;
-    let stamped = item
-        .get("date_timestamp")
-        .and_then(|value| value.as_str())
-        .filter(|value| value.len() >= 10);
-    let date = match stamped {
-        Some(value) => &value[..10],
-        None => return None,
-    };
-    clock_minutes(date, depart, roll_forward)
+// `depart_time` and `eta` are clocks. `date_timestamp` is when Sun Ferry
+// generated the row, so each clock is the occurrence nearest that instant.
+// `eta` is the arrival of this trip. A departure already in the past is not
+// moved to the next day.
+fn sun_minutes(item: &Value) -> Option<i64> {
+    minutes_from(sun_shown(item)?)
 }
 
-fn clock_minutes(date: &str, clock: &str, roll_forward: bool) -> Option<i64> {
-    let when = hk_stamp(date, clock)?;
-    if let Some(minutes) = minutes_from(when) {
-        return Some(minutes);
-    }
-    if roll_forward {
-        return minutes_from(when + chrono::Duration::days(1));
+fn sun_shown(item: &Value) -> Option<DateTime<chrono::FixedOffset>> {
+    let stamped = item.get("date_timestamp").and_then(|value| value.as_str())?;
+    let generated = DateTime::parse_from_rfc3339(stamped).ok()?;
+    for key in ["eta", "depart_time"] {
+        let Some(clock) = item.get(key).and_then(|value| value.as_str()).filter(|value| !value.is_empty()) else {
+            continue;
+        };
+        let Some(when) = sun_clock(&generated, clock) else { continue };
+        if when.signed_duration_since(generated).num_seconds() >= -90 {
+            return Some(when);
+        }
     }
     None
+}
+
+fn sun_clock(
+    generated: &DateTime<chrono::FixedOffset>,
+    clock: &str,
+) -> Option<DateTime<chrono::FixedOffset>> {
+    if clock.contains('T') {
+        return DateTime::parse_from_rfc3339(clock).ok().map(|when| when.fixed_offset());
+    }
+    nearest_clock(*generated, clock)
+}
+
+fn nearest_clock(
+    generated: DateTime<chrono::FixedOffset>,
+    clock: &str,
+) -> Option<DateTime<chrono::FixedOffset>> {
+    let mut parts = clock.split(':');
+    let hour: u32 = parts.next()?.parse().ok()?;
+    let minute: u32 = parts.next()?.parse().ok()?;
+    let second: u32 = parts.next().unwrap_or("0").parse().ok()?;
+    let time = chrono::NaiveTime::from_hms_opt(hour, minute, second)?;
+    let mut best: Option<DateTime<chrono::FixedOffset>> = None;
+    let mut best_abs = i64::MAX;
+    for delta in [-1_i64, 0, 1] {
+        let day = generated.date_naive() + chrono::Duration::days(delta);
+        let when = day.and_time(time).and_local_timezone(*generated.offset()).single()?;
+        let abs = when.signed_duration_since(generated).num_seconds().abs();
+        if abs < best_abs {
+            best_abs = abs;
+            best = Some(when);
+        }
+    }
+    best
+}
+
+fn clock_minutes(date: &str, clock: &str) -> Option<i64> {
+    minutes_from(hk_stamp(date, clock)?)
 }
 
 fn hk_stamp(date: &str, clock: &str) -> Option<DateTime<chrono::FixedOffset>> {
@@ -886,5 +911,26 @@ mod tests {
             "session_time": "12:15:00"
         });
         assert!(super::hkkf_minutes(&item).is_none());
+    }
+
+    #[test]
+    fn departed_sun_sailing_uses_its_arrival() {
+        let item = serde_json::json!({
+            "depart_time": "04:15",
+            "eta": "04:48",
+            "date_timestamp": "2026-11-21T04:22:07+08:00"
+        });
+        let when = super::sun_shown(&item).expect("arrival");
+        assert_eq!(when.to_rfc3339(), "2026-11-21T04:48:00+08:00");
+    }
+
+    #[test]
+    fn sun_clock_after_midnight_is_the_coming_morning() {
+        let item = serde_json::json!({
+            "depart_time": "07:23",
+            "date_timestamp": "2026-11-20T23:59:07+08:00"
+        });
+        let when = super::sun_shown(&item).expect("departure");
+        assert_eq!(when.to_rfc3339(), "2026-11-21T07:23:00+08:00");
     }
 }

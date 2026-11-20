@@ -38,7 +38,7 @@ Each arrival stores when it was fetched. The page shows that age. A snapshot pas
 
 ## Service hours
 
-`web/public/service-hours.json` holds the static service window for each mode, each MTR station, and each green-minibus route the catalogue names. A stop is drawn as its mode sign only while a window covers the current Hong Kong time. Outside that window it shrinks to a grey dot and does not open its sheet: a grey dot is a location, not a control. A stop with no matching entry keeps its mode default, so a gap in the data never greys a running stop. A window that ends after midnight is written with an end time earlier than its start.
+`web/public/service-hours.json` holds the static service window for each mode, each MTR station, each green-minibus route the catalogue names, and each Star Ferry pier. A stop is drawn as its mode sign only while a window covers the current Hong Kong time. Outside that window it shrinks to a grey dot and does not open its sheet: a grey dot is a location, not a control. A ferry pier stays coloured and clickable outside its window, and the sheet still shows the hours. A stop with no matching entry keeps its mode default, so a gap in the data never greys a running stop. A window that ends after midnight is written with an end time earlier than its start.
 
 Some bus and minibus routes run overnight. A stop served by one of them carries `night: true` in the stop list, so it stays in its mode colour and clickable for the whole day. `server/scripts/fetch-night-stops.py` derives that flag from the stops of every KMB or Citybus route whose code starts with `N` and every green-minibus route whose timetable covers the small hours. Re-run the script to refresh the flags.
 

@@ -127,6 +127,12 @@ export function schedulesForStop(stop: TimedStop, hours: ServiceHours): Schedule
     const station = code ? hours.stations?.[code] : undefined;
     if (station?.length) return [station];
   }
+  // Star Ferry piers have no route list. Their hours live in `routes` under
+  // the stop id, ahead of the overnight ferry default.
+  if (stop.mode === "ferry") {
+    const pier = hours.routes?.[stop.id];
+    if (pier?.length) return [pier];
+  }
   if (stop.routes?.length) {
     const known: Schedule[] = [];
     let missing = false;
@@ -144,7 +150,9 @@ export function schedulesForStop(stop: TimedStop, hours: ServiceHours): Schedule
 }
 
 export function isStopOpen(stop: TimedStop, hours: ServiceHours | null, now: Date): boolean {
-  if (stop.night) return true;
+  // Few piers, so a closed ferry stays coloured and clickable. The sheet still
+  // shows its hours.
+  if (stop.mode === "ferry" || stop.night) return true;
   if (!hours) return true;
   const schedules = schedulesForStop(stop, hours);
   if (schedules.length === 0) return true;

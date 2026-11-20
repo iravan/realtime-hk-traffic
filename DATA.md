@@ -593,7 +593,7 @@ Those files have no ETA. Two operators publish the next departure by route:
 | Operator | Endpoint | What a row uses |
 | --- | --- | --- |
 | Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | `date` and `session_time` as the departure from the origin pier of that direction |
-| Sun Ferry | `https://www.sunferry.com.hk/eta/?route={route_code}` | `depart_time` on the date in `date_timestamp` |
+| Sun Ferry | `https://www.sunferry.com.hk/eta/?route={route_code}` | `eta` when that arrival is still ahead, otherwise `depart_time`. Both clocks use the day nearest `date_timestamp` |
 
 `server/data/ferry-departures.json` says which of those routes leave which
 pier. Opening a mapped pier fetches each of its routes. The sheet shows the

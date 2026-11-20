@@ -73,6 +73,14 @@ function clockParts(value: string): { hour: number; minute: string } {
   return { hour, minute: (minuteText ?? "00").slice(0, 2).padStart(2, "0") };
 }
 
+function duration(minutes: number, hour: string, minute: string): string {
+  if (minutes < 60) return `${minutes} ${minute}`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (rest === 0) return `${hours} ${hour}`;
+  return `${hours} ${hour} ${rest} ${minute}`;
+}
+
 function englishClock(value: string): string {
   const { hour, minute } = clockParts(value);
   const suffix = hour < 12 ? "am" : "pm";
@@ -124,7 +132,7 @@ const en: Messages = {
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
     noArrivals: "No arrivals right now.",
-    minutes: (minutes) => `${minutes} min`,
+    minutes: (minutes) => duration(minutes, "h", "min"),
     updated: (age) => `Updated ${age}`,
     gone: "The snapshot is gone.",
     feedError: "The arrivals feed did not answer.",
@@ -172,7 +180,7 @@ const zhHant: Messages = {
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
     noArrivals: "暫無到站班次。",
-    minutes: (minutes) => `${minutes} 分鐘`,
+    minutes: (minutes) => duration(minutes, "小時", "分鐘"),
     updated: (age) => `更新於 ${age}`,
     gone: "資料已失效。",
     feedError: "到站資料未能回應。",

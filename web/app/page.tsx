@@ -36,7 +36,14 @@ import {
   type TaxiKind,
 } from "./stop-icon";
 import { taxiStandInfo, type TaxiLabel } from "./taxi-stand";
-import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
+import {
+  clockAt,
+  isScheduleOpen,
+  isStopOpen,
+  schedulesForStop,
+  serviceHoursLabel,
+  type ServiceHours,
+} from "./service-hours";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { linkedStopId, writeStopLink } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -1224,8 +1231,10 @@ export default function Page() {
           taxiType={selected.taxiType}
           taxiHours={selected.taxiHours}
           serviceHours={
-            selected.mode === "ferry" && ferrySchedule.length
-              ? serviceHoursLabel(ferrySchedule, t.clock, t.nextDayHours)
+            selected.mode === "ferry" && hours
+              ? schedulesForStop(selected, hours)
+                  .map((schedule) => serviceHoursLabel(schedule, t.clock, t.nextDayHours))
+                  .join(", ") || null
               : null
           }
           onClose={() => {
