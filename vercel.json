@@ -13,6 +13,22 @@
   },
   "rewrites": [
     {
+      "source": "/mtr/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
+      "source": "/bus/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
+      "source": "/minibus/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
+      "source": "/taxi/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
       "source": "/api/:path*",
       "destination": {
         "service": "server"

@@ -7,7 +7,9 @@
 
 Routing: `/api/*` goes to the server and every other path goes to the web app.
 Requests reach the server with the `/api` prefix intact, so the router mounts
-its routes both at `/stops` and under `/api`.
+its routes both at `/stops` and under `/api`. A shared stop path
+(`/mtr/…`, `/bus/…`, `/minibus/…`, `/taxi/…`) is rewritten to the web app at
+`/` and the browser address stays the stop path.
 
 ## Required environment variables
 

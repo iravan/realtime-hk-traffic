@@ -49,6 +49,10 @@ scope. Taxi stands are places, not vehicles.
   overnight route carry `night: true` and stay open and clickable all day.
 - **Merged poles.** Feed ids that publish the same coordinate become one point
   with merged arrivals; poles at different coordinates stay separate stops.
+- **Share a stop.** The stop sheet puts Share and the external-map icon on the
+  vehicle-type line, at the right. Each opens a dialog. Share shows the stop
+  link and copies it. The map dialog lists Google Maps, Apple Maps, Baidu Maps,
+  Amap, and OpenStreetMap. Close stays on the name line.
 
 ## Architecture
 
@@ -88,6 +92,14 @@ The exact endpoints, fields read, checked-in snapshots and request limits are in
 
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
 `mtr:`, `bus:`, `minibus:`, `taxi:`.
+
+The same id is the share link, with slashes instead of colons and a trailing
+slash: `/mtr/CEN/`, `/bus/kmb/{stop}/`, `/bus/ctb/{stop}/`, `/minibus/{id}/`,
+`/taxi/{id}/`. Opening that path selects the stop and moves the map so the
+whole sign stays clear of the sheet. An older `?stop=` link still opens the
+stop, then the address bar switches to the slash form. Closing the sheet or
+changing mode returns the address to `/`. On Vercel those paths are rewritten
+to the web app. A static host serves the same page from `404.html`.
 
 ## Updating catalogues
 

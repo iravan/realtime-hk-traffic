@@ -48,6 +48,8 @@ One page. OpenStreetMap is the basemap. Stops are points on top of it.
 
 The user chooses one mode at a time: MTR, bus, minibus, taxi. The map opens on the device location when the browser grants it, and the nearest stop of the chosen mode opens with it; changing mode moves the selection to the nearest stop of that mode. A locate button asks the device again, moves the map back to it, and reselects the nearest stop, so a visitor who has panned away does not have to reload the page. The selected stop is ringed on the map. Tapping a stop opens its arrivals, soonest first. One departure appears once, even when a feed lists it under several service types. A stop with no live arrival shows that plainly.
 
+A stop can be opened directly. The address is the stop id with slashes instead of colons: `/bus/kmb/{stop}/`, `/mtr/{code}/`, `/minibus/{id}/`, `/taxi/{id}/`. The sheet keeps Share and the external-map icon on the vehicle-type line. Share opens a dialog with that link. The other icon opens a dialog of Google Maps, Apple Maps, Baidu Maps, Amap, and OpenStreetMap. A shared link does not let the automatic location request move the map away.
+
 Moving the map asks the server for the stops inside the view. The client does not choose which arrivals are current. It draws what the server last stored.
 
 There is no sign-in. Anyone can pan and open stops.

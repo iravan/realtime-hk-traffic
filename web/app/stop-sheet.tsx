@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
-import { stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { stopPath } from "./stop-link";
 import { localizeStopName } from "./stop-name";
 import type { TaxiLabel } from "./taxi-stand";
 
@@ -60,7 +62,19 @@ export function StopSheet({
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
-  const sign = useMemo(() => stopIconUrl(mode), [mode]);
+  const [sign, setSign] = useState<string | null>(null);
+  useEffect(() => {
+    if (mode === "taxi" && taxi) return;
+    let cancelled = false;
+    // A deep link opens the sheet before the SVG artwork has loaded. Drawing
+    // then keeps the plain fallback instead of the full sign.
+    void Promise.all([loadVehicleImages(basePath), loadTaxiKindImages(basePath)]).then(() => {
+      if (!cancelled) setSign(stopIconUrl(mode));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, taxi]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const snapshotRef = useRef<Snapshot | null>(null);
   snapshotRef.current = snapshot;
@@ -152,37 +166,51 @@ export function StopSheet({
                 alt=""
               />
             ))
-          ) : (
+          ) : sign ? (
             <img className="stop-sign" src={sign} alt="" />
+          ) : (
+            <span className="stop-sign" />
           )}
-          <div>
-            <h2>{localizeStopName(name, mode, locale)}</h2>
-            <p className="mode">
-              {mode === "taxi" && taxiType
-                ? locale === "en"
-                  ? taxiType.en
-                  : taxiType.tc
-                : t.mode[mode]}
-            </p>
+          <div className="stop-name">
+            <div className="stop-heading">
+              <h2>{localizeStopName(name, mode, locale)}</h2>
+              <button type="button" onClick={onClose}>
+                {t.sheet.close}
+              </button>
+            </div>
+            <div className="mode-line">
+              <p className="mode">
+                {mode === "taxi" && taxiType
+                  ? locale === "en"
+                    ? taxiType.en
+                    : taxiType.tc
+                  : t.mode[mode]}
+              </p>
+              <div className="sheet-actions">
+                <ShareStop
+                  id={id}
+                  label={t.sheet.share}
+                  copyLabel={t.sheet.copy}
+                  copiedLabel={t.sheet.copied}
+                  closeLabel={t.sheet.close}
+                />
+                <MapMenu
+                  latitude={latitude}
+                  longitude={longitude}
+                  name={localizeStopName(name, mode, locale)}
+                  label={t.sheet.otherMaps}
+                  closeLabel={t.sheet.close}
+                  maps={[
+                    ["google", t.sheet.googleMaps],
+                    ["apple", t.sheet.appleMaps],
+                    ["baidu", t.sheet.baiduMaps],
+                    ["amap", t.sheet.amap],
+                    ["osm", t.sheet.openStreetMap],
+                  ]}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="sheet-actions">
-          <MapMenu
-            latitude={latitude}
-            longitude={longitude}
-            name={localizeStopName(name, mode, locale)}
-            label={t.sheet.otherMaps}
-            maps={[
-              ["google", t.sheet.googleMaps],
-              ["apple", t.sheet.appleMaps],
-              ["baidu", t.sheet.baiduMaps],
-              ["amap", t.sheet.amap],
-              ["osm", t.sheet.openStreetMap],
-            ]}
-          />
-          <button type="button" onClick={onClose}>
-            {t.sheet.close}
-          </button>
         </div>
       </header>
       <div className="body">
@@ -230,47 +258,94 @@ export function StopSheet({
   );
 }
 
+function ShareStop({
+  id,
+  label,
+  copyLabel,
+  copiedLabel,
+  closeLabel,
+}: {
+  id: string;
+  label: string;
+  copyLabel: string;
+  copiedLabel: string;
+  closeLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const link = open ? shareLink(id) : "";
+  return (
+    <>
+      <button
+        type="button"
+        className="sheet-icon"
+        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => {
+          setCopied(false);
+          setOpen(true);
+        }}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 15V4" />
+          <path d="M8 7l4-4 4 4" />
+          <path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7" />
+        </svg>
+      </button>
+      {open ? (
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <input className="modal-link" readOnly value={link} onFocus={(event) => event.currentTarget.select()} />
+          <button
+            type="button"
+            className="modal-copy"
+            onClick={() => {
+              void navigator.clipboard?.writeText(link).then(() => setCopied(true));
+            }}
+          >
+            {copied ? copiedLabel : copyLabel}
+          </button>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+function shareLink(id: string): string {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("stop");
+  url.pathname = stopPath(id);
+  return url.toString();
+}
+
 function MapMenu({
   latitude,
   longitude,
   name,
   label,
+  closeLabel,
   maps,
 }: {
   latitude: number;
   longitude: number;
   name: string;
   label: string;
+  closeLabel: string;
   maps: [MapChoice, string][];
 }) {
   const [open, setOpen] = useState(false);
-  const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setOpen(false);
   }, [latitude, longitude]);
-  useEffect(() => {
-    if (!open) return;
-    const close = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("pointerdown", close);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("pointerdown", close);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
   return (
-    <div className="map-menu" ref={root}>
+    <>
       <button
         type="button"
+        className="sheet-icon"
         aria-label={label}
+        aria-haspopup="dialog"
         aria-expanded={open}
-        aria-haspopup="menu"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen(true)}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M14 5h5v5" />
@@ -279,23 +354,64 @@ function MapMenu({
         </svg>
       </button>
       {open ? (
-        <ul role="menu">
-          {maps.map(([choice, text]) => (
-            <li key={choice} role="none">
-              <a
-                role="menuitem"
-                href={mapUrl(choice, latitude, longitude, name)}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setOpen(false)}
-              >
-                {text}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <ul className="modal-maps">
+            {maps.map(([choice, text]) => (
+              <li key={choice}>
+                <a
+                  href={mapUrl(choice, latitude, longitude, name)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                >
+                  {text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Modal>
       ) : null}
-    </div>
+    </>
+  );
+}
+
+function Modal({
+  title,
+  closeLabel,
+  onClose,
+  children,
+}: {
+  title: string;
+  closeLabel: string;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return createPortal(
+    <div className="modal" onClick={onClose}>
+      <div
+        className="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header>
+          <h3>{title}</h3>
+          <button type="button" onClick={onClose}>
+            {closeLabel}
+          </button>
+        </header>
+        {children}
+      </div>
+    </div>,
+    document.body,
   );
 }
 

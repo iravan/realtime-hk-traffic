@@ -33,6 +33,9 @@ export type Messages = {
   };
   sheet: {
     close: string;
+    share: string;
+    copy: string;
+    copied: string;
     otherMaps: string;
     googleMaps: string;
     appleMaps: string;
@@ -74,6 +77,9 @@ const en: Messages = {
   },
   sheet: {
     close: "Close",
+    share: "Share",
+    copy: "Copy",
+    copied: "Copied",
     otherMaps: "Other maps",
     googleMaps: "Google Maps",
     appleMaps: "Apple Maps",
@@ -115,6 +121,9 @@ const zhHant: Messages = {
   },
   sheet: {
     close: "關閉",
+    share: "分享",
+    copy: "複製",
+    copied: "已複製",
     otherMaps: "其他地圖",
     googleMaps: "Google 地圖",
     appleMaps: "Apple 地圖",

@@ -38,7 +38,14 @@ const taxiBitmaps: Partial<Record<TaxiKind, HTMLCanvasElement>> = {};
 
 // The same SVG artwork the category tabs use, so a stop on the map shows the
 // same vehicle as its tab. Loaded once before the first pin is drawn.
-export async function loadVehicleImages(basePath: string): Promise<void> {
+let vehicleLoad: Promise<void> | null = null;
+
+export function loadVehicleImages(basePath: string): Promise<void> {
+  vehicleLoad ??= loadVehicleImagesOnce(basePath);
+  return vehicleLoad;
+}
+
+async function loadVehicleImagesOnce(basePath: string): Promise<void> {
   const all: Mode[] = ["mtr", "bus", "minibus", "taxi"];
   await Promise.all(
     all.map(async (mode) => {
@@ -64,7 +71,14 @@ const taxiPairs: Partial<Record<TaxiKind, [TaxiKind, TaxiKind]>> = {
   "urban-cross": ["urban", "cross"],
 };
 
-export async function loadTaxiKindImages(basePath: string): Promise<void> {
+let taxiKindLoad: Promise<void> | null = null;
+
+export function loadTaxiKindImages(basePath: string): Promise<void> {
+  taxiKindLoad ??= loadTaxiKindImagesOnce(basePath);
+  return taxiKindLoad;
+}
+
+async function loadTaxiKindImagesOnce(basePath: string): Promise<void> {
   await Promise.all(
     taxiFiles.map(async (kind) => {
       try {

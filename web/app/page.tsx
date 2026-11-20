@@ -35,6 +35,7 @@ import {
 import { taxiStandInfo, type TaxiLabel } from "./taxi-stand";
 import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
+import { linkedStopId, writeStopLink } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
@@ -191,6 +192,48 @@ export default function Page() {
   // Null until mount so the static prerender and the first client render agree
   // on what time it is.
   const [now, setNow] = useState<Date | null>(null);
+  const pendingFocusRef = useRef<Stop | null>(null);
+  const focusPadRef = useRef(false);
+  const focusPendingRef = useRef<(map: MlMap) => void>(() => {});
+  const showStopRef = useRef<(stop: Stop, focus?: boolean) => void>(() => {});
+  const linkedStopRef = useRef<string | null>(null);
+  const holdSharedViewRef = useRef(false);
+  const linkSeenRef = useRef(false);
+  if (!linkSeenRef.current && typeof window !== "undefined") {
+    linkSeenRef.current = true;
+    linkedStopRef.current = linkedStopId();
+    holdSharedViewRef.current = linkedStopRef.current !== null;
+  }
+  focusPendingRef.current = (map) => {
+    const stop = pendingFocusRef.current;
+    // The style reports loaded before the stop icons exist. Flying then draws
+    // the sign mid-zoom, and MapLibre keeps the clipped image.
+    if (!stop || !map.getLayer("stops")) return;
+    pendingFocusRef.current = null;
+    focusPadRef.current = true;
+    map.easeTo({
+      center: [stop.longitude, stop.latitude],
+      zoom: Math.max(map.getZoom(), 16),
+      padding: focusPadding(),
+    });
+  };
+  showStopRef.current = (stop, focus = false) => {
+    const open = isStopOpen(stop, hoursRef.current, new Date());
+    setBoard(stop);
+    setSelected(open ? stop : null);
+    writeStopLink(stop.id);
+    if (!focus) return;
+    pendingFocusRef.current = stop;
+    const map = mapRef.current;
+    if (map) focusPendingRef.current(map);
+  };
+  const clearFocusPadding = () => {
+    if (!focusPadRef.current) return;
+    focusPadRef.current = false;
+    const map = mapRef.current;
+    if (!map?.getLayer("stops")) return;
+    map.easeTo({ padding: { top: 0, bottom: 0, left: 0, right: 0 }, duration: 0 });
+  };
 
   useEffect(() => {
     const node = container.current;
@@ -697,13 +740,7 @@ export default function Page() {
         } else {
           hideStopName();
         }
-        if (open) {
-          setSelected(match);
-          setBoard(match);
-        } else {
-          setSelected(null);
-          setBoard(match);
-        }
+        showStopRef.current(match);
       });
       map.on("mouseenter", "stops", (event) => {
         map.getCanvas().style.cursor = event.features?.length ? "pointer" : "";
@@ -717,6 +754,7 @@ export default function Page() {
       map.moveLayer("stops-hover");
       map.moveLayer("selection");
       drawStops(map);
+      focusPendingRef.current(map);
     });
     map.on("moveend", () => {
       drawStops(map);
@@ -797,7 +835,7 @@ export default function Page() {
   }
 
   function selectNearest(fix: Fix | null) {
-    if (!fix) return;
+    if (!fix || holdSharedViewRef.current) return;
     const mode = activeRef.current;
     const catalogue = cataloguesRef.current[mode];
     if (!catalogue) {
@@ -976,6 +1014,7 @@ export default function Page() {
   // button should say why nothing happened, the first automatic request should
   // not.
   function locate(manual: boolean) {
+    if (manual) holdSharedViewRef.current = false;
     if (!navigator.geolocation) {
       if (manual) setLocateState("error");
       return;
@@ -995,8 +1034,10 @@ export default function Page() {
         }
         fixRef.current = fix;
         const map = mapRef.current;
+        if (map?.isStyleLoaded()) placeMe(map, fix);
+        // A shared stop link owns the camera until the user asks for a fix.
+        if (!manual && holdSharedViewRef.current) return;
         if (map?.isStyleLoaded()) {
-          placeMe(map, fix);
           map.easeTo({
             center: [fix.longitude, fix.latitude],
             zoom: Math.max(map.getZoom(), 16),
@@ -1013,6 +1054,12 @@ export default function Page() {
   }
 
   useEffect(() => {
+    const linked = linkedStopRef.current;
+    const mode = linked ? modeFromStopId(linked) : null;
+    if (mode && mode !== activeRef.current) setActive(mode);
+  }, []);
+
+  useEffect(() => {
     locate(false);
   }, []);
 
@@ -1020,16 +1067,23 @@ export default function Page() {
     clearLineRef.current();
     hideStopNameRef.current();
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    drawStops(map);
+    if (map?.isStyleLoaded()) drawStops(map);
     // Switching tabs cancels the picked stop: close the sheet, hide the route
-    // board and clear the highlight.
+    // board and clear the highlight. A shared link reopens after its catalogue
+    // loads, including when the map style is not ready yet.
     setSelected(null);
     setBoard(null);
 
     let cancelled = false;
-    void loadCatalogue(active).then(() => {
+    void loadCatalogue(active).then((stops) => {
       if (cancelled) return;
+      const linked = linkedStopRef.current;
+      if (linked && modeFromStopId(linked) === active) {
+        const stop = stops.find((item) => item.id === linked);
+        linkedStopRef.current = null;
+        if (stop) showStopRef.current(stop, true);
+        else holdSharedViewRef.current = false;
+      }
       const current = mapRef.current;
       if (current?.isStyleLoaded()) drawStops(current);
     });
@@ -1094,6 +1148,8 @@ export default function Page() {
                 onClick={() => {
                   setSelected(null);
                   setBoard(null);
+                  clearStopParam();
+                  clearFocusPadding();
                   setActive(mode);
                 }}
               >
@@ -1146,11 +1202,39 @@ export default function Page() {
           onClose={() => {
             setSelected(null);
             setBoard(null);
+            clearStopParam();
+            clearFocusPadding();
           }}
         />
       ) : null}
     </div>
   );
+}
+
+function modeFromStopId(id: string): Mode | null {
+  const mode = id.split(":")[0];
+  return modes.includes(mode as Mode) ? (mode as Mode) : null;
+}
+
+// Keep the stop in the part of the map the details sheet does not cover, so
+// the whole sign stays on screen. The padding lasts until the sheet closes.
+function focusPadding(): { top: number; bottom: number; left: number; right: number } {
+  const root = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const narrow = window.matchMedia("(max-width: 767px)").matches;
+  if (narrow) {
+    return {
+      top: 96,
+      bottom: Math.round(window.innerHeight * 0.52) + 16,
+      left: 16,
+      right: 16,
+    };
+  }
+  return { top: 96, bottom: 24, left: 24, right: Math.round(22 * root + 12) + 24 };
+}
+
+function clearStopParam() {
+  if (!linkedStopId()) return;
+  writeStopLink(null);
 }
 
 function inHongKong(fix: Fix): boolean {
