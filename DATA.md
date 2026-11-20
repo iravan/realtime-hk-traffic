@@ -39,16 +39,16 @@ MTR Bus feed, which uses POST.
 ## What the server actually uses
 
 Short answer: no. Only the rows marked `Yes` in the Rust service column are
-called at runtime. Not every source in this document is polled by the Rust
-service. The rest are bundled, script-generated, web-only, or documented for
-future work.
+called at runtime. Catalogue rows marked `Optional` are fetched only when
+`LIVE_CATALOGUES=1`; by default the service uses the bundled stops. The rest
+are script-generated, web-only, or documented for future work.
 
 | Source | Rust service | Scripts | Web | Notes |
 | --- | --- | --- | --- | --- |
 | MTR lines and stations CSV | Indirect | No | No | The server uses bundled `mtr.json`, not the CSV |
 | MTR next train | Yes | No | No | Live station arrivals |
 | MTR Bus and Feeder Bus | No | No | No | Documented only |
-| KMB and LWB stop list | Yes | No | No | Live stop catalogue |
+| KMB and LWB stop list | Optional | No | No | Bundled by default; live catalogue refresh with `LIVE_CATALOGUES=1` |
 | KMB and LWB stop detail | No | No | No | Documented only |
 | KMB and LWB route list | No | Yes | No | Night-stop generation |
 | KMB and LWB route detail | No | No | No | Documented only |
@@ -56,18 +56,22 @@ future work.
 | KMB and LWB route-stop detail | No | Yes | No | Night-stop generation |
 | KMB and LWB stop ETA | Yes | No | No | Live bus arrivals |
 | KMB and LWB route ETA | No | No | No | Documented only |
-| Citybus route, stop, route-stop and ETA | Yes | Partial | No | Server uses all; night-stop script uses route and route-stop |
+| Citybus ETA | Yes | No | No | Live bus arrivals |
+| Citybus route and stop catalogues | Optional | Partial | No | Bundled by default; live crawl with `LIVE_CATALOGUES=1`; night-stop script uses route and route-stop |
 | KML_BUS.zip | No | No | No | Documented only |
-| Green minibus route, stop and ETA | Yes | Partial | No | Server uses all; scripts use route and route-stop |
+| GMB stop ETA | Yes | No | No | Live minibus arrivals |
+| GMB route and stop catalogues | Optional | Partial | No | Bundled by default; live crawl with `LIVE_CATALOGUES=1`; scripts use route and route-stop |
 | ROUTE_GMB.xml | No | No | No | Reference for bundled `gmb-routes.json` |
 | KML_GMB.zip | No | No | No | Documented only |
-| Taxi stands | Yes | No | No | Live stand catalogue |
+| Taxi stands | Optional | No | No | Bundled by default; live catalogue refresh with `LIVE_CATALOGUES=1` |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
 | `mtr-lines.geojson` | No | Generated | Yes | Web-only MTR line layer |
 
 The checked-in stop catalogue is used on both sides: the server reads
-`server/data/stops.json`, and the page reads `web/public/stops.json`.
+`server/data/stops.json`, and the page reads `web/public/stops.json`. The server
+loads the bundled stops first and only refreshes the live catalogues when
+`LIVE_CATALOGUES=1`.
 
 ## Static and dynamic data
 
@@ -87,10 +91,10 @@ arrival information that changes continuously and is polled by the service.
 | `web/public/mtr-lines.geojson` | Checked in | Regenerated from OpenStreetMap |
 | `KML_BUS.zip` and `KML_GMB.zip` | Publisher reference archives | Periodic publisher update; not polled |
 | `ROUTE_GMB.xml` | Publisher reference | Periodic publisher update; not polled |
-| KMB and LWB route and stop catalogues | Fetched at startup | Daily, or when routes and stops change |
-| Citybus route and stop catalogues | Fetched at startup | Daily, or when routes and stops change |
-| GMB route and stop catalogues | Fetched at startup | When routes and stops change |
-| Taxi stand locations | Fetched at startup | When stands change |
+| KMB and LWB route and stop catalogues | Bundled; optional live refresh | Daily, or when routes and stops change |
+| Citybus route and stop catalogues | Bundled; optional live refresh | Daily, or when routes and stops change |
+| GMB route and stop catalogues | Bundled; optional live refresh | When routes and stops change |
+| Taxi stand locations | Bundled; optional live refresh | When stands change |
 
 ### Dynamic or live data
 
@@ -107,6 +111,11 @@ arrival information that changes continuously and is polled by the service.
 Dynamic data is never committed to the repository. The only persisted copy is
 the Redis snapshot, and it expires. Static data is the material a new server
 starts from.
+
+### Static data improvements
+
+Static-data optimization opportunities and their measurements are tracked in
+[improve.md](improve.md).
 
 ## MTR lines and stations
 
@@ -640,7 +649,7 @@ Detailed endpoints and fields are in the tables above.
 flowchart TB
   subgraph Inputs["Data sources"]
     direction TB
-    LiveStops["Live stop catalogues: bus, minibus, taxi"]
+    LiveStops["Optional live stop catalogues: bus, minibus, taxi"]
     LiveArrivals["Live arrival feeds: MTR train, bus, minibus"]
     Repo["Checked-in data: stops, MTR stations, GMB routes"]
     MapFiles["Checked-in map files: service hours, icons, MTR lines"]
@@ -674,7 +683,7 @@ flowchart TB
   end
 
   Repo --> Catalog
-  LiveStops --> Catalog
+  LiveStops -.-> Catalog
   Catalog --> Poll
   LiveArrivals --> Poll
   Poll --> Cache
@@ -684,6 +693,9 @@ flowchart TB
   MapFiles --> Map
   Map -->|"tap a stop"| Sheet
 ```
+
+The dotted live-stop edge is enabled only with `LIVE_CATALOGUES=1`. Without it,
+the service uses the bundled stop catalogue.
 
 ### One arrival request
 

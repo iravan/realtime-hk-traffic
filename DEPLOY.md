@@ -21,6 +21,9 @@ its routes both at `/stops` and under `/api`.
 - `CORS_ORIGINS` — optional. Public traffic is same-origin through the rewrite,
   so this only matters for `bun run dev` or the GitHub Pages build reaching the
   API cross-origin. Comma-separated origins.
+- `LIVE_CATALOGUES` — optional. Set to `1` to refresh the bus, minibus and taxi
+  catalogues from upstream at startup. Leave it unset to serve the bundled
+  catalogue only; that is faster and avoids thousands of upstream requests.
 - `PORT` — injected by Vercel (`80` for container services). The image defaults
   to `3000` for local runs.
 
@@ -72,7 +75,8 @@ A full run of that script, without `--routes-only`, also refreshes the stop
 lists' `routes` arrays.
 
 Regenerate the seed (and `web/public/stops.json`) from a running server when
-the catalogue changes.
+the catalogue changes. The runbook is in
+[README.md](README.md#updating-catalogues).
 
 ## Why the server is a container
 

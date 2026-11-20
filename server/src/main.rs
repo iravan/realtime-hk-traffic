@@ -185,56 +185,93 @@ async fn main() {
 
 async fn load_catalogues(app: Arc<App>) {
     let bundled = catalog::bundled_stops();
-    eprintln!("bundled stops {}", bundled.len());
-    remember_local(&app, bundled).await;
+    let count = bundled.len();
+    let (added, updated) = remember_local(&app, bundled).await;
+    eprintln!("bundled stops {count} ({added} new, {updated} updated)");
+
     // MTR arrivals need the station code and lines; attach them before any
     // network or redis work so a cold first request is never missing them.
     let mtr = catalog::mtr_stops();
-    remember_local(&app, mtr).await;
-    let kmb = catalog::kmb_stops(&app.http).await;
-    eprintln!("kmb stops {}", kmb.len());
-    remember(&app, kmb).await;
-    let taxi = catalog::taxi_stands(&app.http).await;
-    eprintln!("taxi stands {}", taxi.len());
-    remember(&app, taxi).await;
-    let http = app.http.clone();
-    let citybus_task = tokio::spawn(async move { catalog::citybus_stops(&http).await });
-    let http = app.http.clone();
-    let minibus_task = tokio::spawn(async move { catalog::minibus_stops(&http).await });
-    let citybus = citybus_task.await.unwrap_or_default();
-    eprintln!("citybus stops {}", citybus.len());
-    remember(&app, citybus).await;
-    if let Ok((minibus, routes)) = minibus_task.await {
-        eprintln!("minibus stops {}", minibus.len());
-        // The bundled map already names every known route; the crawl only adds
-        // routes that appeared after it was generated.
-        app.gmb_routes.write().await.extend(routes);
-        remember(&app, minibus).await;
+    let count = mtr.len();
+    let (added, updated) = remember_local(&app, mtr).await;
+    eprintln!("mtr stops {count} ({added} new, {updated} updated)");
+
+    if live_catalogues_enabled() {
+        eprintln!("live catalogue refresh enabled");
+        refresh_live_catalogues(&app).await;
+    } else {
+        eprintln!("live catalogue refresh disabled; using bundled stops");
     }
     eprintln!("catalogue ready {}", app.stops.read().await.len());
 }
 
-async fn remember(app: &App, stops: Vec<Stop>) {
-    if stops.is_empty() {
-        return;
+// The bundled catalogue is complete enough to serve. Live catalogue crawls are
+// opt-in because the minibus and Citybus walks cost thousands of requests.
+fn live_catalogues_enabled() -> bool {
+    std::env::var("LIVE_CATALOGUES")
+        .map(|value| {
+            matches!(
+                value.trim().to_ascii_lowercase().as_str(),
+                "1" | "true" | "yes" | "on"
+            )
+        })
+        .unwrap_or(false)
+}
+
+async fn refresh_live_catalogues(app: &App) {
+    let kmb = catalog::kmb_stops(&app.http).await;
+    let count = kmb.len();
+    let (added, updated) = remember(app, kmb).await;
+    eprintln!("kmb stops {count} ({added} new, {updated} updated)");
+
+    let taxi = catalog::taxi_stands(&app.http).await;
+    let count = taxi.len();
+    let (added, updated) = remember(app, taxi).await;
+    eprintln!("taxi stands {count} ({added} new, {updated} updated)");
+
+    let http = app.http.clone();
+    let citybus_task = tokio::spawn(async move { catalog::citybus_stops(&http).await });
+    let http = app.http.clone();
+    let minibus_task = tokio::spawn(async move { catalog::minibus_stops(&http).await });
+
+    let citybus = citybus_task.await.unwrap_or_default();
+    let count = citybus.len();
+    let (added, updated) = remember(app, citybus).await;
+    eprintln!("citybus stops {count} ({added} new, {updated} updated)");
+
+    if let Ok((minibus, routes)) = minibus_task.await {
+        let count = minibus.len();
+        // The bundled map already names every known route; the crawl only adds
+        // routes that appeared after it was generated.
+        app.gmb_routes.write().await.extend(routes);
+        let (added, updated) = remember(app, minibus).await;
+        eprintln!("minibus stops {count} ({added} new, {updated} updated)");
     }
-    index_stops(app, stops).await;
+}
+
+async fn remember(app: &App, stops: Vec<Stop>) -> (usize, usize) {
+    if stops.is_empty() {
+        return (0, 0);
+    }
+    index_stops(app, stops).await
 }
 
 // The bundled catalogue already travels in the binary; caching it in redis
 // too would cost tens of thousands of writes on every cold start.
-async fn remember_local(app: &App, stops: Vec<Stop>) {
+async fn remember_local(app: &App, stops: Vec<Stop>) -> (usize, usize) {
     if stops.is_empty() {
-        return;
+        return (0, 0);
     }
-    index_stops(app, stops).await;
+    index_stops(app, stops).await
 }
 
-async fn index_stops(app: &App, stops: Vec<Stop>) {
+async fn index_stops(app: &App, stops: Vec<Stop>) -> (usize, usize) {
     let mut all = app.stops.write().await;
     let mut index = app.by_id.write().await;
     let mut locations = app.by_location.write().await;
     let mut members = app.by_member.write().await;
+    let mut added = 0;
+    let mut updated = 0;
     for stop in stops {
         let key = location_key(&stop);
         let owner = locations.get(&key).cloned();
@@ -252,16 +289,19 @@ async fn index_stops(app: &App, stops: Vec<Stop>) {
                     kept.mtr_code = stop.mtr_code;
                     kept.name = stop.name;
                 }
+                updated += 1;
             }
             None => {
                 locations.insert(key, stop.id.clone());
                 members.insert(stop.id.clone(), stop.id.clone());
                 index.insert(stop.id.clone(), stop);
+                added += 1;
             }
         }
     }
     // One entry per location; a stop seen in two sources is refreshed, not doubled.
     *all = index.values().cloned().collect();
+    (added, updated)
 }
 
 fn location_key(stop: &Stop) -> String {

@@ -89,6 +89,129 @@ The exact endpoints, fields read, checked-in snapshots and polling rules are in
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
 `mtr:`, `bus:`, `minibus:`, `taxi:`.
 
+## Updating catalogues
+
+The server can pick up the latest official stop lists at startup with
+`LIVE_CATALOGUES=1`, but that only changes the in-memory catalogue. The checked-in
+files under `server/data` and `web/public` must be updated separately.
+
+### 1. Refresh the base stop list
+
+Start the server with live catalogues and wait for the `catalogue ready` log:
+
+```bash
+cd server
+LIVE_CATALOGUES=1 cargo run
+```
+
+In another terminal, export the merged catalogue and merge it into both stop
+files. The merge keeps existing ids, including ids that share a location, and
+preserves `routes` and `night` fields.
+
+```bash
+curl -s 'http://127.0.0.1:8787/stops?south=-90&west=-180&north=90&east=180' -o /tmp/stops-live.json
+
+python3 - <<'PY'
+import json
+from pathlib import Path
+
+live = {
+    stop["id"]: stop
+    for stop in json.load(open("/tmp/stops-live.json", encoding="utf-8"))["stops"]
+}
+if not live:
+    raise SystemExit("no live stops; wait for catalogue ready and retry")
+
+for name in ("server/data/stops.json", "web/public/stops.json"):
+    path = Path(name)
+    document = json.loads(path.read_text(encoding="utf-8"))
+    known = {stop["id"] for stop in document["stops"]}
+
+    for stop in document["stops"]:
+        fresh = live.get(stop["id"])
+        if fresh:
+            for key in ("mode", "name", "latitude", "longitude"):
+                stop[key] = fresh[key]
+
+    document["stops"].extend(
+        sorted(
+            (stop for stop in live.values() if stop["id"] not in known),
+            key=lambda stop: stop["id"],
+        )
+    )
+    path.write_text(
+        json.dumps(document, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+PY
+```
+
+New stops are appended without `routes` or `night`; the scripts below fill those
+in. Stops removed upstream are not deleted automatically. Remove them by hand if
+the catalogue has shrunk.
+
+### 2. Minibus route numbers and stop routes
+
+```bash
+python3 server/scripts/fetch-minibus-routes.py --routes-only
+```
+
+Rewrites `server/data/gmb-routes.json`. A full run without `--routes-only` also
+refreshes the `routes` arrays in both stop files. Responses are cached under
+`.cache/gmb`; the publisher throttles bursts, so a large refresh may need
+several runs with `--budget N`.
+
+### 3. Night-stop flags
+
+```bash
+python3 server/scripts/fetch-night-stops.py
+```
+
+Rewrites `night` on both stop files. It uses the cached minibus data, so run the
+minibus script first when minibus routes changed. This script also accepts
+`--budget N` and caches responses under `.cache/night`.
+
+### 4. MTR station metadata
+
+`server/data/mtr.json` is checked in. When MTR adds or renames a station or
+changes line membership, update it from the official
+[MTR lines and stations CSV](https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv).
+Keep the coordinates and include `RAC` (Racecourse), which the CSV omits.
+
+### 5. MTR line geometry
+
+```bash
+python3 server/scripts/fetch-mtr-lines.py --refresh
+```
+
+Rewrites `web/public/mtr-lines.geojson` from OpenStreetMap/Overpass.
+
+### 6. Service hours
+
+`web/public/service-hours.json` is checked-in schedule data. Update it by hand
+when a mode, station or route changes its service window.
+
+### 7. Check the result
+
+The two stop files must stay identical:
+
+```bash
+cmp server/data/stops.json web/public/stops.json
+```
+
+Then run the normal checks:
+
+```bash
+cd server && cargo fmt --check && cargo check && cargo test
+cd ../web && bunx tsc --noEmit && bun run build
+```
+
+`server/data/stops.json` is compiled into the server binary, so rebuild and
+redeploy the server after changing it. The web build needs a new static export
+when `web/public/stops.json`, `service-hours.json` or `mtr-lines.geojson`
+changes. Leave `LIVE_CATALOGUES` unset in production unless you want the slower
+live catalogue refresh at startup.
+
 ## HTTP API
 
 All routes are public. The service answers both at the root and under `/api`
@@ -115,8 +238,9 @@ stand returns a name-only snapshot and has no arrivals key. An unknown id is a
 arrivals:{id}    string, EX 90    { "fetched_at", "live", "status"?, "note"?, "rows" }
 ```
 
-Redis holds only ephemeral arrival snapshots. The stop index (bundled plus live
-catalogues) lives in the Rust process memory. See [REDIS.md](REDIS.md).
+Redis holds only ephemeral arrival snapshots. The stop index (bundled, with an
+optional live catalogue refresh) lives in the Rust process memory. See
+[REDIS.md](REDIS.md).
 
 ## Running locally
 
@@ -151,6 +275,7 @@ Environment variables:
 | `BIND` | Listen address when `PORT` is not set (default `127.0.0.1:8787`) |
 | `PORT` | Injected by Vercel; binds `0.0.0.0:$PORT` |
 | `CORS_ORIGINS` | Comma-separated allowed origins for cross-origin page builds |
+| `LIVE_CATALOGUES` | Optional. Set to `1` to refresh bus, minibus and taxi catalogues from upstream at startup; by default the server uses the bundled catalogue |
 
 If Redis is unreachable the process exits within 5 seconds with a clear message
 rather than hanging.

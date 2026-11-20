@@ -62,7 +62,7 @@ arrivals:{id}                 string, EX 90
 
 `rows` is the next arrivals. For a taxi stand the arrivals key is absent. For a green minibus stop with only a timetable, `live` is false and the rows are the scheduled times.
 
-The poller writes `arrivals:{id}` with a 90-second expiry. The stop index lives in memory (bundled plus live catalogues), not in Redis. A reader never computes an ETA. If `arrivals:{id}` has expired, the stop is still on the map and the sheet says the snapshot is gone. See [REDIS.md](REDIS.md).
+The poller writes `arrivals:{id}` with a 90-second expiry. The stop index lives in memory (bundled, optionally refreshed from live catalogues), not in Redis. A reader never computes an ETA. If `arrivals:{id}` has expired, the stop is still on the map and the sheet says the snapshot is gone. See [REDIS.md](REDIS.md).
 
 ## First build
 
