@@ -15,8 +15,15 @@ portal. Add new sources here when the service starts using them.
 | --- | --- | --- | --- |
 | MTR lines and stations | MTR open data | `https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv` | Station codes, names, line membership and station order |
 | MTR next train | data.gov.hk | `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php` | Live train arrivals |
+| MTR Bus and Feeder Bus | data.gov.hk | `https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule` | Live next-bus arrivals by route |
 | KMB and LWB stops | data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/stop` | Bus stop catalogue |
-| KMB and LWB ETA | data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{stop_id}` | Live bus arrivals |
+| KMB and LWB stop detail | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/stop/{stop_id}` | One stop's TC/SC/EN name and coordinates |
+| KMB and LWB route list | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/route/` | Route numbers, bound, service type, origins and destinations in TC/SC/EN |
+| KMB and LWB route detail | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/route/{route}/{direction}/{service_type}` | One route variant's origin and destination |
+| KMB and LWB route-stop list | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/` | Ordered stops for every route variant |
+| KMB and LWB route-stop detail | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/route-stop/{route}/{direction}/{service_type}` | Ordered stops for one route variant |
+| KMB and LWB ETA | data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{stop_id}` | Live bus arrivals for every route at a stop |
+| KMB and LWB route ETA | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/eta/{stop_id}/{route}/{service_type}` | Live arrivals for one route at one stop |
 | Citybus stops | data.gov.hk | `https://rt.data.gov.hk/v2/transport/citybus/...` | Citybus stop catalogue |
 | Citybus ETA | data.gov.hk | `https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}` | Live Citybus arrivals |
 | Bus route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_BUS.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
@@ -26,7 +33,8 @@ portal. Add new sources here when the service starts using them.
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/...` | Stand names and coordinates |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
 
-The service sends no API key. All feeds are public HTTP GET endpoints.
+The service sends no API key. All feeds are public HTTP GET endpoints except the
+MTR Bus feed, which uses POST.
 
 ## MTR lines and stations
 
@@ -135,11 +143,127 @@ Fields the service reads:
 The service calls this for watched MTR stations every 15 seconds, and for every
 MTR station once a minute.
 
+## MTR Bus and Feeder Bus
+
+Real-time MTR Bus and Feeder Bus schedule. The feed is the MTR Bus ETA dataset
+on data.gov.hk:
+
+<https://data.gov.hk/en-data/dataset/mtr-mtr_bus-mtr-bus-eta-data/resource/f58a9043-2556-4770-bcdb-0a62ed8d206c>
+
+The resource is published with an update frequency of every 10 seconds. It is a
+`POST` endpoint, not a `GET`: the route and language go in a JSON body.
+
+```text
+POST https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule
+Content-Type: application/json
+
+{"language":"en","routeName":"K12"}
+```
+
+`language` is `en` for English or `zh` for Traditional Chinese. `routeName` is
+the MTR Bus route, for example `K12`, `K51` or `506`. The API spec in
+`https://opendata.mtr.com.hk/doc/MTR_BUS_API_Spec_v1.14.pdf` lists every valid
+route name.
+
+Response fields:
+
+| Field | Meaning |
+| --- | --- |
+| `appRefreshTimeInSecond` | Suggested refresh interval in seconds |
+| `routeName` | Route that was requested |
+| `routeStatus`, `routeStatusColour`, `routeStatusTime` | Route-level status |
+| `status` | Overall response status code |
+| `footerRemarks` | Publisher note about the estimate |
+| `busStop[]` | Stops on the route, in order |
+| `busStop[].busStopId` | MTR Bus stop id |
+| `busStop[].isSuspended` | `1` when the stop is suspended |
+| `busStop[].bus[]` | Next buses for that stop |
+| `bus[].busId` | Vehicle id |
+| `bus[].lineRef` | Internal route and direction reference |
+| `bus[].departureTimeInSecond`, `departureTimeText` | Seconds and human-readable text until departure |
+| `bus[].arrivalTimeInSecond`, `arrivalTimeText` | Seconds and human-readable text until arrival |
+| `bus[].busLocation` | Last known bus latitude and longitude |
+| `bus[].isDelayed`, `isScheduled`, `busRemark` | Delay, timetable and remark flags |
+
+The service does not poll this feed yet. The data dictionary is
+`https://opendata.mtr.com.hk/doc/MTR_BUS_DataDictionary_v1.20.pdf`.
+
 ## Bus stops and arrivals
 
 ### KMB and LWB
 
+Source dataset: [Real time Arrival Data of Kowloon Motor Bus and Long Win Bus Services](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/fcac14ed-23e4-433b-afd0-3c37d5c8e428).
+
+Route list:
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/route/
+```
+
+Last checked on 20 November 2026: 1,569 route variants and 770 unique route
+numbers. The response includes LWB routes such as `A41` and `E33` alongside KMB
+routes. The publisher updates the list once a day and asks clients to call it
+after 05:00; it should not be polled like the ETA feed.
+
+Each item in `data` is read as:
+
+| Field | Use |
+| --- | --- |
+| `route` | Route number |
+| `bound` | Direction, `O` or `I` |
+| `service_type` | Route variant |
+| `orig_tc`, `orig_sc`, `orig_en` | Origin in Traditional Chinese, Simplified Chinese and English |
+| `dest_tc`, `dest_sc`, `dest_en` | Destination in Traditional Chinese, Simplified Chinese and English |
+
+`server/scripts/fetch-night-stops.py` uses this list to find overnight routes.
+The Rust service itself uses the stop and ETA endpoints below.
+
+Single route variant:
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/route/{route}/{direction}/{service_type}
+```
+
+Source dataset: [Route Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/75364cea-abff-4e85-b0d2-38a21ad8c8a8).
+`direction` is `outbound` or `inbound`; `service_type` is the variant number
+from the route list. The response is a single `data` object with the same fields
+as a route-list row: `route`, `bound`, `service_type`, `orig_tc/sc/en` and
+`dest_tc/sc/en`. This resource is also updated once a day and should be fetched
+after 05:00, not polled.
+
+Route-stop data:
+
+The full list returns every route-stop pair at once:
+
+Source dataset: [Route-Stop List Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/d8c9ef3e-e4c9-4786-aaa6-9a3bd7a5d8c7).
+The full list is served at the following URL, including the trailing slash.
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/route-stop/
+```
+
+Last checked on 20 November 2026: 35,776 rows across 770 routes. Like the other
+catalogue resources, it is updated once a day and should be fetched after 05:00
+rather than polled.
+
+For one route variant:
+
+Source dataset: [Route-Stop Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/2dda0e97-fc4d-449c-bb98-a17228742eb4).
+It returns the ordered stops for that route, direction and service type.
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/route-stop/{route}/{direction}/{service_type}
+```
+
+Both responses have `data[]` rows containing `route`, `bound`, `service_type`,
+`seq` and `stop`. `server/scripts/fetch-night-stops.py` uses the route list and
+route-stop endpoints.
+
 Stop catalogue:
+
+Source dataset: [Stop List Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/3d6ded6c-ee36-40a0-a6fe-8f40966dff67).
+The publisher updates this list once a day and asks clients to call it after
+05:00; repeated calls do not return newer data.
 
 ```text
 https://data.etabus.gov.hk/v1/transport/kmb/stop
@@ -150,10 +274,26 @@ Each item in `data` is read as:
 | Field | Use |
 | --- | --- |
 | `stop` | Stop id, stored as `bus:kmb:{stop}` |
-| `name_tc`, `name_en` | Stop name in both languages |
+| `name_tc`, `name_sc`, `name_en` | Stop name in Traditional Chinese, Simplified Chinese and English |
 | `lat`, `long` | WGS84 coordinates, parsed from strings |
 
-Live arrivals:
+Single stop:
+
+Source dataset: [Stop Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/31ee7ca9-d9ef-42cb-8c11-cca2876650fb).
+The stop id is the 16-character id returned by the route-stop endpoint. Like the
+stop list, this resource is updated once a day and should be fetched after 05:00.
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/stop/{stop_id}
+```
+
+The response has one `data` object with `stop`, `name_tc`, `name_sc`, `name_en`,
+`lat` and `long`.
+
+Live arrivals at one stop:
+
+Source dataset: [Stop ETA Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/12185102-718d-4d03-bfd7-b9ecf760aee2).
+The ETA data is updated every minute and covers every route at the stop.
 
 ```text
 https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{stop_id}
@@ -166,6 +306,34 @@ Each item in `data` is read as:
 | `route` | Route number |
 | `dest_tc` (or `dest`) | Destination |
 | `eta` | ISO timestamp used to calculate minutes remaining |
+
+The rows also carry `co`, `dir`, `service_type`, `seq`, `dest_sc`, `dest_en`,
+`eta_seq`, `rmk_tc`, `rmk_sc`, `rmk_en` and `data_timestamp`.
+
+Single stop and route ETA:
+
+Source dataset: [ETA Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/2ea2591f-67e7-488d-83de-96ed48def51e).
+The ETA data is updated every minute. The response may contain up to three
+arrivals for each direction.
+
+```text
+https://data.etabus.gov.hk/v1/transport/kmb/eta/{stop_id}/{route}/{service_type}
+```
+
+Each item in `data` is read as:
+
+| Field | Use |
+| --- | --- |
+| `co` | Operator code, such as `KMB` or `LWB` |
+| `route` | Route number |
+| `dir` | Direction, `O` or `I` |
+| `service_type` | Route variant |
+| `seq` | Stop sequence on the route |
+| `dest_tc`, `dest_sc`, `dest_en` | Destination in TC, SC and English |
+| `eta_seq` | Arrival order at this stop |
+| `eta` | Estimated arrival time |
+| `rmk_tc`, `rmk_sc`, `rmk_en` | Remark in TC, SC and English |
+| `data_timestamp` | Time the estimate was generated |
 
 ### Citybus
 
@@ -366,3 +534,97 @@ See [REDIS.md](REDIS.md) for the snapshot keys and expiry details.
 - MTR open data: <https://opendata.mtr.com.hk/>
 - CSDI: <https://portal.csdi.gov.hk/>
 - OpenStreetMap copyright: <https://www.openstreetmap.org/copyright>
+
+## Data relationships
+
+Read this section before changing the service. The first diagram is the big
+picture; the second follows one arrival request.
+
+Key ideas:
+
+- The Rust service is the only component that calls upstream feeds.
+- Checked-in files seed the stop catalogue and the map.
+- Redis holds the latest snapshot for each stop.
+- The page loads static map data and asks the API only for arrivals.
+
+Detailed endpoints and fields are in the tables above.
+
+```mermaid
+flowchart TB
+  subgraph Inputs["Data sources"]
+    direction TB
+    LiveStops["Live stop catalogues: bus, minibus, taxi"]
+    LiveArrivals["Live arrival feeds: MTR train, bus, minibus"]
+    Repo["Checked-in data: stops, MTR stations, GMB routes"]
+    MapFiles["Checked-in map files: service hours, icons, MTR lines"]
+  end
+
+  subgraph Server["Rust service"]
+    direction TB
+    Catalog["1. Build stop catalogue"]
+    Poll["2. Poll feeds and build snapshots"]
+  end
+
+  subgraph Storage["Redis"]
+    Cache["Latest snapshot per stop, TTL 90s"]
+  end
+
+  subgraph Api["Rust API"]
+    Endpoints["HTTP JSON and SSE"]
+  end
+
+  subgraph Browser["Next.js page"]
+    direction TB
+    Map["Map"]
+    Sheet["Arrival sheet"]
+  end
+
+  subgraph Later["Documented, not integrated"]
+    direction TB
+    MtrBus["MTR Bus API"]
+    KmlBus["KML_BUS.zip"]
+    KmlGmb["KML_GMB.zip"]
+  end
+
+  Repo --> Catalog
+  LiveStops --> Catalog
+  Catalog --> Poll
+  LiveArrivals --> Poll
+  Poll --> Cache
+  Cache --> Endpoints
+  Endpoints --> Sheet
+  Repo --> Map
+  MapFiles --> Map
+  Map -->|"tap a stop"| Sheet
+```
+
+### One arrival request
+
+The service may already have a snapshot from its background poll. If not, the
+request triggers a fetch and stores the result before answering.
+
+The page also opens an SSE stream, so later snapshots for that stop arrive
+without another request.
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Page as Next.js page
+  participant API as Rust API
+  participant Store as Redis
+  participant Feed as Official feed
+
+  Note over Page: loads stops.json and map assets
+  Page->>API: GET /stops/{id}/arrivals
+  API->>Store: read snapshot
+  alt snapshot exists
+    Store-->>API: stored snapshot
+  else snapshot missing
+    API->>Feed: request current arrivals
+    Feed-->>API: feed rows
+    API->>Store: write snapshot TTL 90s
+  end
+  API-->>Page: JSON snapshot
+  Page->>API: EventSource /stops/{id}/events
+  API-->>Page: SSE arrivals events
+```
