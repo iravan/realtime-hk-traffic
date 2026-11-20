@@ -26,6 +26,7 @@ import {
   type Mode,
 } from "./stop-icon";
 import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
+import { localizeBilingualName, localizeStopName } from "./stop-name";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const modes = ["mtr", "bus", "minibus", "taxi"] as const;
@@ -168,6 +169,8 @@ export default function Page() {
   const [active, setActive] = useState<Mode>("bus");
   const activeRef = useRef(active);
   activeRef.current = active;
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
   const fixRef = useRef<Fix | null>(null);
   const selectedRef = useRef<Stop | null>(null);
   const boardRef = useRef<Stop | null>(null);
@@ -411,7 +414,7 @@ export default function Page() {
       const showStopName = (stop: Stop) => {
         const node = document.createElement("div");
         node.className = "stop-name";
-        node.textContent = stop.name;
+        node.textContent = localizeStopName(stop.name, stop.mode, localeRef.current);
         stopPopup.setDOMContent(node).setLngLat([stop.longitude, stop.latitude]);
         if (!stopPopup.isOpen()) stopPopup.addTo(map);
       };
@@ -447,7 +450,9 @@ export default function Page() {
         if (terminals) {
           const ends = document.createElement("div");
           ends.className = "line-tooltip-terminals";
-          ends.textContent = `${terminals.from} ↔ ${terminals.to}`;
+          const from = localizeBilingualName(terminals.from, localeRef.current);
+          const to = localizeBilingualName(terminals.to, localeRef.current);
+          ends.textContent = `${from} ↔ ${to}`;
           text.appendChild(ends);
         }
 

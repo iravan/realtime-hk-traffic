@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n, type Messages } from "./i18n";
 import { stopIconUrl, type Mode } from "./stop-icon";
+import { localizeStopName } from "./stop-name";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
@@ -46,7 +47,7 @@ export function StopSheet({
   name: string;
   onClose: () => void;
 }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const sign = useMemo(() => stopIconUrl(mode), [mode]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const snapshotRef = useRef<Snapshot | null>(null);
@@ -124,7 +125,7 @@ export function StopSheet({
         <div className="stop-title">
           <img className="stop-sign" src={sign} alt="" />
           <div>
-            <h2>{name}</h2>
+            <h2>{localizeStopName(name, mode, locale)}</h2>
             <p className="mode">{t.mode[mode]}</p>
           </div>
         </div>
@@ -146,8 +147,8 @@ export function StopSheet({
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
-                      {row.route ? <strong>{row.route}</strong> : null}
-                      <span>{row.destination}</span>
+                      {row.route && mode !== "mtr" ? <strong>{row.route}</strong> : null}
+                      <span>{localizeStopName(row.destination, mode, locale)}</span>
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                   ))}

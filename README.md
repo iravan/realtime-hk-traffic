@@ -83,6 +83,9 @@ renders.
 | Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus; timetable only when no ETA exists |
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
+The exact endpoints, fields read, checked-in snapshots and polling rules are in
+[DATA.md](DATA.md).
+
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
 `mtr:`, `bus:`, `minibus:`, `taxi:`.
 

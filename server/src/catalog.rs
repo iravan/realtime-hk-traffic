@@ -324,7 +324,7 @@ pub fn mtr_label(code: &str) -> String {
         let raw: Vec<MtrStation> =
             serde_json::from_str(include_str!("../data/mtr.json")).unwrap_or_default();
         raw.into_iter()
-            .map(|station| (station.code, station.name_tc))
+            .map(|station| (station.code, name(&station.name_tc, &station.name_en)))
             .collect()
     });
     labels
@@ -443,4 +443,12 @@ pub fn bundled_stops() -> Vec<Stop> {
             )
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn mtr_label_has_both_names() {
+        assert_eq!(super::mtr_label("CEN"), "中環 Central");
+    }
 }
