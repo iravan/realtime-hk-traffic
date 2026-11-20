@@ -373,7 +373,11 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
             .into_response();
     };
     if stop.mode == "taxi" {
-        return Json(taxi_snapshot()).into_response();
+        return (
+            StatusCode::NOT_FOUND,
+            Json(json!({"error": "no arrivals"})),
+        )
+            .into_response();
     }
     if let Some(body) = read_snapshot(&app, &id).await {
         return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
@@ -405,18 +409,19 @@ async fn events(
         )
             .into_response());
     };
+    if stop.mode == "taxi" {
+        return Err((
+            StatusCode::NOT_FOUND,
+            Json(json!({"error": "no arrivals"})),
+        )
+            .into_response());
+    }
     let (sender, receiver) = tokio::sync::mpsc::channel(8);
     {
         let mut watch = app.watch.lock().expect("watch lock");
         watch.entry(id.clone()).or_default().push(sender);
     }
-    if stop.mode == "taxi" {
-        publish(
-            &app,
-            &id,
-            &serde_json::to_string(&taxi_snapshot()).unwrap_or_default(),
-        );
-    } else if let Some(body) = read_snapshot(&app, &id).await {
+    if let Some(body) = read_snapshot(&app, &id).await {
         publish(&app, &id, &body);
     } else {
         let app = app.clone();
@@ -525,16 +530,6 @@ fn publish(app: &App, id: &str, body: &str) {
         return;
     };
     senders.retain(|sender| sender.try_send(body.to_string()).is_ok());
-}
-
-fn taxi_snapshot() -> Snapshot {
-    Snapshot {
-        fetched_at: String::new(),
-        live: false,
-        status: None,
-        note: Some("no-arrivals".to_string()),
-        rows: Vec::new(),
-    }
 }
 
 async fn bus_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {

@@ -47,7 +47,7 @@ arrivals:{id}                 string, EX 90
 - [ ] Do not write `arrivals:{id}` for a taxi stand.
 - [ ] `GET /stops/{id}/arrivals` returns the stored snapshot, soonest first. The handler does not compute an ETA.
 - [ ] A missing or expired arrivals key is a gone snapshot, not an empty timetable.
-- [ ] An unknown id is rejected. A taxi id returns the no-arrival result, not a 500.
+- [ ] An unknown id is rejected. A taxi id is rejected with no arrivals, and no feed is called.
 
 ## Freshness
 

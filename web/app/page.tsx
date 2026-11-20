@@ -644,7 +644,7 @@ export default function Page() {
         const id = feature?.properties?.id;
         if (typeof id !== "string") return;
         const match = stopsRef.current.find((stop) => stop.id === id);
-        if (!match) return;
+        if (!match || match.mode === "taxi") return;
         if (match.mode === "mtr") {
           stopNamePinned = true;
           showStopName(match);
@@ -660,7 +660,8 @@ export default function Page() {
         }
       });
       map.on("mouseenter", "stops", (event) => {
-        map.getCanvas().style.cursor = event.features?.length ? "pointer" : "";
+        const clickable = event.features?.some((item) => item.properties?.mode !== "taxi");
+        map.getCanvas().style.cursor = clickable ? "pointer" : "";
       });
       map.on("mouseleave", "stops", () => {
         map.getCanvas().style.cursor = "";
@@ -1121,7 +1122,7 @@ function nearestStop(
   let nearest: Stop | null = null;
   let best = Number.POSITIVE_INFINITY;
   for (const stop of stops) {
-    if (stop.mode !== mode) continue;
+    if (mode === "taxi" || stop.mode !== mode) continue;
     if (!isStopOpen(stop, hours, now)) continue;
     const dx = (stop.longitude - longitude) * scale * metersPerDegree;
     const dy = (stop.latitude - latitude) * metersPerDegree;
