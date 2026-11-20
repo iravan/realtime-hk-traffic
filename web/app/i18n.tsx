@@ -34,6 +34,8 @@ export type Messages = {
   sheet: {
     close: string;
     taxiNote: string;
+    taxiHours: string;
+    taxiAllDay: string;
     delayed: string;
     timetable: string;
     noArrivals: string;
@@ -67,6 +69,8 @@ const en: Messages = {
   sheet: {
     close: "Close",
     taxiNote: "A taxi stand has no arrival list.",
+    taxiHours: "Working hours",
+    taxiAllDay: "Open all day",
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
     noArrivals: "No arrivals right now.",
@@ -100,6 +104,8 @@ const zhHant: Messages = {
   sheet: {
     close: "關閉",
     taxiNote: "的士站沒有到站時間。",
+    taxiHours: "開放時間",
+    taxiAllDay: "全日開放",
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
     noArrivals: "暫無到站班次。",

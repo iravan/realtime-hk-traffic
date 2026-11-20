@@ -136,6 +136,10 @@ button { cursor: pointer; }
 }
 .sheet header.station .mode,
 .sheet header.station button { color: inherit; }
+.sheet header button {
+  flex: none;
+  white-space: nowrap;
+}
 .station-chip {
   display: inline-flex;
   align-items: center;
@@ -172,6 +176,7 @@ button { cursor: pointer; }
 }
 .stop-title { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
 .stop-sign { width: 32px; height: 46px; object-fit: contain; flex: none; }
+.taxi-sign { width: 36px; height: 36px; align-self: center; }
 .sheet h2 { margin: 0; font-size: 1.05rem; }
 .sheet .mode { margin: 0.2rem 0 0; color: #6f675e; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
@@ -267,6 +272,12 @@ button { cursor: pointer; }
   box-shadow: 0 10px 26px rgba(28, 25, 21, 0.3);
 }
 .stop-popup .maplibregl-popup-tip { border-top-color: var(--stop-bg, var(--mtr)); }
+.stop-popup.taxi-type .maplibregl-popup-content {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.stop-popup.taxi-type .maplibregl-popup-tip { border-top-color: var(--paper); }
 .stop-name {
   max-width: 15rem;
   font-size: 0.85rem;

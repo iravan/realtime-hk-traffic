@@ -1,10 +1,12 @@
+import { TAXI_COLORS } from "./taxi-colors";
+
 export type Mode = "mtr" | "bus" | "minibus" | "taxi";
 
 const colors: Record<Mode, string> = {
   mtr: "#11254a",
   bus: "#e52029",
   minibus: "#2f7d4f",
-  taxi: "#c8102e",
+  taxi: TAXI_COLORS.urban.primary,
 };
 
 // Out-of-hours stops are drawn as a muted dot: the map still shows where the
@@ -18,6 +20,21 @@ const paper = "#fbf7f0";
 const ink = "#241f1a";
 
 const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
+
+export type TaxiKind = "urban" | "nt" | "lantau" | "cross" | "urban-nt" | "urban-cross";
+
+export const taxiKindColor: Record<TaxiKind, string> = {
+  urban: TAXI_COLORS.urban.primary,
+  nt: TAXI_COLORS.nt.primary,
+  lantau: TAXI_COLORS.lantau.primary,
+  cross: TAXI_COLORS.crossHarbour.primary,
+  "urban-nt": TAXI_COLORS.urban.primary,
+  "urban-cross": TAXI_COLORS.crossHarbour.primary,
+};
+
+export const taxiKinds = Object.keys(taxiKindColor) as TaxiKind[];
+
+const taxiBitmaps: Partial<Record<TaxiKind, HTMLCanvasElement>> = {};
 
 // The same SVG artwork the category tabs use, so a stop on the map shows the
 // same vehicle as its tab. Loaded once before the first pin is drawn.
@@ -38,8 +55,170 @@ export async function loadVehicleImages(basePath: string): Promise<void> {
   );
 }
 
+// Each kind is its own SVG. Rasterise it larger than the sign so the map
+// scales the artwork down. Painting over a 24px bitmap is what made it soft.
+const taxiFiles: TaxiKind[] = ["urban", "nt", "lantau", "cross"];
+
+const taxiPairs: Partial<Record<TaxiKind, [TaxiKind, TaxiKind]>> = {
+  "urban-nt": ["urban", "nt"],
+  "urban-cross": ["urban", "cross"],
+};
+
+export async function loadTaxiKindImages(basePath: string): Promise<void> {
+  await Promise.all(
+    taxiFiles.map(async (kind) => {
+      try {
+        const response = await fetch(`${basePath}/icons/taxi-${kind}.svg`);
+        if (!response.ok) return;
+        taxiBitmaps[kind] = await rasterizeSvg(await response.text(), 192);
+      } catch {
+        // taxiIconImage falls back to the canvas taxi in that kind's colour.
+      }
+    }),
+  );
+}
+
+function rasterizeSvg(svg: string, size: number): Promise<HTMLCanvasElement> {
+  const sized = svg
+    .replace(/width="\d+"/, `width="${size}"`)
+    .replace(/height="\d+"/, `height="${size}"`);
+  const image = new Image();
+  const ready = new Promise<HTMLCanvasElement>((resolve, reject) => {
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("canvas"));
+        return;
+      }
+      ctx.drawImage(image, 0, 0, size, size);
+      resolve(canvas);
+    };
+    image.onerror = () => reject(new Error("svg"));
+  });
+  image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`;
+  return ready;
+}
+
+function taxiSign(kind: TaxiKind): HTMLCanvasElement {
+  const pair = taxiPairs[kind];
+  if (pair) return drawTaxiPair(pair[0], pair[1]);
+  const bitmap = taxiBitmaps[kind];
+  return bitmap
+    ? drawStopIcon("taxi", bitmap)
+    : drawStopIcon("taxi", undefined, taxiKindColor[kind]);
+}
+
+export function taxiIconImage(kind: TaxiKind): ImageData {
+  return imageData(taxiSign(kind));
+}
+
+export function taxiSignHighlight(kind: TaxiKind): ImageData {
+  return outlineImage(taxiSign(kind), false);
+}
+
+function drawTaxiPair(left: TaxiKind, right: TaxiKind): HTMLCanvasElement {
+  const boxWidth = 58;
+  const canvas = document.createElement("canvas");
+  canvas.width = boxWidth * ratio;
+  canvas.height = height * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  const cx = boxWidth / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx, 38);
+  ctx.lineTo(cx, height - 2);
+  ctx.strokeStyle = paper;
+  ctx.lineWidth = 4.4;
+  ctx.stroke();
+  ctx.strokeStyle = ink;
+  ctx.lineWidth = 2.2;
+  ctx.stroke();
+  ctx.fillStyle = ink;
+  ctx.beginPath();
+  ctx.ellipse(cx, height - 1.8, 3.6, 1.4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  roundRect(ctx, 2, 2, boxWidth - 4, 34, 8);
+  ctx.fillStyle = paper;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = ink;
+  ctx.stroke();
+  const icon = 22;
+  const gap = 2;
+  const x = (boxWidth - icon * 2 - gap) / 2;
+  drawTaxiBitmap(ctx, left, x, 7, icon);
+  drawTaxiBitmap(ctx, right, x + icon + gap, 7, icon);
+  return canvas;
+}
+
+function drawTaxiBitmap(
+  ctx: CanvasRenderingContext2D,
+  kind: TaxiKind,
+  x: number,
+  y: number,
+  size: number,
+) {
+  const bitmap = taxiBitmaps[kind];
+  if (!bitmap) return;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(bitmap, x, y, size, size);
+}
+
+export function taxiDotImage(kind: TaxiKind): ImageData {
+  const pair = taxiPairs[kind];
+  if (pair) return imageData(drawTaxiPairDot(pair[0], pair[1]));
+  const size = 20;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  const centre = size / 2;
+  const radius = 6;
+  ctx.beginPath();
+  ctx.arc(centre, centre, radius, 0, Math.PI * 2);
+  ctx.fillStyle = taxiKindColor[kind];
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(centre, centre, radius, 0, Math.PI * 2);
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = paper;
+  ctx.stroke();
+  return imageData(canvas);
+}
+
+function drawTaxiPairDot(left: TaxiKind, right: TaxiKind): HTMLCanvasElement {
+  const size = 28;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  roundRect(ctx, 1, 5, size - 2, 18, 4);
+  ctx.fillStyle = paper;
+  ctx.fill();
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = ink;
+  ctx.stroke();
+  drawTaxiBitmap(ctx, left, 2, 6, 12);
+  drawTaxiBitmap(ctx, right, 14, 6, 12);
+  return canvas;
+}
+
 export function stopIconImage(mode: Mode): ImageData {
-  const canvas = drawStopIcon(mode);
+  return imageData(drawStopIcon(mode));
+}
+
+function imageData(canvas: HTMLCanvasElement): ImageData {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("canvas");
   return ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -54,7 +233,7 @@ export const stopIconPixelRatio = ratio;
 // A dot stands in for the full sign when a view holds more stops than it can
 // legibly show, and every out-of-hours stop is a dot even in a sparse view. The
 // muted fill keeps the stop's place on the map without inviting a tap.
-export function stopDotImage(mode: Mode, muted = false): ImageData {
+export function stopDotImage(mode: Mode, muted = false, fill?: string): ImageData {
   const size = 20;
   const canvas = document.createElement("canvas");
   canvas.width = size * ratio;
@@ -64,7 +243,7 @@ export function stopDotImage(mode: Mode, muted = false): ImageData {
   ctx.scale(ratio, ratio);
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, 6, 0, Math.PI * 2);
-  ctx.fillStyle = muted ? mutedFill : colors[mode];
+  ctx.fillStyle = muted ? mutedFill : (fill ?? colors[mode]);
   ctx.fill();
   ctx.lineWidth = 2;
   ctx.strokeStyle = paper;
@@ -129,6 +308,54 @@ export function stopDotHighlight(mode: Mode): ImageData {
   return ctx.getImageData(0, 0, canvas.width, canvas.height);
 }
 
+export function taxiDotHighlight(kind: TaxiKind): ImageData {
+  const pair = taxiPairs[kind];
+  if (pair) return outlineImage(drawTaxiPairDot(pair[0], pair[1]), true);
+  const size = 28;
+  const canvas = document.createElement("canvas");
+  canvas.width = size * ratio;
+  canvas.height = size * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  const centre = size / 2;
+  for (const [radius, colour] of [
+    [11.5, paper],
+    [9, ink],
+    [7.4, paper],
+  ] as const) {
+    ctx.beginPath();
+    ctx.arc(centre, centre, radius, 0, Math.PI * 2);
+    ctx.fillStyle = colour;
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.arc(centre, centre, 6, 0, Math.PI * 2);
+  ctx.fillStyle = taxiKindColor[kind];
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = paper;
+  ctx.stroke();
+  return imageData(canvas);
+}
+
+function outlineImage(base: HTMLCanvasElement, padBottom: boolean): ImageData {
+  const pad = 5;
+  const bottom = padBottom ? pad : 0;
+  const baseWidth = base.width / ratio;
+  const baseHeight = base.height / ratio;
+  const canvas = document.createElement("canvas");
+  canvas.width = (baseWidth + pad * 2) * ratio;
+  canvas.height = (baseHeight + pad + bottom) * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  stampOutline(ctx, base, paper, pad, 4.2);
+  stampOutline(ctx, base, ink, pad, 2.6);
+  ctx.drawImage(base, pad, pad, baseWidth, baseHeight);
+  return imageData(canvas);
+}
+
 
 // Stamping a flat fill of the icon's alpha around it builds a crisp outline
 // that follows every part of the artwork, including the pole and the vehicle.
@@ -168,7 +395,11 @@ function silhouette(source: HTMLCanvasElement, color: string): HTMLCanvasElement
   return canvas;
 }
 
-function drawStopIcon(mode: Mode): HTMLCanvasElement {
+function drawStopIcon(
+  mode: Mode,
+  vehicle?: CanvasImageSource,
+  taxiColor?: string,
+): HTMLCanvasElement {
   if (mode === "mtr") return drawMtrBlock();
 
   const canvas = document.createElement("canvas");
@@ -180,7 +411,7 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
-  const color = colors[mode];
+  const color = taxiColor ?? colors[mode];
   const line = ink;
   const cx = width / 2;
   ctx.beginPath();
@@ -210,9 +441,11 @@ function drawStopIcon(mode: Mode): HTMLCanvasElement {
   ctx.strokeStyle = line;
   ctx.stroke();
 
-  const vehicle = vehicleImages[mode];
-  if (vehicle) {
-    ctx.drawImage(vehicle, 5, 2, 34, 34);
+  const artwork = vehicle ?? (taxiColor ? undefined : vehicleImages[mode]);
+  if (artwork) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(artwork, 5, 2, 34, 34);
   } else if (mode === "bus") {
     drawBus(ctx, color, line);
   } else if (mode === "minibus") {
@@ -327,7 +560,7 @@ function drawTaxi(ctx: CanvasRenderingContext2D, color: string, line: string) {
   ctx.fill();
   ctx.fillStyle = color;
   ctx.fillRect(18.2, 8.6, 7.6, 1.8);
-  ctx.fillStyle = paper;
+  ctx.fillStyle = color;
   ctx.beginPath();
   ctx.moveTo(8, 26);
   ctx.lineTo(8, 19);
@@ -339,7 +572,7 @@ function drawTaxi(ctx: CanvasRenderingContext2D, color: string, line: string) {
   ctx.lineTo(36, 26);
   ctx.closePath();
   ctx.fill();
-  ctx.fillStyle = color;
+  ctx.fillStyle = line;
   ctx.beginPath();
   ctx.moveTo(17.4, 14.2);
   ctx.lineTo(15.4, 18.2);

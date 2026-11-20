@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
-import { stopIconUrl, type Mode } from "./stop-icon";
+import { stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { localizeStopName } from "./stop-name";
+import type { TaxiLabel } from "./taxi-stand";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
@@ -41,11 +42,17 @@ export function StopSheet({
   id,
   mode,
   name,
+  taxi,
+  taxiType,
+  taxiHours,
   onClose,
 }: {
   id: string;
   mode: Mode;
   name: string;
+  taxi?: TaxiKind;
+  taxiType?: TaxiLabel;
+  taxiHours?: TaxiLabel | null;
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
@@ -57,7 +64,7 @@ export function StopSheet({
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!apiBase) return;
+    if (!apiBase || mode === "taxi") return;
     let cancelled = false;
     setSnapshot(null);
     setState("loading");
@@ -84,7 +91,7 @@ export function StopSheet({
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, mode]);
 
   useEffect(() => {
     if (!apiBase || mode === "taxi") return;
@@ -132,17 +139,39 @@ export function StopSheet({
         }
       >
         <div className="stop-title">
-          <img className="stop-sign" src={sign} alt="" />
+          {mode === "taxi" && taxi ? (
+            taxiIconFiles(taxi).map((file) => (
+              <img
+                key={file}
+                className="stop-sign taxi-sign"
+                src={`${basePath}/icons/${file}`}
+                alt=""
+              />
+            ))
+          ) : (
+            <img className="stop-sign" src={sign} alt="" />
+          )}
           <div>
             <h2>{localizeStopName(name, mode, locale)}</h2>
-            <p className="mode">{t.mode[mode]}</p>
+            <p className="mode">
+              {mode === "taxi" && taxiType
+                ? locale === "en"
+                  ? taxiType.en
+                  : taxiType.tc
+                : t.mode[mode]}
+            </p>
           </div>
         </div>
         <button type="button" onClick={onClose}>
           {t.sheet.close}
         </button>
       </header>
-      {apiBase ? (
+      {mode === "taxi" ? (
+        <div className="body">
+          <p className="muted">{t.sheet.taxiHours}</p>
+          <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
+        </div>
+      ) : apiBase ? (
         <div className="body">
           {snapshot?.note === "no-arrivals" ? (
             <p className="muted">{t.sheet.taxiNote}</p>
@@ -178,6 +207,12 @@ export function StopSheet({
       ) : null}
     </aside>
   );
+}
+
+function taxiIconFiles(kind: TaxiKind): string[] {
+  if (kind === "urban-nt") return ["taxi-urban.svg", "taxi-nt.svg"];
+  if (kind === "urban-cross") return ["taxi-urban.svg", "taxi-cross.svg"];
+  return [`taxi-${kind}.svg`];
 }
 
 function StationChip({ name, locale }: { name: string; locale: Locale }) {

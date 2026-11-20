@@ -30,7 +30,7 @@ portal. Add new sources here when the service starts using them.
 | Green minibus | data.gov.hk | `https://data.etagmb.gov.hk/...` | Stops, routes and live arrivals |
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Green minibus route numbers | data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml` | Route id to route number labels |
-| Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/...` | Stand names and coordinates |
+| Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
 
 The service sends no API key. All feeds are public HTTP GET endpoints except the
@@ -63,7 +63,7 @@ are script-generated, web-only, or documented for future work.
 | GMB route and stop catalogues | Optional | Partial | No | Bundled by default; live crawl with `LIVE_CATALOGUES=1`; scripts use route and route-stop |
 | ROUTE_GMB.xml | No | No | No | Reference for bundled `gmb-routes.json` |
 | KML_GMB.zip | No | No | No | Documented only |
-| Taxi stands | Optional | No | No | Bundled by default; live catalogue refresh with `LIVE_CATALOGUES=1` |
+| Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
 | `mtr-lines.geojson` | No | Generated | Yes | Web-only MTR line layer |
@@ -95,6 +95,7 @@ map stop is opened, not on a timer.
 | Citybus route and stop catalogues | Bundled; optional live refresh | Daily, or when routes and stops change |
 | GMB route and stop catalogues | Bundled; optional live refresh | When routes and stops change |
 | Taxi stand locations | Bundled; optional live refresh | When stands change |
+| `web/public/taxi-stands.geojson` | Checked in | The stand list or a stand's taxi type changes |
 
 ### Dynamic or live data
 
@@ -570,23 +571,71 @@ lookup. The service does not read it yet.
 
 Source dataset: [Taxi Stands](https://data.gov.hk/en-data/dataset/hk-td-tis_37-taxi-stands/resource/29635792-e286-402d-92bb-dc8586c649f7).
 
-Taxi stands come from the CSDI feature service linked from data.gov.hk:
+The checked-in copy is `web/public/taxi-stands.geojson`, downloaded from:
+
+```text
+https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands
+```
+
+`properties.Status_EN` (and `Status_TC` / `Status_SC`) says which taxi type may
+use the stand. A newline after the type is the hours that stand is open; the
+type is the first line. `OBJECTID` matches the bundled stop id `taxi:{OBJECTID}`.
+
+Each type has its own icon in `web/public/icons`. The body uses `primary`, the
+outline uses `dark` where that type has one, and the roof cap uses `roof`.
+Cross-harbour uses `accent` for the roof light. A stand that allows two types
+keeps both icons, side by side in one box. The dot for that stand is the same
+box.
+
+| `Status_EN` begins | Icon | Colours |
+| --- | --- | --- |
+| `Urban Taxi Stand` | `taxi-urban.svg` | primary `#DC2626`, dark `#991B1B`, roof `#F1F5F9` |
+| `NT Taxi Stand` | `taxi-nt.svg` | primary `#16A34A`, dark `#166534`, roof `#F1F5F9` |
+| `Lantau Taxi Stand` | `taxi-lantau.svg` | primary `#0284C7`, dark `#075985`, roof `#F1F5F9` |
+| `Cross Harbour Taxi Stand` | `taxi-cross.svg` | primary `#991B1B`, accent `#F59E0B` |
+| `Both of Urban and NT` or `Urban and NT` | urban icon and NT icon in one box | each icon keeps its own colours |
+| `Urban and Cross Harbour` | urban icon and cross-harbour icon in one box | each icon keeps its own colours |
+
+The optional live catalogue still pages the same layer through the feature
+service, 200 records at a time:
 
 ```text
 https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1697081907714_17556/FeatureServer/0/query
 ```
 
-The service pages through the layer 200 records at a time and asks for GeoJSON.
-It reads:
+That crawl reads names and coordinates only. The map reads the taxi type from
+the checked-in GeoJSON.
 
 | Field | Use |
 | --- | --- |
 | `properties.OBJECTID` | Stand id, stored as `taxi:{OBJECTID}` |
 | `properties.Location_TC`, `Location_EN` | Stand name in both languages |
+| `properties.Status_EN`, `Status_TC`, `Status_SC` | Taxi type allowed at the stand. A second line, when present, is that stand's operating hours |
 | `geometry.coordinates` | Longitude and latitude |
 
-Hong Kong publishes stand locations, not vehicle positions, so a taxi stand has
-no arrival rows.
+### Operating hours
+
+There is no Taxi Stand Operating Hours dataset. data.gov.hk publishes Taxi
+Stands, taxi pick-up and drop-off points, taxi call stations, and taxi fleet
+information. None of those is an hours table.
+
+The WFS for this same layer confirms the schema. A feature has `OBJECTID`,
+region, district, location, and `Status` in English, Traditional Chinese, and
+Simplified Chinese. There is no hours field.
+
+```text
+https://portal.csdi.gov.hk/server/services/common/td_rcd_1697081907714_17556/MapServer/WFSServer?service=wfs&request=GetFeature&typenames=Taxi_Stands&outputFormat=geojson
+```
+
+Operating hours are the extra line inside `Status`, and only when that stand is
+time-limited. Of the 518 stands in `web/public/taxi-stands.geojson`, 10 include
+a clock range, for example `Cross Harbour Taxi Stand` followed by
+`(2200-0700 daily)`. The other 508 are a taxi type only, such as
+`Urban Taxi Stand`, with no clock times.
+
+The details panel shows that line when it exists. When `Status` has no hours,
+the panel says the stand is open all day. Hong Kong publishes stand locations,
+not vehicle positions, so a taxi stand has no arrival rows.
 
 ## Checked-in files derived from these sources
 
@@ -600,6 +649,7 @@ no arrival rows.
 | `web/app/mtr-line-terminals.json` | Generated line endpoint labels from the MTR CSV |
 | `web/public/service-hours.json` | Per-mode, per-station and per-route service windows |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
+| `web/public/taxi-stands.geojson` | Taxi stand taxi type, joined to `taxi:{OBJECTID}` |
 
 Generation scripts:
 

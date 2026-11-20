@@ -17,14 +17,22 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { StopSheet } from "./stop-sheet";
 import { useI18n } from "./i18n";
 import {
+  loadTaxiKindImages,
   loadVehicleImages,
   stopDotHighlight,
   stopDotImage,
   stopIconHighlight,
   stopIconImage,
+  taxiDotHighlight,
+  taxiSignHighlight,
   stopIconPixelRatio,
+  taxiDotImage,
+  taxiIconImage,
+  taxiKinds,
   type Mode,
+  type TaxiKind,
 } from "./stop-icon";
+import { taxiStandInfo, type TaxiLabel } from "./taxi-stand";
 import { clockAt, isScheduleOpen, isStopOpen, serviceHoursLabel, type ServiceHours } from "./service-hours";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -82,7 +90,7 @@ const signImage: ExpressionSpecification = [
 const dotImage: ExpressionSpecification = [
   "case",
   ["get", "open"],
-  ["concat", ["get", "mode"], "-dot"],
+  ["concat", ["get", "icon"], "-dot"],
   ["concat", ["get", "mode"], "-dot-off"],
 ];
 const signSize: ExpressionSpecification = [
@@ -142,6 +150,9 @@ type Stop = {
   longitude: number;
   routes?: string[];
   night?: boolean;
+  taxi?: TaxiKind;
+  taxiType?: TaxiLabel;
+  taxiHours?: TaxiLabel | null;
 };
 
 type Fix = { latitude: number; longitude: number };
@@ -209,10 +220,17 @@ export default function Page() {
     map.addControl(new AttributionControl({ compact: false }), "bottom-left");
     map.on("load", async () => {
       await loadVehicleImages(basePath);
+      await loadTaxiKindImages(basePath);
       for (const mode of modes) {
         map.addImage(mode, stopIconImage(mode), { pixelRatio: stopIconPixelRatio });
         map.addImage(`${mode}-dot`, stopDotImage(mode), { pixelRatio: stopIconPixelRatio });
         map.addImage(`${mode}-dot-off`, stopDotImage(mode, true), {
+          pixelRatio: stopIconPixelRatio,
+        });
+      }
+      for (const kind of taxiKinds) {
+        map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
+        map.addImage(`taxi-${kind}-dot`, taxiDotImage(kind), {
           pixelRatio: stopIconPixelRatio,
         });
       }
@@ -413,6 +431,7 @@ export default function Page() {
         const station = mtrStationColor(stop.id);
         const popup = stopPopup.getElement();
         if (!popup) return;
+        popup.classList.remove("taxi-type");
         popup.classList.toggle("station-badge-chh", station?.badge === "station-badge-chh");
         if (station && !station.badge) {
           popup.style.setProperty("--stop-bg", station.color);
@@ -543,11 +562,38 @@ export default function Page() {
         if (!linePopup.isOpen()) linePopup.addTo(map);
       };
 
+      const showTaxiType = (stop: Stop) => {
+        const label = stop.taxiType;
+        const text = label
+          ? localeRef.current === "en"
+            ? label.en
+            : label.tc
+          : localizeStopName(stop.name, stop.mode, localeRef.current);
+        const node = document.createElement("div");
+        node.className = "stop-name";
+        node.textContent = text;
+        stopPopup.setDOMContent(node).setLngLat([stop.longitude, stop.latitude]);
+        if (!stopPopup.isOpen()) stopPopup.addTo(map);
+        const popup = stopPopup.getElement();
+        if (!popup) return;
+        popup.classList.remove("station-badge-chh");
+        popup.classList.add("taxi-type");
+        popup.style.removeProperty("--stop-bg");
+        popup.style.removeProperty("--stop-fg");
+      };
+
       const showHoveredStop = (feature: MapGeoJSONFeature) => {
         const id = feature.properties?.id;
         if (typeof id !== "string") return;
         const stop = stopsRef.current.find((item) => item.id === id);
-        if (!stop || stop.mode !== "mtr") return;
+        if (!stop) return;
+        if (stop.mode === "taxi") {
+          if (hoveredStopRef.current === stop.id) return;
+          hoveredStopRef.current = stop.id;
+          showTaxiType(stop);
+          return;
+        }
+        if (stop.mode !== "mtr") return;
         if (hoveredStopRef.current === stop.id) return;
         hoveredStopRef.current = stop.id;
         const source = map.getSource("stops-hover");
@@ -644,7 +690,7 @@ export default function Page() {
         const id = feature?.properties?.id;
         if (typeof id !== "string") return;
         const match = stopsRef.current.find((stop) => stop.id === id);
-        if (!match || match.mode === "taxi") return;
+        if (!match) return;
         if (match.mode === "mtr") {
           stopNamePinned = true;
           showStopName(match);
@@ -660,8 +706,7 @@ export default function Page() {
         }
       });
       map.on("mouseenter", "stops", (event) => {
-        const clickable = event.features?.some((item) => item.properties?.mode !== "taxi");
-        map.getCanvas().style.cursor = clickable ? "pointer" : "";
+        map.getCanvas().style.cursor = event.features?.length ? "pointer" : "";
       });
       map.on("mouseleave", "stops", () => {
         map.getCanvas().style.cursor = "";
@@ -724,9 +769,10 @@ export default function Page() {
         if (!response.ok) throw new Error(`stops-${mode}`);
         return response.json() as Promise<{ stops: Stop[] }>;
       })
-      .then((body) => {
-        cataloguesRef.current[mode] = body.stops;
-        return body.stops;
+      .then(async (body) => {
+        const stops = mode === "taxi" ? await withTaxiKinds(body.stops) : body.stops;
+        cataloguesRef.current[mode] = stops;
+        return stops;
       })
       .catch(() => {
         // Cache the empty result so a failed mode does not loop on every draw.
@@ -859,7 +905,7 @@ export default function Page() {
         properties: {
           id: stop.id,
           mode: stop.mode,
-          icon: stop.mode,
+          icon: stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}` : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
@@ -1089,6 +1135,9 @@ export default function Page() {
           id={selected.id}
           mode={selected.mode}
           name={selected.name}
+          taxi={selected.taxi}
+          taxiType={selected.taxiType}
+          taxiHours={selected.taxiHours}
           onClose={() => {
             setSelected(null);
             setBoard(null);
@@ -1108,6 +1157,47 @@ function inHongKong(fix: Fix): boolean {
   );
 }
 
+const taxiStandById = new Map<string, ReturnType<typeof taxiStandInfo>>();
+let taxiKindsLoaded: Promise<void> | null = null;
+
+function loadTaxiKinds(): Promise<void> {
+  if (taxiKindsLoaded) return taxiKindsLoaded;
+  taxiKindsLoaded = fetch(`${basePath}/taxi-stands.geojson`)
+    .then((response) => {
+      if (!response.ok) throw new Error("taxi-stands");
+      return response.json() as Promise<{
+        features?: {
+          properties?: { OBJECTID?: number; Status_EN?: string; Status_TC?: string };
+        }[];
+      }>;
+    })
+    .then((body) => {
+      for (const feature of body.features ?? []) {
+        const id = feature.properties?.OBJECTID;
+        const statusEn = feature.properties?.Status_EN;
+        if (typeof id !== "number" || typeof statusEn !== "string") continue;
+        taxiStandById.set(
+          `taxi:${id}`,
+          taxiStandInfo(statusEn, feature.properties?.Status_TC ?? ""),
+        );
+      }
+    })
+    .catch(() => {
+      taxiKindsLoaded = null;
+    });
+  return taxiKindsLoaded;
+}
+
+async function withTaxiKinds(stops: Stop[]): Promise<Stop[]> {
+  await loadTaxiKinds();
+  if (taxiStandById.size === 0) return stops;
+  return stops.map((stop) => {
+    const info = taxiStandById.get(stop.id);
+    if (!info) return { ...stop, taxi: "urban" as const };
+    return { ...stop, taxi: info.kind, taxiType: info.type, taxiHours: info.hours };
+  });
+}
+
 function nearestStop(
   stops: Stop[],
   mode: Mode,
@@ -1122,7 +1212,7 @@ function nearestStop(
   let nearest: Stop | null = null;
   let best = Number.POSITIVE_INFINITY;
   for (const stop of stops) {
-    if (mode === "taxi" || stop.mode !== mode) continue;
+    if (stop.mode !== mode) continue;
     if (!isStopOpen(stop, hours, now)) continue;
     const dx = (stop.longitude - longitude) * scale * metersPerDegree;
     const dy = (stop.latitude - latitude) * metersPerDegree;
@@ -1168,17 +1258,28 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 // first use, then reused from the style.
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   if (dots) {
-    const image = `${stop.mode}-dot-sel`;
+    const image =
+      stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}-dot-sel` : `${stop.mode}-dot-sel`;
     if (!map.hasImage(image)) {
-      map.addImage(image, stopDotHighlight(stop.mode), { pixelRatio: stopIconPixelRatio });
+      map.addImage(
+        image,
+        stop.mode === "taxi"
+          ? taxiDotHighlight(stop.taxi ?? "urban")
+          : stopDotHighlight(stop.mode),
+        { pixelRatio: stopIconPixelRatio },
+      );
     }
     return image;
   }
-  const image = `${stop.mode}-sel`;
+  const image = stop.mode === "taxi" ? `taxi-${stop.taxi ?? "urban"}-sel` : `${stop.mode}-sel`;
   if (!map.hasImage(image)) {
-    map.addImage(image, stopIconHighlight(stop.mode), {
-      pixelRatio: stopIconPixelRatio,
-    });
+    map.addImage(
+      image,
+      stop.mode === "taxi"
+        ? taxiSignHighlight(stop.taxi ?? "urban")
+        : stopIconHighlight(stop.mode),
+      { pixelRatio: stopIconPixelRatio },
+    );
   }
   return image;
 }
