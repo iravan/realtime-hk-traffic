@@ -7,7 +7,15 @@ import { stopIconUrl, type Mode } from "./stop-icon";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
 // as GitHub Pages has no API, so it must name one, or the sheet stays name-only.
-const apiBase = process.env.NEXT_PUBLIC_API_BASE || (basePath ? "" : "/api");
+// `next dev` has no rewrite either, so a local run talks to the Rust server
+// directly unless NEXT_PUBLIC_API_BASE names another host.
+const apiBase =
+  process.env.NEXT_PUBLIC_API_BASE ||
+  (basePath
+    ? ""
+    : process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:8787"
+      : "/api");
 const goneAfterMs = 12000;
 
 type Row = {

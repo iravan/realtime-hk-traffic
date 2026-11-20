@@ -126,9 +126,10 @@ bun run dev
 ```
 
 Open the URL Bun prints. The demo build loads `web/public/stops.json` and
-`web/public/service-hours.json`, so the map works without the API. To talk to a
-local API, set `NEXT_PUBLIC_API_BASE` (for example
-`http://127.0.0.1:8787`).
+`web/public/service-hours.json`, so the map works without the API. In
+development the sheet talks to the Rust server at `http://127.0.0.1:8787`, so
+start the server below for live arrivals. Set `NEXT_PUBLIC_API_BASE` to point
+somewhere else (for example when the server uses another `BIND`).
 
 ### Server
 
