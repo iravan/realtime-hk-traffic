@@ -48,8 +48,9 @@ scope. Taxi stands are places, not vehicles.
   The open tab loads its file, and the other modes follow about two seconds
   later. A first visit downloads about 550 KB compressed for all five files;
   the bus file is most of that. The browser keeps each file for 24 hours, so a
-  return visit draws the pins without downloading them again. The five
-  IndexedDB keys, the fields on each record, and a ferry check are in
+  return visit draws the pins without downloading them again. Service hours,
+  the MTR lines, taxi-stand types, and ferry timetables stay in that same
+  store. The IndexedDB keys and a ferry check are in
   [DATA.md](DATA.md#caching). Panning does not
   ask the server for stops. Below zoom 16 those stops are counted groups; a tap
   on a count zooms in, and at zoom 16 each stop is its own pin. The bus tab and the KMB, LWB, and New Lantao pins
@@ -328,8 +329,8 @@ bun run dev
 
 Open the URL Bun prints. The demo build loads the generated per-mode stop files
 (`web/public/stops-*.json`) and `web/public/service-hours.json`, so the map works
-without the API. The browser keeps each mode's stop file for 24 hours, so a
-return visit draws the pins from that copy. In development the sheet talks to the Rust server at
+without the API. The browser keeps each mode's stop file, the service hours,
+the MTR lines, the taxi stands, and the ferry timetables for 24 hours. In development the sheet talks to the Rust server at
 `http://127.0.0.1:8787`, so start the server below for live arrivals. Set
 `NEXT_PUBLIC_API_BASE` to point somewhere else (for example when the server uses
 another `BIND`).

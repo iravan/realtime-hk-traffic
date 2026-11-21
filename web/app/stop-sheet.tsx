@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import type { TaxiLabel } from "./taxi-stand";
@@ -77,9 +78,12 @@ export function StopSheet({
   useEffect(() => {
     if (mode !== "ferry") return;
     let cancelled = false;
-    fetch(`${basePath}/ferry-services.json`)
-      .then((response) => response.json())
-      .then((body: Record<string, FerryService[]>) => {
+    loadCachedJson<Record<string, FerryService[]>>("ferry-services", async () => {
+      const response = await fetch(`${basePath}/ferry-services.json`);
+      if (!response.ok) throw new Error("ferry-services");
+      return response.json() as Promise<Record<string, FerryService[]>>;
+    })
+      .then((body) => {
         if (!cancelled) setSailings(body[id] ?? []);
       })
       .catch(() => {

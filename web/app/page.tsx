@@ -979,11 +979,11 @@ export default function Page() {
   function ensureMtrLines(map: MlMap) {
     if (mtrLinesLoadedRef.current || mtrLinesLoadingRef.current) return;
     mtrLinesLoadingRef.current = true;
-    fetch(`${basePath}/mtr-lines.geojson`)
-      .then((response) => {
-        if (!response.ok) throw new Error("mtr-lines");
-        return response.json() as Promise<GeoJSON.FeatureCollection>;
-      })
+    loadCachedJson<GeoJSON.FeatureCollection>("mtr-lines", async () => {
+      const response = await fetch(`${basePath}/mtr-lines.geojson`);
+      if (!response.ok) throw new Error("mtr-lines");
+      return response.json() as Promise<GeoJSON.FeatureCollection>;
+    })
       .then((body) => {
         const source = map.getSource("mtr-lines");
         if (!source || source.type !== "geojson") return;
@@ -1074,9 +1074,12 @@ export default function Page() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`${basePath}/service-hours.json`)
-      .then((response) => response.json())
-      .then((body: ServiceHours) => {
+    loadCachedJson<ServiceHours>("service-hours", async () => {
+      const response = await fetch(`${basePath}/service-hours.json`);
+      if (!response.ok) throw new Error("service-hours");
+      return response.json() as Promise<ServiceHours>;
+    })
+      .then((body) => {
         if (cancelled) return;
         hoursRef.current = body;
         setHours(body);
@@ -1390,15 +1393,15 @@ let taxiKindsLoaded: Promise<void> | null = null;
 
 function loadTaxiKinds(): Promise<void> {
   if (taxiKindsLoaded) return taxiKindsLoaded;
-  taxiKindsLoaded = fetch(`${basePath}/taxi-stands.geojson`)
-    .then((response) => {
-      if (!response.ok) throw new Error("taxi-stands");
-      return response.json() as Promise<{
-        features?: {
-          properties?: { OBJECTID?: number; Status_EN?: string; Status_TC?: string };
-        }[];
-      }>;
-    })
+  taxiKindsLoaded = loadCachedJson<{
+    features?: {
+      properties?: { OBJECTID?: number; Status_EN?: string; Status_TC?: string };
+    }[];
+  }>("taxi-stands", async () => {
+    const response = await fetch(`${basePath}/taxi-stands.geojson`);
+    if (!response.ok) throw new Error("taxi-stands");
+    return response.json();
+  })
     .then((body) => {
       for (const feature of body.features ?? []) {
         const id = feature.properties?.OBJECTID;

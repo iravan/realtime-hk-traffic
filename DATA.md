@@ -777,14 +777,16 @@ two seconds later. A first visit downloads about 550 KB compressed in total.
 The bus file is about 340 KB of that.
 
 The browser keeps each file in IndexedDB for 24 hours. A visit inside that
-window does not download the pins again. After 24 hours the page fetches a new
-copy, and if that request fails it keeps the stored one. Vercel also sends
-`Cache-Control: public, max-age=3600, stale-while-revalidate=86400` on these
-files, so a cache miss can still be served from the CDN.
+window does not download the pins again. The same store keeps the other static
+files: service hours, the MTR lines, the taxi-stand types, and the ferry
+timetables. After 24 hours the page fetches a new copy, and if that request
+fails it keeps the stored one. Vercel also sends
+`Cache-Control: public, max-age=3600, stale-while-revalidate=86400` on the
+stop files and on service hours, taxi stands, and the MTR lines, so a cache
+miss can still be served from the CDN.
 
-One database, `hk-traffic`, and one object store, `catalogues`. The five keys
-are separate because the five files are loaded separately, and each expires on
-its own clock:
+One database, `hk-traffic`, and one object store, `catalogues`. Each key
+expires on its own clock:
 
 | Key | File | What a stop record contains |
 | --- | --- | --- |
@@ -793,6 +795,10 @@ its own clock:
 | `stops-ferry` | `stops-ferry.json` | `id`, `latitude`, `longitude`, `mode`, `name` only. No `routes` or `night` |
 | `stops-taxi` | `stops-taxi.json` | The same five fields. Taxi type is joined later from `taxi-stands.geojson` and is not stored here |
 | `stops-mtr` | `stops-mtr.json` | The same five fields |
+| `service-hours` | `service-hours.json` | The service windows used to grey a closed stop |
+| `mtr-lines` | `mtr-lines.geojson` | The MTR route lines |
+| `taxi-stands` | `taxi-stands.geojson` | Stand type, joined onto `stops-taxi` after the cache read |
+| `ferry-services` | `ferry-services.json` | Each pier's destination, first boat, and last boat |
 
 Each record is `{ savedAt, value }`. `savedAt` is the time it was written, in
 milliseconds. `value` is the file body, `{ stops: [...] }`. A ferry copy is

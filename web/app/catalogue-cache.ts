@@ -54,9 +54,9 @@ async function writeEntry(key: string, value: unknown): Promise<void> {
   });
 }
 
-// Stop catalogues change with a deploy, not minute by minute. A copy newer
-// than a day is used as-is. An older copy is replaced, and kept only when the
-// network request fails.
+// These files change with a deploy, not minute by minute. A copy newer than a
+// day is used as-is. An older copy is replaced, and kept only when the network
+// request fails.
 export async function loadCachedJson<T>(key: string, load: () => Promise<T>): Promise<T> {
   const hit = await readEntry(key);
   if (hit && Date.now() - hit.savedAt < ttlMs) return hit.value as T;
