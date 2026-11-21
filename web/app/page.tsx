@@ -48,6 +48,7 @@ import {
   type ServiceHours,
 } from "./service-hours";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
+import { loadCachedJson } from "./catalogue-cache";
 import { linkedStopId, writeStopLink } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
@@ -825,11 +826,11 @@ export default function Page() {
     if (cached) return Promise.resolve(cached);
     const pending = cataloguePromisesRef.current.get(mode);
     if (pending) return pending;
-    const promise = fetch(`${basePath}/stops-${mode}.json`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`stops-${mode}`);
-        return response.json() as Promise<{ stops: Stop[] }>;
-      })
+    const promise = loadCachedJson<{ stops: Stop[] }>(`stops-${mode}`, async () => {
+      const response = await fetch(`${basePath}/stops-${mode}.json`);
+      if (!response.ok) throw new Error(`stops-${mode}`);
+      return response.json() as Promise<{ stops: Stop[] }>;
+    })
       .then(async (body) => {
         const stops = mode === "taxi" ? await withTaxiKinds(body.stops) : body.stops;
         cataloguesRef.current[mode] = stops;

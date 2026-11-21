@@ -756,6 +756,7 @@ not vehicle positions, so a taxi stand has no arrival rows.
 | `web/public/ferry-services.json` | Destination, first boat, and last boat for ferry piers |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
 | `web/public/taxi-stands.geojson` | Taxi stand taxi type, joined to `taxi:{OBJECTID}` |
+| `web/public/icons/citybus.svg` | Yellow double-decker used for `bus:ctb:` pins and the stop sheet. The bus tab stays on `bus.svg` |
 
 Generation scripts:
 
@@ -769,11 +770,25 @@ Generation scripts:
 
 ## Caching
 
+Stop pins are static files, one per mode: `web/public/stops-bus.json`,
+`stops-minibus.json`, `stops-ferry.json`, `stops-taxi.json`, and
+`stops-mtr.json`. The page loads the active mode first and the others about
+two seconds later. A first visit downloads about 550 KB compressed in total.
+The bus file is about 340 KB of that.
+
+The browser keeps each file in IndexedDB (`hk-traffic` / `catalogues`, key
+`stops-{mode}`) for 24 hours. A visit inside that window does not download the
+pins again. After 24 hours the page fetches a new copy, and if that request
+fails it keeps the stored one. Vercel also sends
+`Cache-Control: public, max-age=3600, stale-while-revalidate=86400` on these
+files, so a cache miss can still be served from the CDN.
+
 - There is no background poll. Opening a stop calls `GET /stops/{id}/arrivals`.
   If `arrivals:{stop_id}` is still in Redis, that body is returned and the
   publisher is not called.
 - A missing key fetches that stop once and writes `arrivals:{stop_id}` with a
-  90-second expiry.
+  90-second expiry. A Citybus stop is two batch requests, `lang=en` and
+  `lang=zh-Hant`, made together.
 - The page also listens to `/stops/{id}/events` for the snapshot from that
   fetch. The stream does not schedule another fetch.
 

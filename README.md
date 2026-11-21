@@ -40,7 +40,18 @@ scope. Taxi stands are places, not vehicles.
 - **Live arrivals.** The selected stop is ringed on the map. Its sheet loads the
   latest snapshot, soonest first, and then listens on a server-sent event
   (`/stops/{id}/events`) stream for newer snapshots. The page never computes an
-  ETA and never calls a transport feed directly.
+  ETA and never calls a transport feed directly. A bus or ferry destination is
+  shown in the language of the page. Citybus publishes one language per
+  request, so the server asks for English and Traditional Chinese and pairs
+  the two.
+- **Stop pins.** Each mode is a static file, `web/public/stops-{mode}.json`.
+  The open tab loads its file, and the other modes follow about two seconds
+  later. A first visit downloads about 550 KB compressed for all five files;
+  the bus file is most of that. The browser keeps each file for 24 hours, so a
+  return visit draws the pins without downloading them again. Panning does not
+  ask the server for stops. The bus tab and the KMB, LWB, and New Lantao pins
+  use the red bus. A Citybus stop (`bus:ctb:`) uses the yellow double-decker
+  in `web/public/icons/citybus.svg`, on the map and in the sheet.
 - **Freshness is visible.** Every snapshot carries the time the server fetched
   it; the sheet shows that age. An expired snapshot says the snapshot is gone,
   but the stop stays on the map.
@@ -65,7 +76,8 @@ scope. Taxi stands are places, not vehicles.
 flowchart LR
     A[Official feeds<br/>data.gov.hk, KMB/LWB, Citybus/NLB] -->|fetch on click| B[Rust service<br/>Axum + Tokio]
     B -->|write snapshot TTL 90s| C[(Redis)]
-    B -->|GET /stops, /arrivals, /events| D[Next.js page<br/>MapLibre GL]
+    B -->|GET /arrivals, /events| D[Next.js page<br/>MapLibre GL]
+    F[stops-*.json] -->|first visit, then 24h on device| D
     C -->|read snapshot| B
     D -->|OpenStreetMap tiles| E[Map tiles]
 ```
@@ -313,7 +325,8 @@ bun run dev
 
 Open the URL Bun prints. The demo build loads the generated per-mode stop files
 (`web/public/stops-*.json`) and `web/public/service-hours.json`, so the map works
-without the API. In development the sheet talks to the Rust server at
+without the API. The browser keeps each mode's stop file for 24 hours, so a
+return visit draws the pins from that copy. In development the sheet talks to the Rust server at
 `http://127.0.0.1:8787`, so start the server below for live arrivals. Set
 `NEXT_PUBLIC_API_BASE` to point somewhere else (for example when the server uses
 another `BIND`).

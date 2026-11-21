@@ -1,6 +1,6 @@
 # Frontend
 
-The Next.js page. The build spec is [TECH-STACK.md](TECH-STACK.md). The product is [DESIGN.md](DESIGN.md). Bun installs this app. The page loads a generated per-mode stop file from `web/public` when it starts. It does not call the API, data.gov.hk, the bus ETA hosts, or the MTR feed. There is no sign-in.
+The Next.js page. The build spec is [TECH-STACK.md](TECH-STACK.md). The product is [DESIGN.md](DESIGN.md). Bun installs this app. The page loads a generated per-mode stop file from `web/public` when it starts, and keeps that file in the browser for 24 hours. It does not call the API, data.gov.hk, the bus ETA hosts, or the MTR feed for pin locations. There is no sign-in.
 
 The first demo is the map in `web/`. The service list is [server/CHECKLIST.md](server/CHECKLIST.md).
 
