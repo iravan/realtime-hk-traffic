@@ -23,7 +23,7 @@ modes:
 | --- | --- | --- |
 | **MTR** | A station | The next train on each line that serves the station, plus line service status when the feed includes it |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
-| **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise the timetable, marked not live |
+| **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise "No arrivals right now" |
 | **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry shows the minutes until departure. Sun Ferry shows the published arrival once the boat has left, and the minutes until departure before that. Other piers stay on the map and show that nothing is scheduled right now |
 | **Taxi** | A taxi stand | The stand's name and location only — Hong Kong publishes no per-vehicle position feed |
 
@@ -107,7 +107,7 @@ map. Next.js only renders.
 | --- | --- | --- |
 | MTR | MTR next-train feed on data.gov.hk | Station, line, destination, minutes or clock time, fetch time |
 | Bus | KMB, LWB, Citybus, and New Lantao Bus ETA feeds | Stop id, route, destination, minutes, fetch time |
-| Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus; timetable only when no ETA exists |
+| Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same shape as a bus, plus whether the vehicle has left its first stop; no rows when the feed has no ETA for the stop |
 | Ferry | Transport Department pier list, plus Hong Kong & Kowloon Ferry and Sun Ferry ETA feeds | Pier id, name, coordinates, and the live departure or arrival where a feed exists |
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
@@ -141,8 +141,8 @@ cd server
 LIVE_CATALOGUES=1 cargo run
 ```
 
-In another terminal, export the merged catalogue and merge it into
-`server/data/stops.json`. The merge keeps existing ids, including ids that share
+In another terminal, from the repository root, export the merged catalogue and
+merge it into `server/data/stops.json`. The merge keeps existing ids, including ids that share
 a location, and preserves `routes` and `night` fields.
 
 ```bash
@@ -265,7 +265,7 @@ Department stop sequence and the CSDI pier coordinates, and rewrites
 Kowloon Ferry and Sun Ferry routes that leave it. Rebuild the server after
 either file changes.
 
-### 7. Check the result
+### 8. Check the result
 
 The web build regenerates the web copy and per-mode files from the canonical
 catalogue:
@@ -299,22 +299,32 @@ GET /stops?south&west&north&east&modes
     { "stops": [ { "id", "mode", "name", "latitude", "longitude" } ] }
 
 GET /stops/{id}/arrivals
-    { "fetched_at", "live", "status"?, "note"?, "rows": [ { "route", "destination", "minutes" | "time", "not_departed"? } ] }
+    { "fetched_at", "live", "status"?, "rows": [ { "route", "destination", "minutes"?, "time"?, "not_departed"? } ] }
 
 GET /stops/{id}/events      Server-sent events; each new snapshot is an `arrivals` event
 ```
 
-`modes` is a comma-separated subset of `mtr,bus,minibus,ferry,taxi`. `minutes` is
-omitted when a feed gives a clock time instead; that row then has `time`. A
-minibus row sets `not_departed` when the vehicle is still at its first stop, and
-the sheet shows 始站 beside 未開出. A taxi
-stand returns a name-only snapshot and has no arrivals key. An unknown id is a
-404; an expired snapshot is reported as gone, not as an empty timetable.
+`modes` is a comma-separated subset of `mtr,bus,minibus,ferry,taxi`.
+
+`live` is `true` on every snapshot the server writes today; there is no
+timetable fallback yet. `status` is `"delayed"` only when an MTR line reports a
+delay. `minutes` is omitted when the feed gives no countable value; an MTR row
+then keeps its clock `time`. A minibus row sets `not_departed` when the vehicle
+is still at its first stop, and the sheet shows 始站 beside 未開出.
+
+`/stops/{id}/arrivals` answers from Redis when a snapshot is cached. Otherwise it
+calls the feed once and answers with the result. Errors use these codes:
+
+- `404 {"error": "unknown stop"}` for an id the catalogue does not have.
+- `404 {"error": "no arrivals"}` for a taxi stand. No feed is called. The same
+  check applies to `/events`.
+- `404 {"error": "snapshot is gone"}` when no snapshot can be fetched or stored.
+  The stop stays on the map.
 
 ### Redis
 
 ```text
-arrivals:{id}    string, EX 90    { "fetched_at", "live", "status"?, "note"?, "rows" }
+arrivals:{id}    string, EX 90    { "fetched_at", "live", "status"?, "rows" }
 ```
 
 Redis holds only ephemeral arrival snapshots. The stop index (bundled, with an
@@ -366,8 +376,9 @@ rather than hanging.
 ```text
 web/                 Next.js app (static export)
   app/               Map page, stop sheet, service-hours helpers, icons
-  public/            stops.json, service-hours.json, MTR line GeoJSON, icons
-  scripts/           MapLibre worker copy step
+  public/            Generated stops*.json, service-hours.json, ferry-services.json,
+                     MTR line GeoJSON, icons
+  scripts/           MapLibre worker copy step, per-mode stop file split
 server/              Rust API (Axum + Tokio)
   src/main.rs        Routes and feed fetchers
   src/catalog.rs     Stop catalogues and bundled route data
@@ -386,6 +397,7 @@ Pages setup.
 ## Documentation
 
 - [DESIGN.md](DESIGN.md) — product goal and behaviour
+- [DATA.md](DATA.md) — feed endpoints, fields, caching and request limits
 - [TECH-STACK.md](TECH-STACK.md) — stack and feed choices
 - [CHECKLIST.md](CHECKLIST.md) — frontend work list
 - [server/CHECKLIST.md](server/CHECKLIST.md) — backend work list

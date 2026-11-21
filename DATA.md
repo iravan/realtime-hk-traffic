@@ -539,8 +539,8 @@ reference for route labels, fares, stop sequences and multilingual stop names.
 
 Source dataset: [Real-time arrival data of green minibuses (GMBs)](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb).
 
-The green-minibus API is `https://data.etagmb.gov.hk`. The service uses five
-resources:
+The green-minibus API is `https://data.etagmb.gov.hk`. The service uses these six
+endpoints:
 
 | Endpoint | Source resource | Fields read |
 | --- | --- | --- |

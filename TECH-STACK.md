@@ -24,7 +24,7 @@ Rust is the only component that calls a feed.
 | --- | --- | --- |
 | MTR | MTR next-train feed on data.gov.hk | Station, line, destination, minutes or clock time, fetch time |
 | Bus | KMB, LWB, Citybus, and New Lantao Bus ETA feeds | Stop id, route, destination, minutes, fetch time |
-| Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same arrival shape as a bus. No ETA means the timetable only, marked not live |
+| Minibus | Green-minibus ETA feed on data.gov.hk, where a route has one | Same arrival shape as a bus. No ETA means no arrival rows; a timetable fallback is planned |
 | Taxi | Taxi-stand locations on data.gov.hk | Stand id, name, coordinates. No vehicle positions |
 
 A stop id is the publisher's id, prefixed by the mode so two feeds cannot collide: `mtr:`, `bus:`, `minibus:`, `taxi:`.
@@ -60,7 +60,7 @@ arrivals:{id}                 string, EX 90
                               { "fetched_at", "live", "rows" }
 ```
 
-`rows` is the next arrivals. For a taxi stand the arrivals key is absent. For a green minibus stop with only a timetable, `live` is false and the rows are the scheduled times.
+`rows` is the next arrivals. A taxi stand has no arrivals: both endpoints answer 404 and no feed is called. Every snapshot written today has `live: true`; a timetable with `live: false` for minibus stops without an ETA is planned.
 
 A click that misses the cache writes `arrivals:{id}` with a 90-second expiry. The stop index lives in memory (bundled, optionally refreshed from live catalogues), not in Redis. A reader never computes an ETA. If `arrivals:{id}` has expired, the stop is still on the map and the next click fetches again. See [REDIS.md](REDIS.md).
 
@@ -68,7 +68,7 @@ A click that misses the cache writes `arrivals:{id}` with a 90-second expiry. Th
 
 1. Stop list for all four modes, from the official catalogues, drawn on the map.
 2. Click fetch for MTR next train and for franchised-bus ETA. Redis holds the snapshot. The sheet reads it.
-3. Green minibus ETA where the feed has it, and timetable-only where it does not.
+3. Green minibus ETA where the feed has it. A timetable fallback for stops without one is still to do.
 4. Taxi stands as places, with no vehicle layer.
 5. Redis on `127.0.0.1:6379` for local development. The page is installed with Bun.
 
