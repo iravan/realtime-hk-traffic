@@ -107,8 +107,8 @@ function chineseClock(value: string): string {
 }
 
 const en: Messages = {
-  appTitle: "Realtime HK Traffic",
-  brand: "Hong Kong Traffic",
+  appTitle: "Realtime HK public transport",
+  brand: "Hong Kong public transport",
   stopsInView: (count) => `${count} stop${count === 1 ? "" : "s"} in view`,
   mode: { mtr: "MTR", bus: "Bus", minibus: "Minibus", ferry: "Ferry", taxi: "Taxi" },
   switchLanguage: "Switch language",
