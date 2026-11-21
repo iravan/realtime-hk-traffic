@@ -1073,6 +1073,14 @@ export default function Page() {
     refreshSelection(map);
   }
 
+  // MapLibre reports the style as not loaded while a GeoJSON update or a tile
+  // is in flight, which is common right after a tab change. A draw skipped then
+  // would leave the previous mode's pins on the map, so wait for idle instead.
+  function drawWhenReady(map: MlMap) {
+    if (map.isStyleLoaded()) drawStops(map);
+    else map.once("idle", () => drawStops(map));
+  }
+
   function refreshSelection(map: MlMap) {
     if (!map.getLayer("selection")) return;
     const focus = selectedRef.current ?? boardRef.current;
@@ -1101,7 +1109,7 @@ export default function Page() {
         hoursRef.current = body;
         setHours(body);
         const map = mapRef.current;
-        if (map?.isStyleLoaded()) drawStops(map);
+        if (map) drawWhenReady(map);
         const current = selectedRef.current;
         if (current && !isStopOpen(current, body, new Date())) setSelected(null);
       })
@@ -1120,7 +1128,7 @@ export default function Page() {
       if (cancelled) return;
       selectNearest(fixRef.current);
       const map = mapRef.current;
-      if (map?.isStyleLoaded()) drawStops(map);
+      if (map) drawWhenReady(map);
       prefetchOtherModes(activeRef.current);
     });
     return () => {
@@ -1195,10 +1203,8 @@ export default function Page() {
     setSelected(null);
     setBoard(null);
     const map = mapRef.current;
-    if (map?.isStyleLoaded()) {
-      refreshSelection(map);
-      drawStops(map);
-    }
+    if (map?.isStyleLoaded()) refreshSelection(map);
+    if (map) drawWhenReady(map);
     // Each tab keeps its own stop. A shared link or the most recent stop can
     // still be waiting on a mode change, so this pass leaves that id alone.
 
@@ -1221,7 +1227,7 @@ export default function Page() {
         }
       }
       const current = mapRef.current;
-      if (current?.isStyleLoaded()) drawStops(current);
+      if (current) drawWhenReady(current);
     });
     return () => {
       cancelled = true;
@@ -1271,6 +1277,11 @@ export default function Page() {
               aria-label={t.switchLanguage}
               title={t.switchLanguage}
             >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18" />
+                <path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
+              </svg>
               {locale === "en" ? "中文" : "EN"}
             </button>
           </div>
