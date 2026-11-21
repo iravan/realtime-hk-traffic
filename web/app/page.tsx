@@ -50,7 +50,7 @@ import {
 } from "./service-hours";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
 import { loadCachedJson } from "./catalogue-cache";
-import { linkedStopId, writeStopLink } from "./stop-link";
+import { linkedStopId, readLastStop, writeLastStop, writeStopLink } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
@@ -182,6 +182,7 @@ export default function Page() {
   const fixRef = useRef<Fix | null>(null);
   const selectedRef = useRef<Stop | null>(null);
   const boardRef = useRef<Stop | null>(null);
+  const routeMarkerRef = useRef<Marker | null>(null);
   const cataloguesRef = useRef<Partial<Record<Mode, Stop[]>>>({});
   const cataloguePromisesRef = useRef(new Map<Mode, Promise<Stop[]>>());
   const hoursRef = useRef<ServiceHours | null>(null);
@@ -204,7 +205,7 @@ export default function Page() {
   const linkSeenRef = useRef(false);
   if (!linkSeenRef.current && typeof window !== "undefined") {
     linkSeenRef.current = true;
-    linkedStopRef.current = linkedStopId();
+    linkedStopRef.current = linkedStopId() ?? readLastStop();
     holdSharedViewRef.current = linkedStopRef.current !== null;
   }
   focusPendingRef.current = (map) => {
@@ -222,8 +223,15 @@ export default function Page() {
   };
   showStopRef.current = (stop, focus = false) => {
     const open = isStopOpen(stop, hoursRef.current, new Date());
+    // The map reads these refs while drawing. State updates land on the next
+    // render, so a tab change would otherwise highlight the previous mode.
+    selectedRef.current = open ? stop : null;
+    boardRef.current = stop;
     setBoard(stop);
     setSelected(open ? stop : null);
+    const drawn = mapRef.current;
+    if (drawn?.isStyleLoaded()) refreshSelection(drawn);
+    writeLastStop(stop.id);
     writeStopLink(stop.id);
     if (!focus) return;
     pendingFocusRef.current = stop;
@@ -896,6 +904,8 @@ export default function Page() {
   }, [selected, board]);
 
   useEffect(() => {
+    routeMarkerRef.current?.remove();
+    routeMarkerRef.current = null;
     const map = mapRef.current;
     const routes = board?.mode === "minibus" ? board.routes : undefined;
     if (!map || !board || !routes || routes.length === 0) return;
@@ -910,8 +920,10 @@ export default function Page() {
     const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
       .addTo(map);
+    routeMarkerRef.current = marker;
     return () => {
       marker.remove();
+      if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
     };
   }, [board]);
 
@@ -970,10 +982,7 @@ export default function Page() {
       hoursRef.current,
       new Date(),
     );
-    if (nearest) {
-      setSelected(nearest);
-      setBoard(nearest);
-    }
+    if (nearest) showStopRef.current(nearest, true);
   }
 
   function ensureMtrLines(map: MlMap) {
@@ -1021,6 +1030,11 @@ export default function Page() {
     const catalogue = cataloguesRef.current[mode];
     if (!catalogue) {
       setStops([]);
+      const source = map.getSource("stops");
+      if (source && source.type === "geojson") {
+        (source as GeoJSONSource).setData({ type: "FeatureCollection", features: [] });
+      }
+      refreshSelection(map);
       return;
     }
     const hours = hoursRef.current;
@@ -1137,7 +1151,8 @@ export default function Page() {
         fixRef.current = fix;
         const map = mapRef.current;
         if (map?.isStyleLoaded()) placeMe(map, fix);
-        // A shared stop link owns the camera until the user asks for a fix.
+        // A shared link or a remembered stop owns the camera until the user asks
+        // for a fix. With neither, the nearest stop of this mode opens.
         if (!manual && holdSharedViewRef.current) return;
         if (map?.isStyleLoaded()) {
           map.easeTo({
@@ -1168,23 +1183,39 @@ export default function Page() {
   useEffect(() => {
     clearLineRef.current();
     hideStopNameRef.current();
-    const map = mapRef.current;
-    if (map?.isStyleLoaded()) drawStops(map);
-    // Switching tabs cancels the picked stop: close the sheet, hide the route
-    // board and clear the highlight. A shared link reopens after its catalogue
-    // loads, including when the map style is not ready yet.
+    // Drop the previous mode's highlight before the catalogue for this tab
+    // arrives. The refs have to change now; state alone waits for a render.
+    selectedRef.current = null;
+    boardRef.current = null;
+    routeMarkerRef.current?.remove();
+    routeMarkerRef.current = null;
     setSelected(null);
     setBoard(null);
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) {
+      refreshSelection(map);
+      drawStops(map);
+    }
+    // Each tab keeps its own stop. A shared link or the most recent stop can
+    // still be waiting on a mode change, so this pass leaves that id alone.
 
     let cancelled = false;
     void loadCatalogue(active).then((stops) => {
       if (cancelled) return;
-      const linked = linkedStopRef.current;
-      if (linked && modeFromStopId(linked) === active) {
-        const stop = stops.find((item) => item.id === linked);
+      const pending = linkedStopRef.current;
+      const waitingForMode = pending !== null && modeFromStopId(pending) !== active;
+      if (!waitingForMode) {
         linkedStopRef.current = null;
+        const linked = pending ?? readLastStop(active);
+        const stop =
+          linked && modeFromStopId(linked) === active
+            ? stops.find((item) => item.id === linked)
+            : undefined;
         if (stop) showStopRef.current(stop, true);
-        else holdSharedViewRef.current = false;
+        else {
+          holdSharedViewRef.current = false;
+          selectNearest(fixRef.current);
+        }
       }
       const current = mapRef.current;
       if (current?.isStyleLoaded()) drawStops(current);
@@ -1252,9 +1283,10 @@ export default function Page() {
                 aria-pressed={active === mode}
                 className={active === mode ? "on" : ""}
                 onClick={() => {
-                  setSelected(null);
-                  setBoard(null);
-                  clearStopParam();
+                  if (mode === active) return;
+                  const remembered = readLastStop(mode);
+                  linkedStopRef.current = remembered;
+                  holdSharedViewRef.current = remembered !== null;
                   clearFocusPadding();
                   setActive(mode);
                 }}

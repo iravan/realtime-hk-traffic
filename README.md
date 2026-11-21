@@ -15,8 +15,8 @@ There is no sign-in. Every visitor can pan the map and open any stop.
 
 ## What it does
 
-The page opens on the device location (when the browser grants it) and selects
-the nearest stop of the chosen mode. Five tabs switch between the transport
+The page opens on the device location (when the browser grants it). Each tab
+remembers the stop last opened there. Five tabs switch between the transport
 modes:
 
 | Mode | A stop is | What an arrival shows |
@@ -32,11 +32,12 @@ scope. Taxi stands are places, not vehicles.
 
 ### Behaviour
 
-- **Location-aware start.** On load the page asks for the device location,
-  marks it, and opens the nearest stop of the active mode. Changing mode
-  reselects the nearest stop of that mode. A locate button re-asks the device,
-  recentres the map, and reselects, so a visitor who panned away does not have
-  to reload.
+- **Location-aware start.** On load the page asks for the device location and
+  marks it. The stop opened most recently is opened again and the map moves to
+  it. Each tab keeps its own stop, and changing tab returns to that stop. With
+  no remembered stop for the tab, the nearest stop opens. A shared link still
+  wins. A locate button re-asks the device, recentres the map, and reselects,
+  so a visitor who panned away does not have to reload.
 - **Live arrivals.** The selected stop is ringed on the map. Its sheet loads the
   latest snapshot, soonest first, and then listens on a server-sent event
   (`/stops/{id}/events`) stream for newer snapshots. The page never computes an

@@ -28,9 +28,9 @@ GET /stops/{id}/arrivals
 - [x] On move end, draw the saved stops in the current view. The page does not call a server.
 - [x] Draw one stop per saved record, at that record's coordinates. The client does not invent an id or a coordinate.
 - [x] Five tabs: MTR, bus, minibus, ferry, taxi. Choosing one shows only that mode.
-- [x] On load, ask the device for its location, mark it on the map, and select the nearest stop of the chosen mode.
+- [x] On load, ask the device for its location and mark it. The stop opened most recently is opened again and the map moves to it. Otherwise select the nearest stop of the chosen mode. A shared link still wins.
 - [x] A locate button asks again, moves the map to that fix, and selects the nearest stop of the chosen mode. A refused fix marks the button.
-- [x] Changing the tab selects the nearest stop of the new mode.
+- [x] Changing the tab opens that tab's last stop and moves the map to it. A tab with no remembered stop selects the nearest stop.
 - [x] The selected stop is marked on the map with a halo, and closing the sheet clears it.
 - [x] Ids that publish the same coordinate are one point, and their arrivals are merged. Poles at different coordinates stay separate stops.
 - [x] Load static service hours from `web/public/service-hours.json`. Outside service hours a stop is grey and does not open. A ferry pier stays coloured and clickable, and its sheet still shows the hours. Star Ferry piers use their own windows.

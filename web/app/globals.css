@@ -47,7 +47,7 @@ button { cursor: pointer; }
   border: 1px solid rgba(28, 25, 21, 0.14);
   box-shadow: 0 12px 32px rgba(28, 25, 21, 0.16);
 }
-.brand { padding: 0.65rem 0.8rem; }
+.brand { flex: none; padding: 0.65rem 0.8rem; }
 .brand h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
 .brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
@@ -62,7 +62,7 @@ button { cursor: pointer; }
 }
 .lang-toggle:hover { background: rgba(28, 25, 21, 0.06); }
 .lang-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.filters { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.45rem; }
+.filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.35rem; max-width: 100%; padding: 0.45rem; }
 .filters button {
   display: inline-flex;
   align-items: center;
@@ -81,8 +81,17 @@ button { cursor: pointer; }
 .filters button[data-mode="ferry"].on { background: var(--ferry); }
 .filters button[data-mode="taxi"].on { background: var(--taxi); }
 
-/* The tab bar and the notice that hangs beneath it. */
-.channel { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+/* The tab bar and the notice that hangs beneath it. It takes the room
+   between the title and the right edge, and wraps rather than sliding under
+   the details panel. */
+.channel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  min-width: 0;
+}
 .notice {
   max-width: 20rem;
   padding: 0.5rem 0.7rem 0.55rem;
@@ -294,7 +303,9 @@ button { cursor: pointer; }
 }
 @media (min-width: 768px) {
   .sheet { top: 0.75rem; right: 0.75rem; bottom: 0.75rem; width: 22rem; }
-  /* Keep the control clear of the sheet rather than under it. */
+  /* The sheet occupies the right edge, so the tabs and the locate control
+     stop short of it. */
+  .visit.sheet-open .chrome,
   .visit.sheet-open .map-actions { right: calc(22rem + 1.5rem); }
 }
 .maplibregl-ctrl-attrib { background: rgba(244, 239, 230, 0.92); font-size: 11px; }
