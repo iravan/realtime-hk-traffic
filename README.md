@@ -66,7 +66,8 @@ scope. Taxi stands are places, not vehicles.
   Stops served by an overnight route carry `night: true` and stay open and
   clickable all day.
 - **Long waits.** A wait of 60 minutes or more is shown as hours and leftover
-  minutes. A shorter wait stays in minutes.
+  minutes. A shorter wait stays in minutes. A wait under one minute says Due
+  (即將到站).
 - **Merged poles.** Feed ids that publish the same coordinate become one point
   with merged arrivals; poles at different coordinates stay separate stops.
 - **Share a stop.** The stop sheet puts Share and the external-map icon on the

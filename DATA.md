@@ -615,7 +615,8 @@ Those files have no ETA. Two operators publish the next departure by route:
 `server/data/ferry-departures.json` says which of those routes leave which
 pier. Opening a mapped pier fetches each of its routes. The sheet shows the
 operator, the destination, and the minutes until that time. A wait of 60
-minutes or more is shown as hours and leftover minutes. A pier with no mapped
+minutes or more is shown as hours and leftover minutes. A wait under one
+minute says Due (即將到站). A pier with no mapped
 route still draws, and the sheet says there is no departure right now.
 Fortune Ferry, the Star Ferry, and Discovery Bay are not in that file: their
 ETA hosts were not returning a usable route list when this was wired.
