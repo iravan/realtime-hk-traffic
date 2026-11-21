@@ -22,12 +22,19 @@ const ink = "#241f1a";
 
 const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
 let ferryBoatImage: HTMLImageElement | undefined;
+let citybusImage: HTMLImageElement | undefined;
 
 // Star Ferry piers keep the green mark. Every other pier uses the plain boat.
 const starFerryIds = new Set(["ferry:101119", "ferry:101339", "ferry:101118"]);
 
 export function isStarFerry(id: string): boolean {
   return starFerryIds.has(id);
+}
+
+// Citybus stops use the yellow double-decker. KMB and the other franchises
+// keep the red bus.
+export function isCitybus(id: string): boolean {
+  return id.startsWith("bus:ctb:");
 }
 
 export type TaxiKind = "urban" | "nt" | "lantau" | "cross" | "urban-nt" | "urban-cross";
@@ -46,7 +53,8 @@ export const taxiKinds = Object.keys(taxiKindColor) as TaxiKind[];
 const taxiBitmaps: Partial<Record<TaxiKind, HTMLCanvasElement>> = {};
 
 // The category tabs and the map signs share this artwork, except the ferry
-// tab, which keeps the Star Ferry mark while other piers use the plain boat.
+// tab, which keeps the Star Ferry mark while other piers use the plain boat,
+// and Citybus stops, which use the yellow double-decker.
 // Loaded once before the first pin is drawn.
 let vehicleLoad: Promise<void> | null = null;
 
@@ -78,6 +86,15 @@ async function loadVehicleImagesOnce(basePath: string): Promise<void> {
     ferryBoatImage = boat;
   } catch {
     // The canvas ferry stands in for a missing boat file.
+  }
+  try {
+    const citybus = new Image();
+    citybus.decoding = "async";
+    citybus.src = `${basePath}/icons/citybus.svg`;
+    await citybus.decode();
+    citybusImage = citybus;
+  } catch {
+    // The canvas bus stands in for a missing Citybus file.
   }
 }
 
@@ -269,6 +286,20 @@ export function ferryBoatIconImage(): ImageData {
 
 export function ferryBoatIconUrl(): string {
   return drawStopIcon("ferry", ferryBoatImage, ferryBoatFill).toDataURL();
+}
+
+const citybusFill = "#FACC15";
+
+export function citybusIconImage(): ImageData {
+  return imageData(drawStopIcon("bus", citybusImage, citybusFill));
+}
+
+export function citybusIconUrl(): string {
+  return drawStopIcon("bus", citybusImage, citybusFill).toDataURL();
+}
+
+export function citybusSignHighlight(): ImageData {
+  return stopIconHighlight("bus", citybusImage, citybusFill);
 }
 
 export function ferryBoatSignHighlight(): ImageData {

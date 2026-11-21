@@ -399,7 +399,7 @@ Each item in `data` is read as:
 | Field | Use |
 | --- | --- |
 | `route` | Route number |
-| `dest_tc` (or `dest`) | Destination |
+| `dest_tc` and `dest_en` | Destination in both languages. The sheet shows the one for the current language |
 | `eta` | ISO timestamp used to calculate minutes remaining |
 
 The rows also carry `co`, `dir`, `service_type`, `seq`, `dest_sc`, `dest_en`,
@@ -450,11 +450,28 @@ route list, `data[].stop` from route-stop, and `data.stop`, `data.name_tc`,
 Live arrivals:
 
 ```text
-https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}
+https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}?lang=en
+https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}?lang=zh-Hant
 ```
 
-The arrival fields are the same ones the KMB feed uses: `route`, `dest_tc` (or
-`dest`), and `eta`.
+`lang` is required to choose the language. The batch response has one `dest`
+field, not `dest_tc` and `dest_en`. `en` and `zh-Hant` are the accepted codes;
+a request with no `lang` is English, and `zh` or `tc` is rejected. The two
+responses list the same trips, so each English destination is paired with the
+Chinese destination of the same route, direction, stop sequence and ETA. The
+sheet then shows the language in use. The per-route v2 ETA
+(`/v2/transport/citybus/eta/CTB/{stop_id}/{route}`) does return `dest_tc` and
+`dest_en` together, but only for one route.
+
+If the Chinese batch fails, the
+[route list](https://rt.data.gov.hk/v2/transport/citybus/route/CTB) supplies
+both ends. An inbound trip (`dir` `I`) is going to the route origin, and an
+outbound trip to the route destination. The English `dest` is often only the
+first place in that name, so `Hoi Lai Estate` is the origin `海麗邨／南昌站`.
+Brackets are ignored, so `Central (Pier 3)` is `中環3號碼頭`. A short working
+can name a stop instead, and the English can be longer than the stop (`The
+Peninsula Hong Kong` for `半島酒店 The Peninsula`). An English name that
+matches neither a route end nor a Citybus stop stays as the feed published it.
 
 ### Bus route information archive
 

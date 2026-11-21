@@ -25,6 +25,9 @@ import {
   stopIconImage,
   ferryBoatIconImage,
   ferryBoatSignHighlight,
+  citybusIconImage,
+  citybusSignHighlight,
+  isCitybus,
   isStarFerry,
   taxiDotHighlight,
   taxiSignHighlight,
@@ -285,6 +288,10 @@ export default function Page() {
       }
       map.addImage("ferry-boat", ferryBoatIconImage(), { pixelRatio: stopIconPixelRatio });
       map.addImage("ferry-boat-dot", stopDotImage("ferry", false, "#0c6e8a"), {
+        pixelRatio: stopIconPixelRatio,
+      });
+      map.addImage("citybus", citybusIconImage(), { pixelRatio: stopIconPixelRatio });
+      map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
         pixelRatio: stopIconPixelRatio,
       });
       for (const kind of taxiKinds) {
@@ -967,7 +974,9 @@ export default function Page() {
               ? `taxi-${stop.taxi ?? "urban"}`
               : stop.mode === "ferry" && !isStarFerry(stop.id)
                 ? "ferry-boat"
-                : stop.mode,
+                : stop.mode === "bus" && isCitybus(stop.id)
+                  ? "citybus"
+                  : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
@@ -1408,20 +1417,25 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 // first use, then reused from the style.
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
+  const citybus = stop.mode === "bus" && isCitybus(stop.id);
   if (dots) {
     const image = boat
       ? "ferry-boat-dot-sel"
-      : stop.mode === "taxi"
-        ? `taxi-${stop.taxi ?? "urban"}-dot-sel`
-        : `${stop.mode}-dot-sel`;
+      : citybus
+        ? "citybus-dot-sel"
+        : stop.mode === "taxi"
+          ? `taxi-${stop.taxi ?? "urban"}-dot-sel`
+          : `${stop.mode}-dot-sel`;
     if (!map.hasImage(image)) {
       map.addImage(
         image,
         boat
           ? stopDotHighlight("ferry", "#0c6e8a")
-          : stop.mode === "taxi"
-            ? taxiDotHighlight(stop.taxi ?? "urban")
-            : stopDotHighlight(stop.mode),
+          : citybus
+            ? stopDotHighlight("bus", "#FACC15")
+            : stop.mode === "taxi"
+              ? taxiDotHighlight(stop.taxi ?? "urban")
+              : stopDotHighlight(stop.mode),
         { pixelRatio: stopIconPixelRatio },
       );
     }
@@ -1429,17 +1443,21 @@ function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   }
   const image = boat
     ? "ferry-boat-sel"
-    : stop.mode === "taxi"
-      ? `taxi-${stop.taxi ?? "urban"}-sel`
-      : `${stop.mode}-sel`;
+    : citybus
+      ? "citybus-sel"
+      : stop.mode === "taxi"
+        ? `taxi-${stop.taxi ?? "urban"}-sel`
+        : `${stop.mode}-sel`;
   if (!map.hasImage(image)) {
     map.addImage(
       image,
       boat
         ? ferryBoatSignHighlight()
-        : stop.mode === "taxi"
-          ? taxiSignHighlight(stop.taxi ?? "urban")
-          : stopIconHighlight(stop.mode),
+        : citybus
+          ? citybusSignHighlight()
+          : stop.mode === "taxi"
+            ? taxiSignHighlight(stop.taxi ?? "urban")
+            : stopIconHighlight(stop.mode),
       { pixelRatio: stopIconPixelRatio },
     );
   }

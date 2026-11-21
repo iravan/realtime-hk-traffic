@@ -85,6 +85,7 @@ struct App {
     // still resolves after stops are merged.
     by_member: RwLock<HashMap<String, String>>,
     gmb_routes: RwLock<HashMap<i64, String>>,
+    city_routes: RwLock<HashMap<String, catalog::RouteEnds>>,
     redis: ConnectionManager,
     http: reqwest::Client,
     watch: std::sync::Mutex<HashMap<String, Vec<tokio::sync::mpsc::Sender<String>>>>,
@@ -148,6 +149,7 @@ async fn main() {
         by_location: RwLock::new(HashMap::new()),
         by_member: RwLock::new(HashMap::new()),
         gmb_routes: RwLock::new(catalog::bundled_routes()),
+        city_routes: RwLock::new(HashMap::new()),
         redis,
         http,
         watch: std::sync::Mutex::new(HashMap::new()),
@@ -441,7 +443,7 @@ async fn events(
 async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
     match stop.mode.as_str() {
         "mtr" => mtr_arrivals(&app.http, stop).await,
-        "bus" => bus_arrivals(&app.http, stop).await,
+        "bus" => bus_arrivals(app, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
         "ferry" => ferry_arrivals(&app.http, stop).await,
         _ => None,
@@ -526,6 +528,33 @@ async fn read_snapshot(app: &App, id: &str) -> Option<String> {
         .flatten()
 }
 
+async fn city_places(app: &App) -> Vec<(String, String)> {
+    let stops = app.stops.read().await;
+    stops
+        .iter()
+        .filter(|stop| stop.id.starts_with("bus:ctb:"))
+        .filter_map(|stop| catalog::bilingual_name(&stop.name))
+        .collect()
+}
+
+async fn city_routes(app: &App) -> HashMap<String, catalog::RouteEnds> {
+    {
+        let cached = app.city_routes.read().await;
+        if !cached.is_empty() {
+            return cached.clone();
+        }
+    }
+    let fetched = catalog::citybus_route_ends(&app.http).await;
+    if fetched.is_empty() {
+        return fetched;
+    }
+    let mut cached = app.city_routes.write().await;
+    if cached.is_empty() {
+        *cached = fetched.clone();
+    }
+    cached.clone()
+}
+
 fn publish(app: &App, id: &str, body: &str) {
     let mut watch = app.watch.lock().expect("watch lock");
     let Some(senders) = watch.get_mut(id) else {
@@ -534,28 +563,91 @@ fn publish(app: &App, id: &str, body: &str) {
     senders.retain(|sender| sender.try_send(body.to_string()).is_ok());
 }
 
-async fn bus_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
-    let raw = stop.id.split(':').nth(2)?;
-    let url = if stop.id.starts_with("bus:ctb:") {
-        format!("https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{raw}")
-    } else {
-        format!("https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{raw}")
-    };
-    let response = http.get(url).send().await.ok()?;
+async fn eta_rows(app: &App, url: &str) -> Option<Vec<Value>> {
+    let response = app.http.get(url).send().await.ok()?;
     let parsed = response.json::<Value>().await.ok()?;
-    let rows_in = parsed.get("data")?.as_array()?;
+    Some(parsed.get("data")?.as_array()?.clone())
+}
+
+// The batch feed returns one language in `dest`. The same trip is the same
+// route, direction, stop sequence, ETA sequence and ETA in both responses.
+fn citybus_row_key(item: &Value) -> String {
+    let text = |name| item.get(name).and_then(|value| value.as_str()).unwrap_or("");
+    let number = |name| item.get(name).and_then(|value| value.as_i64()).unwrap_or(0);
+    format!(
+        "{}|{}|{}|{}|{}",
+        text("route"),
+        text("dir"),
+        number("seq"),
+        number("eta_seq"),
+        text("eta")
+    )
+}
+
+async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
+    let raw = stop.id.split(':').nth(2)?;
+    let citybus = stop.id.starts_with("bus:ctb:");
+    let routes = if citybus {
+        city_routes(app).await
+    } else {
+        HashMap::new()
+    };
+    let places = if citybus {
+        city_places(app).await
+    } else {
+        Vec::new()
+    };
+    let place_refs: Vec<(&str, &str)> = places
+        .iter()
+        .map(|(chinese, english)| (chinese.as_str(), english.as_str()))
+        .collect();
+    // Citybus `lang` selects the language of `dest`. One call cannot return
+    // both, so the Chinese and English batches are requested together.
+    let (rows_in, chinese_dest) = if citybus {
+        let english_url =
+            format!("https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{raw}?lang=en");
+        let chinese_url =
+            format!("https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{raw}?lang=zh-Hant");
+        let (english, chinese) = tokio::join!(
+            eta_rows(app, &english_url),
+            eta_rows(app, &chinese_url)
+        );
+        let mut chinese_dest = HashMap::new();
+        if let Some(chinese) = chinese {
+            for item in chinese {
+                if let Some(dest) = item.get("dest").and_then(|value| value.as_str()) {
+                    chinese_dest.insert(citybus_row_key(&item), dest.to_string());
+                }
+            }
+        }
+        (english?, chinese_dest)
+    } else {
+        let url = format!("https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{raw}");
+        (eta_rows(app, &url).await?, HashMap::new())
+    };
     let mut rows = Vec::new();
-    for item in rows_in {
+    for item in &rows_in {
         let route = item
             .get("route")
             .and_then(|value| value.as_str())
             .unwrap_or("");
-        let destination = item
-            .get("dest_tc")
+        let paired = chinese_dest.get(&citybus_row_key(item)).map(String::as_str);
+        let tc = paired.unwrap_or_else(|| {
+            item.get("dest_tc")
+                .and_then(|value| value.as_str())
+                .unwrap_or("")
+        });
+        let en = item
+            .get("dest_en")
             .or_else(|| item.get("dest"))
             .and_then(|value| value.as_str())
-            .unwrap_or("")
-            .to_string();
+            .unwrap_or("");
+        let dir = item
+            .get("dir")
+            .and_then(|value| value.as_str())
+            .unwrap_or("");
+        let destination =
+            catalog::arrival_destination(routes.get(route), &place_refs, dir, tc, en);
         let eta = item
             .get("eta")
             .and_then(|value| value.as_str())

@@ -362,6 +362,207 @@ fn name(tc: &str, en: &str) -> String {
     }
 }
 
+/// One Citybus route's two ends. The batch ETA names the destination in
+/// English only, so the route list supplies the Chinese.
+#[derive(Clone)]
+pub struct RouteEnds {
+    origin_tc: String,
+    origin_en: String,
+    dest_tc: String,
+    dest_en: String,
+}
+
+pub async fn citybus_route_ends(http: &reqwest::Client) -> HashMap<String, RouteEnds> {
+    let Ok(body) = http
+        .get("https://rt.data.gov.hk/v2/transport/citybus/route/CTB")
+        .send()
+        .await
+    else {
+        eprintln!("citybus route names failed");
+        return HashMap::new();
+    };
+    let Ok(parsed) = body.json::<Data<Vec<CityRouteName>>>().await else {
+        eprintln!("citybus route names were not json");
+        return HashMap::new();
+    };
+    parsed
+        .data
+        .into_iter()
+        .map(|route| {
+            (
+                route.route,
+                RouteEnds {
+                    origin_tc: route.orig_tc,
+                    origin_en: route.orig_en,
+                    dest_tc: route.dest_tc,
+                    dest_en: route.dest_en,
+                },
+            )
+        })
+        .collect()
+}
+
+/// KMB publishes both languages on the arrival. Citybus publishes English
+/// only, and that English is often a shorter form of the route's origin or
+/// destination. `dir` `I` is towards the origin and `O` towards the destination.
+/// `places` are Citybus stop names `(chinese, english)`. A short working can
+/// name a stop instead of the route's official end, sometimes with extra words
+/// ("The Peninsula Hong Kong" for the stop "The Peninsula").
+pub fn arrival_destination(
+    ends: Option<&RouteEnds>,
+    places: &[(&str, &str)],
+    dir: &str,
+    tc: &str,
+    en: &str,
+) -> String {
+    let tc = tc.trim();
+    let en = en.trim();
+    if !tc.is_empty() && !en.is_empty() {
+        return name(tc, en);
+    }
+    if !tc.is_empty() {
+        return tc.to_string();
+    }
+    if let Some(ends) = ends {
+        if let Some(matched) = ends.matching(dir, en) {
+            return matched;
+        }
+    }
+    if let Some(chinese) = matching_place(places, en) {
+        return name(chinese, en);
+    }
+    en.to_string()
+}
+
+/// Catalogue names are one string, "半島酒店 The Peninsula". The English half
+/// starts at the first Latin word after the last Chinese character.
+pub fn bilingual_name(name: &str) -> Option<(String, String)> {
+    let name = name.trim();
+    let mut after_cjk = None;
+    for (index, ch) in name.char_indices() {
+        if ('\u{3400}'..='\u{9fff}').contains(&ch) {
+            after_cjk = Some(index + ch.len_utf8());
+        }
+    }
+    let mut index = after_cjk?;
+    while index < name.len() {
+        let ch = name[index..].chars().next()?;
+        if ch.is_whitespace() || ch.is_ascii_alphabetic() {
+            break;
+        }
+        index += ch.len_utf8();
+    }
+    let chinese = name[..index].trim();
+    let english = name[index..].trim();
+    if chinese.is_empty() || !english.starts_with(|ch: char| ch.is_ascii_alphabetic()) {
+        return None;
+    }
+    Some((chinese.to_string(), english.to_string()))
+}
+
+fn matching_place<'a>(places: &'a [(&str, &str)], english: &str) -> Option<&'a str> {
+    let mut best_len = 0usize;
+    let mut best: Option<&str> = None;
+    let mut conflict = false;
+    for (chinese, place) in places {
+        if !same_place(english, place) && !same_place(place, english) {
+            continue;
+        }
+        if place.len() > best_len {
+            best_len = place.len();
+            best = Some(*chinese);
+            conflict = false;
+        } else if place.len() == best_len && best != Some(*chinese) {
+            conflict = true;
+        }
+    }
+    if conflict { None } else { best }
+}
+
+impl RouteEnds {
+    fn matching(&self, dir: &str, english: &str) -> Option<String> {
+        let inbound = dir.eq_ignore_ascii_case("I") || dir.eq_ignore_ascii_case("inbound");
+        let (first, second) = if inbound {
+            (self.origin(), self.destination())
+        } else {
+            (self.destination(), self.origin())
+        };
+        for (tc, en) in [first, second] {
+            if same_place(en, english) {
+                return Some(name(tc, en));
+            }
+        }
+        // "Central (Ferry Piers)" is the end "Central" with a bracketed
+        // qualifier. Keep the feed's English and the route's Chinese.
+        for (tc, en) in [first, second] {
+            if parenthetical(english, en) {
+                return Some(name(tc, english));
+            }
+        }
+        None
+    }
+
+    fn origin(&self) -> (&str, &str) {
+        (&self.origin_tc, &self.origin_en)
+    }
+
+    fn destination(&self) -> (&str, &str) {
+        (&self.dest_tc, &self.dest_en)
+    }
+}
+
+fn same_place(full: &str, short: &str) -> bool {
+    let full = plain_place(full);
+    let short = plain_place(short);
+    if short.is_empty() || full.is_empty() {
+        return false;
+    }
+    full == short
+        || full.starts_with(&(short.clone() + " "))
+        || full.starts_with(&(short.clone() + "/"))
+        || full.starts_with(&(short + " /"))
+}
+
+// The feed and the route list write the same place with different brackets:
+// "Central (Pier 3)" and "Central Pier 3".
+fn parenthetical(eta: &str, route_en: &str) -> bool {
+    let bare = strip_paren_groups(eta);
+    let bare = plain_place(&bare);
+    let route = plain_place(route_en);
+    !bare.is_empty() && bare == route && plain_place(eta) != route
+}
+
+fn strip_paren_groups(value: &str) -> String {
+    let mut out = String::with_capacity(value.len());
+    let mut depth = 0;
+    for ch in value.chars() {
+        match ch {
+            '(' | '（' => depth += 1,
+            ')' | '）' if depth > 0 => depth -= 1,
+            _ if depth == 0 => out.push(ch),
+            _ => {}
+        }
+    }
+    out
+}
+
+fn plain_place(value: &str) -> String {
+    let mut out = String::with_capacity(value.len());
+    let mut spaced = false;
+    for ch in value.chars() {
+        if matches!(ch, '(' | ')' | '（' | '）') || ch.is_whitespace() {
+            spaced = !out.is_empty();
+            continue;
+        }
+        if spaced {
+            out.push(' ');
+            spaced = false;
+        }
+        out.extend(ch.to_lowercase());
+    }
+    out
+}
+
 #[derive(Deserialize)]
 struct Data<T> {
     data: T,
@@ -379,6 +580,19 @@ struct KmbStop {
 #[derive(Deserialize)]
 struct CityRoute {
     route: String,
+}
+
+#[derive(Deserialize)]
+struct CityRouteName {
+    route: String,
+    #[serde(default)]
+    orig_tc: String,
+    #[serde(default)]
+    orig_en: String,
+    #[serde(default)]
+    dest_tc: String,
+    #[serde(default)]
+    dest_en: String,
 }
 
 #[derive(Deserialize)]
@@ -450,5 +664,103 @@ mod tests {
     #[test]
     fn mtr_label_has_both_names() {
         assert_eq!(super::mtr_label("CEN"), "中環 Central");
+    }
+
+    fn ends() -> super::RouteEnds {
+        super::RouteEnds {
+            origin_tc: "海麗邨／南昌站".to_string(),
+            origin_en: "Hoi Lai Estate / Nam Cheong Station".to_string(),
+            dest_tc: "旺角".to_string(),
+            dest_en: "Mong Kok".to_string(),
+        }
+    }
+
+    #[test]
+    fn kmb_arrival_keeps_both_languages() {
+        let name = super::arrival_destination(None, &[], "O", "小西灣(藍灣半島)", "SIU SAI WAN (ISLAND RESORT)");
+        assert_eq!(name, "小西灣(藍灣半島) SIU SAI WAN (ISLAND RESORT)");
+    }
+
+    #[test]
+    fn citybus_inbound_uses_the_origin_when_the_english_is_shorter() {
+        let name = super::arrival_destination(Some(&ends()), &[], "I", "", "Hoi Lai Estate");
+        assert_eq!(name, "海麗邨／南昌站 Hoi Lai Estate / Nam Cheong Station");
+    }
+
+    #[test]
+    fn citybus_outbound_uses_the_destination() {
+        let name = super::arrival_destination(Some(&ends()), &[], "O", "", "Mong Kok");
+        assert_eq!(name, "旺角 Mong Kok");
+    }
+
+    #[test]
+    fn unmatched_english_destination_stays_as_published() {
+        let name = super::arrival_destination(Some(&ends()), &[], "I", "", "Somewhere Else");
+        assert_eq!(name, "Somewhere Else");
+    }
+
+    #[test]
+    fn citybus_parenthetical_uses_the_route_chinese() {
+        let ends = super::RouteEnds {
+            origin_tc: "中環".to_string(),
+            origin_en: "Central".to_string(),
+            dest_tc: "山頂".to_string(),
+            dest_en: "The Peak".to_string(),
+        };
+        let name = super::arrival_destination(Some(&ends), &[], "I", "", "Central (Ferry Piers)");
+        assert_eq!(name, "中環 Central (Ferry Piers)");
+    }
+
+    #[test]
+    fn citybus_parentheses_match_the_route_end() {
+        let ends = super::RouteEnds {
+            origin_tc: "中環3號碼頭".to_string(),
+            origin_en: "Central Pier 3".to_string(),
+            dest_tc: "羅便臣道／柏道".to_string(),
+            dest_en: "Robinson Road / Park Road".to_string(),
+        };
+        let name = super::arrival_destination(Some(&ends), &[], "I", "", "Central (Pier 3)");
+        assert_eq!(name, "中環3號碼頭 Central Pier 3");
+    }
+
+    #[test]
+    fn citybus_stop_name_translates_a_longer_destination() {
+        let ends = super::RouteEnds {
+            origin_tc: "中環碼頭-天星小輪".to_string(),
+            origin_en: "Central Ferry - Star Ferry".to_string(),
+            dest_tc: "尖沙咀 ．落日飛車".to_string(),
+            dest_en: "Tsim Sha Tsui".to_string(),
+        };
+        let places = [("半島酒店", "The Peninsula")];
+        let name = super::arrival_destination(
+            Some(&ends),
+            &places,
+            "O",
+            "",
+            "The Peninsula Hong Kong",
+        );
+        assert_eq!(name, "半島酒店 The Peninsula Hong Kong");
+    }
+
+    #[test]
+    fn conflicting_stop_names_stay_as_published() {
+        let places = [("半島酒店", "The Peninsula"), ("其他", "The Peninsula")];
+        let name = super::arrival_destination(None, &places, "O", "", "The Peninsula Hong Kong");
+        assert_eq!(name, "The Peninsula Hong Kong");
+    }
+
+    #[test]
+    fn bilingual_stop_name_keeps_the_bracket_with_the_chinese() {
+        assert_eq!(
+            super::bilingual_name("半島酒店 The Peninsula"),
+            Some(("半島酒店".to_string(), "The Peninsula".to_string()))
+        );
+        assert_eq!(
+            super::bilingual_name("中環 (港澳碼頭) Central (Macao Ferry)"),
+            Some((
+                "中環 (港澳碼頭)".to_string(),
+                "Central (Macao Ferry)".to_string()
+            ))
+        );
     }
 }

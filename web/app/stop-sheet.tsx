@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
-import { loadTaxiKindImages, loadVehicleImages, ferryBoatIconUrl, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import type { TaxiLabel } from "./taxi-stand";
@@ -95,7 +95,15 @@ export function StopSheet({
     // A deep link opens the sheet before the SVG artwork has loaded. Drawing
     // then keeps the plain fallback instead of the full sign.
     void Promise.all([loadVehicleImages(basePath), loadTaxiKindImages(basePath)]).then(() => {
-      if (!cancelled) setSign(mode === "ferry" && !isStarFerry(id) ? ferryBoatIconUrl() : stopIconUrl(mode));
+      if (!cancelled) {
+        setSign(
+          mode === "ferry" && !isStarFerry(id)
+            ? ferryBoatIconUrl()
+            : mode === "bus" && isCitybus(id)
+              ? citybusIconUrl()
+              : stopIconUrl(mode),
+        );
+      }
     });
     return () => {
       cancelled = true;
@@ -297,7 +305,7 @@ export function StopSheet({
                         <StationChip name={row.destination} locale={locale} />
                       ) : (
                         <span>
-                          {mode === "ferry"
+                          {mode === "ferry" || mode === "bus"
                             ? localizeBilingualName(row.destination, locale)
                             : row.destination}
                         </span>
