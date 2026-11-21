@@ -932,7 +932,10 @@ export default function Page() {
     if (cached) return Promise.resolve(cached);
     const pending = cataloguePromisesRef.current.get(mode);
     if (pending) return pending;
-    const promise = loadCachedJson<{ stops: Stop[] }>(`stops-${mode}`, async () => {
+    // Minibus names gained their English half after the first cache. A new key
+    // makes that copy load instead of the Chinese-only one saved for 24 hours.
+    const catalogueKey = mode === "minibus" ? "stops-minibus-bilingual" : `stops-${mode}`;
+    const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
       if (!response.ok) throw new Error(`stops-${mode}`);
       return response.json() as Promise<{ stops: Stop[] }>;

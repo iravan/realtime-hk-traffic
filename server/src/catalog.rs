@@ -189,11 +189,15 @@ pub async fn minibus_stops(http: &reqwest::Client) -> (Vec<Stop>, HashMap<i64, S
                     .iter()
                     .filter_map(|stop| {
                         let id = stop.get("stop_id")?.as_i64()?;
-                        let name = stop
+                        let tc = stop
                             .get("name_tc")
                             .and_then(|value| value.as_str())
                             .unwrap_or("");
-                        Some((id, name.to_string()))
+                        let en = stop
+                            .get("name_en")
+                            .and_then(|value| value.as_str())
+                            .unwrap_or("");
+                        Some((id, name(tc, en)))
                     })
                     .collect::<Vec<_>>()
             }
