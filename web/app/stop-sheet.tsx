@@ -326,6 +326,7 @@ export function StopSheet({
                           · {t.sheet.origin} {t.sheet.notDeparted}
                         </span>
                       ) : null}
+                      {mode === "ferry" && row.time ? <span> · {t.clock(row.time)}</span> : null}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                   ))}
