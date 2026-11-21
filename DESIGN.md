@@ -31,7 +31,7 @@ The server fetches an official feed when a stop is opened, and keeps that snapsh
 
 - **MTR.** Next train on each line at the station, and the line service status when the feed includes it. Source: the MTR next-train feed on data.gov.hk.
 - **Bus.** Estimated minutes until the next buses at that stop, the route number, the destination, and the time the estimate was fetched. Sources: the KMB and LWB feeds, and the Citybus and New Lantao Bus feeds, published for the Transport Department. The destination follows the language of the page. Citybus sends one language at a time, so the server requests English and Traditional Chinese and keeps both.
-- **Green minibus.** The same arrival shape, only for routes an official ETA feed covers. A stop that has a timetable but no ETA shows the timetable and says the arrival is not live. Red minibuses stay off the map.
+- **Green minibus.** The same arrival shape, only for routes an official ETA feed covers. The destination is the route direction's end, in the current language. A vehicle that has not left its first stop is marked 始站 未開出 (Origin, not yet departed) beside the wait. A stop that has a timetable but no ETA shows the timetable and says the arrival is not live. Red minibuses stay off the map.
 - **Taxi.** The stand's name and location from the taxi-stand dataset. Hong Kong does not publish a feed of every taxi's position, so the map does not draw moving taxis.
 
 Each arrival stores when it was fetched. The page shows that age. A snapshot past the feed's useful life is marked stale and stays visible until a newer one replaces it.

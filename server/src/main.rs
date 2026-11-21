@@ -75,6 +75,9 @@ struct Row {
     minutes: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     time: Option<String>,
+    // The minibus has not left its first stop. The sheet prints 始站 beside 未開出.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    not_departed: bool,
 }
 
 struct App {
@@ -85,6 +88,8 @@ struct App {
     // still resolves after stops are merged.
     by_member: RwLock<HashMap<String, String>>,
     gmb_routes: RwLock<HashMap<i64, String>>,
+    // route id -> route_seq -> bilingual destination. Filled when a stop is opened.
+    gmb_directions: RwLock<HashMap<i64, HashMap<i64, String>>>,
     city_routes: RwLock<HashMap<String, catalog::RouteEnds>>,
     redis: ConnectionManager,
     http: reqwest::Client,
@@ -149,6 +154,7 @@ async fn main() {
         by_location: RwLock::new(HashMap::new()),
         by_member: RwLock::new(HashMap::new()),
         gmb_routes: RwLock::new(catalog::bundled_routes()),
+        gmb_directions: RwLock::new(HashMap::new()),
         city_routes: RwLock::new(HashMap::new()),
         redis,
         http,
@@ -663,6 +669,7 @@ async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
             destination,
             minutes: Some(minutes),
             time: None,
+            not_departed: false,
         });
     }
     rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
@@ -682,28 +689,38 @@ async fn minibus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
     let response = app.http.get(url).send().await.ok()?;
     let parsed = response.json::<Value>().await.ok()?;
     let groups = parsed.get("data")?.as_array()?;
+    let route_ids: Vec<i64> = groups
+        .iter()
+        .filter_map(|group| group.get("route_id").and_then(|value| value.as_i64()))
+        .collect();
+    let destinations = gmb_destinations(app, &route_ids).await;
     let names = app.gmb_routes.read().await;
     let mut rows = Vec::new();
     for group in groups {
         let route_id = group.get("route_id").and_then(|value| value.as_i64());
+        let route_seq = group.get("route_seq").and_then(|value| value.as_i64());
         let route = route_id
             .and_then(|id| names.get(&id).cloned())
+            .unwrap_or_default();
+        let destination = route_id
+            .zip(route_seq)
+            .and_then(|key| destinations.get(&key).cloned())
             .unwrap_or_default();
         let Some(etas) = group.get("eta").and_then(|value| value.as_array()) else {
             continue;
         };
         for eta in etas {
             let minutes = eta.get("diff").and_then(|value| value.as_i64());
-            let destination = eta
+            let remark = eta
                 .get("remarks_tc")
                 .and_then(|value| value.as_str())
-                .unwrap_or("")
-                .to_string();
+                .unwrap_or("");
             rows.push(Row {
                 route: route.clone(),
-                destination,
+                destination: destination.clone(),
                 minutes,
                 time: None,
+                not_departed: gmb_not_departed(remark),
             });
         }
     }
@@ -716,6 +733,98 @@ async fn minibus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
         note: None,
         rows,
     })
+}
+
+fn gmb_not_departed(remark: &str) -> bool {
+    remark == "未開出" || remark == "未开出"
+}
+
+fn bilingual(tc: &str, en: &str) -> String {
+    let tc = tc.trim();
+    let en = en.trim();
+    if tc.is_empty() {
+        en.to_string()
+    } else if en.is_empty() {
+        tc.to_string()
+    } else {
+        format!("{tc} {en}")
+    }
+}
+
+fn gmb_direction_names(parsed: &Value) -> HashMap<i64, String> {
+    let mut names = HashMap::new();
+    let Some(variants) = parsed.get("data").and_then(|value| value.as_array()) else {
+        return names;
+    };
+    for variant in variants {
+        let Some(directions) = variant.get("directions").and_then(|value| value.as_array()) else {
+            continue;
+        };
+        for direction in directions {
+            let Some(seq) = direction.get("route_seq").and_then(|value| value.as_i64()) else {
+                continue;
+            };
+            let tc = direction
+                .get("dest_tc")
+                .and_then(|value| value.as_str())
+                .unwrap_or("");
+            let en = direction
+                .get("dest_en")
+                .and_then(|value| value.as_str())
+                .unwrap_or("");
+            let destination = bilingual(tc, en);
+            if !destination.is_empty() {
+                names.insert(seq, destination);
+            }
+        }
+    }
+    names
+}
+
+async fn gmb_route_directions(
+    http: &reqwest::Client,
+    route_id: i64,
+) -> Option<HashMap<i64, String>> {
+    let url = format!("https://data.etagmb.gov.hk/route/{route_id}");
+    let response = http.get(url).send().await.ok()?;
+    let parsed = response.json::<Value>().await.ok()?;
+    Some(gmb_direction_names(&parsed))
+}
+
+async fn gmb_destinations(app: &App, route_ids: &[i64]) -> HashMap<(i64, i64), String> {
+    let missing: Vec<i64> = {
+        let cached = app.gmb_directions.read().await;
+        route_ids
+            .iter()
+            .copied()
+            .filter(|id| !cached.contains_key(id))
+            .collect()
+    };
+    if !missing.is_empty() {
+        let fetched = join_all(
+            missing
+                .iter()
+                .map(|id| gmb_route_directions(&app.http, *id)),
+        )
+        .await;
+        let mut cached = app.gmb_directions.write().await;
+        for (id, directions) in missing.into_iter().zip(fetched) {
+            if let Some(directions) = directions {
+                cached.entry(id).or_insert(directions);
+            }
+        }
+    }
+    let cached = app.gmb_directions.read().await;
+    let mut destinations = HashMap::new();
+    for id in route_ids {
+        let Some(directions) = cached.get(id) else {
+            continue;
+        };
+        for (seq, destination) in directions {
+            destinations.insert((*id, *seq), destination.clone());
+        }
+    }
+    destinations
 }
 
 async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
@@ -764,6 +873,7 @@ async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
                         destination: mtr_dest(dest),
                         minutes,
                         time,
+                        not_departed: false,
                     });
                 }
             }
@@ -867,6 +977,7 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
             destination: sailing.destination.clone(),
             minutes: Some(minutes),
             time: None,
+            not_departed: false,
         });
     }
     Ok(rows)
@@ -1014,6 +1125,26 @@ mod tests {
         });
         let when = super::sun_shown(&item).expect("arrival");
         assert_eq!(when.to_rfc3339(), "2026-11-21T04:48:00+08:00");
+    }
+
+    #[test]
+    fn minibus_destination_comes_from_the_route_and_not_the_remark() {
+        let parsed = serde_json::json!({
+            "data": [{
+                "route_id": 2001524,
+                "directions": [
+                    { "route_seq": 1, "dest_tc": "崇仁街", "dest_en": "Shung Yan Street" },
+                    { "route_seq": 2, "dest_tc": "麗晶花園", "dest_en": "Richland Gardens" }
+                ]
+            }]
+        });
+        let names = super::gmb_direction_names(&parsed);
+        assert_eq!(
+            names.get(&1).map(String::as_str),
+            Some("崇仁街 Shung Yan Street")
+        );
+        assert!(super::gmb_not_departed("未開出"));
+        assert!(!super::gmb_not_departed(""));
     }
 
     #[test]

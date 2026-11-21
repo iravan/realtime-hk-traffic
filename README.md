@@ -299,13 +299,15 @@ GET /stops?south&west&north&east&modes
     { "stops": [ { "id", "mode", "name", "latitude", "longitude" } ] }
 
 GET /stops/{id}/arrivals
-    { "fetched_at", "live", "status"?, "note"?, "rows": [ { "route", "destination", "minutes" | "time" } ] }
+    { "fetched_at", "live", "status"?, "note"?, "rows": [ { "route", "destination", "minutes" | "time", "not_departed"? } ] }
 
 GET /stops/{id}/events      Server-sent events; each new snapshot is an `arrivals` event
 ```
 
 `modes` is a comma-separated subset of `mtr,bus,minibus,ferry,taxi`. `minutes` is
-omitted when a feed gives a clock time instead; that row then has `time`. A taxi
+omitted when a feed gives a clock time instead; that row then has `time`. A
+minibus row sets `not_departed` when the vehicle is still at its first stop, and
+the sheet shows 始站 beside 未開出. A taxi
 stand returns a name-only snapshot and has no arrivals key. An unknown id is a
 404; an expired snapshot is reported as gone, not as an empty timetable.
 

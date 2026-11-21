@@ -57,6 +57,8 @@ export type Messages = {
     delayed: string;
     timetable: string;
     noArrivals: string;
+    origin: string;
+    notDeparted: string;
     minutes: (minutes: number) => string;
     updated: (age: string) => string;
     gone: string;
@@ -143,6 +145,8 @@ const en: Messages = {
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
     noArrivals: "No arrivals right now.",
+    origin: "Origin",
+    notDeparted: "Not yet departed",
     minutes: (minutes) => duration(minutes, "h", "min", "Due"),
     updated: (age) => `Updated ${age}`,
     gone: "The snapshot is gone.",
@@ -196,6 +200,8 @@ const zhHant: Messages = {
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
     noArrivals: "暫無到站班次。",
+    origin: "始站",
+    notDeparted: "未開出",
     minutes: (minutes) => duration(minutes, "小時", "分鐘", "即將到站"),
     updated: (age) => `更新於 ${age}`,
     gone: "資料已失效。",

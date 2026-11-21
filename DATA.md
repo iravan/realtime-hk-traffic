@@ -548,7 +548,13 @@ resources:
 | `/route/{region}/{route}` | [GMB route data](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/f003e716-e8cf-4511-b315-2a86c9b26ce0) | `data[].route_id` and `data[].directions[].route_seq` |
 | `/route-stop/{route_id}/{route_seq}` | [GMB stop list of specific route](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/b22d3e1a-78a2-40fa-a939-d2dbe5a9a27f) | `data.route_stops[].stop_id`, `.name_tc` |
 | `/stop/{stop_id}` | [GMB stop data](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/77fe99f2-bcfa-4691-a5c0-a4d67484afca) | `data.coordinates.wgs84.latitude`, `.longitude` |
-| `/eta/stop/{stop_id}` | [ETA list of a specific GMB stop](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/09d817d8-470a-4d12-82ff-c09555360c97) | `data[].route_id`, `data[].eta[].diff`, `.remarks_tc` |
+| `/route/{route_id}` | Same route resource, looked up by the id on an arrival | `data[].directions[].route_seq`, `.dest_tc`, `.dest_en` |
+| `/eta/stop/{stop_id}` | [ETA list of a specific GMB stop](https://data.gov.hk/en-data/dataset/hk-td-sm_7-real-time-arrival-data-of-gmb/resource/09d817d8-470a-4d12-82ff-c09555360c97) | `data[].route_id`, `data[].route_seq`, `data[].eta[].diff`, `.remarks_tc` |
+
+An arrival's destination is the direction's `dest_tc` and `dest_en`, kept for the
+process after the first lookup of `/route/{route_id}`. `remarks_tc` is not a
+destination. When it is `未開出`, the row is marked `not_departed` and the sheet
+shows 始站 beside that remark.
 
 The catalogue crawl is expensive and is throttled by the publisher. The
 bundled stop list in `server/data/stops.json` is the baseline; the live crawl

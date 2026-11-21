@@ -29,6 +29,7 @@ type Row = {
   destination: string;
   minutes?: number;
   time?: string;
+  not_departed?: boolean;
 };
 
 type Snapshot = {
@@ -311,13 +312,19 @@ export function StopSheet({
                       ) : null}
                       {mode === "mtr" ? (
                         <StationChip name={row.destination} locale={locale} />
-                      ) : (
+                      ) : row.destination ? (
                         <span>
-                          {mode === "ferry" || mode === "bus"
+                          {mode === "ferry" || mode === "bus" || mode === "minibus"
                             ? localizeBilingualName(row.destination, locale)
                             : row.destination}
                         </span>
-                      )}
+                      ) : null}
+                      {row.not_departed ? (
+                        <span>
+                          {" "}
+                          · {t.sheet.origin} {t.sheet.notDeparted}
+                        </span>
+                      ) : null}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                   ))}
