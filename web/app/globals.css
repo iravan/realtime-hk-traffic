@@ -294,12 +294,19 @@ button { cursor: pointer; }
 .stale { color: var(--alert); }
 
 @media (max-width: 767px) {
-  .chrome { flex-direction: column; align-items: flex-start; }
-  .channel { align-items: flex-start; }
+  /* The tabs wrap at this size. Stretch the panels to the screen edges and
+     start every row at the left, so no wrapped row drifts to the right. */
+  .chrome { flex-direction: column; align-items: stretch; }
+  .channel { align-items: stretch; }
+  .filters { justify-content: flex-start; }
   .sheet { left: 0; right: 0; bottom: 0; max-height: 52dvh; }
   /* The sheet spans the full width at this size, so it would cover the
      control and any tap meant for it. */
   .visit.sheet-open .map-actions { opacity: 0; pointer-events: none; }
+  .filters{
+      font-size:.85rem;font-weight:600;line-height:1.3;
+      justify-content:flex-start;
+  }
 }
 @media (min-width: 768px) {
   .sheet { top: 0.75rem; right: 0.75rem; bottom: 0.75rem; width: 22rem; }
@@ -391,4 +398,3 @@ button { cursor: pointer; }
   font-weight: 600;
   line-height: 1.3;
 }
-
