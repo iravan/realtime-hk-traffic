@@ -480,7 +480,11 @@ fn matching_place<'a>(places: &'a [(&str, &str)], english: &str) -> Option<&'a s
             conflict = true;
         }
     }
-    if conflict { None } else { best }
+    if conflict {
+        None
+    } else {
+        best
+    }
 }
 
 impl RouteEnds {
@@ -681,7 +685,13 @@ mod tests {
 
     #[test]
     fn kmb_arrival_keeps_both_languages() {
-        let name = super::arrival_destination(None, &[], "O", "小西灣(藍灣半島)", "SIU SAI WAN (ISLAND RESORT)");
+        let name = super::arrival_destination(
+            None,
+            &[],
+            "O",
+            "小西灣(藍灣半島)",
+            "SIU SAI WAN (ISLAND RESORT)",
+        );
         assert_eq!(name, "小西灣(藍灣半島) SIU SAI WAN (ISLAND RESORT)");
     }
 
@@ -736,13 +746,8 @@ mod tests {
             dest_en: "Tsim Sha Tsui".to_string(),
         };
         let places = [("半島酒店", "The Peninsula")];
-        let name = super::arrival_destination(
-            Some(&ends),
-            &places,
-            "O",
-            "",
-            "The Peninsula Hong Kong",
-        );
+        let name =
+            super::arrival_destination(Some(&ends), &places, "O", "", "The Peninsula Hong Kong");
         assert_eq!(name, "半島酒店 The Peninsula Hong Kong");
     }
 

@@ -382,11 +382,7 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
             .into_response();
     };
     if stop.mode == "taxi" {
-        return (
-            StatusCode::NOT_FOUND,
-            Json(json!({"error": "no arrivals"})),
-        )
-            .into_response();
+        return (StatusCode::NOT_FOUND, Json(json!({"error": "no arrivals"}))).into_response();
     }
     if let Some(body) = read_snapshot(&app, &id).await {
         return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
@@ -419,11 +415,7 @@ async fn events(
             .into_response());
     };
     if stop.mode == "taxi" {
-        return Err((
-            StatusCode::NOT_FOUND,
-            Json(json!({"error": "no arrivals"})),
-        )
-            .into_response());
+        return Err((StatusCode::NOT_FOUND, Json(json!({"error": "no arrivals"}))).into_response());
     }
     let (sender, receiver) = tokio::sync::mpsc::channel(8);
     {
@@ -578,7 +570,11 @@ async fn eta_rows(app: &App, url: &str) -> Option<Vec<Value>> {
 // The batch feed returns one language in `dest`. The same trip is the same
 // route, direction, stop sequence, ETA sequence and ETA in both responses.
 fn citybus_row_key(item: &Value) -> String {
-    let text = |name| item.get(name).and_then(|value| value.as_str()).unwrap_or("");
+    let text = |name| {
+        item.get(name)
+            .and_then(|value| value.as_str())
+            .unwrap_or("")
+    };
     let number = |name| item.get(name).and_then(|value| value.as_i64()).unwrap_or(0);
     format!(
         "{}|{}|{}|{}|{}",
@@ -614,10 +610,8 @@ async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
             format!("https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{raw}?lang=en");
         let chinese_url =
             format!("https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{raw}?lang=zh-Hant");
-        let (english, chinese) = tokio::join!(
-            eta_rows(app, &english_url),
-            eta_rows(app, &chinese_url)
-        );
+        let (english, chinese) =
+            tokio::join!(eta_rows(app, &english_url), eta_rows(app, &chinese_url));
         let mut chinese_dest = HashMap::new();
         if let Some(chinese) = chinese {
             for item in chinese {
@@ -652,8 +646,7 @@ async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
             .get("dir")
             .and_then(|value| value.as_str())
             .unwrap_or("");
-        let destination =
-            catalog::arrival_destination(routes.get(route), &place_refs, dir, tc, en);
+        let destination = catalog::arrival_destination(routes.get(route), &place_refs, dir, tc, en);
         let eta = item
             .get("eta")
             .and_then(|value| value.as_str())
@@ -963,7 +956,10 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
         return Err(());
     }
     let parsed = response.json::<Value>().await.map_err(|_| ())?;
-    let items = parsed.get("data").and_then(|value| value.as_array()).ok_or(())?;
+    let items = parsed
+        .get("data")
+        .and_then(|value| value.as_array())
+        .ok_or(())?;
     let mut rows = Vec::new();
     for item in items {
         let minutes = match sailing.op.as_str() {
@@ -985,9 +981,7 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
 
 fn hkkf_minutes(item: &Value) -> Option<i64> {
     let date = item.get("date").and_then(|value| value.as_str())?;
-    let session = item
-        .get("session_time")
-        .and_then(|value| value.as_str())?;
+    let session = item.get("session_time").and_then(|value| value.as_str())?;
     clock_minutes(date, session)
 }
 
@@ -1000,13 +994,21 @@ fn sun_minutes(item: &Value) -> Option<i64> {
 }
 
 fn sun_shown(item: &Value) -> Option<DateTime<chrono::FixedOffset>> {
-    let stamped = item.get("date_timestamp").and_then(|value| value.as_str())?;
+    let stamped = item
+        .get("date_timestamp")
+        .and_then(|value| value.as_str())?;
     let generated = DateTime::parse_from_rfc3339(stamped).ok()?;
     for key in ["eta", "depart_time"] {
-        let Some(clock) = item.get(key).and_then(|value| value.as_str()).filter(|value| !value.is_empty()) else {
+        let Some(clock) = item
+            .get(key)
+            .and_then(|value| value.as_str())
+            .filter(|value| !value.is_empty())
+        else {
             continue;
         };
-        let Some(when) = sun_clock(&generated, clock) else { continue };
+        let Some(when) = sun_clock(&generated, clock) else {
+            continue;
+        };
         if when.signed_duration_since(generated).num_seconds() >= -90 {
             return Some(when);
         }
@@ -1019,7 +1021,9 @@ fn sun_clock(
     clock: &str,
 ) -> Option<DateTime<chrono::FixedOffset>> {
     if clock.contains('T') {
-        return DateTime::parse_from_rfc3339(clock).ok().map(|when| when.fixed_offset());
+        return DateTime::parse_from_rfc3339(clock)
+            .ok()
+            .map(|when| when.fixed_offset());
     }
     nearest_clock(*generated, clock)
 }
@@ -1037,7 +1041,10 @@ fn nearest_clock(
     let mut best_abs = i64::MAX;
     for delta in [-1_i64, 0, 1] {
         let day = generated.date_naive() + chrono::Duration::days(delta);
-        let when = day.and_time(time).and_local_timezone(*generated.offset()).single()?;
+        let when = day
+            .and_time(time)
+            .and_local_timezone(*generated.offset())
+            .single()?;
         let abs = when.signed_duration_since(generated).num_seconds().abs();
         if abs < best_abs {
             best_abs = abs;
