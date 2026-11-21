@@ -29,6 +29,7 @@ import {
   citybusSignHighlight,
   isCitybus,
   isStarFerry,
+  modeColor,
   taxiDotHighlight,
   taxiSignHighlight,
   stopIconPixelRatio,
@@ -76,6 +77,9 @@ const lineTerminals: Record<string, { from: string; to: string }> = lineTerminal
 // it, so the same centre and zoom open the app and reset it.
 const hkCenter: [number, number] = [114.1694, 22.3193];
 const hkZoom = 14;
+// Counted groups stand in for signs until this zoom. Closer than this, every
+// stop in the view is its own pin.
+const pinZoom = 16;
 // Generous box around the territory, islands included; geolocation accuracy is
 // tens of metres, so the exact edge does not matter.
 const hkBounds = { south: 22.1, north: 22.6, west: 113.8, east: 114.5 };
@@ -91,23 +95,12 @@ const autoselectRadiusMeters: Record<Mode, number> = {
   taxi: 400,
 };
 
-// A view holding more signs than this switches to dots. Full signs are 44×64,
-// so a few hundred of them cover the map and hide the streets underneath.
-const dotThreshold = 120;
-
-// A feature's `icon` is its mode sign, or a route-number sign for minibuses; a
-// dot is always keyed by mode. Out of service a stop drops to its muted dot, so
-// it stays visible as a location but stops inviting a tap.
+// A feature's `icon` is its mode sign. Out of service a stop drops to its
+// muted dot, so it stays visible as a location but stops inviting a tap.
 const signImage: ExpressionSpecification = [
   "case",
   ["get", "open"],
   ["get", "icon"],
-  ["concat", ["get", "mode"], "-dot-off"],
-];
-const dotImage: ExpressionSpecification = [
-  "case",
-  ["get", "open"],
-  ["concat", ["get", "icon"], "-dot"],
   ["concat", ["get", "mode"], "-dot-off"],
 ];
 const signSize: ExpressionSpecification = [
@@ -121,7 +114,6 @@ const signSize: ExpressionSpecification = [
   17,
   1.2,
 ];
-const dotSize: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 12, 0.8, 16, 1.1];
 // A sign hangs from its pole while a dot is centred on the stop, so a view of
 // signs can still hold grey dots without them floating above their point.
 // MTR station blocks are centred on the station; the other modes hang from a
@@ -132,10 +124,6 @@ const signAnchor: ExpressionSpecification = [
   "bottom",
   "center",
 ];
-// `icon-size` is a layout property, so MapLibre accepts only one zoom-based
-// `step`/`interpolate` in it. Signs and dots therefore keep separate single
-// curves and `drawStops` swaps between them when the view crosses the dot
-// threshold, rather than branching on `open` inside the expression.
 // The selected sign is drawn a touch larger than its neighbours; the outline
 // that makes it read as selected is part of the image itself.
 const selectedSignSize: ExpressionSpecification = [
@@ -197,7 +185,6 @@ export default function Page() {
   const cataloguesRef = useRef<Partial<Record<Mode, Stop[]>>>({});
   const cataloguePromisesRef = useRef(new Map<Mode, Promise<Stop[]>>());
   const hoursRef = useRef<ServiceHours | null>(null);
-  const dotsRef = useRef(false);
   const mtrLinesLoadedRef = useRef(false);
   const mtrLinesLoadingRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
@@ -265,6 +252,7 @@ export default function Page() {
       touchPitch: false,
       style: {
         version: 8,
+        glyphs: "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
         sources: {
           osm: {
             type: "raster",
@@ -385,11 +373,71 @@ export default function Page() {
       map.addSource("stops", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
+        cluster: true,
+        clusterRadius: 56,
+        clusterMaxZoom: pinZoom - 1,
+      });
+      map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "stops",
+        filter: ["has", "point_count"],
+        maxzoom: pinZoom,
+        paint: {
+          "circle-color": modeColor.bus,
+          "circle-radius": ["step", ["get", "point_count"], 18, 10, 22, 50, 28, 200, 34],
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#fbf7f0",
+        },
+      });
+      map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "stops",
+        filter: ["has", "point_count"],
+        maxzoom: pinZoom,
+        layout: {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Noto Sans Regular"],
+          "text-size": 13,
+          "text-allow-overlap": true,
+        },
+        paint: { "text-color": "#fbf7f0" },
+      });
+      // A stop that sits alone is still a count of one until the pin zoom.
+      map.addLayer({
+        id: "stop-singles",
+        type: "circle",
+        source: "stops",
+        filter: ["!", ["has", "point_count"]],
+        maxzoom: pinZoom,
+        paint: {
+          "circle-color": modeColor.bus,
+          "circle-radius": 16,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#fbf7f0",
+        },
+      });
+      map.addLayer({
+        id: "stop-single-count",
+        type: "symbol",
+        source: "stops",
+        filter: ["!", ["has", "point_count"]],
+        maxzoom: pinZoom,
+        layout: {
+          "text-field": "1",
+          "text-font": ["Noto Sans Regular"],
+          "text-size": 13,
+          "text-allow-overlap": true,
+        },
+        paint: { "text-color": "#fbf7f0" },
       });
       map.addLayer({
         id: "stops",
         type: "symbol",
         source: "stops",
+        filter: ["!", ["has", "point_count"]],
+        minzoom: pinZoom,
         layout: {
           "icon-image": signImage,
           "icon-anchor": signAnchor,
@@ -409,6 +457,7 @@ export default function Page() {
         id: "stops-hover",
         type: "symbol",
         source: "stops-hover",
+        minzoom: pinZoom,
         layout: {
           "icon-image": ["get", "image"],
           "icon-anchor": "center",
@@ -427,6 +476,7 @@ export default function Page() {
         id: "selection",
         type: "symbol",
         source: "selection",
+        minzoom: pinZoom,
         layout: {
           "icon-image": ["get", "image"],
           "icon-anchor": "bottom",
@@ -663,12 +713,13 @@ export default function Page() {
         if (stop.mode !== "mtr") return;
         if (hoveredStopRef.current === stop.id) return;
         hoveredStopRef.current = stop.id;
+        const open = feature.properties?.open === true;
         const source = map.getSource("stops-hover");
         if (source && source.type === "geojson") {
-          const feature: GeoJSON.Feature<GeoJSON.Point> = {
+          const hover: GeoJSON.Feature<GeoJSON.Point> = {
             type: "Feature",
             properties: {
-              image: selectionImage(map, stop, dotsRef.current),
+              image: selectionImage(map, stop, !open),
             },
             geometry: {
               type: "Point",
@@ -677,24 +728,26 @@ export default function Page() {
           };
           (source as GeoJSONSource).setData({
             type: "FeatureCollection",
-            features: [feature],
+            features: [hover],
           });
         }
         map.setLayoutProperty(
           "stops-hover",
           "icon-size",
-          dotsRef.current ? selectedDotSize : selectedSignSize,
+          open ? selectedSignSize : selectedDotSize,
         );
         showStopName(stop);
       };
 
+      const overStops = (point: { x: number; y: number }) =>
+        map.queryRenderedFeatures([point.x, point.y], {
+          layers: ["stops", "clusters", "cluster-count", "stop-singles", "stop-single-count"],
+        }).length > 0;
+
       const lineAt = (point: { x: number; y: number }) => {
         // A station block sits above the lines: if the pointer is on the
         // block, the station wins over a line passing underneath.
-        if (
-          map.queryRenderedFeatures([point.x, point.y], { layers: ["stops"] })
-            .length > 0
-        ) {
+        if (overStops(point)) {
           return null;
         }
         // Wider than the painted line, so a finger hits it and so a lane
@@ -707,9 +760,7 @@ export default function Page() {
       };
 
       map.on("mousemove", (event) => {
-        if (
-          map.queryRenderedFeatures(event.point, { layers: ["stops"] }).length > 0
-        ) {
+        if (overStops(event.point)) {
           clearLine();
           return;
         }
@@ -723,9 +774,7 @@ export default function Page() {
       });
       map.on("click", (event) => {
         // A tap on the open map drops a pinned station name.
-        if (
-          map.queryRenderedFeatures(event.point, { layers: ["stops"] }).length === 0
-        ) {
+        if (!overStops(event.point)) {
           hideStopName();
         }
         const feature = lineAt(event.point);
@@ -772,8 +821,50 @@ export default function Page() {
       map.on("mouseleave", "stops", () => {
         map.getCanvas().style.cursor = "";
       });
+      const zoomToCluster = (event: { features?: MapGeoJSONFeature[] }) => {
+        const feature = event.features?.[0];
+        const clusterId = Number(feature?.properties?.cluster_id);
+        const source = map.getSource("stops");
+        if (
+          !Number.isFinite(clusterId) ||
+          !feature ||
+          feature.geometry.type !== "Point" ||
+          !source ||
+          source.type !== "geojson"
+        ) {
+          return;
+        }
+        const center = feature.geometry.coordinates as [number, number];
+        void (source as GeoJSONSource).getClusterExpansionZoom(clusterId).then((zoom: number) => {
+          map.easeTo({ center, zoom: Math.max(zoom, map.getZoom() + 1) });
+        });
+      };
+      const zoomToPin = (event: { features?: MapGeoJSONFeature[] }) => {
+        const feature = event.features?.[0];
+        if (!feature || feature.geometry.type !== "Point") return;
+        map.easeTo({
+          center: feature.geometry.coordinates as [number, number],
+          zoom: pinZoom,
+        });
+      };
+      map.on("click", "clusters", zoomToCluster);
+      map.on("click", "cluster-count", zoomToCluster);
+      map.on("click", "stop-singles", zoomToPin);
+      map.on("click", "stop-single-count", zoomToPin);
+      for (const layer of ["clusters", "cluster-count", "stop-singles", "stop-single-count"]) {
+        map.on("mouseenter", layer, () => {
+          map.getCanvas().style.cursor = "pointer";
+        });
+        map.on("mouseleave", layer, () => {
+          map.getCanvas().style.cursor = "";
+        });
+      }
       // Stations must paint above the line layers, so their square hit areas
       // win over a line passing underneath.
+      map.moveLayer("clusters");
+      map.moveLayer("cluster-count");
+      map.moveLayer("stop-singles");
+      map.moveLayer("stop-single-count");
       map.moveLayer("stops");
       map.moveLayer("stops-hover");
       map.moveLayer("selection");
@@ -781,7 +872,10 @@ export default function Page() {
       focusPendingRef.current(map);
     });
     map.on("moveend", () => {
-      drawStops(map);
+      const mode = activeRef.current;
+      const catalogue = cataloguesRef.current[mode];
+      if (!catalogue) return;
+      setStops(stopsInView(map, catalogue, mode));
     });
     mapRef.current = map;
     return () => {
@@ -931,41 +1025,14 @@ export default function Page() {
     }
     const hours = hoursRef.current;
     const now = new Date();
-    const bounds = map.getBounds();
-    const south = bounds.getSouth();
-    const north = bounds.getNorth();
-    const west = bounds.getWest();
-    const east = bounds.getEast();
-    // Several ids can publish one location; draw the first and let the server
-    // merge their arrivals.
-    const seen = new Set<string>();
-    const visible = catalogue.filter((stop) => {
-      if (stop.mode !== mode) return false;
-      if (stop.latitude < south || stop.latitude > north) return false;
-      if (stop.longitude < west || stop.longitude > east) return false;
-      const key = `${stop.latitude.toFixed(6)}:${stop.longitude.toFixed(6)}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-    setStops(visible);
-    // Swap the whole layer rather than styling features one by one: every stop
-    // in the view has to agree, and a layout change is one redraw.
-    const dots = visible.length > dotThreshold;
-    // The style is loaded before the stop icons finish loading, so a catalogue
-    // fetch can draw while this layer is still missing. Leave dotsRef alone
-    // until the layer exists, or the later draw would skip the layout swap.
-    if (dots !== dotsRef.current && map.getLayer("stops")) {
-      dotsRef.current = dots;
-      map.setLayoutProperty("stops", "icon-image", dots ? dotImage : signImage);
-      map.setLayoutProperty("stops", "icon-anchor", dots ? "center" : signAnchor);
-      map.setLayoutProperty("stops", "icon-size", dots ? dotSize : signSize);
-    }
+    setStops(stopsInView(map, catalogue, mode));
     const source = map.getSource("stops");
     if (!source || source.type !== "geojson") return;
+    // The whole mode is clustered, not just the current view, so a count at
+    // the edge does not split when the map moves.
     (source as GeoJSONSource).setData({
       type: "FeatureCollection",
-      features: visible.map((stop) => ({
+      features: uniqueStops(catalogue, mode).map((stop) => ({
         type: "Feature",
         properties: {
           id: stop.id,
@@ -983,16 +1050,17 @@ export default function Page() {
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
       })),
     });
+    for (const layer of ["clusters", "stop-singles"]) {
+      if (map.getLayer(layer)) map.setPaintProperty(layer, "circle-color", modeColor[mode]);
+    }
     refreshSelection(map);
   }
 
   function refreshSelection(map: MlMap) {
     if (!map.getLayer("selection")) return;
     const focus = selectedRef.current ?? boardRef.current;
-    // A greyed stop is drawn as a dot, so its highlight is the ringed dot even
-    // in a sparse view; the dense-view threshold forces the dot as well.
-    const dot =
-      dotsRef.current || (focus !== null && !isStopOpen(focus, hoursRef.current, new Date()));
+    // A greyed stop is drawn as a dot, so its highlight is the ringed dot.
+    const dot = focus !== null && !isStopOpen(focus, hoursRef.current, new Date());
     const square = !dot && focus?.mode === "mtr";
     map.setLayoutProperty(
       "selection",
@@ -1399,6 +1467,36 @@ function placeMe(map: MlMap, fix: Fix) {
   });
 }
 
+// Several feeds can publish one coordinate. The first stop owns the pin and
+// the server merges the arrivals.
+function uniqueStops(catalogue: Stop[], mode: Mode): Stop[] {
+  const seen = new Set<string>();
+  const stops: Stop[] = [];
+  for (const stop of catalogue) {
+    if (stop.mode !== mode) continue;
+    const key = `${stop.latitude.toFixed(6)}:${stop.longitude.toFixed(6)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    stops.push(stop);
+  }
+  return stops;
+}
+
+function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode): Stop[] {
+  const bounds = map.getBounds();
+  const south = bounds.getSouth();
+  const north = bounds.getNorth();
+  const west = bounds.getWest();
+  const east = bounds.getEast();
+  return uniqueStops(catalogue, mode).filter(
+    (stop) =>
+      stop.latitude >= south &&
+      stop.latitude <= north &&
+      stop.longitude >= west &&
+      stop.longitude <= east,
+  );
+}
+
 function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
   const source = map.getSource("selection");
   if (!source || source.type !== "geojson") return;
@@ -1414,8 +1512,8 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 }
 
 // A selected stop needs its own outline image: the mode sign, a minibus route
-// board, or the ringed dot that replaces both when the view is dense. Built on
-// first use, then reused from the style.
+// board, or the ringed dot used when the stop is closed. Built on first use,
+// then reused from the style.
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
   const citybus = stop.mode === "bus" && isCitybus(stop.id);

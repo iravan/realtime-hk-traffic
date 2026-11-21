@@ -2,7 +2,7 @@ import { TAXI_COLORS } from "./taxi-colors";
 
 export type Mode = "mtr" | "bus" | "minibus" | "ferry" | "taxi";
 
-const colors: Record<Mode, string> = {
+export const modeColor: Record<Mode, string> = {
   mtr: "#11254a",
   bus: "#e52029",
   minibus: "#2f7d4f",
@@ -321,7 +321,7 @@ export function stopDotImage(mode: Mode, muted = false, fill?: string): ImageDat
   ctx.scale(ratio, ratio);
   ctx.beginPath();
   ctx.arc(size / 2, size / 2, 6, 0, Math.PI * 2);
-  ctx.fillStyle = muted ? mutedFill : (fill ?? colors[mode]);
+  ctx.fillStyle = muted ? mutedFill : (fill ?? modeColor[mode]);
   ctx.fill();
   ctx.lineWidth = 2;
   ctx.strokeStyle = paper;
@@ -378,7 +378,7 @@ export function stopDotHighlight(mode: Mode, fill?: string): ImageData {
   }
   ctx.beginPath();
   ctx.arc(centre, centre, 6, 0, Math.PI * 2);
-  ctx.fillStyle = fill ?? colors[mode];
+  ctx.fillStyle = fill ?? modeColor[mode];
   ctx.fill();
   ctx.lineWidth = 2;
   ctx.strokeStyle = paper;
@@ -489,7 +489,7 @@ function drawStopIcon(
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
-  const color = taxiColor ?? colors[mode];
+  const color = taxiColor ?? modeColor[mode];
   const line = ink;
   const cx = width / 2;
   ctx.beginPath();
@@ -561,7 +561,7 @@ function drawMtrBlock(): HTMLCanvasElement {
   ctx.save();
   roundRect(ctx, 2, 2, size - 4, size - 4, 3);
   ctx.clip();
-  ctx.fillStyle = colors.mtr;
+  ctx.fillStyle = modeColor.mtr;
   ctx.fillRect(2, 2, size - 4, 10);
   ctx.restore();
 
@@ -569,7 +569,7 @@ function drawMtrBlock(): HTMLCanvasElement {
   if (vehicle) {
     ctx.drawImage(vehicle, 7, 12, 30, 30);
   } else {
-    drawMtr(ctx, colors.mtr);
+    drawMtr(ctx, modeColor.mtr);
   }
   return canvas;
 }

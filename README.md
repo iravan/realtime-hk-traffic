@@ -48,8 +48,11 @@ scope. Taxi stands are places, not vehicles.
   The open tab loads its file, and the other modes follow about two seconds
   later. A first visit downloads about 550 KB compressed for all five files;
   the bus file is most of that. The browser keeps each file for 24 hours, so a
-  return visit draws the pins without downloading them again. Panning does not
-  ask the server for stops. The bus tab and the KMB, LWB, and New Lantao pins
+  return visit draws the pins without downloading them again. The five
+  IndexedDB keys, the fields on each record, and a ferry check are in
+  [DATA.md](DATA.md#caching). Panning does not
+  ask the server for stops. Below zoom 16 those stops are counted groups; a tap
+  on a count zooms in, and at zoom 16 each stop is its own pin. The bus tab and the KMB, LWB, and New Lantao pins
   use the red bus. A Citybus stop (`bus:ctb:`) uses the yellow double-decker
   in `web/public/icons/citybus.svg`, on the map and in the sheet.
 - **Freshness is visible.** Every snapshot carries the time the server fetched

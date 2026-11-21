@@ -25,7 +25,7 @@ portal. Add new sources here when the service starts using them.
 | KMB and LWB ETA | data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/{stop_id}` | Live bus arrivals for every route at a stop |
 | KMB and LWB route ETA | Transport Department / data.gov.hk | `https://data.etabus.gov.hk/v1/transport/kmb/eta/{stop_id}/{route}/{service_type}` | Live arrivals for one route at one stop |
 | Citybus stops | data.gov.hk | `https://rt.data.gov.hk/v2/transport/citybus/...` | Citybus stop catalogue |
-| Citybus ETA | data.gov.hk | `https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}` | Live Citybus arrivals |
+| Citybus ETA | data.gov.hk | `https://rt.data.gov.hk/v1/transport/batch/stop-eta/CTB/{stop_id}?lang=en` and `?lang=zh-Hant` | Live Citybus arrivals. One `lang` per request; the two responses are paired |
 | Bus route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_BUS.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Green minibus | data.gov.hk | `https://data.etagmb.gov.hk/...` | Stops, routes and live arrivals |
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
@@ -776,12 +776,50 @@ Stop pins are static files, one per mode: `web/public/stops-bus.json`,
 two seconds later. A first visit downloads about 550 KB compressed in total.
 The bus file is about 340 KB of that.
 
-The browser keeps each file in IndexedDB (`hk-traffic` / `catalogues`, key
-`stops-{mode}`) for 24 hours. A visit inside that window does not download the
-pins again. After 24 hours the page fetches a new copy, and if that request
-fails it keeps the stored one. Vercel also sends
+The browser keeps each file in IndexedDB for 24 hours. A visit inside that
+window does not download the pins again. After 24 hours the page fetches a new
+copy, and if that request fails it keeps the stored one. Vercel also sends
 `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` on these
 files, so a cache miss can still be served from the CDN.
+
+One database, `hk-traffic`, and one object store, `catalogues`. The five keys
+are separate because the five files are loaded separately, and each expires on
+its own clock:
+
+| Key | File | What a stop record contains |
+| --- | --- | --- |
+| `stops-bus` | `stops-bus.json` | `id`, `latitude`, `longitude`, `mode`, `name`, and `night` on overnight stops |
+| `stops-minibus` | `stops-minibus.json` | The same fields, plus `routes`, and `night` when the route runs overnight |
+| `stops-ferry` | `stops-ferry.json` | `id`, `latitude`, `longitude`, `mode`, `name` only. No `routes` or `night` |
+| `stops-taxi` | `stops-taxi.json` | The same five fields. Taxi type is joined later from `taxi-stands.geojson` and is not stored here |
+| `stops-mtr` | `stops-mtr.json` | The same five fields |
+
+Each record is `{ savedAt, value }`. `savedAt` is the time it was written, in
+milliseconds. `value` is the file body, `{ stops: [...] }`. A ferry copy is
+valid when `value.stops` has 72 items, every `id` starts with `ferry:`, every
+`mode` is `ferry`, and `name`, `latitude`, and `longitude` are present. Check
+it from the app origin, `http://localhost:3000` or the deployed site:
+
+```js
+const entry = await new Promise((resolve, reject) => {
+  const open = indexedDB.open("hk-traffic");
+  open.onerror = () => reject(open.error);
+  open.onsuccess = () => {
+    const req = open.result.transaction("catalogues").objectStore("catalogues").get("stops-ferry");
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => resolve(req.result);
+  };
+});
+const stops = entry?.value?.stops ?? [];
+console.log({
+  count: stops.length,
+  ageHours: entry ? (Date.now() - entry.savedAt) / 36e5 : null,
+  sample: stops[0],
+});
+```
+
+`count` is 72 and `ageHours` is under 24 for a fresh copy. Delete the
+`stops-ferry` key and reload when `count` is 0.
 
 - There is no background poll. Opening a stop calls `GET /stops/{id}/arrivals`.
   If `arrivals:{stop_id}` is still in Redis, that body is returned and the
