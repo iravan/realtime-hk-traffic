@@ -962,37 +962,43 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
         .ok_or(())?;
     let mut rows = Vec::new();
     for item in items {
-        let minutes = match sailing.op.as_str() {
-            "hkkf" => hkkf_minutes(item),
-            "sun" => sun_minutes(item),
+        let shown = match sailing.op.as_str() {
+            "hkkf" => hkkf_shown(item),
+            "sun" => sun_shown(item),
             _ => None,
         };
-        let Some(minutes) = minutes else { continue };
+        let Some(when) = shown else { continue };
+        let Some(minutes) = minutes_from(when) else {
+            continue;
+        };
         rows.push(Row {
             route: sailing.label.clone(),
             destination: sailing.destination.clone(),
             minutes: Some(minutes),
-            time: None,
+            time: Some(when.format("%H:%M").to_string()),
             not_departed: false,
         });
     }
     Ok(rows)
 }
 
-fn hkkf_minutes(item: &Value) -> Option<i64> {
+// The departure is shown while it is still ahead. Once the boat has left, `ETA`
+// is its arrival, shown the same way as a Sun Ferry trip that is under way.
+fn hkkf_shown(item: &Value) -> Option<DateTime<chrono::FixedOffset>> {
     let date = item.get("date").and_then(|value| value.as_str())?;
     let session = item.get("session_time").and_then(|value| value.as_str())?;
-    clock_minutes(date, session)
+    let departs = hk_stamp(date, session)?;
+    if minutes_from(departs).is_some() {
+        return Some(departs);
+    }
+    let eta = item.get("ETA").and_then(|value| value.as_str())?;
+    DateTime::parse_from_rfc3339(eta).ok()
 }
 
 // `depart_time` and `eta` are clocks. `date_timestamp` is when Sun Ferry
 // generated the row, so each clock is the occurrence nearest that instant.
 // `eta` is the arrival of this trip. A departure already in the past is not
 // moved to the next day.
-fn sun_minutes(item: &Value) -> Option<i64> {
-    minutes_from(sun_shown(item)?)
-}
-
 fn sun_shown(item: &Value) -> Option<DateTime<chrono::FixedOffset>> {
     let stamped = item
         .get("date_timestamp")
@@ -1052,10 +1058,6 @@ fn nearest_clock(
         }
     }
     best
-}
-
-fn clock_minutes(date: &str, clock: &str) -> Option<i64> {
-    minutes_from(hk_stamp(date, clock)?)
 }
 
 fn hk_stamp(date: &str, clock: &str) -> Option<DateTime<chrono::FixedOffset>> {
@@ -1120,7 +1122,25 @@ mod tests {
             "date": "2020-01-01",
             "session_time": "12:15:00"
         });
-        assert!(super::hkkf_minutes(&item).is_none());
+        assert!(super::hkkf_shown(&item).is_none());
+    }
+
+    #[test]
+    fn hkkf_sailing_in_transit_shows_its_arrival() {
+        let hong_kong = chrono::FixedOffset::east_opt(8 * 3600).expect("offset");
+        let departed = chrono::Utc::now().with_timezone(&hong_kong) - chrono::Duration::minutes(30);
+        let arrives = chrono::Utc::now().with_timezone(&hong_kong) + chrono::Duration::minutes(20);
+        let item = serde_json::json!({
+            "date": departed.format("%Y-%m-%d").to_string(),
+            "session_time": departed.format("%H:%M:%S").to_string(),
+            "ETA": arrives.to_rfc3339()
+        });
+        let when = super::hkkf_shown(&item).expect("arrival");
+        assert_eq!(
+            when.format("%H:%M").to_string(),
+            arrives.format("%H:%M").to_string()
+        );
+        assert!((19..=20).contains(&super::minutes_from(when).expect("ahead")));
     }
 
     #[test]

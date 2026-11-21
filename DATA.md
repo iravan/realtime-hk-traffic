@@ -615,7 +615,7 @@ Those files have no ETA. Two operators publish the next departure by route:
 
 | Operator | Endpoint | What a row uses |
 | --- | --- | --- |
-| Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | `date` and `session_time` as the departure from the origin pier of that direction |
+| Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/eta/{route_id}/{direction}` | `date` and `session_time` as the departure from the origin pier of that direction. Once that has passed, `ETA` as the arrival, while it is still ahead |
 | Sun Ferry | `https://www.sunferry.com.hk/eta/?route={route_code}` | `eta` when that arrival is still ahead, otherwise `depart_time`. Both clocks use the day nearest `date_timestamp` |
 
 `server/data/ferry-departures.json` says which of those routes leave which
@@ -633,7 +633,12 @@ nearest that instant. It uses `eta` when that arrival is still ahead of the
 generated time, because the feed then names the boat that has already left.
 Otherwise it uses `depart_time`. A clock already in the past is dropped. It is
 not moved to the next day. Hong Kong & Kowloon Ferry publishes a real `date`
-with `session_time`, and that pair is the departure.
+with `session_time`, and that pair is the departure. Its `ETA` is the arrival
+at the destination. A departure already past uses `ETA` while the arrival is
+still ahead, the same as Sun Ferry, so a boat under way is not dropped.
+
+Each ferry row carries the clock of the sailing it shows as `time` (`HH:MM`,
+Hong Kong time), so two sailings on one route can be told apart on the sheet.
 
 The Transport Department pier list has no first or last sailing.
 `web/public/ferry-services.json` holds the destination, first boat, and last

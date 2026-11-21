@@ -24,7 +24,7 @@ modes:
 | **MTR** | A station | The next train on each line that serves the station, plus line service status when the feed includes it |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
 | **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise "No arrivals right now" |
-| **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry shows the minutes until departure. Sun Ferry shows the published arrival once the boat has left, and the minutes until departure before that. Other piers stay on the map and show that nothing is scheduled right now |
+| **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry and Sun Ferry show the clock time of the sailing and the minutes until departure, or until arrival once the boat has left. Other piers stay on the map and show that nothing is scheduled right now |
 | **Taxi** | A taxi stand | The stand's name and location only — Hong Kong publishes no per-vehicle position feed |
 
 Red minibuses, private cars, and live taxi positions are deliberately out of
@@ -309,7 +309,9 @@ GET /stops/{id}/events      Server-sent events; each new snapshot is an `arrival
 `live` is `true` on every snapshot the server writes today; there is no
 timetable fallback yet. `status` is `"delayed"` only when an MTR line reports a
 delay. `minutes` is omitted when the feed gives no countable value; an MTR row
-then keeps its clock `time`. A minibus row sets `not_departed` when the vehicle
+then keeps its clock `time`. On a ferry row `time` is the clock of the sailing
+shown, in Hong Kong time (its departure, or its arrival once the boat has left),
+and `minutes` counts to that clock. A minibus row sets `not_departed` when the vehicle
 is still at its first stop, and the sheet shows 始站 beside 未開出.
 
 `/stops/{id}/arrivals` answers from Redis when a snapshot is cached. Otherwise it
