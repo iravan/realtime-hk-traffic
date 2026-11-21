@@ -1358,6 +1358,7 @@ export default function Page() {
       </div>
       {selected ? (
         <StopSheet
+          key={selected.id}
           id={selected.id}
           mode={selected.mode}
           name={selected.name}

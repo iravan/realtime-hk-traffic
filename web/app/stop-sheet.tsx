@@ -76,8 +76,12 @@ export function StopSheet({
   const [sign, setSign] = useState<string | null>(null);
   const [sailings, setSailings] = useState<FerryService[] | null>(null);
   useEffect(() => {
-    if (mode !== "ferry") return;
+    if (mode !== "ferry") {
+      setSailings(null);
+      return;
+    }
     let cancelled = false;
+    setSailings(null);
     loadCachedJson<Record<string, FerryService[]>>("ferry-services", async () => {
       const response = await fetch(`${basePath}/ferry-services.json`);
       if (!response.ok) throw new Error("ferry-services");
@@ -260,7 +264,7 @@ export function StopSheet({
           </>
         ) : apiBase ? (
           <>
-          {mode === "ferry" && sailings === null ? null : sailings && sailings.length > 0 ? (
+          {mode === "ferry" && sailings && sailings.length > 0 ? (
             <table className="ferry-services">
               <thead>
                 <tr>
