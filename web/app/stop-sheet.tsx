@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
+import { ferryDestinationColor } from "./ferry-destination-color";
 import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
@@ -188,6 +189,41 @@ export function StopSheet({
   const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
   const station = mode === "mtr" ? mtrStationColor(id) : null;
+  const description =
+    mode === "taxi" ? (
+      <>
+        {taxiType ? <p className="muted">{locale === "en" ? taxiType.en : taxiType.tc}</p> : null}
+        <p className="muted">{t.sheet.hours}</p>
+        <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
+      </>
+    ) : apiBase && mode === "ferry" && sailings && sailings.length > 0 ? (
+      <table className="ferry-services">
+        <thead>
+          <tr>
+            <th>{t.sheet.destination}</th>
+            <th>{t.sheet.firstBoat}</th>
+            <th>{t.sheet.lastBoat}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sailings.map((sailing, index) => {
+            const text = locale === "en" ? "en" : "zh";
+            return (
+              <tr key={`${sailing.destination}-${index}`}>
+                <td><FerryDestination name={sailing.destination} locale={locale} /></td>
+                <td>{formatFerryWhen(sailing.first[text], t)}</td>
+                <td>{formatFerryLast(sailing.first[text], sailing.last[text], t)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    ) : apiBase && serviceHours ? (
+      <>
+        <p className="muted">{t.sheet.hours}</p>
+        <p>{serviceHours}</p>
+      </>
+    ) : null;
 
   return (
     <aside className="sheet">
@@ -218,13 +254,6 @@ export function StopSheet({
             <div className="stop-heading">
               <div className="stop-copy">
                 <h2>{localizeStopName(name, mode, locale)}</h2>
-                <p className="mode">
-                  {mode === "taxi" && taxiType
-                    ? locale === "en"
-                      ? taxiType.en
-                      : taxiType.tc
-                    : t.mode[mode]}
-                </p>
               </div>
               <div className="sheet-actions">
 
@@ -254,45 +283,13 @@ export function StopSheet({
                 </button>
               </div>
             </div>
+            {description ? <section className="description">{description}</section> : null}
           </div>
         </div>
       </header>
       <div className="body">
-        {mode === "taxi" ? (
+        {mode !== "taxi" && apiBase ? (
           <>
-            <p className="muted">{t.sheet.hours}</p>
-            <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
-          </>
-        ) : apiBase ? (
-          <>
-          {mode === "ferry" && sailings && sailings.length > 0 ? (
-            <table className="ferry-services">
-              <thead>
-                <tr>
-                  <th>{t.sheet.destination}</th>
-                  <th>{t.sheet.firstBoat}</th>
-                  <th>{t.sheet.lastBoat}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sailings.map((sailing, index) => {
-                  const text = locale === "en" ? "en" : "zh";
-                  return (
-                    <tr key={`${sailing.destination}-${index}`}>
-                      <td>{localizeBilingualName(sailing.destination, locale)}</td>
-                      <td>{formatFerryWhen(sailing.first[text], t)}</td>
-                      <td>{formatFerryLast(sailing.first[text], sailing.last[text], t)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          ) : serviceHours ? (
-            <>
-              <p className="muted">{t.sheet.hours}</p>
-              <p>{serviceHours}</p>
-            </>
-          ) : null}
           {snapshot?.note === "no-arrivals" ? (
             <p className="muted">{t.sheet.taxiNote}</p>
           ) : snapshot ? (
@@ -313,11 +310,15 @@ export function StopSheet({
                       {mode === "mtr" ? (
                         <StationChip name={row.destination} locale={locale} />
                       ) : row.destination ? (
-                        <span>
-                          {mode === "ferry" || mode === "bus" || mode === "minibus"
-                            ? localizeBilingualName(row.destination, locale)
-                            : row.destination}
-                        </span>
+                        mode === "ferry" ? (
+                          <FerryDestination name={row.destination} locale={locale} />
+                        ) : (
+                          <span>
+                            {mode === "bus" || mode === "minibus"
+                              ? localizeBilingualName(row.destination, locale)
+                              : row.destination}
+                          </span>
+                        )
                       ) : null}
                       {row.not_departed ? (
                         <span>
@@ -341,6 +342,25 @@ export function StopSheet({
         ) : null}
       </div>
     </aside>
+  );
+}
+
+function FerryDestination({ name, locale }: { name: string; locale: Locale }) {
+  return (
+    <>
+      {name.split(" / ").map((part, index) => {
+        const color = ferryDestinationColor(part);
+        return (
+          <span
+            key={`${part}-${index}`}
+            className="station-chip"
+            style={color ? { background: color.color, color: color.font } : undefined}
+          >
+            {localizeBilingualName(part, locale)}
+          </span>
+        );
+      })}
+    </>
   );
 }
 

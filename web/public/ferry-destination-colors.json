@@ -1,0 +1,318 @@
+{
+  "三家村 Sam Ka Tsuen": {
+    "color": "#3053A6",
+    "font": "#FFFFFF"
+  },
+  "中環 Central": {
+    "color": "#75A630",
+    "font": "#1C1915"
+  },
+  "中環3號碼頭 Central Pier 3": {
+    "color": "#A63097",
+    "font": "#FFFFFF"
+  },
+  "中環3號碼頭 Central Pier 3\n（不能於愉景灣 Discovery Bay渡輪碼頭落客）": {
+    "color": "#30A692",
+    "font": "#1C1915"
+  },
+  "中環4號碼頭 Central Pier 4": {
+    "color": "#A67030",
+    "font": "#1C1915"
+  },
+  "中環8號碼頭 Central Pier 8": {
+    "color": "#4E30A6",
+    "font": "#FFFFFF"
+  },
+  "中環天星碼頭 Central Star Ferry Pier": {
+    "color": "#35A630",
+    "font": "#1C1915"
+  },
+  "中環（2號碼頭） Central Pier 2": {
+    "color": "#A63058",
+    "font": "#FFFFFF"
+  },
+  "中環（4號碼頭） Central Pier 4": {
+    "color": "#307AA6",
+    "font": "#FFFFFF"
+  },
+  "中環（5號碼頭） Central Pier 5": {
+    "color": "#9CA630",
+    "font": "#1C1915"
+  },
+  "中環（6號碼頭） Central Pier 6": {
+    "color": "#8D30A6",
+    "font": "#FFFFFF"
+  },
+  "九龍城 Kowloon City": {
+    "color": "#30A66B",
+    "font": "#1C1915"
+  },
+  "企嶺下海 Kei Ling Ha": {
+    "color": "#A64930",
+    "font": "#FFFFFF"
+  },
+  "伙頭墳洲 Fo Tau Fan Chau": {
+    "color": "#303AA6",
+    "font": "#FFFFFF"
+  },
+  "北角 (東) North Point (East)": {
+    "color": "#5DA630",
+    "font": "#1C1915"
+  },
+  "北角 (西) North Point (West)": {
+    "color": "#A6307F",
+    "font": "#FFFFFF"
+  },
+  "北角(東) North Point (East)": {
+    "color": "#30A1A6",
+    "font": "#1C1915"
+  },
+  "北角村 Pak Kok Tsuen": {
+    "color": "#A68830",
+    "font": "#1C1915"
+  },
+  "南丫島 (榕樹灣) Yung Shue Wan": {
+    "color": "#6630A6",
+    "font": "#FFFFFF"
+  },
+  "南丫島 (索罟灣) Sok Kwu Wan": {
+    "color": "#30A644",
+    "font": "#1C1915"
+  },
+  "原點上落 Same pier": {
+    "color": "#A6303F",
+    "font": "#FFFFFF"
+  },
+  "吉澳 Kat O": {
+    "color": "#3062A6",
+    "font": "#FFFFFF"
+  },
+  "啟德 Kai Tak": {
+    "color": "#84A630",
+    "font": "#1C1915"
+  },
+  "喜靈洲 Hei Ling Chau": {
+    "color": "#A630A6",
+    "font": "#FFFFFF"
+  },
+  "坪洲 Peng Chau": {
+    "color": "#30A683",
+    "font": "#1C1915"
+  },
+  "坪洲公眾碼頭 Peng Chau Public Pier": {
+    "color": "#A66130",
+    "font": "#FFFFFF"
+  },
+  "塔門 Tap Mun": {
+    "color": "#3F30A6",
+    "font": "#FFFFFF"
+  },
+  "大廟灣 Tai Miu Wan": {
+    "color": "#44A630",
+    "font": "#1C1915"
+  },
+  "大水坑 Tai Shui Hang": {
+    "color": "#A63067",
+    "font": "#FFFFFF"
+  },
+  "大水坑碼頭 Tai Shui Hang Pier": {
+    "color": "#3089A6",
+    "font": "#1C1915"
+  },
+  "大澳 Tai O": {
+    "color": "#A6A130",
+    "font": "#1C1915"
+  },
+  "天星小輪": {
+    "color": "#7E30A6",
+    "font": "#FFFFFF"
+  },
+  "天星海港遊航線": {
+    "color": "#30A65C",
+    "font": "#1C1915"
+  },
+  "將軍澳南 Tseung Kwan O South": {
+    "color": "#A63930",
+    "font": "#FFFFFF"
+  },
+  "尖東 Tsim Sha Tsui East": {
+    "color": "#3049A6",
+    "font": "#FFFFFF"
+  },
+  "尖沙咀 Tsim Sha Tsui": {
+    "color": "#6CA630",
+    "font": "#1C1915"
+  },
+  "尖沙咀天星碼頭 Tsim Sha Tsui Star Ferry Pier": {
+    "color": "#A6308E",
+    "font": "#FFFFFF"
+  },
+  "屯門 Tuen Mun": {
+    "color": "#30A69C",
+    "font": "#1C1915"
+  },
+  "愉景灣 Discovery Bay": {
+    "color": "#A67930",
+    "font": "#1C1915"
+  },
+  "愉景灣北 Discovery Bay North": {
+    "color": "#5730A6",
+    "font": "#FFFFFF"
+  },
+  "東平洲 Tung Ping Chau": {
+    "color": "#30A634",
+    "font": "#1C1915"
+  },
+  "東涌 Tung Chung": {
+    "color": "#A6304E",
+    "font": "#FFFFFF"
+  },
+  "東龍島 Tung Lung Chau": {
+    "color": "#3071A6",
+    "font": "#FFFFFF"
+  },
+  "梅窩 Mui Wo": {
+    "color": "#93A630",
+    "font": "#1C1915"
+  },
+  "梅窩二號梯台 Mui Wo Landing No. 2": {
+    "color": "#9730A6",
+    "font": "#FFFFFF"
+  },
+  "梅窩梯台 Mui Wo Landing": {
+    "color": "#30A674",
+    "font": "#1C1915"
+  },
+  "榕樹灣 Yung Shue Wan": {
+    "color": "#A65230",
+    "font": "#FFFFFF"
+  },
+  "模達 Mo Tat": {
+    "color": "#3031A6",
+    "font": "#FFFFFF"
+  },
+  "機場第三條跑道西工地": {
+    "color": "#53A630",
+    "font": "#1C1915"
+  },
+  "沙螺灣 Sha Lo Wan": {
+    "color": "#A63076",
+    "font": "#FFFFFF"
+  },
+  "沙頭角 Sha Tau Kok": {
+    "color": "#3098A6",
+    "font": "#1C1915"
+  },
+  "灣仔 Wan Chai": {
+    "color": "#A69230",
+    "font": "#1C1915"
+  },
+  "灣仔渡輪碼頭 Wan Chai Ferry Pier": {
+    "color": "#6F30A6",
+    "font": "#FFFFFF"
+  },
+  "珀麗灣 Park Island": {
+    "color": "#30A64D",
+    "font": "#1C1915"
+  },
+  "珀麗灣渡輪碼頭 Park Island Ferry Pier": {
+    "color": "#A63036",
+    "font": "#FFFFFF"
+  },
+  "稔樹灣登岸處 Nim Shue Wan Landing": {
+    "color": "#3058A6",
+    "font": "#FFFFFF"
+  },
+  "筲箕灣避風塘 Shau Kei Wan Typhoon Shelter": {
+    "color": "#7BA630",
+    "font": "#1C1915"
+  },
+  "糧船灣 Leung Shuen Wan": {
+    "color": "#A6309D",
+    "font": "#FFFFFF"
+  },
+  "紅磡 (北) Hung Hom (North)": {
+    "color": "#30A68D",
+    "font": "#1C1915"
+  },
+  "紅磡 (南) Hung Hom (South)": {
+    "color": "#A66A30",
+    "font": "#1C1915"
+  },
+  "索罟灣 Sok Kwu Wan": {
+    "color": "#4830A6",
+    "font": "#FFFFFF"
+  },
+  "芝麻灣 Chi Ma Wan": {
+    "color": "#3BA630",
+    "font": "#1C1915"
+  },
+  "荃灣 Tsuen Wan": {
+    "color": "#A6305D",
+    "font": "#FFFFFF"
+  },
+  "荔枝窩 Lai Chi Wo": {
+    "color": "#3080A6",
+    "font": "#1C1915"
+  },
+  "蒲台 Po Toi": {
+    "color": "#A2A630",
+    "font": "#1C1915"
+  },
+  "西九 West Kowloon": {
+    "color": "#8830A6",
+    "font": "#FFFFFF"
+  },
+  "西灣河 Sai Wan Ho": {
+    "color": "#30A665",
+    "font": "#1C1915"
+  },
+  "西貢 Sai Kung": {
+    "color": "#A64330",
+    "font": "#FFFFFF"
+  },
+  "觀塘 Kwun Tong": {
+    "color": "#3040A6",
+    "font": "#FFFFFF"
+  },
+  "赤柱 Stanley": {
+    "color": "#62A630",
+    "font": "#1C1915"
+  },
+  "長洲 Cheung Chau": {
+    "color": "#A63085",
+    "font": "#FFFFFF"
+  },
+  "香港仔 Aberdeen": {
+    "color": "#30A6A5",
+    "font": "#1C1915"
+  },
+  "香港仔行人隧道口 Aberdeen pedestrian tunnel": {
+    "color": "#A68330",
+    "font": "#1C1915"
+  },
+  "香港仔魚類批發市場 Aberdeen Wholesale Fish Market": {
+    "color": "#6030A6",
+    "font": "#FFFFFF"
+  },
+  "馬料水 Ma Liu Shui": {
+    "color": "#30A63E",
+    "font": "#1C1915"
+  },
+  "鴨洲 Ap Chau": {
+    "color": "#A63045",
+    "font": "#FFFFFF"
+  },
+  "鴨脷洲悅海華庭 Ap Lei Chau Marina Habitat": {
+    "color": "#3067A6",
+    "font": "#FFFFFF"
+  },
+  "鹽田梓 Yim Tin Tsai": {
+    "color": "#8AA630",
+    "font": "#1C1915"
+  },
+  "黃石 Wong Shek": {
+    "color": "#A030A6",
+    "font": "#FFFFFF"
+  }
+}

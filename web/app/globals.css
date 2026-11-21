@@ -159,7 +159,6 @@ button { cursor: pointer; }
   border-bottom: 1px solid rgba(28, 25, 21, 0.12);
 }
 .sheet-actions { display: flex; align-items: center; flex: none; gap: 0; }
-.sheet header.station .mode,
 .sheet header.station button { color: inherit; }
 .sheet header button {
   flex: none;
@@ -206,13 +205,14 @@ button { cursor: pointer; }
 .stop-sign { display: block; width: 32px; height: 46px; object-fit: contain; flex: none; }
 .taxi-sign { width: 36px; height: 36px; align-self: center; }
 .sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
-.sheet .mode { margin: 0; min-width: 0; color: #6f675e; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.sheet .description { margin-top: 0.6rem; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
 .sheet .body { overflow: auto; }
 .ferry-services { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.85rem; }
 .ferry-services th, .ferry-services td { padding: 0.28rem 0.45rem 0.28rem 0; vertical-align: top; text-align: left; white-space: pre-line; overflow-wrap: anywhere; }
 .ferry-services th:first-child, .ferry-services td:first-child { width: 40%; }
 .ferry-services th { color: #6f675e; font-weight: 600; }
+.sheet .station-chip + .station-chip { margin-left: 0.3rem; }
 .sheet .sheet-icon {
   display: grid;
   place-items: center;
