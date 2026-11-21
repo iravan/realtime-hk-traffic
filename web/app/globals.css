@@ -52,6 +52,9 @@ button { cursor: pointer; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
 .brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
 .lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   min-height: 26px;
   padding: 0 0.5rem;
   border: 1px solid rgba(28, 25, 21, 0.25);
@@ -62,6 +65,7 @@ button { cursor: pointer; }
 }
 .lang-toggle:hover { background: rgba(28, 25, 21, 0.06); }
 .lang-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.lang-toggle svg { width: 14px; height: 14px; }
 .filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.35rem; max-width: 100%; padding: 0.45rem; }
 .filters button {
   display: inline-flex;
@@ -204,7 +208,7 @@ button { cursor: pointer; }
 .stop-copy { min-width: 0; }
 .stop-sign { display: block; width: 32px; height: 46px; object-fit: contain; flex: none; }
 .taxi-sign { width: 36px; height: 36px; align-self: center; }
-.sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+.sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; overflow-wrap: anywhere; text-wrap: balance; }
 .sheet .description { margin-top: 0.6rem; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
 .sheet .body { overflow: auto; }
@@ -213,6 +217,7 @@ button { cursor: pointer; }
 .ferry-services th:first-child, .ferry-services td:first-child { width: 40%; }
 .ferry-services th { color: #6f675e; font-weight: 600; }
 .sheet .station-chip + .station-chip { margin-left: 0.3rem; }
+.ferry-chip { border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }
 .sheet .sheet-icon {
   display: grid;
   place-items: center;

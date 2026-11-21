@@ -39,8 +39,10 @@ export function localizeBilingualName(name: string, locale: Locale): string {
 }
 
 export function localizeStopName(name: string, mode: Mode, locale: Locale): string {
-  // MTR and ferry catalogues store Chinese and English in one string. Bus
-  // arrival destinations do too, once the feed has been paired. Other stop
-  // titles stay as published.
-  return mode === "mtr" || mode === "ferry" ? localizeBilingualName(name, locale) : name;
+  // MTR, ferry and green-minibus catalogues store Chinese and English in one
+  // string. Bus arrival destinations do too, once the feed has been paired.
+  // Other stop titles stay as published.
+  return mode === "mtr" || mode === "ferry" || mode === "minibus"
+    ? localizeBilingualName(name, locale)
+    : name;
 }

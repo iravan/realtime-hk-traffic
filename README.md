@@ -41,8 +41,9 @@ scope. Taxi stands are places, not vehicles.
 - **Live arrivals.** The selected stop is ringed on the map. Its sheet loads the
   latest snapshot, soonest first, and then listens on a server-sent event
   (`/stops/{id}/events`) stream for newer snapshots. The page never computes an
-  ETA and never calls a transport feed directly. A bus or ferry destination is
-  shown in the language of the page. Citybus publishes one language per
+  ETA and never calls a transport feed directly. A bus, minibus or ferry
+  destination, and an MTR, ferry or minibus stop title, is shown in the language
+  of the page. Citybus publishes one language per
   request, so the server asks for English and Traditional Chinese and pairs
   the two.
 - **Stop pins.** Each mode is a static file, `web/public/stops-{mode}.json`.

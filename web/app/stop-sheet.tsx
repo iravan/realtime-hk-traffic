@@ -354,7 +354,7 @@ function FerryDestination({ name, locale }: { name: string; locale: Locale }) {
         return (
           <span
             key={`${part}-${index}`}
-            className="station-chip"
+            className="station-chip ferry-chip"
             style={color ? { background: color.color, color: color.font } : undefined}
           >
             {localizeBilingualName(part, locale)}
