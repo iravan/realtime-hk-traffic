@@ -1,5 +1,6 @@
 mod catalog;
 mod ferry_timetable;
+mod holidays;
 
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderValue, Method, StatusCode};
@@ -199,7 +200,8 @@ async fn main() {
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
         .route("/stops/{id}/timetable", get(timetable))
-        .route("/stops/{id}/events", get(events));
+        .route("/stops/{id}/events", get(events))
+        .route("/holidays", get(holidays_handler));
     // Vercel hands the service the /api prefix, so answer on both shapes.
     let router = Router::new()
         .merge(api.clone())
@@ -420,6 +422,11 @@ async fn timetable(Path(id): Path<String>, State(app): State<Arc<App>>) -> Respo
             .into_response();
     };
     Json(ferry_timetable::for_pier(&app.http, app.redis.clone(), pier).await).into_response()
+}
+
+async fn holidays_handler(State(app): State<Arc<App>>) -> Response {
+    let dates = holidays::fetch_holidays(&app.http).await;
+    Json(json!({"dates": dates})).into_response()
 }
 
 async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Response {

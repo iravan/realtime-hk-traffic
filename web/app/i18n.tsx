@@ -70,6 +70,7 @@ export type Messages = {
     ferryTimetable: string;
     everyMinutes: (frequency: string) => string;
     ferryDay: (day: string) => string;
+    timetableError: string;
     toilet: string;
     toiletLayout: string;
     noArrivals: string;
@@ -212,6 +213,7 @@ const en: Messages = {
     ferryTimetable: "Timetable",
     everyMinutes: (frequency) => `every ${frequency} min`,
     ferryDay: (day) => day,
+    timetableError: "Could not load the timetable. Try again.",
     toilet: "Toilet",
     toiletLayout: "Layout",
     noArrivals: "No arrivals right now.",
@@ -299,6 +301,7 @@ const zhHant: Messages = {
     ferryTimetable: "時間表",
     everyMinutes: (frequency) => `每 ${frequency} 分鐘`,
     ferryDay: (day) => translateFerryDay(day),
+    timetableError: "無法載入時間表，請再試一次。",
     toilet: "洗手間",
     toiletLayout: "平面圖",
     noArrivals: "暫無到站班次。",

@@ -533,18 +533,10 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
   const [holidays, setHolidays] = useState<Set<string> | null>(null);
   useEffect(() => {
     loadCachedJson<string[]>("hk-public-holidays", async () => {
-      const response = await fetch("https://www.1823.gov.hk/common/ical/en.json");
+      const response = await fetch(`${apiBase}/holidays`);
       if (!response.ok) throw new Error("holidays");
       const data = await response.json();
-      const dates: string[] = [];
-      const events = data?.vcalendar?.[0]?.vevent ?? [];
-      for (const event of events) {
-        const dtstart = event?.dtstart?.[0];
-        if (typeof dtstart === "string" && dtstart.length === 8) {
-          dates.push(`${dtstart.slice(0, 4)}-${dtstart.slice(4, 6)}-${dtstart.slice(6, 8)}`);
-        }
-      }
-      return dates;
+      return (data.dates ?? []) as string[];
     }, 365 * 24 * 60 * 60 * 1000)
       .then((dates) => setHolidays(new Set(dates)))
       .catch(() => setHolidays(new Set()));
@@ -594,7 +586,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
       </button>
       {open ? (
         <Modal title={t.sheet.ferryTimetable} closeLabel={t.sheet.close} onClose={() => setOpen(false)}>
-          {failed ? <p className="stale">{t.sheet.feedError}</p> : null}
+          {failed ? <p className="stale">{t.sheet.timetableError}</p> : null}
           {!failed && !timetable ? <p className="muted">{t.sheet.loading}</p> : null}
           {timetable && destinations.length === 0 ? <p className="muted">{t.sheet.noArrivals}</p> : null}
           {timetable && current ? (
