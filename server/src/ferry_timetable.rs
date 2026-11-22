@@ -178,10 +178,33 @@ fn sun_sailings_for_pier(
 // "Central to Mui Wo" leaves Central and reaches Mui Wo, so the destination is
 // the part after " to ".
 fn destination_of(direction: &str) -> String {
-    direction
+    let english = direction
         .split_once(" to ")
         .map(|(_, to)| to.to_string())
-        .unwrap_or_else(|| direction.to_string())
+        .unwrap_or_else(|| direction.to_string());
+    bilingual_destination(&english)
+}
+
+// The timetable CSVs carry English destination names. The colour table and the
+// bilingual name splitter both expect "Chinese English", so map each known
+// destination to that form here.
+fn bilingual_destination(english: &str) -> String {
+    match english.trim() {
+        "Cheung Chau" => "長洲 Cheung Chau".to_string(),
+        "Mui Wo" => "梅窩 Mui Wo".to_string(),
+        "Sok Kwu Wan" => "南丫島 (索罟灣) Sok Kwu Wan".to_string(),
+        "Yung Shue Wan" => "南丫島 (榕樹灣) Yung Shue Wan".to_string(),
+        "Peng Chau" => "坪洲 Peng Chau".to_string(),
+        "Hei Ling Chau" => "喜靈洲 Hei Ling Chau".to_string(),
+        "Chi Ma Wan" => "芝麻灣 Chi Ma Wan".to_string(),
+        "Central" => "中環 Central".to_string(),
+        "Tsim Sha Tsui" => "尖沙咀 Tsim Sha Tsui".to_string(),
+        "Wanchai" | "Wan Chai" => "灣仔 Wan Chai".to_string(),
+        "Hung Hom" => "紅磡 Hung Hom".to_string(),
+        "Kowloon City" => "九龍城 Kowloon City".to_string(),
+        "Aberdeen" => "香港仔 Aberdeen".to_string(),
+        other => other.to_string(),
+    }
 }
 
 // Inter-island and North Point corridors each leave from one pier per origin.
@@ -286,7 +309,7 @@ fn parse_hkkf_sessions(text: &str, destination: &str) -> Vec<Session> {
             let day = day.split('/').next().unwrap_or(day).trim().to_string();
             for (time, remark) in hkkf_sessions(cell) {
                 sessions.push(Session {
-                    destination: destination.to_string(),
+                    destination: bilingual_destination(destination),
                     day: day.clone(),
                     time,
                     remark,
@@ -346,7 +369,7 @@ fn parse_tsui_wah_sessions(text: &str, pier: &str) -> Vec<Session> {
                 return None;
             }
             Some(Session {
-                destination: destination.to_string(),
+                destination: bilingual_destination(destination),
                 day: tsui_wah_day(date_type)?.to_string(),
                 time: clock_24_hhmm(time)?,
                 remark: String::new(),
@@ -580,13 +603,13 @@ mod tests {
                     Tsim Sha Tsui to Central,\"Sat, Sun & Public Holidays\",10:30pm-11:30pm,10 -- 12\n";
         let central = parse_star_bands(text, "101339");
         assert_eq!(central.len(), 1);
-        assert_eq!(central[0].destination, "Tsim Sha Tsui");
+        assert_eq!(central[0].destination, "尖沙咀 Tsim Sha Tsui");
         assert_eq!(central[0].day, "Mon – Fri (Except Public Holidays)");
         assert_eq!((central[0].from.as_str(), central[0].to.as_str()), ("06:30", "07:25"));
         assert_eq!(central[0].frequency, "10–12");
         let tst = parse_star_bands(text, "101119");
         assert_eq!(tst.len(), 1);
-        assert_eq!(tst[0].destination, "Central");
+        assert_eq!(tst[0].destination, "中環 Central");
         assert_eq!((tst[0].from.as_str(), tst[0].to.as_str()), ("22:30", "23:30"));
     }
 
@@ -604,13 +627,13 @@ mod tests {
         assert_eq!(
             shape,
             vec![
-                ("Weekdays", "06:00", "Yung Shue Wan"),
-                ("Saturday", "07:20", "Yung Shue Wan"),
+                ("Weekdays", "06:00", "南丫島 (榕樹灣) Yung Shue Wan"),
+                ("Saturday", "07:20", "南丫島 (榕樹灣) Yung Shue Wan"),
             ]
         );
         let yung_shue_wan = parse_tsui_wah_sessions(text, "101123");
         assert_eq!(yung_shue_wan.len(), 1);
-        assert_eq!(yung_shue_wan[0].destination, "Aberdeen");
+        assert_eq!(yung_shue_wan[0].destination, "香港仔 Aberdeen");
     }
 
     #[test]
