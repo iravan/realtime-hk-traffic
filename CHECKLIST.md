@@ -42,7 +42,7 @@ GET /stops/{id}/arrivals
 
 - [x] Tapping a stop opens its saved name and mode, then asks the server for that stop's arrivals.
 - [x] List rows soonest first. Each row shows the route, the destination, and the minutes or the clock time. A wait of 60 minutes or more is shown as hours and leftover minutes. A wait under one minute says Due (即將到站).
-- [x] A ferry sheet lists destination, first boat, and last boat when `web/public/ferry-services.json` has that pier.
+- [x] A ferry sheet lists every sailing from `/stops/{id}/timetable`, with the first and last session of each day highlighted.
 - [x] Show the age from `fetched_at`.
 - [x] `live: false` is a timetable. The sheet says the arrival is not live.
 - [x] A missing or expired snapshot says the snapshot is gone. The stop stays on the map.

@@ -49,7 +49,10 @@ SAILINGS = {
         ("sun", "IIPECMUW", "", "新渡輪 Sun Ferry", "梅窩 Mui Wo"),
     ],
     "101324": [("hkkf", "4", "inbound", "港九小輪 HK & Kowloon Ferry", "坪洲 Peng Chau")],  # Hei Ling Chau
-    "101102": [("sun", "CECC", "", "新渡輪 Sun Ferry", "長洲 Cheung Chau")],  # Central Pier 5
+    "101102": [  # Central Pier 5
+        ("sun", "CECC", "", "新渡輪 Sun Ferry", "長洲 Cheung Chau"),
+        ("sun", "CEMW", "", "新渡輪 Sun Ferry", "梅窩 Mui Wo"),
+    ],
     "101101": [  # Cheung Chau
         ("sun", "CCCE", "", "新渡輪 Sun Ferry", "中環 Central"),
         ("sun", "IICHCCMW", "", "新渡輪 Sun Ferry", "芝麻灣 Chi Ma Wan"),

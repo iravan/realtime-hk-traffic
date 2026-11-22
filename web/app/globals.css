@@ -220,10 +220,34 @@ button { cursor: pointer; }
 .sheet .description { margin-top: 0.6rem; }
 .sheet button { border: 0; background: transparent; min-height: 44px; }
 .sheet .body { overflow: auto; }
-.ferry-services { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.85rem; }
-.ferry-services th, .ferry-services td { padding: 0.28rem 0.45rem 0.28rem 0; vertical-align: top; text-align: left; white-space: pre-line; overflow-wrap: anywhere; }
-.ferry-services th:first-child, .ferry-services td:first-child { width: 40%; }
-.ferry-services th { color: #6f675e; font-weight: 600; }
+.ferry-tabs { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.75rem; }
+.ferry-tab {
+  min-height: 36px;
+  padding: 0 0.6rem;
+  border: 1px solid rgba(28, 25, 21, 0.2);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.ferry-tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.ferry-timetable-icon { display: block; width: 20px; height: 20px; background-color: currentColor; }
+.ferry-day { margin: 0 0 0.9rem; }
+.ferry-day h3 { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: #6f675e; }
+.ferry-op-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 0.3rem; }
+.ferry-operator { margin: 0 0 0.75rem; }
+.ferry-operator:last-child { margin-bottom: 0; }
+.ferry-operator-name { margin: 0 0 0.35rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; }
+.ferry-bands { margin: 0 0 0.4rem; padding: 0; list-style: none; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.ferry-bands li + li { margin-top: 0.25rem; }
+.ferry-sessions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0; padding: 0; list-style: none; }
+.ferry-sessions li {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(28, 25, 21, 0.14);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.ferry-sessions li.first, .ferry-sessions li.last { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .sheet .station-chip + .station-chip { margin-left: 0.3rem; }
 .ferry-chip { border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }
 .sheet .sheet-icon {

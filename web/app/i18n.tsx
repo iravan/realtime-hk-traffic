@@ -29,7 +29,6 @@ export type Messages = {
   closedHours: (hours: string) => string;
   clock: (value: string) => string;
   nextDayHours: (from: string, to: string) => string;
-  nextDayTime: (time: string) => string;
   locate: {
     idle: string;
     locating: string;
@@ -68,6 +67,8 @@ export type Messages = {
     taxiAllDay: string;
     delayed: string;
     timetable: string;
+    ferryTimetable: string;
+    everyMinutes: (frequency: string) => string;
     toilet: string;
     toiletLayout: string;
     noArrivals: string;
@@ -131,7 +132,6 @@ const en: Messages = {
   closedHours: (hours) => `Service hours ${hours}, Hong Kong time`,
   clock: englishClock,
   nextDayHours: (from, to) => `${from}–${to} (next day)`,
-  nextDayTime: (time) => `${time} (next day)`,
   locate: {
     idle: "Show my location",
     locating: "Finding your location…",
@@ -186,6 +186,8 @@ const en: Messages = {
     taxiAllDay: "Open all day",
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
+    ferryTimetable: "Timetable",
+    everyMinutes: (frequency) => `every ${frequency} min`,
     toilet: "Toilet",
     toiletLayout: "Layout",
     noArrivals: "No arrivals right now.",
@@ -216,7 +218,6 @@ const zhHant: Messages = {
   closedHours: (hours) => `服務時間 ${hours}（香港時間）`,
   clock: chineseClock,
   nextDayHours: (from, to) => `${from}–翌日${to}`,
-  nextDayTime: (time) => `翌日${time}`,
   locate: {
     idle: "顯示我的位置",
     locating: "正在定位…",
@@ -271,6 +272,8 @@ const zhHant: Messages = {
     taxiAllDay: "全日開放",
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
+    ferryTimetable: "時間表",
+    everyMinutes: (frequency) => `每 ${frequency} 分鐘`,
     toilet: "洗手間",
     toiletLayout: "平面圖",
     noArrivals: "暫無到站班次。",

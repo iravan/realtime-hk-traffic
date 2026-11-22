@@ -29,6 +29,13 @@
       "direction": "",
       "label": "新渡輪 Sun Ferry",
       "destination": "長洲 Cheung Chau"
+    },
+    {
+      "op": "sun",
+      "route": "CEMW",
+      "direction": "",
+      "label": "新渡輪 Sun Ferry",
+      "destination": "梅窩 Mui Wo"
     }
   ],
   "101107": [

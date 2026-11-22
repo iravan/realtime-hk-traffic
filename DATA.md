@@ -644,46 +644,86 @@ still ahead, the same as Sun Ferry, so a boat under way is not dropped.
 Each ferry row carries the clock of the sailing it shows as `time` (`HH:MM`,
 Hong Kong time), so two sailings on one route can be told apart on the sheet.
 
-The Transport Department pier list has no first or last sailing.
-`web/public/ferry-services.json` holds the destination, first boat, and last
-boat for each pier whose [Hong Kong Ferry wiki](https://hkferry.fandom.com/zh/wiki/%E4%B8%AD%E7%92%B04%E8%99%9F%E7%A2%BC%E9%A0%AD)
-page publishes them. `server/scripts/fetch-ferry-berths.py` rebuilds that
-file. The sheet uses it, and the live departure list stays underneath. A pier
-with no row still shows the ferry default in `web/public/service-hours.json`,
-03:00–01:00. A ferry pier stays coloured and clickable outside its hours. A last
-boat from 00:00 to 09:00 is labelled next day on the sheet.
+## Ferry timetable flow
 
-The file covers the franchised piers and the kaitos that publish a first and
-last boat. [Central Pier 4](https://hkferry.fandom.com/zh/wiki/%E4%B8%AD%E7%92%B04%E8%99%9F%E7%A2%BC%E9%A0%AD)
-runs to Sok Kwu Wan 07:20–23:30, and to Yung Shue Wan 06:30–00:30 on weekdays,
-06:30–02:30 on Saturdays, and 07:30–02:30 on holidays.
-[Central Pier 5](https://hkferry.fandom.com/zh/wiki/%E4%B8%AD%E7%92%B05%E8%99%9F%E7%A2%BC%E9%A0%AD)
-lists Cheung Chau 01:30–00:30 and one special sailing to Mui Wo at 03:00. That
-Mui Wo sailing is in the table and not in the live departure list. Pak Kok
-Tsuen (`ferry:101122`) is the Chuen Kee kaito between Aberdeen and Yung Shue
-Wan: Yung Shue Wan from 06:25 (07:45 on holidays) until 22:20, and Aberdeen
-from 06:50 (08:15 on holidays) until 22:40. The Hong Kong & Kowloon Ferry
-service from Central to Pak Kok ended in April 2002, and this landing has no
-live ETA. The same file also times Sok Kwu Wan Pier 2, Sok Kwu Wan Public
-Pier, Chi Ma Wan, Hei Ling Chau, Tai O Promenade, WestK Quay, Kai Tak Runway
-Park, Peng Chau Public Pier, Tai Shui Hang, and Aberdeen Promenade. Tung
-Lung Chau Public Pier (`ferry:101352`) has no timetable on its own page. Its
-boats are weekend and holiday only: Coral Sea to Sam Ka Tsuen 08:50–17:30, and
-Blue Sea to Shau Kei Wan Typhoon Shelter 09:45–17:30, with no service on Lunar
-New Year day 1 and 2. Chek Keng (`ferry:101131`) is a call on the through
-boats only: Wong Shek 10:20–16:40 and Ma Liu Shui 10:45–17:05, daily. The
-other Tap Mun–Wong Shek sailings do not stop there. Where a pier page has no
-table, the route page supplies the boats that leave that pier. That adds Tap
-Mun, both Ma Liu Shui piers, Wong Shek, Sham Chung, Lai Chi Chong, Ko Lau Wan,
-Tung Ping Chau, Kat O, Ap Chau, Lai Chi Wo, Sha Tau Kok, Sha Tin Area 77, Sai
-Kung Public Pier, Fo Tau Fan Chau, Kau Sai Village, Leung Shuen Wan, Po Toi,
-Stanley Blake Pier, Mo Tat, Nim Shue Wan, Mui Wo Landing, Shau Kei Wan Typhoon
-Shelter Landing No. 10, Tseung Kwan O South, the Ap Lei Chau pontoon, the
-Aberdeen fish-market pier, Tsim Sha Tsui Landing No. 1, and the Convention
-Centre landing. On-demand Sai Kung boats and the unlicensed Wong Shek
-speedboats have no fixed first and last. The vague Aberdeen pin
-(`ferry:101125`) and Tung Lung Chau North Pier (`ferry:101327`) still have no
-published departure, so they stay on 03:00–01:00.
+```mermaid
+flowchart TD
+    A[User opens ferry stop sheet] --> B[StopSheet renders]
+    B --> C{User taps timetable icon}
+    C --> D[FerryTimetable modal opens]
+    D --> E[Fetch GET /stops/ferry:ID/timetable]
+    E --> F[Server for_pier]
+    F --> G1[Sun Ferry CSVs<br/>5 corridors]
+    F --> G2[HKKF CSVs<br/>route_id + direction]
+    F --> G3[Tsui Wah CSV<br/>single file]
+    F --> G4[Star Ferry CSVs<br/>2 routes]
+    G1 --> H[Filter by pier origin]
+    G2 --> H
+    G3 --> H
+    G4 --> H
+    H --> I[Group by destination + day]
+    I --> J[JSON response<br/>sessions + bands with operator]
+    J --> K[Modal renders tabs per destination]
+    K --> L[Each session shows operator icon<br/>ferry.svg or ferry-boat.svg]
+    K --> M[First and last session highlighted]
+
+    subgraph "Operator icons"
+        N[Sun Ferry → ferry.svg]
+        O[HKKF → ferry-boat.svg]
+        P[Star Ferry → ferry.svg]
+        Q[Tsui Wah → ferry.svg]
+    end
+```
+
+## Ferry timetables
+
+`GET /stops/ferry:{STOP_ID}/timetable` returns every scheduled sailing for a
+pier, read from the operators' timetables on data.gov.hk. Each destination has
+day groups, and each group lists its sessions in file order, with a `remark`
+code and an `operator` (`sun`, `hkkf`, `star`, or `tsuiwah`). Bands carry the
+same `operator`. The stop sheet's timetable modal shows one tab per destination,
+an operator icon next to each session or band, and highlights the first and last
+session of each day group.
+
+| Operator | Source | Piers |
+| --- | --- | --- |
+| Sun Ferry | Five English CSVs on sunferry.com.hk: Central–Cheung Chau, Central–Mui Wo, inter-islands, North Point–Hung Hom, North Point–Kowloon City | `101101`, `101102`, `101107`, `101108`, `101109`, `101110`, `101111`, `101112`, `101115` |
+| Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/time_table/{route_id}/{direction}` (CSV) | `101126`, `101348`, `101123`, `101108`, `101109`, `101324` |
+| Tsui Wah | `https://www.traway.com.hk/govdata/time.csv` | `101125`, `101123` |
+| Star Ferry | Central and Wan Chai to Tsim Sha Tsui timetable CSVs on starferry.com.hk (listed on data.gov.hk) | `101339`, `101119`, `101118` |
+
+Pier rules, from the Transport Department route data and the operators' own
+timetable text:
+
+- Central to Cheung Chau leaves Central Pier No. 5 (`101102`).
+- Central to Mui Wo leaves Central Pier No. 6 (`101108`), except the 03:00
+  sailing, which leaves Pier No. 5.
+- Inter-island and North Point sailings leave the pier named by their origin.
+- Star Ferry's Central Pier No. 7 is `101339`, Tsim Sha Tsui (Kowloon Point) is `101119`, and Wan Chai Ferry Pier is `101118`.
+- Tsui Wah's `A` is Aberdeen (`101125`) and `Y` is Yung Shue Wan (`101123`).
+  The file does not define its day codes. `W`, `S` and `H` are labelled
+  Weekdays, Saturday and Public holidays. That reading is an assumption.
+
+Remark codes are kept as given. HKKF defines its markers in the CSV's
+`remarks_en` column: `{}` Saturday only, `^` last sailing, `#` one-day advance
+booking for large freight, `*` small freight only, and `@` optional service.
+The meaning of Sun Ferry's numeric remarks (such as `1`) is not confirmed, so
+they are passed through unchanged.
+
+Star Ferry publishes frequency bands, not sailings. Each band has a start and
+end time and a headway in minutes, such as `6:30am-7:25am, 10 -- 12`. The
+response lists these as `bands`, with `from`, `to` and `frequency`, not as
+`sessions`. The frequency is kept as a range, not expanded into departure times.
+
+The server caches each source file in memory for six hours, and caches the
+assembled timetable in Redis under `timetable:{pier}` with a 24-hour TTL.
+The app caches the same response in IndexedDB under `ferry-timetable:{id}`
+with a 24-hour TTL, and does not request the server while that cache is valid.
+Piers with no operator source show no timetable.
+
+Live departures are still read from `GET /stops/{id}/arrivals`, as above. The
+service window in `web/public/service-hours.json` still applies, and a ferry
+pier stays coloured and clickable outside it.
 
 `inbound` on the HKKF feed is the sailing towards the route origin (Central,
 or Peng Chau on the Hei Ling Chau route). `outbound` leaves that origin.
@@ -770,7 +810,6 @@ not vehicle positions, so a taxi stand has no arrival rows.
 | `server/data/ferry-departures.json` | Pier id to HKKF and Sun Ferry departures |
 | `web/app/mtr-line-terminals.json` | Generated line endpoint labels from the MTR CSV |
 | `web/public/service-hours.json` | Per-mode, per-station, per-route, and Star Ferry pier service windows |
-| `web/public/ferry-services.json` | Destination, first boat, and last boat for ferry piers |
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
 | `web/public/taxi-stands.geojson` | Taxi stand taxi type, joined to `taxi:{OBJECTID}` |
 | `web/public/icons/citybus.svg` | Yellow double-decker used for `bus:ctb:` pins and the stop sheet. The bus tab stays on `bus.svg` |
@@ -783,7 +822,6 @@ Generation scripts:
 | `server/scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
 | `server/scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
 | `server/scripts/fetch-ferry-stops.py` | Ferry stop sequence, CSDI pier coordinates, and the checked-in departure map |
-| `server/scripts/fetch-ferry-berths.py` | Hong Kong Ferry wiki pier pages, written to `web/public/ferry-services.json` |
 
 ## Caching
 
@@ -815,7 +853,6 @@ expires on its own clock:
 | `service-hours` | `service-hours.json` | The service windows used to grey a closed stop |
 | `mtr-lines` | `mtr-lines.geojson` | The MTR route lines |
 | `taxi-stands` | `taxi-stands.geojson` | Stand type, joined onto `stops-taxi` after the cache read |
-| `ferry-services` | `ferry-services.json` | Each pier's destination, first boat, and last boat |
 
 Each record is `{ savedAt, value }`. `savedAt` is the time it was written, in
 milliseconds. `value` is the file body, `{ stops: [...] }`. A ferry copy is

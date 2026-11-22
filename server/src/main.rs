@@ -1,4 +1,5 @@
 mod catalog;
+mod ferry_timetable;
 
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderValue, Method, StatusCode};
@@ -194,6 +195,7 @@ async fn main() {
     let api = Router::new()
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
+        .route("/stops/{id}/timetable", get(timetable))
         .route("/stops/{id}/events", get(events));
     // Vercel hands the service the /api prefix, so answer on both shapes.
     let router = Router::new()
@@ -404,6 +406,17 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
         });
     }
     Json(json!({"stops": matched})).into_response()
+}
+
+async fn timetable(Path(id): Path<String>, State(app): State<Arc<App>>) -> Response {
+    let Some(pier) = id.strip_prefix("ferry:") else {
+        return (
+            StatusCode::NOT_FOUND,
+            Json(json!({"error": "no timetable"})),
+        )
+            .into_response();
+    };
+    Json(ferry_timetable::for_pier(&app.http, app.redis.clone(), pier).await).into_response()
 }
 
 async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Response {

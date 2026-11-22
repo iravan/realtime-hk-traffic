@@ -43,13 +43,15 @@ type Snapshot = {
 
 type State = "loading" | "waiting" | "gone" | "error";
 
-type FerryText = { zh: string; en: string };
+type TimetableSession = { time: string; remark: string; operator: string };
 
-type FerryService = {
-  destination: string;
-  first: FerryText;
-  last: FerryText;
-};
+type TimetableBand = { from: string; to: string; frequency: string; operator: string };
+
+type TimetableDay = { day: string; sessions: TimetableSession[]; bands: TimetableBand[] };
+
+type TimetableDestination = { destination: string; days: TimetableDay[] };
+
+type Timetable = { source: string; destinations: TimetableDestination[] };
 
 type StationToilet = {
   station_code: string;
@@ -88,29 +90,6 @@ export function StopSheet({
 }) {
   const { locale, t } = useI18n();
   const [sign, setSign] = useState<string | null>(null);
-  const [sailings, setSailings] = useState<FerryService[] | null>(null);
-  useEffect(() => {
-    if (mode !== "ferry") {
-      setSailings(null);
-      return;
-    }
-    let cancelled = false;
-    setSailings(null);
-    loadCachedJson<Record<string, FerryService[]>>("ferry-services", async () => {
-      const response = await fetch(`${basePath}/ferry-services.json`);
-      if (!response.ok) throw new Error("ferry-services");
-      return response.json() as Promise<Record<string, FerryService[]>>;
-    })
-      .then((body) => {
-        if (!cancelled) setSailings(body[id] ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setSailings([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [id, mode]);
   const [toilet, setToilet] = useState<StationToilet | null>(null);
   useEffect(() => {
     if (mode !== "mtr") {
@@ -232,28 +211,8 @@ export function StopSheet({
         <p className="muted">{t.sheet.hours}</p>
         <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
       </>
-    ) : apiBase && mode === "ferry" && sailings && sailings.length > 0 ? (
-      <table className="ferry-services">
-        <thead>
-          <tr>
-            <th>{t.sheet.destination}</th>
-            <th>{t.sheet.firstBoat}</th>
-            <th>{t.sheet.lastBoat}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sailings.map((sailing, index) => {
-            const text = locale === "en" ? "en" : "zh";
-            return (
-              <tr key={`${sailing.destination}-${index}`}>
-                <td><FerryDestination name={sailing.destination} locale={locale} /></td>
-                <td>{formatFerryWhen(sailing.first[text], t)}</td>
-                <td>{formatFerryWhen(sailing.last[text], t, true)}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+    ) : apiBase && mode === "ferry" ? (
+      <FerryTimetable id={id} locale={locale} t={t} />
     ) : apiBase && serviceHours ? (
       <>
         <p className="muted">{t.sheet.hours}</p>
@@ -475,6 +434,159 @@ function shareLink(id: string): string {
   return url.toString();
 }
 
+function operatorName(operator: string, locale: Locale): string {
+  switch (operator) {
+    case "hkkf":
+      return locale === "en" ? "Hong Kong & Kowloon Ferry" : "港九小輪";
+    case "sun":
+      return locale === "en" ? "Sun Ferry" : "新渡輪";
+    case "star":
+      return locale === "en" ? "Star Ferry" : "天星小輪";
+    case "tsuiwah":
+      return locale === "en" ? "Tsui Wah Ferry" : "翠華船務";
+    default:
+      return operator;
+  }
+}
+
+function operatorIcon(operator: string): string {
+  switch (operator) {
+    case "hkkf":
+      return `${basePath}/icons/ferry-boat.svg`;
+    case "sun":
+    case "star":
+    case "tsuiwah":
+    default:
+      return `${basePath}/icons/ferry.svg`;
+  }
+}
+
+function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Messages }) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const [timetable, setTimetable] = useState<Timetable | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    setFailed(false);
+    loadCachedJson<Timetable>(`ferry-timetable:${id}`, async () => {
+      const response = await fetch(`${apiBase}/stops/${encodeURIComponent(id)}/timetable`);
+      if (!response.ok) throw new Error("timetable");
+      return response.json() as Promise<Timetable>;
+    })
+      .then((body) => {
+        if (!cancelled) setTimetable(body);
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, open]);
+  const destinations = timetable?.destinations ?? [];
+  const current = destinations[active];
+  const iconMask = `url(${basePath}/icons/ferry-timetable.svg) center / contain no-repeat`;
+  return (
+    <>
+      <button
+        type="button"
+        className="sheet-icon"
+        aria-label={t.sheet.ferryTimetable}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+      >
+        <span
+          aria-hidden="true"
+          className="ferry-timetable-icon"
+          style={{ mask: iconMask, WebkitMask: iconMask }}
+        />
+      </button>
+      {open ? (
+        <Modal title={t.sheet.ferryTimetable} closeLabel={t.sheet.close} onClose={() => setOpen(false)}>
+          {failed ? <p className="stale">{t.sheet.feedError}</p> : null}
+          {!failed && !timetable ? <p className="muted">{t.sheet.loading}</p> : null}
+          {timetable && destinations.length === 0 ? <p className="muted">{t.sheet.noArrivals}</p> : null}
+          {timetable && current ? (
+            <>
+              <div className="ferry-tabs" role="tablist">
+                {destinations.map((item, index) => (
+                  <button
+                    key={`${item.destination}-${index}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={index === active}
+                    className="ferry-tab"
+                    onClick={() => setActive(index)}
+                  >
+                    {localizeBilingualName(item.destination, locale)}
+                  </button>
+                ))}
+              </div>
+              <div role="tabpanel">
+                {current.days.map((day) => (
+                  <section key={day.day} className="ferry-day">
+                    <h3>{day.day}</h3>
+                    {(() => {
+                      const operators = [...new Set(day.bands.map((band) => band.operator))];
+                      const sessionOps = [...new Set(day.sessions.map((session) => session.operator))];
+                      const allOps = [...new Set([...operators, ...sessionOps])];
+                      return allOps.map((op) => {
+                        const opBands = day.bands.filter((band) => band.operator === op);
+                        const opSessions = day.sessions.filter((session) => session.operator === op);
+                        if (opBands.length === 0 && opSessions.length === 0) return null;
+                        // `^` marks the last sailing of the day within this operator.
+                        const marked = opSessions.reduce(
+                          (found, item, position) => (item.remark.includes("^") ? position : found),
+                          -1,
+                        );
+                        const last = marked >= 0 ? marked : opSessions.length - 1;
+                        return (
+                          <div key={op} className="ferry-operator">
+                            <h4 className="ferry-operator-name">
+                              <img src={operatorIcon(op)} alt="" className="ferry-op-icon" />
+                              {operatorName(op, locale)}
+                            </h4>
+                            {opBands.length > 0 ? (
+                              <ul className="ferry-bands">
+                                {opBands.map((band, index) => (
+                                  <li key={`${band.from}-${index}`}>
+                                    {t.clock(band.from)}–{t.clock(band.to)} · {t.sheet.everyMinutes(band.frequency)}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : null}
+                            {opSessions.length > 0 ? (
+                              <ol className="ferry-sessions">
+                                {opSessions.map((session, index) => {
+                                  const highlight = [index === 0 ? "first" : "", index === last ? "last" : ""]
+                                    .filter(Boolean)
+                                    .join(" ");
+                                  return (
+                                    <li key={`${session.time}-${index}`} className={highlight}>
+                                      {t.clock(session.time)}
+                                    </li>
+                                  );
+                                })}
+                              </ol>
+                            ) : null}
+                          </div>
+                        );
+                      });
+                    })()}
+                  </section>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
 function MapMenu({
   latitude,
   longitude,
@@ -688,24 +800,6 @@ function StationChip({ name, locale }: { name: string; locale: Locale }) {
       {localizeStopName(name, "mtr", locale)}
     </span>
   );
-}
-
-// A last boat from 00:00 to 09:00 sails on the next day.
-const nextDayFrom = 0;
-const nextDayTo = 540;
-
-function formatFerryWhen(value: string, t: Messages, lastBoat = false): string {
-  return value
-    .split("\n")
-    .map((line) =>
-      line.replace(/(\d{1,2}):(\d{2})/g, (_match, hour, minute) => {
-        const clock = t.clock(`${hour.padStart(2, "0")}:${minute}`);
-        const minutes = Number(hour) * 60 + Number(minute);
-        const nextDay = lastBoat && minutes >= nextDayFrom && minutes <= nextDayTo;
-        return nextDay ? t.nextDayTime(clock) : clock;
-      }),
-    )
-    .join("\n");
 }
 
 function copy(state: State, t: Messages): string {
