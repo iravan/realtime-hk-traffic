@@ -457,15 +457,21 @@ function operatorName(operator: string, locale: Locale): string {
   }
 }
 
+function sessionMinutes(time: string): number {
+  const match = time.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return 0;
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
 function isPastSession(time: string): boolean {
   const match = time.match(/^(\d{1,2}):(\d{2})$/);
   if (!match) return false;
-  const sessionMinutes = Number(match[1]) * 60 + Number(match[2]);
+  const mins = sessionMinutes(time);
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   // A session before 06:00 is treated as next-day when viewed in the evening.
-  if (sessionMinutes < 360 && currentMinutes >= 720) return false;
-  return sessionMinutes < currentMinutes;
+  if (mins < 360 && currentMinutes >= 720) return false;
+  return mins < currentMinutes;
 }
 
 function operatorIcon(operator: string): string {
@@ -586,7 +592,12 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                             {opSessions.length > 0 ? (
                               <ol className="ferry-sessions">
                                 {opSessions.map((session, index) => {
-                                  const highlight = [index === 0 ? "first" : "", index === last ? "last" : ""]
+                                  const minutes = sessionMinutes(session.time);
+                                  const hasEarlierValid = opSessions
+                                    .slice(0, index)
+                                    .some((s) => sessionMinutes(s.time) >= 240);
+                                  const isFirst = minutes >= 240 && !hasEarlierValid;
+                                  const highlight = [isFirst ? "first" : "", index === last ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
                                   const past = isPastSession(session.time);
