@@ -646,7 +646,8 @@ boat for each pier whose [Hong Kong Ferry wiki](https://hkferry.fandom.com/zh/wi
 page publishes them. `server/scripts/fetch-ferry-berths.py` rebuilds that
 file. The sheet uses it, and the live departure list stays underneath. A pier
 with no row still shows the ferry default in `web/public/service-hours.json`,
-03:00–01:00. A ferry pier stays coloured and clickable outside its hours.
+03:00–01:00. A ferry pier stays coloured and clickable outside its hours. A last
+boat from 00:00 to 09:00 is labelled next day on the sheet.
 
 The file covers the franchised piers and the kaitos that publish a first and
 last boat. [Central Pier 4](https://hkferry.fandom.com/zh/wiki/%E4%B8%AD%E7%92%B04%E8%99%9F%E7%A2%BC%E9%A0%AD)
@@ -682,6 +683,193 @@ published departure, so they stay on 03:00–01:00.
 
 `inbound` on the HKKF feed is the sailing towards the route origin (Central,
 or Peng Chau on the Hei Ling Chau route). `outbound` leaves that origin.
+
+### Timetable order (`ferry-timetable.json`)
+
+`web/public/ferry-timetable.json` is keyed by ferry stop id under `piers`. Each
+destination has `sessions` with `weekday`, `saturday`, and `holiday` arrays of
+`HH:MM` times. The file is marked `"mock": true`, and no code reads it yet.
+
+The array order decides the first and last ferry. It is not re-sorted by clock.
+
+- First ferry is `sessions[kind][0]`.
+- Last ferry is the final element.
+
+The sheet judges whether the last ferry is next day from its clock alone. A last
+boat from 00:00 to 09:00 is shown as next day. The first boat has no such rule.
+
+Known limits:
+
+- The rule also labels morning-only services whose last boat is in 00:00 to
+  09:00, such as `ferry:101133` (Sunday 09:00) and `ferry:80000019` (weekdays
+  08:15). Confirm these before relying on the label.
+
+The order of destinations within a pier has no meaning here. Only the order of
+each session array counts.
+
+### Timetable table
+
+Summary of `web/public/ferry-timetable.json`, which is marked `"mock": true`. Each
+cell is the first and last ferry of that session list, using the array order:
+first is index 0 and last is the final element. `(+1)` marks a last ferry from
+00:00 to 09:00, shown as next day. `—` means the route has no sailings that day
+type.
+
+| Pier | Destination | Weekday | Saturday | Holiday |
+| --- | --- | --- | --- | --- |
+| `ferry:101322` | 西灣河 Sai Wan Ho | 07:00 – 22:30 | 07:00 – 22:30 | 07:00 – 22:30 |
+| `ferry:101322` | 東龍島 Tung Lung Chau | — | 08:20 – 16:55 | 08:20 – 16:55 |
+| `ferry:101104` | 珀麗灣 Park Island | 07:00 – 21:30 | 08:30 – 20:30 | 08:30 – 20:30 |
+| `ferry:101337` | 愉景灣 Discovery Bay | 06:30 – 00:30 (+1) | 06:30 – 01:00 (+1) | 06:30 – 01:00 (+1) |
+| `ferry:101337` | 愉景灣北 Discovery Bay North | 18:30 – 19:10 | 11:30 – 18:00 | 11:30 – 18:00 |
+| `ferry:101126` | 南丫島 (索罟灣) Sok Kwu Wan | 07:20 – 23:30 | 07:20 – 23:30 | 07:20 – 23:30 |
+| `ferry:101126` | 南丫島 (榕樹灣) Yung Shue Wan | 06:30 – 00:30 (+1) | 06:30 – 02:30 (+1) | 07:30 – 02:30 (+1) |
+| `ferry:101102` | 長洲 Cheung Chau | 01:30 – 00:30 (+1) | 01:30 – 00:30 (+1) | 01:30 – 00:30 (+1) |
+| `ferry:101102` | 梅窩 Mui Wo | 03:00 – 03:00 (+1) | 03:00 – 03:00 (+1) | 03:00 – 03:00 (+1) |
+| `ferry:101108` | 坪洲 Peng Chau | 03:00 – 00:30 (+1) | 03:00 – 00:30 (+1) | 03:00 – 00:30 (+1) |
+| `ferry:101108` | 喜靈洲 Hei Ling Chau | 09:15 – 00:30 (+1) | — | 07:00 – 23:40 |
+| `ferry:101108` | 梅窩 Mui Wo | 06:10 – 00:30 (+1) | — | 07:00 – 00:30 (+1) |
+| `ferry:101358` | 紅磡 (南) Hung Hom (South) | 07:50 – 19:20 | — | 08:30 – 18:00 |
+| `ferry:80000003` | 西九 West Kowloon | 08:00 – 21:45 | 08:00 – 22:45 | 08:00 – 22:45 |
+| `ferry:80000003` | 灣仔 Wan Chai | 11:40 – 18:55 | 11:40 – 18:55 | 11:40 – 18:55 |
+| `ferry:80000003` | 尖東 Tsim Sha Tsui East | 11:40 – 18:55 | 11:40 – 18:55 | 11:40 – 18:55 |
+| `ferry:80000003` | 西九 West Kowloon | 17:25 – 18:55 | 17:25 – 18:55 | 17:25 – 18:55 |
+| `ferry:101339` | 尖沙咀 Tsim Sha Tsui | 06:30 – 23:30 | 06:30 – 23:30 | 06:30 – 23:30 |
+| `ferry:101112` | 北角 (西) North Point (West) | 07:05 – 19:35 | 08:05 – 19:35 | 08:05 – 19:35 |
+| `ferry:101349` | 觀塘 Kwun Tong | 07:00 – 19:30 | 08:00 – 19:00 | 09:00 – 19:00 |
+| `ferry:101349` | 啟德 Kai Tak | — | 09:00 – 19:00 | 09:00 – 19:00 |
+| `ferry:101110` | 紅磡 (北) Hung Hom (North) | 07:23 – 19:23 | 08:23 – 19:23 | 08:23 – 19:23 |
+| `ferry:101110` | 九龍城 Kowloon City | 07:17 – 19:17 | 08:23 – 19:17 | 08:23 – 19:17 |
+| `ferry:101109` | 中環（6號碼頭） Central Pier 6 | 03:40 – 23:30 | — | 03:40 – 23:35 |
+| `ferry:101109` | 喜靈洲 Hei Ling Chau | 09:45 – 01:00 (+1) | — | 07:30 – 00:10 (+1) |
+| `ferry:101109` | 梅窩 Mui Wo | 05:40 – 23:45 | 05:40 – 23:45 | 05:40 – 23:45 |
+| `ferry:101109` | 芝麻灣 Chi Ma Wan | 07:30 – 19:50 | 07:30 – 19:50 | 07:30 – 19:50 |
+| `ferry:101109` | 長洲 Cheung Chau | 05:40 – 21:50 | 05:40 – 21:50 | 05:40 – 21:50 |
+| `ferry:101119` | 中環天星碼頭 Central Star Ferry Pier | 06:30 – 23:30 | 06:30 – 23:30 | 06:30 – 23:30 |
+| `ferry:101119` | 灣仔渡輪碼頭 Wan Chai Ferry Pier | 07:20 – 22:50 | — | 07:30 – 22:50 |
+| `ferry:101119` | 原點上落 Same pier | 15:20 – 19:45 | 15:20 – 19:45 | 15:20 – 19:45 |
+| `ferry:101113` | 東涌 Tung Chung | 07:00 – 17:30 | 07:00 – 17:30 | 07:00 – 17:30 |
+| `ferry:101113` | 沙螺灣 Sha Lo Wan | 08:00 – 17:30 | 08:00 – 17:30 | 08:00 – 17:30 |
+| `ferry:101113` | 大澳 Tai O | 08:00 – 17:30 | 08:00 – 17:30 | 08:00 – 17:30 |
+| `ferry:80000019` | 中環3號碼頭 Central Pier 3 （不能於愉景灣 Discovery Bay渡輪碼頭落客） | 07:45 – 08:15 (+1) | 10:15 – 17:15 | 10:15 – 17:15 |
+| `ferry:101127` | 中環3號碼頭 Central Pier 3 | 06:00 – 00:00 (+1) | 06:00 – 00:30 (+1) | 06:00 – 00:30 (+1) |
+| `ferry:101114` | 屯門 Tuen Mun | 07:30 – 19:40 | 07:30 – 19:40 | 07:30 – 19:40 |
+| `ferry:101114` | 沙螺灣 Sha Lo Wan | 08:30 – 18:00 | 08:30 – 18:00 | 08:30 – 18:00 |
+| `ferry:101114` | 大澳 Tai O | 08:30 – 18:00 | 08:30 – 18:00 | 08:30 – 18:00 |
+| `ferry:101107` | 中環（6號碼頭） Central Pier 6 | 03:40 – 23:30 | 03:40 – 23:30 | 03:40 – 23:30 |
+| `ferry:101107` | 坪洲 Peng Chau | 06:30 – 23:25 | 06:30 – 23:25 | 06:30 – 23:25 |
+| `ferry:101107` | 芝麻灣 Chi Ma Wan | 08:00 – 20:10 | 08:00 – 20:10 | 08:00 – 20:10 |
+| `ferry:101107` | 長洲 Cheung Chau | 06:00 – 22:20 | 06:00 – 22:20 | 06:00 – 22:20 |
+| `ferry:101123` | 中環（4號碼頭） Central Pier 4 | 05:30 – 23:30 | 05:30 – 23:30 | 05:30 – 23:30 |
+| `ferry:101123` | 香港仔 Aberdeen | 06:40 – 22:30 | 06:40 – 22:30 | 08:05 – 22:30 |
+| `ferry:101123` | 北角村 Pak Kok Tsuen | 06:40 – 22:30 | 06:40 – 22:30 | 08:05 – 22:30 |
+| `ferry:101117` | 大澳 Tai O | 08:45 – 18:15 | 08:45 – 18:15 | 08:45 – 18:15 |
+| `ferry:101117` | 東涌 Tung Chung | 09:55 – 19:25 | 09:55 – 19:25 | 09:55 – 19:25 |
+| `ferry:101117` | 屯門 Tuen Mun | 09:55 – 19:25 | 09:55 – 19:25 | 09:55 – 19:25 |
+| `ferry:101118` | 尖沙咀天星碼頭 Tsim Sha Tsui Star Ferry Pier | 07:30 – 23:00 | — | 07:40 – 23:00 |
+| `ferry:101118` | 天星小輪 | 07:30 – 23:00 | — | 07:40 – 23:00 |
+| `ferry:101118` | 天星海港遊航線 | 07:30 – 23:00 | — | 07:40 – 23:00 |
+| `ferry:101103` | 中環（2號碼頭） Central Pier 2 | 06:30 – 21:00 | 08:00 – 20:00 | 08:00 – 20:00 |
+| `ferry:101103` | 荃灣 Tsuen Wan | 08:10 – 16:10 | 10:10 – 16:10 | 10:10 – 16:10 |
+| `ferry:101111` | 北角 (西) North Point (West) | 07:05 – 19:35 | 08:05 – 19:35 | 08:05 – 19:35 |
+| `ferry:101357` | 中環8號碼頭 Central Pier 8 | 07:30 – 19:00 | — | 08:10 – 18:20 |
+| `ferry:101357` | 中環8號碼頭 Central Pier 8 | 16:00 – 16:00 | 16:00 – 16:00 | 16:00 – 16:00 |
+| `ferry:101105` | 珀麗灣渡輪碼頭 Park Island Ferry Pier | 08:30 – 16:30 | 10:30 – 16:30 | 10:30 – 16:30 |
+| `ferry:101321` | 觀塘 Kwun Tong | 07:03 – 21:40 | 07:03 – 21:40 | 07:03 – 21:40 |
+| `ferry:101321` | 三家村 Sam Ka Tsuen | 07:12 – 22:45 | 07:12 – 22:45 | 07:12 – 22:45 |
+| `ferry:101320` | 北角 (東) North Point (East) | 07:15 – 19:45 | 08:15 – 19:35 | 09:35 – 19:35 |
+| `ferry:101320` | 啟德 Kai Tak | — | 09:15 – 19:15 | 09:15 – 19:15 |
+| `ferry:101320` | 西灣河 Sai Wan Ho | 06:48 – 21:18 | 06:48 – 21:18 | 06:48 – 21:18 |
+| `ferry:101101` | 中環（5號碼頭） Central Pier 5 | 05:10 – 02:20 (+1) | 05:10 – 02:20 (+1) | 05:10 – 02:20 (+1) |
+| `ferry:101101` | 坪洲 Peng Chau | 06:00 – 22:50 | 06:00 – 22:50 | 06:00 – 22:50 |
+| `ferry:101101` | 梅窩 Mui Wo | 06:00 – 22:50 | 06:00 – 22:50 | 06:00 – 22:50 |
+| `ferry:101101` | 芝麻灣 Chi Ma Wan | 06:35 – 22:50 | 06:35 – 22:50 | 06:35 – 22:50 |
+| `ferry:101122` | 榕樹灣 Yung Shue Wan | 06:25 – 22:20 | 06:25 – 22:20 | 07:45 – 22:20 |
+| `ferry:101122` | 香港仔 Aberdeen | 06:50 – 22:40 | 06:50 – 22:40 | 08:15 – 22:40 |
+| `ferry:101355` | 觀塘 Kwun Tong | — | 09:25 – 19:25 | 09:25 – 19:25 |
+| `ferry:101355` | 北角(東) North Point (East) | — | 09:25 – 19:25 | 09:25 – 19:25 |
+| `ferry:101324` | 坪洲 Peng Chau | 07:05 – 21:55 | — | 06:10 – 22:40 |
+| `ferry:101356` | 稔樹灣登岸處 Nim Shue Wan Landing | 06:30 – 23:10 | 06:30 – 23:10 | 06:30 – 23:10 |
+| `ferry:101356` | 大水坑碼頭 Tai Shui Hang Pier | 11:30 – 17:20 | 11:30 – 17:20 | 10:25 – 17:10 |
+| `ferry:101356` | 稔樹灣登岸處 Nim Shue Wan Landing | 07:45 – 07:45 (+1) | — | — |
+| `ferry:101356` | 梅窩二號梯台 Mui Wo Landing No. 2 | 15:25 – 15:25 | — | — |
+| `ferry:101340` | 坪洲公眾碼頭 Peng Chau Public Pier | 08:10 – 14:45 | 08:10 – 15:50 | 08:10 – 16:00 |
+| `ferry:101340` | 稔樹灣登岸處 Nim Shue Wan Landing | 11:30 – 17:20 | 11:30 – 17:20 | 10:25 – 17:10 |
+| `ferry:101120` | 沙螺灣 Sha Lo Wan | 09:30 – 19:00 | 09:30 – 19:00 | 09:30 – 19:00 |
+| `ferry:101120` | 東涌 Tung Chung | 09:30 – 19:00 | 09:30 – 19:00 | 09:30 – 19:00 |
+| `ferry:101120` | 屯門 Tuen Mun | 09:30 – 19:00 | 09:30 – 19:00 | 09:30 – 19:00 |
+| `ferry:101348` | 中環4號碼頭 Central Pier 4 | 06:40 – 22:40 | 06:40 – 22:40 | 06:40 – 22:40 |
+| `ferry:101124` | 香港仔 Aberdeen / 模達 Mo Tat | 06:00 – 22:20 | 06:00 – 22:20 | 06:00 – 22:20 |
+| `ferry:101115` | 坪洲 Peng Chau | 06:52 – 23:05 | 06:52 – 23:05 | 06:52 – 23:05 |
+| `ferry:101115` | 梅窩 Mui Wo | 06:52 – 23:05 | 06:52 – 23:05 | 06:52 – 23:05 |
+| `ferry:101115` | 長洲 Cheung Chau | 08:20 – 20:30 | 08:20 – 20:30 | 08:20 – 20:30 |
+| `ferry:80000025` | 中環 Central | 08:15 – 22:00 | 08:15 – 23:00 | 08:15 – 23:00 |
+| `ferry:80000025` | 尖東 Tsim Sha Tsui East | 10:55 – 18:10 | 10:55 – 18:10 | 10:55 – 18:10 |
+| `ferry:80000025` | 灣仔 Wan Chai | 10:55 – 18:10 | 10:55 – 18:10 | 10:55 – 18:10 |
+| `ferry:80000025` | 中環 Central | 10:55 – 18:10 | 10:55 – 18:10 | 10:55 – 18:10 |
+| `ferry:101332` | 模達 Mo Tat / 索罟灣 Sok Kwu Wan | 06:40 – 23:00 | 06:40 – 23:00 | 06:40 – 23:00 |
+| `ferry:101332` | 北角村 Pak Kok Tsuen / 榕樹灣 Yung Shue Wan | 06:00 – 22:00 | 06:00 – 22:00 | 07:20 – 22:00 |
+| `ferry:101332` | 蒲台 Po Toi | 10:00 – 10:00 | — | 08:15 – 08:15 (+1) |
+| `ferry:101352` | 三家村 Sam Ka Tsuen | — | 08:50 – 17:30 | 08:50 – 17:30 |
+| `ferry:101352` | 筲箕灣避風塘 Shau Kei Wan Typhoon Shelter | — | 09:45 – 17:30 | 09:45 – 17:30 |
+| `ferry:101131` | 黃石 Wong Shek | 10:20 – 16:40 | 10:20 – 16:40 | 10:20 – 16:40 |
+| `ferry:101131` | 馬料水 Ma Liu Shui | 10:45 – 17:05 | 10:45 – 17:05 | 10:45 – 17:05 |
+| `ferry:101134` | 黃石 Wong Shek | 07:45 – 18:00 | 08:00 – 18:05 | 08:00 – 18:05 |
+| `ferry:101134` | 馬料水 Ma Liu Shui | 11:10 – 17:30 | 11:10 – 17:30 | 11:10 – 17:30 |
+| `ferry:101130` | 塔門 Tap Mun | 08:30 – 18:30 | 08:30 – 18:35 | 08:30 – 18:35 |
+| `ferry:101130` | 馬料水 Ma Liu Shui | 10:35 – 16:55 | 10:35 – 16:55 | 10:35 – 16:55 |
+| `ferry:101133` | 塔門 Tap Mun | 08:30 – 15:00 | 08:30 – 15:00 | 08:30 – 15:00 |
+| `ferry:101133` | 黃石 Wong Shek | 08:30 – 15:00 | 08:30 – 15:00 | 08:30 – 15:00 |
+| `ferry:101133` | 東平洲 Tung Ping Chau | — | 09:00 – 15:30 | 09:00 – 09:00 (+1) |
+| `ferry:101132` | 馬料水 Ma Liu Shui | — | 17:15 – 17:15 | 17:15 – 17:15 |
+| `ferry:80000013` | 黃石 Wong Shek | 07:50 – 18:05 | 08:05 – 18:10 | 08:05 – 18:10 |
+| `ferry:80000013` | 塔門 Tap Mun | 08:50 – 18:50 | 08:50 – 18:55 | 08:50 – 18:55 |
+| `ferry:101136` | 塔門 Tap Mun | 09:00 – 15:30 | 09:00 – 15:30 | 09:00 – 15:30 |
+| `ferry:101136` | 馬料水 Ma Liu Shui | 11:55 – 18:15 | 11:55 – 18:15 | 11:55 – 18:15 |
+| `ferry:101136` | 企嶺下海 Kei Ling Ha | — | 10:30 – 17:30 | 10:30 – 17:30 |
+| `ferry:101137` | 塔門 Tap Mun | 09:15 – 15:45 | 09:15 – 15:45 | 09:15 – 15:45 |
+| `ferry:101137` | 馬料水 Ma Liu Shui | 11:40 – 18:00 | 11:40 – 18:00 | 11:40 – 18:00 |
+| `ferry:101323` | 香港仔 Aberdeen | 06:08 – 22:28 | 06:08 – 22:28 | 06:08 – 22:28 |
+| `ferry:101323` | 索罟灣 Sok Kwu Wan | 07:05 – 23:25 | 07:05 – 23:25 | 07:05 – 23:25 |
+| `ferry:101326` | 赤柱 Stanley / 香港仔 Aberdeen | 15:30 – 15:30 | 12:40 – 16:00 | 09:15 – 18:00 |
+| `ferry:101336` | 蒲台 Po Toi | — | 13:20 – 13:20 | 10:00 – 17:00 |
+| `ferry:101128` | 坪洲公眾碼頭 Peng Chau Public Pier | 06:45 – 23:20 | 06:45 – 23:20 | 06:45 – 23:20 |
+| `ferry:101128` | 大水坑碼頭 Tai Shui Hang Pier | 08:00 – 14:35 | 08:00 – 15:40 | 08:00 – 15:50 |
+| `ferry:101128` | 梅窩梯台 Mui Wo Landing | 15:15 – 15:15 | 07:15 – 20:05 | 08:45 – 20:05 |
+| `ferry:101350` | 坪洲公眾碼頭 Peng Chau Public Pier | 07:20 – 07:20 (+1) | — | — |
+| `ferry:101350` | 稔樹灣登岸處 Nim Shue Wan Landing | 07:20 – 07:20 (+1) | 07:45 – 20:30 | 09:15 – 20:30 |
+| `ferry:101331` | 香港仔行人隧道口 Aberdeen pedestrian tunnel | 07:00 – 22:50 | 07:00 – 22:50 | 07:00 – 22:50 |
+| `ferry:101331` | 香港仔魚類批發市場 Aberdeen Wholesale Fish Market | 06:00 – 23:45 | 06:00 – 23:45 | 06:00 – 23:45 |
+| `ferry:101333` | 鴨脷洲悅海華庭 Ap Lei Chau Marina Habitat | 06:10 – 23:50 | 06:10 – 23:50 | 06:10 – 23:50 |
+| `ferry:101351` | 東龍島 Tung Lung Chau | — | 09:00 – 16:40 | 09:00 – 16:40 |
+| `ferry:101351` | 將軍澳南 Tseung Kwan O South | — | 09:30 – 18:15 | 09:30 – 18:15 |
+| `ferry:80000020` | 筲箕灣避風塘 Shau Kei Wan Typhoon Shelter | — | 10:00 – 18:45 | 10:00 – 18:45 |
+| `ferry:80000006` | 糧船灣 Leung Shuen Wan | — | 09:30 – 16:30 | 09:30 – 16:30 |
+| `ferry:80000006` | 伙頭墳洲 Fo Tau Fan Chau | 09:00 – 14:00 | 09:00 – 14:00 | — |
+| `ferry:80000006` | 鹽田梓 Yim Tin Tsai | — | 10:00 – 15:00 | 10:00 – 15:00 |
+| `ferry:80000007` | 西貢 Sai Kung | 10:00 – 15:30 | 10:00 – 15:30 | — |
+| `ferry:80000017` | 西貢 Sai Kung | — | 10:30 – 17:30 | 10:30 – 17:30 |
+| `ferry:80000016` | 糧船灣 Leung Shuen Wan | — | 10:00 – 17:00 | 10:00 – 17:00 |
+| `ferry:80000016` | 西貢 Sai Kung | — | 13:00 – 16:00 | 13:00 – 16:00 |
+| `ferry:101343` | 吉澳 Kat O | 08:30 – 17:00 | 08:30 – 17:00 | 08:30 – 17:00 |
+| `ferry:101342` | 沙頭角 Sha Tau Kok | 09:15 – 16:00 | 09:15 – 16:00 | 09:15 – 16:00 |
+| `ferry:101342` | 鴨洲 Ap Chau | 09:15 – 13:15 | 09:15 – 13:15 | 09:15 – 13:15 |
+| `ferry:101342` | 馬料水 Ma Liu Shui | — | 15:30 – 15:30 | 15:30 – 15:30 |
+| `ferry:101342` | 大水坑 Tai Shui Hang | 15:10 – 15:10 | — | — |
+| `ferry:80000008` | 沙頭角 Sha Tau Kok | 09:30 – 13:30 | 09:30 – 13:30 | 09:30 – 13:30 |
+| `ferry:80000008` | 吉澳 Kat O | 11:00 – 15:45 | 11:00 – 15:45 | 11:00 – 15:45 |
+| `ferry:80000008` | 荔枝窩 Lai Chi Wo | 12:45 – 12:45 | — | — |
+| `ferry:101354` | 沙頭角 Sha Tau Kok | 11:30 – 16:15 | 11:30 – 16:15 | 11:30 – 16:15 |
+| `ferry:101354` | 吉澳 Kat O | 09:00 – 13:00 | 09:00 – 13:00 | 09:00 – 13:00 |
+| `ferry:101354` | 馬料水 Ma Liu Shui | — | 15:30 – 15:30 | 15:30 – 15:30 |
+| `ferry:101354` | 大水坑 Tai Shui Hang | 15:40 – 15:40 | — | — |
+| `ferry:80000023` | 荔枝窩 Lai Chi Wo | — | 09:00 – 09:00 (+1) | 09:00 – 09:00 (+1) |
+| `ferry:80000023` | 吉澳 Kat O | — | 09:00 – 09:00 (+1) | 09:00 – 09:00 (+1) |
+| `ferry:80000011` | 荔枝窩 Lai Chi Wo / 吉澳 Kat O / 鴨洲 Ap Chau | 09:00 – 09:00 (+1) | — | — |
+| `ferry:80000002` | 西九 West Kowloon | 10:40 – 17:55 | 10:40 – 17:55 | 10:40 – 17:55 |
+| `ferry:80000002` | 灣仔 Wan Chai | 11:10 – 18:25 | 11:10 – 18:25 | 11:10 – 18:25 |
+| `ferry:80000015` | 中環 Central | 11:25 – 18:40 | 11:25 – 18:40 | 11:25 – 18:40 |
+| `ferry:80000015` | 尖東 Tsim Sha Tsui East | 11:55 – 19:10 | 11:55 – 19:10 | 11:55 – 19:10 |
 
 ## Taxi stands
 

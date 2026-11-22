@@ -244,7 +244,7 @@ export function StopSheet({
               <tr key={`${sailing.destination}-${index}`}>
                 <td><FerryDestination name={sailing.destination} locale={locale} /></td>
                 <td>{formatFerryWhen(sailing.first[text], t)}</td>
-                <td>{formatFerryLast(sailing.first[text], sailing.last[text], t)}</td>
+                <td>{formatFerryWhen(sailing.last[text], t, true)}</td>
               </tr>
             );
           })}
@@ -669,25 +669,22 @@ function StationChip({ name, locale }: { name: string; locale: Locale }) {
   );
 }
 
-function formatFerryWhen(value: string, t: Messages): string {
+// A last boat from 00:00 to 09:00 sails on the next day.
+const nextDayFrom = 0;
+const nextDayTo = 540;
+
+function formatFerryWhen(value: string, t: Messages, lastBoat = false): string {
   return value
     .split("\n")
-    .map((line) => line.replace(/(\d{1,2}):(\d{2})/g, (_match, hour, minute) => t.clock(`${hour.padStart(2, "0")}:${minute}`)))
+    .map((line) =>
+      line.replace(/(\d{1,2}):(\d{2})/g, (_match, hour, minute) => {
+        const clock = t.clock(`${hour.padStart(2, "0")}:${minute}`);
+        const minutes = Number(hour) * 60 + Number(minute);
+        const nextDay = lastBoat && minutes >= nextDayFrom && minutes <= nextDayTo;
+        return nextDay ? t.nextDayTime(clock) : clock;
+      }),
+    )
     .join("\n");
-}
-
-function bareClock(value: string): number | null {
-  const match = value.trim().match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return null;
-  return Number(match[1]) * 60 + Number(match[2]);
-}
-
-function formatFerryLast(first: string, last: string, t: Messages): string {
-  const shown = formatFerryWhen(last, t);
-  const from = bareClock(first);
-  const to = bareClock(last);
-  if (from != null && to != null && to < from) return t.nextDayTime(shown);
-  return shown;
 }
 
 function copy(state: State, t: Messages): string {
