@@ -233,7 +233,9 @@ button { cursor: pointer; }
 .ferry-tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .ferry-timetable-icon { display: block; width: 20px; height: 20px; background-color: currentColor; }
 .ferry-day { margin: 0 0 0.9rem; }
+.ferry-day.ferry-day-past { opacity: 0.4; }
 .ferry-day h3 { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: #6f675e; }
+.ferry-day-title-current { font-weight: 800; color: var(--ink); }
 .ferry-op-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 0.3rem; }
 .ferry-destinations { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.5rem; }
 .ferry-operator { margin: 0 0 0.75rem; }

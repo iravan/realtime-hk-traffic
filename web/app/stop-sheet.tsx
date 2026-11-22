@@ -463,6 +463,62 @@ function sessionMinutes(time: string): number {
   return Number(match[1]) * 60 + Number(match[2]);
 }
 
+// Hong Kong public holidays (YYYY-MM-DD). Update yearly.
+const HK_PUBLIC_HOLIDAYS = new Set([
+  // 2025
+  "2025-01-01", "2025-01-29", "2025-01-30", "2025-01-31",
+  "2025-04-04", "2025-04-05", "2025-04-06", "2025-04-18",
+  "2025-04-19", "2025-04-21", "2025-05-01", "2025-05-05",
+  "2025-05-31", "2025-07-01", "2025-10-01", "2025-10-07",
+  "2025-10-29", "2025-12-25", "2025-12-26",
+  // 2026
+  "2026-01-01", "2026-02-17", "2026-02-18", "2026-02-19",
+  "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06",
+  "2026-05-01", "2026-05-24", "2026-05-25", "2026-07-01",
+  "2026-09-26", "2026-10-01", "2026-10-19", "2026-10-26",
+  "2026-12-25", "2026-12-26",
+  // 2027
+  "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08",
+  "2027-03-26", "2027-03-27", "2027-03-29", "2027-04-05",
+  "2027-04-06", "2027-05-01", "2027-05-13", "2027-05-14",
+  "2027-07-01", "2027-09-16", "2027-10-01", "2027-10-08",
+  "2027-10-20", "2027-12-25", "2027-12-27",
+]);
+
+function isHongKongPublicHoliday(date: Date): boolean {
+  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return HK_PUBLIC_HOLIDAYS.has(key);
+}
+
+function isCurrentDayGroup(day: string): boolean {
+  const now = new Date();
+  const dow = now.getDay(); // 0=Sun, 6=Sat
+  const isHoliday = isHongKongPublicHoliday(now);
+  const lower = day.toLowerCase();
+  if (dow === 0 || isHoliday) {
+    // Sunday or public holiday
+    return (
+      lower.includes("sun") ||
+      lower.includes("public") ||
+      lower.includes("holiday") ||
+      lower.includes("daily") ||
+      lower.includes("every")
+    );
+  }
+  if (dow === 6) {
+    // Saturday
+    return lower.includes("sat") || lower.includes("daily") || lower.includes("every");
+  }
+  // Weekday (Mon-Fri, not holiday)
+  return (
+    lower.includes("mon") ||
+    lower.includes("week") ||
+    lower.includes("fri") ||
+    lower.includes("daily") ||
+    lower.includes("every")
+  );
+}
+
 function isPastSession(time: string): boolean {
   const match = time.match(/^(\d{1,2}):(\d{2})$/);
   if (!match) return false;
@@ -557,9 +613,17 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                 ))}
               </div>
               <div role="tabpanel">
-                {current.days.map((day) => (
-                  <section key={day.day} className="ferry-day">
-                    <h3>{t.sheet.ferryDay(day.day)}</h3>
+                {[...current.days]
+                  .sort((a, b) => {
+                    const aCurrent = isCurrentDayGroup(a.day) ? 0 : 1;
+                    const bCurrent = isCurrentDayGroup(b.day) ? 0 : 1;
+                    return aCurrent - bCurrent;
+                  })
+                  .map((day) => {
+                    const isCurrent = isCurrentDayGroup(day.day);
+                    return (
+                  <section key={day.day} className={`ferry-day ${isCurrent ? "" : "ferry-day-past"}`.trim()}>
+                    <h3 className={isCurrent ? "ferry-day-title-current" : ""}>{t.sheet.ferryDay(day.day)}</h3>
                     {(() => {
                       const operators = [...new Set(day.bands.map((band) => band.operator))];
                       const sessionOps = [...new Set(day.sessions.map((session) => session.operator))];
@@ -621,7 +685,8 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                       });
                     })()}
                   </section>
-                ))}
+                  );
+                })}
               </div>
             </>
           ) : null}
