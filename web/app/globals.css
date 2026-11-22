@@ -230,7 +230,8 @@ button { cursor: pointer; }
   font-size: 0.85rem;
   cursor: pointer;
 }
-.ferry-tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.ferry-tab { background: transparent; color: var(--ink); font-weight: normal; }
+.ferry-tab[aria-selected="true"] { font-weight: 600; }
 .ferry-timetable-icon { display: block; width: 20px; height: 20px; background-color: currentColor; }
 .ferry-day { margin: 0 0 0.9rem; }
 .ferry-day.ferry-day-past { opacity: 0.4; }

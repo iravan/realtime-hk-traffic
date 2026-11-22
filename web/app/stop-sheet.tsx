@@ -606,9 +606,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                       style={
                         selected
                           ? { background: color?.color ?? "var(--ink)", color: color?.font ?? "var(--paper)", borderColor: color?.color ?? "var(--ink)" }
-                          : color
-                            ? { background: color.color, color: color.font, borderColor: color.color, opacity: 0.7 }
-                            : undefined
+                          : undefined
                       }
                       onClick={() => setActive(index)}
                     >
