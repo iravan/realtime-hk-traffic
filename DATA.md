@@ -668,8 +668,8 @@ flowchart TD
     K --> M[First and last session highlighted]
 
     subgraph "Operator icons"
-        N[Sun Ferry → ferry.svg]
-        O[HKKF → ferry-boat.svg]
+        N[Sun Ferry → ferry-boat.svg]
+        O[HKKF → ferry.svg]
         P[Star Ferry → ferry.svg]
         Q[Tsui Wah → ferry.svg]
     end

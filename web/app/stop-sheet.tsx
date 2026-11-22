@@ -451,9 +451,9 @@ function operatorName(operator: string, locale: Locale): string {
 
 function operatorIcon(operator: string): string {
   switch (operator) {
-    case "hkkf":
-      return `${basePath}/icons/ferry-boat.svg`;
     case "sun":
+      return `${basePath}/icons/ferry-boat.svg`;
+    case "hkkf":
     case "star":
     case "tsuiwah":
     default:
