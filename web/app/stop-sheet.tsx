@@ -569,11 +569,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                         const opSessions = day.sessions.filter((session) => session.operator === op);
                         if (opBands.length === 0 && opSessions.length === 0) return null;
                         // `^` marks the last sailing of the day within this operator.
-                        const marked = opSessions.reduce(
-                          (found, item, position) => (item.remark.includes("^") ? position : found),
-                          -1,
-                        );
-                        const last = marked >= 0 ? marked : opSessions.length - 1;
+                        const markedSession = opSessions.find((s) => s.remark.includes("^"));
                         return (
                           <div key={op} className="ferry-operator">
                             <h4 className="ferry-operator-name">
@@ -591,13 +587,24 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                             ) : null}
                             {opSessions.length > 0 ? (
                               <ol className="ferry-sessions">
-                                {opSessions.map((session, index) => {
+                                {[...opSessions]
+                                  .sort((a, b) => {
+                                    const am = sessionMinutes(a.time);
+                                    const bm = sessionMinutes(b.time);
+                                    const aKey = am < 240 ? am + 1440 : am;
+                                    const bKey = bm < 240 ? bm + 1440 : bm;
+                                    return aKey - bKey;
+                                  })
+                                  .map((session, index, sorted) => {
                                   const minutes = sessionMinutes(session.time);
-                                  const hasEarlierValid = opSessions
+                                  const hasEarlierValid = sorted
                                     .slice(0, index)
                                     .some((s) => sessionMinutes(s.time) >= 240);
                                   const isFirst = minutes >= 240 && !hasEarlierValid;
-                                  const highlight = [isFirst ? "first" : "", index === last ? "last" : ""]
+                                  const lastIdx = markedSession
+                                    ? sorted.findIndex((s) => s === markedSession)
+                                    : sorted.length - 1;
+                                  const highlight = [isFirst ? "first" : "", index === lastIdx ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
                                   const past = isPastSession(session.time);
