@@ -32,6 +32,9 @@ const STAR_WAN_CHAI_TSIM_SHA_TSUI: &str = "https://www.starferry.com.hk/sites/de
 // start (`A` Aberdeen, `Y` Yung Shue Wan), day type, and time.
 const TSUI_WAH_TIMETABLE: &str = "https://www.traway.com.hk/govdata/time.csv";
 
+// Chuen Kee Ferry publishes one CSV for Aberdeen - Sok Kwu Wan via Mo Tat Wan.
+const CHUEN_KEE_TIMETABLE: &str = "https://ferry.com.hk/opendataV/time.csv";
+
 static CACHE: Mutex<Option<HashMap<String, (Instant, String)>>> = Mutex::new(None);
 
 #[derive(Clone)]
@@ -427,6 +430,48 @@ fn parse_star_bands(text: &str, pier: &str) -> Vec<Band> {
         .collect()
 }
 
+// Chuen Kee Ferry runs Aberdeen to Sok Kwu Wan via Mo Tat Wan. Each row starts
+// at one end, so the pier and the destination both follow from the route start.
+fn chuen_kee_leg(route_start: &str) -> Option<(&'static str, &'static str)> {
+    match route_start {
+        "A" => Some(("101125", "Sok Kwu Wan")),
+        "S" => Some(("101124", "Aberdeen")),
+        _ => None,
+    }
+}
+
+fn chuen_kee_day(date_type: &str) -> Option<&'static str> {
+    match date_type {
+        "W" => Some("Weekdays"),
+        "WW" => Some("Saturday"),
+        "S" => Some("Sundays and public holidays"),
+        _ => None,
+    }
+}
+
+fn parse_chuen_kee_sessions(text: &str, pier: &str) -> Vec<Session> {
+    text.lines()
+        .skip(1)
+        .filter_map(|line| {
+            let fields: Vec<&str> = line.split(',').map(str::trim).collect();
+            let [_, date_type, route_start, time] = fields[..] else {
+                return None;
+            };
+            let (leg_pier, destination) = chuen_kee_leg(route_start)?;
+            if leg_pier != pier {
+                return None;
+            }
+            Some(Session {
+                destination: bilingual_destination(destination),
+                day: chuen_kee_day(date_type)?.to_string(),
+                time: clock_24_hhmm(time)?,
+                remark: String::new(),
+                operator: "chuenkee",
+            })
+        })
+        .collect()
+}
+
 fn sun_sessions(sailings: Vec<Sailing>) -> Vec<Session> {
     sailings
         .into_iter()
@@ -517,6 +562,21 @@ async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pie
 
     if let Some(text) = cached_text(http, TSUI_WAH_TIMETABLE).await {
         sessions.extend(parse_tsui_wah_sessions(&text, pier));
+    }
+
+    // Debug: try fetching directly
+    match http.get(CHUEN_KEE_TIMETABLE).send().await {
+        Ok(resp) => {
+            eprintln!("Chuen Kee status: {}", resp.status());
+            let text = resp.text().await.unwrap_or_default();
+            eprintln!("Chuen Kee text len: {}", text.len());
+            let parsed = parse_chuen_kee_sessions(&text, pier);
+            eprintln!("Chuen Kee pier {} -> {} sessions", pier, parsed.len());
+            sessions.extend(parsed);
+        }
+        Err(e) => {
+            eprintln!("Chuen Kee fetch error: {}", e);
+        }
     }
 
     let mut bands = Vec::new();

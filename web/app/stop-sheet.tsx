@@ -461,6 +461,8 @@ function operatorName(operator: string, locale: Locale): string {
       return locale === "en" ? "Star Ferry" : "天星小輪";
     case "tsuiwah":
       return locale === "en" ? "Tsui Wah Ferry" : "翠華船務";
+    case "chuenkee":
+      return locale === "en" ? "Chuen Kee Ferry" : "全記渡輪";
     default:
       return operator;
   }
@@ -472,10 +474,26 @@ function sessionMinutes(time: string): number {
   return Number(match[1]) * 60 + Number(match[2]);
 }
 
-function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean {
+// Hong Kong is UTC+8 with no DST.
+function hkNow(): { year: number; month: number; day: number; hours: number; minutes: number; dayOfWeek: number } {
   const now = new Date();
-  const dow = now.getDay(); // 0=Sun, 6=Sat
-  const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+  const hkMs = utcMs + 8 * 60 * 60 * 1000;
+  const hk = new Date(hkMs);
+  return {
+    year: hk.getUTCFullYear(),
+    month: hk.getUTCMonth() + 1,
+    day: hk.getUTCDate(),
+    hours: hk.getUTCHours(),
+    minutes: hk.getUTCMinutes(),
+    dayOfWeek: hk.getUTCDay(),
+  };
+}
+
+function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean {
+  const hk = hkNow();
+  const dow = hk.dayOfWeek; // 0=Sun, 6=Sat
+  const key = `${hk.year}-${String(hk.month).padStart(2, "0")}-${String(hk.day).padStart(2, "0")}`;
   const isHoliday = holidaySet ? holidaySet.has(key) : false;
   const lower = day.toLowerCase();
   if (dow === 0 || isHoliday) {
@@ -506,8 +524,8 @@ function isPastSession(time: string): boolean {
   const match = time.match(/^(\d{1,2}):(\d{2})$/);
   if (!match) return false;
   const mins = sessionMinutes(time);
-  const now = new Date();
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const hk = hkNow();
+  const currentMinutes = hk.hours * 60 + hk.minutes;
   // A session before 06:00 is treated as next-day when viewed in the evening.
   if (mins < 360 && currentMinutes >= 720) return false;
   return mins < currentMinutes;
@@ -520,6 +538,7 @@ function operatorIcon(operator: string): string {
     case "hkkf":
     case "star":
     case "tsuiwah":
+    case "chuenkee":
     default:
       return `${basePath}/icons/ferry.svg`;
   }
