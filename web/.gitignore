@@ -4,5 +4,7 @@ out
 public/maplibre-gl-worker.mjs
 public/stops.json
 public/stops-*.json
+next-env.d.ts
+tsconfig.tsbuildinfo
 .env*
 !.env.example
