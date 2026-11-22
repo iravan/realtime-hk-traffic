@@ -633,7 +633,9 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                   );
                 })}
               </div>
-              <p className="ferry-timetable-legend muted">{t.sheet.ferryTimetableLegend}</p>
+              {current.days.some((day) => day.sessions.some((session) => session.operator === "sun" && (session.remark === "1" || session.remark === "4"))) ? (
+                <p className="ferry-timetable-legend muted">{t.sheet.ferryTimetableLegend}</p>
+              ) : null}
               <div role="tabpanel">
                 {[...current.days]
                   .sort((a, b) => {
