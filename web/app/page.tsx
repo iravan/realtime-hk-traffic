@@ -1279,15 +1279,9 @@ export default function Page() {
   }, []);
 
   const mtrSchedule = hours?.modes?.mtr ?? [];
-  const ferrySchedule = hours?.modes?.ferry ?? [];
   const clock = now != null ? clockAt(now, hours?.timezone) : null;
   const mtrClosed =
     active === "mtr" && clock != null && mtrSchedule.length > 0 && !isScheduleOpen(mtrSchedule, clock);
-  const ferryClosed =
-    active === "ferry" &&
-    clock != null &&
-    ferrySchedule.length > 0 &&
-    !isScheduleOpen(ferrySchedule, clock);
 
   return (
     <div className={`visit${selected ? " sheet-open" : ""}`}>
@@ -1342,12 +1336,6 @@ export default function Page() {
             <div className="notice" role="status">
               <strong>{t.mtrClosedTitle}</strong>
               <span>{t.closedHours(serviceHoursLabel(mtrSchedule, t.clock, t.nextDayHours))}</span>
-            </div>
-          ) : null}
-          {ferryClosed ? (
-            <div className="notice ferry" role="status">
-              <strong>{t.ferryClosedTitle}</strong>
-              <span>{t.closedHours(serviceHoursLabel(ferrySchedule, t.clock, t.nextDayHours))}</span>
             </div>
           ) : null}
         </div>
