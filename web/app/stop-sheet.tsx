@@ -593,18 +593,29 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
           {timetable && current ? (
             <>
               <div className="ferry-tabs" role="tablist">
-                {destinations.map((item, index) => (
-                  <button
-                    key={`${item.destination}-${index}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={index === active}
-                    className="ferry-tab"
-                    onClick={() => setActive(index)}
-                  >
-                    {localizeBilingualName(item.destination, locale)}
-                  </button>
-                ))}
+                {destinations.map((item, index) => {
+                  const color = ferryDestinationColor(item.destination);
+                  const selected = index === active;
+                  return (
+                    <button
+                      key={`${item.destination}-${index}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={selected}
+                      className="ferry-tab"
+                      style={
+                        selected
+                          ? { background: color?.color ?? "var(--ink)", color: color?.font ?? "var(--paper)", borderColor: color?.color ?? "var(--ink)" }
+                          : color
+                            ? { background: color.color, color: color.font, borderColor: color.color, opacity: 0.7 }
+                            : undefined
+                      }
+                      onClick={() => setActive(index)}
+                    >
+                      {localizeBilingualName(item.destination, locale)}
+                    </button>
+                  );
+                })}
               </div>
               <div role="tabpanel">
                 {[...current.days]
