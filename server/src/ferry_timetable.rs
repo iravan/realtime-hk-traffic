@@ -590,8 +590,8 @@ fn sun_sessions(sailings: Vec<Sailing>) -> Vec<Session> {
 use redis::aio::ConnectionManager;
 
 pub async fn for_pier(http: &reqwest::Client, redis: ConnectionManager, pier: &str) -> Value {
-    let key = format!("timetable:{pier}");
-    let refresh_key = format!("timetable:{pier}:refreshed");
+    let key = format!("timetable:v2:{pier}");
+    let refresh_key = format!("timetable:v2:{pier}:refreshed");
 
     // Redis first: return cached data instantly if available.
     let mut conn = redis.clone();
@@ -642,8 +642,8 @@ pub async fn for_pier(http: &reqwest::Client, redis: ConnectionManager, pier: &s
 }
 
 async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pier: &str) -> Value {
-    let key = format!("timetable:{pier}");
-    let refresh_key = format!("timetable:{pier}:refreshed");
+    let key = format!("timetable:v2:{pier}");
+    let refresh_key = format!("timetable:v2:{pier}:refreshed");
 
     let cheung_chau_text = cached_text_redis(http, redis.clone(), SUN_CENTRAL_CHEUNG_CHAU).await.unwrap_or_default();
     let mui_wo_text = cached_text_redis(http, redis.clone(), SUN_CENTRAL_MUI_WO).await.unwrap_or_default();
