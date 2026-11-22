@@ -1,7 +1,7 @@
 use redis::aio::ConnectionManager;
 use serde_json::Value;
 use std::sync::Mutex;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 const HOLIDAY_URL: &str = "https://www.1823.gov.hk/common/ical/en.json";
 const REFRESH_DEBOUNCE_SECS: u64 = 24 * 60 * 60;
