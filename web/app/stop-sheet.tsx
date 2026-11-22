@@ -569,7 +569,6 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
   }, [id]);
   const destinations = timetable?.destinations ?? [];
   const current = destinations[active];
-  const iconMask = `url(${basePath}/icons/ferry-timetable.svg) center / contain no-repeat`;
   return (
     <>
       {destinations.length > 0 ? (
@@ -587,10 +586,10 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <span
-          aria-hidden="true"
+        <img
+          src={`${basePath}/icons/ferry-timetable.svg`}
+          alt=""
           className="ferry-timetable-icon"
-          style={{ mask: iconMask, WebkitMask: iconMask }}
         />
       </button>
       {open ? (

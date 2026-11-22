@@ -232,7 +232,7 @@ button { cursor: pointer; }
 }
 .ferry-tab { background: transparent; color: var(--ink); font-weight: normal; }
 .ferry-tab[aria-selected="true"] { font-weight: 600; }
-.ferry-timetable-icon { display: block; width: 20px; height: 20px; background-color: currentColor; }
+.ferry-timetable-icon { display: block; width: 20px; height: 20px; }
 .ferry-day { margin: 0 0 0.9rem; }
 .ferry-day.ferry-day-past { opacity: 0.4; }
 .ferry-day h3 { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: #6f675e; }
