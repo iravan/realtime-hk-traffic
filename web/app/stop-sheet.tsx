@@ -563,7 +563,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
   useEffect(() => {
     let cancelled = false;
     setFailed(false);
-    loadCachedJson<Timetable>(`ferry-timetable:v2:${id}`, async () => {
+    loadCachedJson<Timetable>(`ferry-timetable:v3:${id}`, async () => {
       const response = await fetch(`${apiBase}/stops/${encodeURIComponent(id)}/timetable`);
       if (!response.ok) throw new Error("timetable");
       return response.json() as Promise<Timetable>;
