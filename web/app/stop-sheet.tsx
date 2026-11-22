@@ -500,9 +500,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
       {destinations.length > 0 ? (
         <div className="ferry-destinations">
           {destinations.map((dest, index) => (
-            <span key={`${dest.destination}-${index}`} className="station-chip ferry-chip">
-              {localizeBilingualName(dest.destination, locale)}
-            </span>
+            <FerryDestination key={`${dest.destination}-${index}`} name={dest.destination} locale={locale} />
           ))}
         </div>
       ) : null}
