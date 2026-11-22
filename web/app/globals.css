@@ -237,15 +237,16 @@ button { cursor: pointer; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: rgba(244, 239, 230, 0.96);
-  box-shadow: 0 12px 32px rgba(28, 25, 21, 0.16);
+  background: transparent;
   cursor: pointer;
+  color: var(--ink);
 }
+.ferry-timetable-btn:hover { background: rgba(28, 25, 21, 0.06); }
 .ferry-day { margin: 0 0 0.9rem; }
 .ferry-day.ferry-day-past { opacity: 0.4; }
 .ferry-day h3 { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: #6f675e; }
