@@ -425,7 +425,7 @@ async fn timetable(Path(id): Path<String>, State(app): State<Arc<App>>) -> Respo
 }
 
 async fn holidays_handler(State(app): State<Arc<App>>) -> Response {
-    let dates = holidays::fetch_holidays(&app.http).await;
+    let dates = holidays::fetch_holidays(&app.http, app.redis.clone()).await;
     Json(json!({"dates": dates})).into_response()
 }
 
