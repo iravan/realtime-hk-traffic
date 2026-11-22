@@ -580,7 +580,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
       ) : null}
       <button
         type="button"
-        className="sheet-icon"
+        className="ferry-timetable-btn"
         aria-label={t.sheet.ferryTimetable}
         aria-haspopup="dialog"
         aria-expanded={open}
