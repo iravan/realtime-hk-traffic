@@ -290,7 +290,24 @@ button { cursor: pointer; }
   font: inherit;
   cursor: pointer;
 }
-.modal-location { margin: 0.75rem 0 0; }
+.modal-location { display: flex; align-items: center; gap: 0.4rem; margin: 0.75rem 0 0; }
+.modal-location > svg { flex: none; width: 18px; height: 18px; }
+.modal-address { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.modal-layout {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 32px;
+  padding: 0 0.6rem;
+  border-radius: 0.45rem;
+  background: #1c1915;
+  color: #f4efe6;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.modal-layout svg { flex: none; width: 16px; height: 16px; }
+
 .modal-maps { list-style: none; margin: 0.35rem 0 0; padding: 0; }
 .modal-maps li { padding: 0; border: 0; }
 .modal-maps a {

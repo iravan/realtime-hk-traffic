@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
-import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
+import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
 import { ferryDestinationColor } from "./ferry-destination-color";
 import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { loadCachedJson } from "./catalogue-cache";
@@ -322,9 +322,10 @@ export function StopSheet({
                   <ToiletMenu
                     toilet={toilet}
                     locale={locale}
+                    station={station}
                     label={t.sheet.toilet}
                     closeLabel={t.sheet.close}
-                    pdfLabel={t.sheet.toiletPdf}
+                    pdfLabel={t.sheet.toiletLayout}
                   />
                 ) : null}
               </section>
@@ -530,12 +531,14 @@ function MapMenu({
 function ToiletMenu({
   toilet,
   locale,
+  station,
   label,
   closeLabel,
   pdfLabel,
 }: {
   toilet: StationToilet;
   locale: Locale;
+  station: StationColor | null;
   label: string;
   closeLabel: string;
   pdfLabel: string;
@@ -562,14 +565,24 @@ function ToiletMenu({
       </button>
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
-          <p className="modal-location">{location}</p>
-          <ul className="modal-maps">
-            <li>
-              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-                {pdfLabel}
-              </a>
-            </li>
-          </ul>
+          <div className="modal-location">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+            </svg>
+            <span className="modal-address">{location}</span>
+            <a
+              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-9.5 8.5c0 .8-.7 1.5-1.5 1.5H7v2H5.5V9H8c.8 0 1.5.7 1.5 1.5zm5 2c0 .8-.7 1.5-1.5 1.5h-2.5V9H13c.8 0 1.5.7 1.5 1.5zm4-3H17v1h1.5V13H17v2h-1.5V9h3zm-6.5 0h1v3h-1zm-5 0h1v1H7z" />
+              </svg>
+              {pdfLabel}
+            </a>
+          </div>
         </Modal>
       ) : null}
     </>

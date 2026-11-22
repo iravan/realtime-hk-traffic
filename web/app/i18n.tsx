@@ -57,7 +57,7 @@ export type Messages = {
     delayed: string;
     timetable: string;
     toilet: string;
-    toiletPdf: string;
+    toiletLayout: string;
     noArrivals: string;
     origin: string;
     notDeparted: string;
@@ -147,7 +147,7 @@ const en: Messages = {
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
     toilet: "Toilet",
-    toiletPdf: "Download layout (PDF)",
+    toiletLayout: "Layout",
     noArrivals: "No arrivals right now.",
     origin: "Origin",
     notDeparted: "Not yet departed",
@@ -204,7 +204,7 @@ const zhHant: Messages = {
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
     toilet: "洗手間",
-    toiletPdf: "下載平面圖（PDF）",
+    toiletLayout: "平面圖",
     noArrivals: "暫無到站班次。",
     origin: "始站",
     notDeparted: "未開出",
