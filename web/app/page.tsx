@@ -56,6 +56,9 @@ import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const apiBase =
+  process.env.NEXT_PUBLIC_API_BASE ||
+  (basePath ? "" : process.env.NODE_ENV === "development" ? "http://127.0.0.1:8787" : "/api");
 const modes = ["mtr", "bus", "minibus", "ferry", "taxi"] as const;
 
 // The category tabs use their own flat vehicle artwork, served from
@@ -922,25 +925,46 @@ export default function Page() {
     routeMarkerRef.current?.remove();
     routeMarkerRef.current = null;
     const map = mapRef.current;
-    const routes = board?.mode === "minibus" ? board.routes : undefined;
-    if (!map || !board || !routes || routes.length === 0) return;
-    const node = document.createElement("div");
-    node.className = "route-board";
-    for (const route of routes) {
-      const chip = document.createElement("span");
-      chip.className = "route-chip";
-      chip.textContent = route;
-      node.appendChild(chip);
-    }
-    const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
-      .setLngLat([board.longitude, board.latitude])
-      .addTo(map);
-    routeMarkerRef.current = marker;
-    return () => {
-      marker.remove();
-      if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
+    if (!map || !board) return;
+    let cancelled = false;
+    let marker: Marker | null = null;
+    const render = (items: string[]) => {
+      if (cancelled || !mapRef.current || items.length === 0) return;
+      const node = document.createElement("div");
+      node.className = "route-board";
+      for (const item of items) {
+        const chip = document.createElement("span");
+        chip.className = "route-chip";
+        chip.textContent = item;
+        node.appendChild(chip);
+      }
+      marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
+        .setLngLat([board.longitude, board.latitude])
+        .addTo(map);
+      routeMarkerRef.current = marker;
     };
-  }, [board]);
+    if (board.mode === "minibus" && board.routes && board.routes.length > 0) {
+      render(board.routes);
+    } else if (board.mode === "ferry") {
+      fetch(`${apiBase}/stops/${encodeURIComponent(board.id)}/timetable`)
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (cancelled || !data) return;
+          const items = (data.destinations ?? []).map((destination: { destination: string }) =>
+            localizeBilingualName(destination.destination, locale),
+          );
+          render(items);
+        })
+        .catch(() => {});
+    }
+    return () => {
+      cancelled = true;
+      if (marker) {
+        marker.remove();
+        if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
+      }
+    };
+  }, [board, locale]);
 
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
