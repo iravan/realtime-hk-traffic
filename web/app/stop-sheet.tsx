@@ -593,7 +593,7 @@ function ToiletMenu({
   );
 }
 
-function Modal({
+export function Modal({
   title,
   closeLabel,
   onClose,
@@ -612,21 +612,38 @@ function Modal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
   return createPortal(
-    <div className="modal" onClick={onClose}>
-      <div
-        className="modal-card"
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <header>
-          <h3>{title}</h3>
-          <button type="button" onClick={onClose}>
-            {closeLabel}
-          </button>
-        </header>
-        {children}
+    <div className="fixed inset-0 z-30 overflow-y-auto bg-[rgb(28_25_21/0.45)]" onClick={onClose}>
+      <div className="flex min-h-full items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          className="relative my-8 w-full max-w-sm border border-[rgb(28_25_21/0.14)] bg-[rgb(244_239_230/0.96)] text-[var(--ink)] shadow-[0_12px_32px_rgb(28_25_21/0.16)]"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <header className="flex items-center justify-between gap-3 border-b border-[rgb(28_25_21/0.12)] px-4 py-[0.85rem]">
+            <h2 className="min-w-0 text-[1.05rem] font-semibold [overflow-wrap:anywhere]">{title}</h2>
+            <button
+              type="button"
+              className="-m-2 flex size-11 shrink-0 items-center justify-center border-0 bg-transparent p-0"
+              aria-label={closeLabel}
+              onClick={onClose}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              >
+                <path d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </header>
+          <div className="px-4 py-[0.85rem]">{children}</div>
+        </div>
       </div>
     </div>,
     document.body,

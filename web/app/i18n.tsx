@@ -35,6 +35,18 @@ export type Messages = {
     locating: string;
     error: string;
   };
+  locateHelp: {
+    title: string;
+    intro: string;
+    unavailableIntro: string;
+    browserLabel: string;
+    browser: string[];
+    ios: string[];
+    android: string[];
+    iosLabel: string;
+    androidLabel: string;
+    close: string;
+  };
   report: string;
   sheet: {
     close: string;
@@ -125,6 +137,34 @@ const en: Messages = {
     locating: "Finding your location…",
     error: "Could not get your location. Try again.",
   },
+  locateHelp: {
+    title: "Can't find your location",
+    intro: "This site cannot use your location. Turn on location for your browser, then tap the location button again.",
+    unavailableIntro: "No GPS position could be found. Check the steps below, then tap the location button again.",
+    browserLabel: "Browser",
+    browser: [
+      "Allow location for this site in your browser's site settings.",
+      "Chrome: tap ⋮, then Settings, Site settings, Location.",
+      "Safari: tap aA, then Website Settings, Location.",
+      "Stay outdoors or near a window for a better GPS signal.",
+    ],
+    ios: [
+      "Open the Settings app.",
+      "Go to Privacy & Security, then Location Services, and turn it on.",
+      "Scroll down to your browser (Safari or Chrome) and choose While Using the App.",
+      "Come back to this page and tap the location button again.",
+    ],
+    android: [
+      "Make sure location is on in your phone's quick settings.",
+      "Tap the lock or site icon in the address bar.",
+      "Open Permissions or Site settings, then Location.",
+      "Choose Allow.",
+      "Come back to this page and tap the location button again.",
+    ],
+    iosLabel: "iPhone / iPad",
+    androidLabel: "Android",
+    close: "Close",
+  },
   report: "Report a problem",
   sheet: {
     close: "Close",
@@ -181,6 +221,34 @@ const zhHant: Messages = {
     idle: "顯示我的位置",
     locating: "正在定位…",
     error: "無法取得你的位置，請再試一次。",
+  },
+  locateHelp: {
+    title: "無法取得你的位置",
+    intro: "此網站無法使用你的位置。請為瀏覽器開啟定位權限，然後再按一次定位按鈕。",
+    unavailableIntro: "無法取得 GPS 定位。請參考以下步驟，然後再按一次定位按鈕。",
+    browserLabel: "瀏覽器",
+    browser: [
+      "在瀏覽器的網站設定中，允許此網站使用位置。",
+      "Chrome：點擊 ⋮，然後選擇設定、網站設定、位置。",
+      "Safari：點擊 aA，然後選擇網站設定、位置。",
+      "請到戶外或窗邊，GPS 訊號會較好。",
+    ],
+    ios: [
+      "打開「設定」App。",
+      "進入「私隱與安全性」，再進入「定位服務」，並將其開啟。",
+      "向下找到你使用的瀏覽器（Safari 或 Chrome），選擇「使用 App 時」。",
+      "返回此頁面，再按一次定位按鈕。",
+    ],
+    android: [
+      "確保手機的定位功能已開啟（可於快速設定中開啟）。",
+      "點擊網址列旁的鎖頭或網站圖示。",
+      "選擇「權限」或「網站設定」，再進入「位置」。",
+      "選擇「允許」。",
+      "返回此頁面，再按一次定位按鈕。",
+    ],
+    iosLabel: "iPhone / iPad",
+    androidLabel: "Android",
+    close: "關閉",
   },
   report: "回報問題",
   sheet: {

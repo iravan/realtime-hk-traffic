@@ -58,8 +58,11 @@ button { cursor: pointer; }
 .brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
 .lang-toggle {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 0.3rem;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
   min-height: 26px;
   padding: 0 0.5rem;
   border: 1px solid rgba(28, 25, 21, 0.25);
@@ -233,41 +236,10 @@ button { cursor: pointer; }
 .sheet .toilet { display: block; min-height: 0; margin: 0.3rem 0 0; padding: 0; color: inherit; cursor: pointer; }
 .sheet .description.icon-only { margin-top: 0; }
 .sheet .toilet svg { display: block; width: 20px; height: 20px; }
-.modal {
-  position: fixed;
-  z-index: 30;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  background: rgba(28, 25, 21, 0.45);
-}
-.modal-card {
-  width: min(22rem, 100%);
-  padding: 0.85rem 1rem 1rem;
-  background: #fbf7f0;
-  color: #241f1a;
-  border-radius: 0.8rem;
-  box-shadow: 0 16px 40px rgba(28, 25, 21, 0.28);
-}
-.modal-card header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-.modal-card h3 { margin: 0; font-size: 1rem; }
-.modal-card header button {
-  flex: none;
-  border: 0;
-  background: transparent;
-  min-height: 44px;
-  padding: 0 0.2rem;
-  color: inherit;
-  font: inherit;
-  white-space: nowrap;
-  cursor: pointer;
-}
+.locate-help p { margin: 0.6rem 0 0; font-size: 0.9rem; line-height: 1.5; }
+.locate-help h4 { margin: 0.9rem 0 0; font-size: 0.9rem; }
+.locate-help ol { margin: 0.4rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.5; }
+.locate-help li + li { margin-top: 0.3rem; }
 .modal-link {
   display: block;
   width: 100%;

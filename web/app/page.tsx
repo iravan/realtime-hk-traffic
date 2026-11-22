@@ -14,8 +14,9 @@ import {
   type MapGeoJSONFeature,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { StopSheet } from "./stop-sheet";
+import { Modal, StopSheet } from "./stop-sheet";
 import { useI18n } from "./i18n";
+import { currentPlatform, type Platform } from "./platform";
 import {
   loadTaxiKindImages,
   loadVehicleImages,
@@ -80,9 +81,6 @@ const hkZoom = 14;
 // Counted groups stand in for signs until this zoom. Closer than this, every
 // stop in the view is its own pin.
 const pinZoom = 16;
-// Generous box around the territory, islands included; geolocation accuracy is
-// tens of metres, so the exact edge does not matter.
-const hkBounds = { south: 22.1, north: 22.6, west: 113.8, east: 114.5 };
 
 // Locating only auto-selects a stop it is actually near. A station point sits in
 // the middle of a large paid area, so it gets a wider radius; street stops are
@@ -194,6 +192,9 @@ export default function Page() {
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
+  // Set only when a manual locate fails: the platform decides which device steps
+  // show, and the reason decides the intro.
+  const [locateHelp, setLocateHelp] = useState<{ platform: Platform; denied: boolean } | null>(null);
   const [hours, setHours] = useState<ServiceHours | null>(null);
   // Null until mount so the static prerender and the first client render agree
   // on what time it is.
@@ -1163,7 +1164,10 @@ export default function Page() {
   function locate(manual: boolean) {
     if (manual) holdSharedViewRef.current = false;
     if (!navigator.geolocation) {
-      if (manual) setLocateState("error");
+      if (manual) {
+        setLocateState("error");
+        setLocateHelp({ platform: currentPlatform(), denied: false });
+      }
       return;
     }
     setLocateState("locating");
@@ -1178,10 +1182,6 @@ export default function Page() {
         // dropped fixes after a pan. placeMe checks for its source, and the load
         // handler places a fix that arrives before the `me` source exists.
         const map = mapRef.current;
-        if (!inHongKong(fix)) {
-          if (map) map.easeTo({ center: hkCenter, zoom: hkZoom });
-          return;
-        }
         fixRef.current = fix;
         if (map) placeMe(map, fix);
         // A shared link or a remembered stop owns the camera until the user asks
@@ -1195,9 +1195,15 @@ export default function Page() {
         }
         selectNearest(fix);
       },
-      () => {
+      (error) => {
         // No fix: the map stays where it is.
         setLocateState(manual ? "error" : "idle");
+        if (manual) {
+          setLocateHelp({
+            platform: currentPlatform(),
+            denied: error.code === error.PERMISSION_DENIED,
+          });
+        }
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
     );
@@ -1347,6 +1353,45 @@ export default function Page() {
         </div>
       </div>
       <div className="map-actions">
+        {locateHelp ? (
+          <Modal
+            title={t.locateHelp.title}
+            closeLabel={t.locateHelp.close}
+            onClose={() => setLocateHelp(null)}
+          >
+            <div className="locate-help">
+              <p>{locateHelp.denied ? t.locateHelp.intro : t.locateHelp.unavailableIntro}</p>
+              {locateHelp.platform !== "android" ? (
+                <section>
+                  {locateHelp.platform === "unknown" ? <h4>{t.locateHelp.iosLabel}</h4> : null}
+                  <ol>
+                    {t.locateHelp.ios.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ol>
+                </section>
+              ) : null}
+              {locateHelp.platform !== "ios" ? (
+                <section>
+                  {locateHelp.platform === "unknown" ? <h4>{t.locateHelp.androidLabel}</h4> : null}
+                  <ol>
+                    {t.locateHelp.android.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ol>
+                </section>
+              ) : null}
+              <section>
+                <h4>{t.locateHelp.browserLabel}</h4>
+                <ol>
+                  {t.locateHelp.browser.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </section>
+            </div>
+          </Modal>
+        ) : null}
         <button
           type="button"
           className="locate"
@@ -1448,15 +1493,6 @@ function focusPadding(): { top: number; bottom: number; left: number; right: num
 function clearStopParam() {
   if (!linkedStopId()) return;
   writeStopLink(null);
-}
-
-function inHongKong(fix: Fix): boolean {
-  return (
-    fix.latitude >= hkBounds.south &&
-    fix.latitude <= hkBounds.north &&
-    fix.longitude >= hkBounds.west &&
-    fix.longitude <= hkBounds.east
-  );
 }
 
 const taxiStandById = new Map<string, ReturnType<typeof taxiStandInfo>>();
