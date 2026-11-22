@@ -475,7 +475,6 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
   const [timetable, setTimetable] = useState<Timetable | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
-    if (!open) return;
     let cancelled = false;
     setFailed(false);
     loadCachedJson<Timetable>(`ferry-timetable:${id}`, async () => {
@@ -492,12 +491,21 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
     return () => {
       cancelled = true;
     };
-  }, [id, open]);
+  }, [id]);
   const destinations = timetable?.destinations ?? [];
   const current = destinations[active];
   const iconMask = `url(${basePath}/icons/ferry-timetable.svg) center / contain no-repeat`;
   return (
     <>
+      {destinations.length > 0 ? (
+        <div className="ferry-destinations">
+          {destinations.map((dest, index) => (
+            <span key={`${dest.destination}-${index}`} className="station-chip ferry-chip">
+              {localizeBilingualName(dest.destination, locale)}
+            </span>
+          ))}
+        </div>
+      ) : null}
       <button
         type="button"
         className="sheet-icon"
