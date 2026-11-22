@@ -145,15 +145,22 @@ def main() -> None:
             continue
         latitude, longitude = coords[stop_id]
         tc, en = names[stop_id]
-        stops.append(
-            {
-                "id": f"ferry:{stop_id}",
-                "latitude": latitude,
-                "longitude": longitude,
-                "mode": "ferry",
-                "name": bilingual(tc, en),
-            }
-        )
+        stop = {
+            "id": f"ferry:{stop_id}",
+            "latitude": latitude,
+            "longitude": longitude,
+            "mode": "ferry",
+            "name": bilingual(tc, en),
+        }
+        rows = SAILINGS.get(str(stop_id))
+        if rows:
+            destinations = []
+            for row in rows:
+                destination = row[4]
+                if destination not in destinations:
+                    destinations.append(destination)
+            stop["destinations"] = destinations
+        stops.append(stop)
     if len(stops) < 40:
         raise SystemExit(f"only {len(stops)} ferry piers joined; refusing to rewrite the catalogue")
 

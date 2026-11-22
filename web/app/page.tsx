@@ -157,6 +157,7 @@ type Stop = {
   latitude: number;
   longitude: number;
   routes?: string[];
+  destinations?: string[];
   night?: boolean;
   taxi?: TaxiKind;
   taxiType?: TaxiLabel;
@@ -186,6 +187,7 @@ export default function Page() {
   const selectedRef = useRef<Stop | null>(null);
   const boardRef = useRef<Stop | null>(null);
   const routeMarkerRef = useRef<Marker | null>(null);
+  const ferryBoardsRef = useRef<Marker[]>([]);
   const cataloguesRef = useRef<Partial<Record<Mode, Stop[]>>>({});
   const cataloguePromisesRef = useRef(new Map<Mode, Promise<Stop[]>>());
   const hoursRef = useRef<ServiceHours | null>(null);
@@ -965,6 +967,33 @@ export default function Page() {
       }
     };
   }, [board, locale]);
+
+  useEffect(() => {
+    ferryBoardsRef.current.forEach((marker) => marker.remove());
+    ferryBoardsRef.current = [];
+    if (active !== "ferry") return;
+    const map = mapRef.current;
+    if (!map) return;
+    for (const stop of stops) {
+      if (!stop.destinations || stop.destinations.length === 0) continue;
+      const node = document.createElement("div");
+      node.className = "route-board";
+      for (const destination of stop.destinations) {
+        const chip = document.createElement("span");
+        chip.className = "route-chip";
+        chip.textContent = localizeBilingualName(destination, locale);
+        node.appendChild(chip);
+      }
+      const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
+        .setLngLat([stop.longitude, stop.latitude])
+        .addTo(map);
+      ferryBoardsRef.current.push(marker);
+    }
+    return () => {
+      ferryBoardsRef.current.forEach((marker) => marker.remove());
+      ferryBoardsRef.current = [];
+    };
+  }, [stops, active, locale]);
 
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
