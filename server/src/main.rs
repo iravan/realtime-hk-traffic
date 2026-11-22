@@ -100,6 +100,9 @@ struct Row {
     // The minibus has not left its first stop. The sheet prints 始站 beside 未開出.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     not_departed: bool,
+    // Ferry operator code: sun, hkkf, star, tsuiwah. None for other modes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    operator: Option<String>,
 }
 
 struct App {
@@ -713,6 +716,7 @@ async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
             minutes: Some(minutes),
             time: None,
             not_departed: false,
+            operator: None,
         });
     }
     rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
@@ -764,6 +768,7 @@ async fn minibus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
                 minutes,
                 time: None,
                 not_departed: gmb_not_departed(remark),
+                operator: None,
             });
         }
     }
@@ -917,6 +922,7 @@ async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
                         minutes,
                         time,
                         not_departed: false,
+                        operator: None,
                     });
                 }
             }
@@ -1027,6 +1033,7 @@ async fn ferry_sailing(http: &reqwest::Client, sailing: &FerrySailing) -> Result
             minutes: Some(minutes),
             time: Some(when.format("%H:%M").to_string()),
             not_departed: false,
+            operator: Some(sailing.op.clone()),
         });
     }
     Ok(rows)

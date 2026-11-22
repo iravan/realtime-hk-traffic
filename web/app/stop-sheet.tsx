@@ -31,6 +31,7 @@ type Row = {
   minutes?: number;
   time?: string;
   not_departed?: boolean;
+  operator?: string;
 };
 
 type Snapshot = {
@@ -311,6 +312,13 @@ export function StopSheet({
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
+                      {mode === "ferry" && row.operator ? (
+                        <img
+                          src={operatorIcon(row.operator)}
+                          alt=""
+                          className="ferry-op-icon"
+                        />
+                      ) : null}
                       {row.route && mode !== "mtr" ? (
                         <strong>
                           {mode === "ferry" ? localizeBilingualName(row.route, locale) : row.route}
