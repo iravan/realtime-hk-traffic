@@ -61,41 +61,53 @@ async fn refresh_holidays(http: &reqwest::Client, redis: ConnectionManager) -> V
     let key = "holidays:dates";
     let refresh_key = "holidays:refreshed";
 
-    let dates = match http.get(HOLIDAY_URL).send().await {
-        Ok(response) if response.status().is_success() => {
-            let text = response.text().await.unwrap_or_default();
-            let text = text.trim_start_matches('\u{feff}');
-            match serde_json::from_str::<Value>(text) {
-            Ok(data) => {
-                let mut dates = Vec::new();
-                let events = data
-                    .get("vcalendar")
-                    .and_then(|v| v.get(0))
-                    .and_then(|c| c.get("vevent"))
-                    .and_then(|e| e.as_array())
-                    .cloned()
-                    .unwrap_or_default();
-                for event in events {
-                    if let Some(dtstart) = event.get("dtstart") {
-                        if let Some(date_str) = dtstart.get(0).and_then(|v| v.as_str()) {
-                            if date_str.len() == 8 {
-                                dates.push(format!(
-                                    "{}-{}-{}",
-                                    &date_str[0..4],
-                                    &date_str[4..6],
-                                    &date_str[6..8]
-                                ));
+    let mut dates = Vec::new();
+    for attempt in 0..3 {
+        if attempt > 0 {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+        }
+        let result = match http.get(HOLIDAY_URL).send().await {
+            Ok(response) if response.status().is_success() => {
+                let text = response.text().await.unwrap_or_default();
+                let text = text.trim_start_matches('\u{feff}');
+                match serde_json::from_str::<Value>(text) {
+                    Ok(data) => {
+                        let mut d = Vec::new();
+                        let events = data
+                            .get("vcalendar")
+                            .and_then(|v| v.get(0))
+                            .and_then(|c| c.get("vevent"))
+                            .and_then(|e| e.as_array())
+                            .cloned()
+                            .unwrap_or_default();
+                        for event in events {
+                            if let Some(dtstart) = event.get("dtstart") {
+                                if let Some(date_str) = dtstart.get(0).and_then(|v| v.as_str()) {
+                                    if date_str.len() == 8 {
+                                        d.push(format!(
+                                            "{}-{}-{}",
+                                            &date_str[0..4],
+                                            &date_str[4..6],
+                                            &date_str[6..8]
+                                        ));
+                                    }
+                                }
                             }
                         }
+                        if !d.is_empty() {
+                            d
+                        } else {
+                            continue;
+                        }
                     }
+                    Err(_) => continue,
                 }
-                dates
             }
-            Err(_) => Vec::new(),
-        }
+            _ => continue,
+        };
+        dates = result;
+        break;
     }
-    _ => Vec::new(),
-};
 
     if let Ok(body) = serde_json::to_string(&dates) {
         let mut conn = redis.clone();

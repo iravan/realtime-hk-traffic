@@ -98,16 +98,22 @@ async fn cached_text_redis(http: &reqwest::Client, redis: ConnectionManager, url
             let redis = redis.clone();
             let url = url.to_string();
             tokio::spawn(async move {
-                if let Ok(response) = http.get(&url).send().await {
-                    if response.status().is_success() {
-                        if let Ok(text) = response.text().await {
-                            if !text.is_empty() {
-                                let mut conn = redis.clone();
-                                let _: Result<(), _> = redis::cmd("SET")
-                                    .arg(format!("csv:{}", url))
-                                    .arg(&text)
-                                    .query_async(&mut conn)
-                                    .await;
+                for attempt in 0..3 {
+                    if attempt > 0 {
+                        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+                    }
+                    if let Ok(response) = http.get(&url).send().await {
+                        if response.status().is_success() {
+                            if let Ok(text) = response.text().await {
+                                if !text.is_empty() {
+                                    let mut conn = redis.clone();
+                                    let _: Result<(), _> = redis::cmd("SET")
+                                        .arg(format!("csv:{}", url))
+                                        .arg(&text)
+                                        .query_async(&mut conn)
+                                        .await;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -118,15 +124,24 @@ async fn cached_text_redis(http: &reqwest::Client, redis: ConnectionManager, url
         return Some(text);
     }
 
-    // No cache: fetch synchronously.
-    let response = http.get(url).send().await.ok()?;
-    if !response.status().is_success() {
-        return None;
+    // No cache: fetch synchronously with retries.
+    let mut text = None;
+    for attempt in 0..3 {
+        if attempt > 0 {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+        }
+        if let Ok(response) = http.get(url).send().await {
+            if response.status().is_success() {
+                if let Ok(body) = response.text().await {
+                    if !body.is_empty() {
+                        text = Some(body);
+                        break;
+                    }
+                }
+            }
+        }
     }
-    let text = response.text().await.ok()?;
-    if text.is_empty() {
-        return None;
-    }
+    let text = text?;
 
     let mut conn = redis.clone();
     let _: Result<(), _> = redis::cmd("SET")

@@ -750,7 +750,9 @@ cache is only overwritten when the fetch succeeds and returns non-empty data.
 The assembled timetable is cached in Redis under `timetable:{pier}` with no
 TTL (kept forever). On a request, the cached timetable is returned instantly.
 A background refresh is enqueued (debounced by 24 hours via the
-`timetable:{pier}:refreshed` key) to fetch fresh data. The app caches the
+`timetable:{pier}:refreshed` key) to fetch fresh data. All fetches retry up
+to 3 times with a 1-second delay on failure, and the cache is only overwritten
+when the fetch succeeds and returns non-empty data. The app caches the
 same response in IndexedDB under `ferry-timetable:v2:{id}` with a 24-hour
 TTL, and does not request the server while that cache is valid.
 Piers with no operator source show no timetable.
