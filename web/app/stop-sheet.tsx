@@ -588,7 +588,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
         <Modal title={t.sheet.ferryTimetable} closeLabel={t.sheet.close} onClose={() => setOpen(false)}>
           {failed ? <p className="stale">{t.sheet.timetableError}</p> : null}
           {!failed && !timetable ? <p className="muted">{t.sheet.loading}</p> : null}
-          {timetable && destinations.length === 0 ? <p className="muted">{t.sheet.noArrivals}</p> : null}
+          {timetable && destinations.length === 0 ? <p className="muted">{t.sheet.noTimetable}</p> : null}
           {timetable && current ? (
             <>
               <div className="ferry-tabs" role="tablist">
