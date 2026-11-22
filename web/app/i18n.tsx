@@ -69,6 +69,7 @@ export type Messages = {
     timetable: string;
     ferryTimetable: string;
     everyMinutes: (frequency: string) => string;
+    ferryDay: (day: string) => string;
     toilet: string;
     toiletLayout: string;
     noArrivals: string;
@@ -87,6 +88,28 @@ export type Messages = {
     hours: (hours: number) => string;
   };
 };
+
+const FERRY_DAY_ZH: Record<string, string> = {
+  "Monday to Saturday": "星期一至六",
+  "Sunday and Public Holidays": "星期日及公眾假期",
+  "Mondays to Fridays except public holidays": "星期一至五（公眾假期除外）",
+  "Saturdays except public holidays": "星期六（公眾假期除外）",
+  "Sundays and public holidays": "星期日及公眾假期",
+  "Mondays to Saturdays except public holidays": "星期一至六（公眾假期除外）",
+  "Sundays & Public Holidays": "星期日及公眾假期",
+  "Mon – Fri (Except Public Holidays)": "星期一至五（公眾假期除外）",
+  "Sat, Sun & Public Holidays": "星期六、日及公眾假期",
+  "Mon – Sat (Except Public Holidays)": "星期一至六（公眾假期除外）",
+  "Sun & Public Holidays": "星期日及公眾假期",
+  Weekdays: "平日",
+  Saturday: "星期六",
+  "Public holidays": "公眾假期",
+  Daily: "每日",
+};
+
+function translateFerryDay(day: string): string {
+  return FERRY_DAY_ZH[day] ?? day;
+}
 
 function clockParts(value: string): { hour: number; minute: string } {
   const [hourText, minuteText] = value.split(":");
@@ -188,6 +211,7 @@ const en: Messages = {
     timetable: "Not live. These are timetable times.",
     ferryTimetable: "Timetable",
     everyMinutes: (frequency) => `every ${frequency} min`,
+    ferryDay: (day) => day,
     toilet: "Toilet",
     toiletLayout: "Layout",
     noArrivals: "No arrivals right now.",
@@ -274,6 +298,7 @@ const zhHant: Messages = {
     timetable: "非即時，以下為時間表班次。",
     ferryTimetable: "時間表",
     everyMinutes: (frequency) => `每 ${frequency} 分鐘`,
+    ferryDay: (day) => translateFerryDay(day),
     toilet: "洗手間",
     toiletLayout: "平面圖",
     noArrivals: "暫無到站班次。",

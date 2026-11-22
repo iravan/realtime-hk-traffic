@@ -542,7 +542,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
               <div role="tabpanel">
                 {current.days.map((day) => (
                   <section key={day.day} className="ferry-day">
-                    <h3>{day.day}</h3>
+                    <h3>{t.sheet.ferryDay(day.day)}</h3>
                     {(() => {
                       const operators = [...new Set(day.bands.map((band) => band.operator))];
                       const sessionOps = [...new Set(day.sessions.map((session) => session.operator))];
