@@ -716,9 +716,12 @@ response lists these as `bands`, with `from`, `to` and `frequency`, not as
 `sessions`. The frequency is kept as a range, not expanded into departure times.
 
 The server caches each source file in memory for six hours, and caches the
-assembled timetable in Redis under `timetable:{pier}` with a 24-hour TTL.
-The app caches the same response in IndexedDB under `ferry-timetable:{id}`
-with a 24-hour TTL, and does not request the server while that cache is valid.
+assembled timetable in Redis under `timetable:{pier}` with no TTL (kept
+forever). On a request, the cached timetable is returned instantly. A
+background refresh is enqueued (debounced by 24 hours via the
+`timetable:{pier}:refreshed` key) to fetch fresh data. The app caches the
+same response in IndexedDB under `ferry-timetable:v2:{id}` with a 24-hour
+TTL, and does not request the server while that cache is valid.
 Piers with no operator source show no timetable.
 
 Live departures are still read from `GET /stops/{id}/arrivals`, as above. The

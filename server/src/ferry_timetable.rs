@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 const TTL: Duration = Duration::from_secs(6 * 60 * 60);
+const TIMETABLE_REFRESH_DEBOUNCE_SECS: u64 = 24 * 60 * 60;
 
 // Sun Ferry publishes one CSV per corridor on data.gov.hk. Each row is one
 // sailing: direction, service date (day type), service hour, remark.
@@ -441,17 +442,61 @@ fn sun_sessions(sailings: Vec<Sailing>) -> Vec<Session> {
 
 use redis::aio::ConnectionManager;
 
-const TIMETABLE_TTL_SECS: u64 = 24 * 60 * 60;
-
 pub async fn for_pier(http: &reqwest::Client, redis: ConnectionManager, pier: &str) -> Value {
     let key = format!("timetable:{pier}");
-    // Redis first.
+    let refresh_key = format!("timetable:{pier}:refreshed");
+
+    // Redis first: return cached data instantly if available.
     let mut conn = redis.clone();
-    if let Ok(Some(body)) = redis::cmd("GET").arg(&key).query_async::<Option<String>>(&mut conn).await {
+    let cached: Option<String> = redis::cmd("GET")
+        .arg(&key)
+        .query_async(&mut conn)
+        .await
+        .ok()
+        .flatten();
+
+    if let Some(body) = cached {
         if let Ok(value) = serde_json::from_str::<Value>(&body) {
+            // Debounced background refresh: only trigger if the refresh key
+            // has expired (i.e., more than 24 hours since last refresh).
+            let mut conn2 = redis.clone();
+            let needs_refresh: bool = redis::cmd("EXISTS")
+                .arg(&refresh_key)
+                .query_async::<i64>(&mut conn2)
+                .await
+                .unwrap_or(1) == 0;
+
+            if needs_refresh {
+                // Set the refresh key with 24h TTL to debounce.
+                let mut conn3 = redis.clone();
+                let _: Result<(), _> = redis::cmd("SET")
+                    .arg(&refresh_key)
+                    .arg("1")
+                    .arg("EX")
+                    .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
+                    .query_async(&mut conn3)
+                    .await;
+
+                // Spawn background refresh.
+                let http = http.clone();
+                let redis = redis.clone();
+                let pier = pier.to_string();
+                tokio::spawn(async move {
+                    refresh_timetable(&http, redis, &pier).await;
+                });
+            }
+
             return value;
         }
     }
+
+    // No cache: fetch synchronously.
+    refresh_timetable(http, redis, pier).await
+}
+
+async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pier: &str) -> Value {
+    let key = format!("timetable:{pier}");
+    let refresh_key = format!("timetable:{pier}:refreshed");
 
     let cheung_chau_text = cached_text(http, SUN_CENTRAL_CHEUNG_CHAU).await.unwrap_or_default();
     let mui_wo_text = cached_text(http, SUN_CENTRAL_MUI_WO).await.unwrap_or_default();
@@ -487,9 +532,15 @@ pub async fn for_pier(http: &reqwest::Client, redis: ConnectionManager, pier: &s
         let _: Result<(), _> = redis::cmd("SET")
             .arg(&key)
             .arg(&body)
-            .arg("EX")
-            .arg(TIMETABLE_TTL_SECS)
             .query_async(&mut conn)
+            .await;
+        let mut conn2 = redis.clone();
+        let _: Result<(), _> = redis::cmd("SET")
+            .arg(&refresh_key)
+            .arg("1")
+            .arg("EX")
+            .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
+            .query_async(&mut conn2)
             .await;
     }
     value
