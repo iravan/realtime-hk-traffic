@@ -1154,18 +1154,20 @@ export default function Page() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
+        // isStyleLoaded() is false while any tile downloads, which silently
+        // dropped fixes after a pan. placeMe checks for its source, and the load
+        // handler places a fix that arrives before the `me` source exists.
+        const map = mapRef.current;
         if (!inHongKong(fix)) {
-          const map = mapRef.current;
-          if (map?.isStyleLoaded()) map.easeTo({ center: hkCenter, zoom: hkZoom });
+          if (map) map.easeTo({ center: hkCenter, zoom: hkZoom });
           return;
         }
         fixRef.current = fix;
-        const map = mapRef.current;
-        if (map?.isStyleLoaded()) placeMe(map, fix);
+        if (map) placeMe(map, fix);
         // A shared link or a remembered stop owns the camera until the user asks
         // for a fix. With neither, the nearest stop of this mode opens.
         if (!manual && holdSharedViewRef.current) return;
-        if (map?.isStyleLoaded()) {
+        if (map) {
           map.easeTo({
             center: [fix.longitude, fix.latitude],
             zoom: Math.max(map.getZoom(), 16),
