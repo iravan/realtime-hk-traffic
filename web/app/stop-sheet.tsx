@@ -520,16 +520,6 @@ function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean
   );
 }
 
-function isPastSession(time: string): boolean {
-  const match = time.match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return false;
-  const mins = sessionMinutes(time);
-  const hk = hkNow();
-  const currentMinutes = hk.hours * 60 + hk.minutes;
-  // A session before 06:00 is treated as next-day when viewed in the evening.
-  if (mins < 360 && currentMinutes >= 720) return false;
-  return mins < currentMinutes;
-}
 
 function operatorIcon(operator: string): string {
   switch (operator) {
@@ -689,12 +679,17 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                                   const lastIdx = markedSession
                                     ? sorted.findIndex((s) => s === markedSession)
                                     : sorted.length - 1;
+                                  // Greyed index: first session >= current time.
+                                  // Sessions before it are past (except index 0).
+                                  const hk = hkNow();
+                                  const currentMins = hk.hours * 60 + hk.minutes;
+                                  const greyedIndex = sorted.findIndex((s) => sessionMinutes(s.time) >= currentMins);
+                                  const isPast = index > 0 && (greyedIndex === -1 || index < greyedIndex);
                                   const highlight = [isFirst ? "first" : "", index === lastIdx ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
-                                  const past = isPastSession(session.time);
                                   return (
-                                    <li key={`${session.time}-${index}`} className={`${highlight} ${past ? "past" : ""}`.trim()}>
+                                    <li key={`${session.time}-${index}`} className={`${highlight} ${isPast ? "past" : ""}`.trim()}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
