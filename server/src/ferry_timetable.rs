@@ -508,7 +508,6 @@ async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pie
         other.extend(parse_sun_sailings(&text));
     }
     let mut sessions = sun_sessions(sun_sailings_for_pier(pier, &cheung_chau, &mui_wo, &other));
-
     for (route, direction, destination) in hkkf_sources(pier) {
         let url = format!("{HKKF_TIMETABLE}/{route}/{direction}");
         if let Some(text) = cached_text(http, &url).await {

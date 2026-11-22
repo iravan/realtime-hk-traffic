@@ -313,18 +313,26 @@ export function StopSheet({
                 <ul>
                   {rows.map((row, index) => (
                     <li key={`${row.route}-${index}`}>
-                      {mode === "ferry" && row.operator ? (
-                        <img
-                          src={operatorIcon(row.operator)}
-                          alt=""
-                          className="ferry-op-icon"
-                        />
-                      ) : null}
-                      {row.route && mode !== "mtr" ? (
-                        <strong>
-                          {mode === "ferry" ? localizeBilingualName(row.route, locale) : row.route}
-                        </strong>
-                      ) : null}
+                      {mode === "ferry" ? (
+                        <div className="ferry-arrival-head">
+                          {row.operator ? (
+                            <img
+                              src={operatorIcon(row.operator)}
+                              alt=""
+                              className="ferry-op-icon"
+                            />
+                          ) : null}
+                          {row.route ? (
+                            <strong>{localizeBilingualName(row.route, locale)}</strong>
+                          ) : null}
+                        </div>
+                      ) : (
+                        <>
+                          {row.route && mode !== "mtr" ? (
+                            <strong>{row.route}</strong>
+                          ) : null}
+                        </>
+                      )}
                       {mode === "mtr" ? (
                         <StationChip name={row.destination} locale={locale} />
                       ) : row.destination ? (
