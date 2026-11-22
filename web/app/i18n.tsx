@@ -56,6 +56,8 @@ export type Messages = {
     taxiAllDay: string;
     delayed: string;
     timetable: string;
+    toilet: string;
+    toiletPdf: string;
     noArrivals: string;
     origin: string;
     notDeparted: string;
@@ -144,6 +146,8 @@ const en: Messages = {
     taxiAllDay: "Open all day",
     delayed: "Delayed",
     timetable: "Not live. These are timetable times.",
+    toilet: "Toilet",
+    toiletPdf: "Download layout (PDF)",
     noArrivals: "No arrivals right now.",
     origin: "Origin",
     notDeparted: "Not yet departed",
@@ -199,6 +203,8 @@ const zhHant: Messages = {
     taxiAllDay: "全日開放",
     delayed: "延誤",
     timetable: "非即時，以下為時間表班次。",
+    toilet: "洗手間",
+    toiletPdf: "下載平面圖（PDF）",
     noArrivals: "暫無到站班次。",
     origin: "始站",
     notDeparted: "未開出",

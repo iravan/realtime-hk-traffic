@@ -51,6 +51,14 @@ type FerryService = {
   last: FerryText;
 };
 
+type StationToilet = {
+  station_code: string;
+  location: string;
+  location_zh: string;
+  pdf_url: string;
+  pdf_url_zh: string;
+};
+
 export function StopSheet({
   id,
   mode,
@@ -94,6 +102,30 @@ export function StopSheet({
       })
       .catch(() => {
         if (!cancelled) setSailings([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, mode]);
+  const [toilet, setToilet] = useState<StationToilet | null>(null);
+  useEffect(() => {
+    if (mode !== "mtr") {
+      setToilet(null);
+      return;
+    }
+    let cancelled = false;
+    setToilet(null);
+    const code = id.startsWith("mtr:") ? id.slice(4) : "";
+    loadCachedJson<StationToilet[]>("station-toilet-v2", async () => {
+      const response = await fetch(`${basePath}/station-toilet.json`);
+      if (!response.ok) throw new Error("station-toilet");
+      return response.json() as Promise<StationToilet[]>;
+    })
+      .then((body) => {
+        if (!cancelled) setToilet(body.find((entry) => entry.station_code === code) ?? null);
+      })
+      .catch(() => {
+        // A missing catalogue only hides the toilet line.
       });
     return () => {
       cancelled = true;
@@ -283,7 +315,20 @@ export function StopSheet({
                 </button>
               </div>
             </div>
-            {description ? <section className="description">{description}</section> : null}
+            {description || toilet ? (
+              <section className={description ? "description" : "description icon-only"}>
+                {description}
+                {toilet ? (
+                  <ToiletMenu
+                    toilet={toilet}
+                    locale={locale}
+                    label={t.sheet.toilet}
+                    closeLabel={t.sheet.close}
+                    pdfLabel={t.sheet.toiletPdf}
+                  />
+                ) : null}
+              </section>
+            ) : null}
           </div>
         </div>
       </header>
@@ -475,6 +520,55 @@ function MapMenu({
                 </a>
               </li>
             ))}
+          </ul>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+function ToiletMenu({
+  toilet,
+  locale,
+  label,
+  closeLabel,
+  pdfLabel,
+}: {
+  toilet: StationToilet;
+  locale: Locale;
+  label: string;
+  closeLabel: string;
+  pdfLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setOpen(false);
+  }, [toilet]);
+  const location = locale === "en" ? toilet.location : toilet.location_zh;
+  const pdfUrl = locale === "en" ? toilet.pdf_url : toilet.pdf_url_zh;
+  return (
+    <>
+      <button
+        type="button"
+        className="toilet"
+        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M7.5 2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2M6 7h3a2 2 0 0 1 2 2v5.5H9.5V22h-4v-7.5H4V9a2 2 0 0 1 2-2m10.5-5a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2M15 22v-6h-3l2.59-7.59C14.84 7.59 15.6 7 16.5 7s1.66.59 1.91 1.41L21 16h-3v6z" />
+        </svg>
+      </button>
+      {open ? (
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <p className="modal-location">{location}</p>
+          <ul className="modal-maps">
+            <li>
+              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                {pdfLabel}
+              </a>
+            </li>
           </ul>
         </Modal>
       ) : null}

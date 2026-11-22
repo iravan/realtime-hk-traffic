@@ -1,0 +1,652 @@
+[
+  {
+    "station_code": "WHP",
+    "station_name": "Whampoa",
+    "station_name_zh": "黃埔",
+    "location": "Station Concourse Exit D (Paid Area)",
+    "location_zh": "車站大堂D出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/whp.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/whp.pdf"
+  },
+  {
+    "station_code": "HOM",
+    "station_name": "Ho Man Tin",
+    "station_name_zh": "何文田",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/hom.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/hom.pdf"
+  },
+  {
+    "station_code": "YMT",
+    "station_name": "Yau Ma Tei",
+    "station_name_zh": "油麻地",
+    "location": "Station Concourse Exit C (Paid Area)",
+    "location_zh": "車站大堂C出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ymt.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ymt.pdf"
+  },
+  {
+    "station_code": "MOK",
+    "station_name": "Mong Kok",
+    "station_name_zh": "旺角",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/mok.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/mok.pdf"
+  },
+  {
+    "station_code": "PRE",
+    "station_name": "Prince Edward",
+    "station_name_zh": "太子",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/pre.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/pre.pdf"
+  },
+  {
+    "station_code": "KOT",
+    "station_name": "Kowloon Tong",
+    "station_name_zh": "九龍塘",
+    "location": "North Station Concourse of East Rail Line (Paid Area) [Accessible toilet is not available for use due to refurbishment work]",
+    "location_zh": "東鐵綫北大堂 (已付車費區域) [無障礙洗手間因翻新工程暫停使用]",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/kot.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/kot.pdf"
+  },
+  {
+    "station_code": "DIH",
+    "station_name": "Diamond Hill",
+    "station_name_zh": "鑽石山",
+    "location": "Station Concourse of Tuen Ma Line (Paid Area)",
+    "location_zh": "屯馬綫車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/dih.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/dih.pdf"
+  },
+  {
+    "station_code": "NTK",
+    "station_name": "Ngau Tau Kok",
+    "station_name_zh": "牛頭角",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ntk.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ntk.pdf"
+  },
+  {
+    "station_code": "YAT",
+    "station_name": "Yau Tong",
+    "station_name_zh": "油塘",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/yat.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/yat.pdf"
+  },
+  {
+    "station_code": "TIK",
+    "station_name": "Tiu Keng Leng",
+    "station_name_zh": "調景嶺",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tik.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tik.pdf"
+  },
+  {
+    "station_code": "CEN",
+    "station_name": "Central",
+    "station_name_zh": "中環",
+    "location": "Station Concourse on L2 Exit A (Paid Area)",
+    "location_zh": "L2層大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/cen.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/cen.pdf"
+  },
+  {
+    "station_code": "ADM",
+    "station_name": "Admiralty",
+    "station_name_zh": "金鐘",
+    "location": "Station Concourse on L1 Exit F and L5 (Paid Area)",
+    "location_zh": "L1層大堂F出口及L5層大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/adm.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/adm.pdf"
+  },
+  {
+    "station_code": "TST",
+    "station_name": "Tsim Sha Tsui",
+    "station_name_zh": "尖沙咀",
+    "location": "Station Concourse Exit E (Unpaid Area)",
+    "location_zh": "車站大堂E出口 (非付費區域)",
+    "paid_area": false,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tst.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tst.pdf"
+  },
+  {
+    "station_code": "MEF",
+    "station_name": "Mei Foo",
+    "station_name_zh": "美孚",
+    "location": "Station Concourse of Tuen Ma Line (Paid Area)",
+    "location_zh": "屯馬綫車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/mef.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/mef.pdf"
+  },
+  {
+    "station_code": "LAK",
+    "station_name": "Lai King",
+    "station_name_zh": "荔景",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/lak.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/lak.pdf"
+  },
+  {
+    "station_code": "KET",
+    "station_name": "Kennedy Town",
+    "station_name_zh": "堅尼地城",
+    "location": "Station Concourse Exit A (Unpaid Area)",
+    "location_zh": "車站大堂A出口 (非付費區域)",
+    "paid_area": false,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ket.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ket.pdf"
+  },
+  {
+    "station_code": "HKU",
+    "station_name": "HKU",
+    "station_name_zh": "香港大學",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/hku.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/hku.pdf"
+  },
+  {
+    "station_code": "SYP",
+    "station_name": "Sai Ying Pun",
+    "station_name_zh": "西營盤",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/syp.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/syp.pdf"
+  },
+  {
+    "station_code": "SHW",
+    "station_name": "Sheung Wan",
+    "station_name_zh": "上環",
+    "location": "Station Concourse Exit E (Paid Area)",
+    "location_zh": "車站大堂E出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/shw.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/shw.pdf"
+  },
+  {
+    "station_code": "NOP",
+    "station_name": "North Point",
+    "station_name_zh": "北角",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/nop.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/nop.pdf"
+  },
+  {
+    "station_code": "QUB",
+    "station_name": "Quarry Bay",
+    "station_name_zh": "鰂魚涌",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/qub.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/qub.pdf"
+  },
+  {
+    "station_code": "HOK",
+    "station_name": "Hong Kong",
+    "station_name_zh": "香港",
+    "location": "Station Concourse on G/F Exit E, L1 and L2 (Unpaid Area)",
+    "location_zh": "地面大堂E出口、L1層及L2層大堂 (非付費區域)",
+    "paid_area": false,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/hok.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/hok.pdf"
+  },
+  {
+    "station_code": "KOW",
+    "station_name": "Kowloon",
+    "station_name_zh": "九龍",
+    "location": "Station Concourse on G and L2 (Unpaid Area) [Toilets on L2 Platform 1 (to Airport/AsiaWorld-Expo) near the rear of the train are not available for use due to refurbishment work]",
+    "location_zh": "地面及L2層大堂 (非付費區域) [L2層1號月台（往機場/博覽館）近車尾位置的洗手間因翻新工程暫停使用]",
+    "paid_area": false,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/kow.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/kow.pdf"
+  },
+  {
+    "station_code": "NAC",
+    "station_name": "Nam Cheong",
+    "station_name_zh": "南昌",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/nac.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/nac.pdf"
+  },
+  {
+    "station_code": "TSY",
+    "station_name": "Tsing Yi",
+    "station_name_zh": "青衣",
+    "location": "Station Concourse on U4 and U2 (Unpaid Area) [Toilets on U2 are not available for use due to refurbishment work]",
+    "location_zh": "U4層及U2層大堂 (非付費區域) [U2層洗手間因翻新工程暫停使用]",
+    "paid_area": false,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tsy.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tsy.pdf"
+  },
+  {
+    "station_code": "SUN",
+    "station_name": "Sunny Bay",
+    "station_name_zh": "欣澳",
+    "location": "Platform 3 of Disneyland Resort Line towards Disneyland Resort",
+    "location_zh": "迪士尼綫3號月台 (往迪士尼方向)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/sun.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/sun.pdf"
+  },
+  {
+    "station_code": "DIS",
+    "station_name": "Disneyland Resort",
+    "station_name_zh": "迪士尼",
+    "location": "Platform 1 of Disneyland Resort Line towards Sunny Bay",
+    "location_zh": "迪士尼綫1號月台 (往欣澳方向)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/dis.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/dis.pdf"
+  },
+  {
+    "station_code": "WKS",
+    "station_name": "Wu Kai Sha",
+    "station_name_zh": "烏溪沙",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/wks.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/wks.pdf"
+  },
+  {
+    "station_code": "MOS",
+    "station_name": "Ma On Shan",
+    "station_name_zh": "馬鞍山",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/mos.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/mos.pdf"
+  },
+  {
+    "station_code": "HEO",
+    "station_name": "Heng On",
+    "station_name_zh": "恆安",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/heo.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/heo.pdf"
+  },
+  {
+    "station_code": "TSH",
+    "station_name": "Tai Shui Hang",
+    "station_name_zh": "大水坑",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tsh.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tsh.pdf"
+  },
+  {
+    "station_code": "SHM",
+    "station_name": "Shek Mun",
+    "station_name_zh": "石門",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/shm.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/shm.pdf"
+  },
+  {
+    "station_code": "CIO",
+    "station_name": "City One",
+    "station_name_zh": "第一城",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/cio.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/cio.pdf"
+  },
+  {
+    "station_code": "STW",
+    "station_name": "Sha Tin Wai",
+    "station_name_zh": "沙田圍",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/stw.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/stw.pdf"
+  },
+  {
+    "station_code": "CKT",
+    "station_name": "Che Kung Temple",
+    "station_name_zh": "車公廟",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ckt.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ckt.pdf"
+  },
+  {
+    "station_code": "TAW",
+    "station_name": "Tai Wai",
+    "station_name_zh": "大圍",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/taw.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/taw.pdf"
+  },
+  {
+    "station_code": "HIK",
+    "station_name": "Hin Keng",
+    "station_name_zh": "顯徑",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/hik.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/hik.pdf"
+  },
+  {
+    "station_code": "KAT",
+    "station_name": "Kai Tak",
+    "station_name_zh": "啟德",
+    "location": "Station Concourse Exit C (Paid Area)",
+    "location_zh": "車站大堂C出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/kat.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/kat.pdf"
+  },
+  {
+    "station_code": "SUW",
+    "station_name": "Sung Wong Toi",
+    "station_name_zh": "宋皇臺",
+    "location": "Station Concourse Exit D (Paid Area)",
+    "location_zh": "車站大堂D出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/suw.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/suw.pdf"
+  },
+  {
+    "station_code": "TKW",
+    "station_name": "To Kwa Wan",
+    "station_name_zh": "土瓜灣",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tkw.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tkw.pdf"
+  },
+  {
+    "station_code": "HUH",
+    "station_name": "Hung Hom",
+    "station_name_zh": "紅磡",
+    "location": "Station Concourse on U2 and U3 (Unpaid Area), Tuen Ma Line Platforms",
+    "location_zh": "U2層及U3層大堂 (非付費區域)、屯馬綫月台",
+    "paid_area": null,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/huh.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/huh.pdf"
+  },
+  {
+    "station_code": "ETS",
+    "station_name": "East Tsim Sha Tsui",
+    "station_name_zh": "尖東",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ets.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ets.pdf"
+  },
+  {
+    "station_code": "AUS",
+    "station_name": "Austin",
+    "station_name_zh": "柯士甸",
+    "location": "Station Concourse Exit C (Paid Area)",
+    "location_zh": "車站大堂C出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/aus.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/aus.pdf"
+  },
+  {
+    "station_code": "TWW",
+    "station_name": "Tsuen Wan West",
+    "station_name_zh": "荃灣西",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tww.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tww.pdf"
+  },
+  {
+    "station_code": "KSR",
+    "station_name": "Kam Sheung Road",
+    "station_name_zh": "錦上路",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ksr.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ksr.pdf"
+  },
+  {
+    "station_code": "YUL",
+    "station_name": "Yuen Long",
+    "station_name_zh": "元朗",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/yul.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/yul.pdf"
+  },
+  {
+    "station_code": "LOP",
+    "station_name": "Long Ping",
+    "station_name_zh": "朗屏",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/lop.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/lop.pdf"
+  },
+  {
+    "station_code": "TIS",
+    "station_name": "Tin Shui Wai",
+    "station_name_zh": "天水圍",
+    "location": "Station Concourse Exit C (Paid Area)",
+    "location_zh": "車站大堂C出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tis.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tis.pdf"
+  },
+  {
+    "station_code": "SIH",
+    "station_name": "Siu Hong",
+    "station_name_zh": "兆康",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/sih.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/sih.pdf"
+  },
+  {
+    "station_code": "TUM",
+    "station_name": "Tuen Mun",
+    "station_name_zh": "屯門",
+    "location": "Station Concourse Exit F (Paid Area)",
+    "location_zh": "車站大堂F出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tum.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tum.pdf"
+  },
+  {
+    "station_code": "EXC",
+    "station_name": "Exhibition Centre",
+    "station_name_zh": "會展",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/exc.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/exc.pdf"
+  },
+  {
+    "station_code": "MKK",
+    "station_name": "Mong Kok East",
+    "station_name_zh": "旺角東",
+    "location": "Station Concourse Exit C (Paid Area)",
+    "location_zh": "車站大堂C出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/mkk.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/mkk.pdf"
+  },
+  {
+    "station_code": "SHT",
+    "station_name": "Sha Tin",
+    "station_name_zh": "沙田",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/sht.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/sht.pdf"
+  },
+  {
+    "station_code": "FOT",
+    "station_name": "Fo Tan",
+    "station_name_zh": "火炭",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/fot.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/fot.pdf"
+  },
+  {
+    "station_code": "UNI",
+    "station_name": "University",
+    "station_name_zh": "大學",
+    "location": "Station Concourse Exit B (Paid Area)",
+    "location_zh": "車站大堂B出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/uni.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/uni.pdf"
+  },
+  {
+    "station_code": "TAP",
+    "station_name": "Tai Po Market",
+    "station_name_zh": "大埔墟",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tap.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tap.pdf"
+  },
+  {
+    "station_code": "TWO",
+    "station_name": "Tai Wo",
+    "station_name_zh": "太和",
+    "location": "Station Concourse Exit A (Paid Area)",
+    "location_zh": "車站大堂A出口 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/two.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/two.pdf"
+  },
+  {
+    "station_code": "FAN",
+    "station_name": "Fanling",
+    "station_name_zh": "粉嶺",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/fan.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/fan.pdf"
+  },
+  {
+    "station_code": "SHS",
+    "station_name": "Sheung Shui",
+    "station_name_zh": "上水",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/shs.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/shs.pdf"
+  },
+  {
+    "station_code": "LOW",
+    "station_name": "Lo Wu",
+    "station_name_zh": "羅湖",
+    "location": "Station Platform and Arrival Hall (Paid & Unpaid Area)",
+    "location_zh": "車站月台及入境大堂 (已付及非付費區域)",
+    "paid_area": null,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/low.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/low.pdf"
+  },
+  {
+    "station_code": "LMC",
+    "station_name": "Lok Ma Chau",
+    "station_name_zh": "落馬洲",
+    "location": "Station Concourse on Arrival Hall (Paid Area) and Departure Hall (Unpaid Area)",
+    "location_zh": "入境大堂 (已付車費區域) 及離境大堂 (非付費區域)",
+    "paid_area": null,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/lmc.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/lmc.pdf"
+  },
+  {
+    "station_code": "OCP",
+    "station_name": "Ocean Park",
+    "station_name_zh": "海洋公園",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ocp.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ocp.pdf"
+  },
+  {
+    "station_code": "WCH",
+    "station_name": "Wong Chuk Hang",
+    "station_name_zh": "黃竹坑",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/wch.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/wch.pdf"
+  },
+  {
+    "station_code": "LET",
+    "station_name": "Lei Tung",
+    "station_name_zh": "利東",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/let.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/let.pdf"
+  },
+  {
+    "station_code": "SOH",
+    "station_name": "South Horizons",
+    "station_name_zh": "海怡半島",
+    "location": "Station Concourse (Paid Area)",
+    "location_zh": "車站大堂 (已付車費區域)",
+    "paid_area": true,
+    "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/soh.pdf",
+    "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/soh.pdf"
+  }
+]

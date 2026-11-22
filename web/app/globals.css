@@ -210,7 +210,7 @@ button { cursor: pointer; }
 .stop-title { display: flex; align-items: flex-start; gap: 0.65rem; min-width: 0; max-width: 100%; }
 .sheet .stop-name { flex: 1; min-width: 0; }
 .stop-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.35rem; }
-.stop-copy { min-width: 0; }
+.stop-copy { min-width: 0; display: flex; align-items: center; min-height: 44px; }
 .stop-sign { display: block; width: 32px; height: 46px; object-fit: contain; flex: none; }
 .taxi-sign { width: 36px; height: 36px; align-self: center; }
 .sheet h2 { margin: 0; min-width: 0; font-size: 1.05rem; overflow-wrap: anywhere; text-wrap: balance; }
@@ -230,6 +230,9 @@ button { cursor: pointer; }
   padding: 0;
 }
 .sheet .sheet-icon svg { width: 20px; height: 20px; }
+.sheet .toilet { display: block; min-height: 0; margin: 0.3rem 0 0; padding: 0; color: inherit; cursor: pointer; }
+.sheet .description.icon-only { margin-top: 0; }
+.sheet .toilet svg { display: block; width: 20px; height: 20px; }
 .modal {
   position: fixed;
   z-index: 30;
@@ -287,6 +290,7 @@ button { cursor: pointer; }
   font: inherit;
   cursor: pointer;
 }
+.modal-location { margin: 0.75rem 0 0; }
 .modal-maps { list-style: none; margin: 0.35rem 0 0; padding: 0; }
 .modal-maps li { padding: 0; border: 0; }
 .modal-maps a {
