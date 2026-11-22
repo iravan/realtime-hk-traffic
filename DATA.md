@@ -680,22 +680,41 @@ flowchart TD
 ## Ferry timetable refresh flow
 
 ```mermaid
-flowchart TD
-    A[Client requests /stops/ferry:ID/timetable] --> B{Redis has cached timetable?}
-    B -->|Yes| C[Return cached data instantly]
-    C --> D{Refresh debounce key exists?}
-    D -->|No, expired| E[Set debounce key, TTL 24h]
-    E --> F[Spawn background refresh task]
-    F --> G[Fetch all source CSVs]
-    G --> H{Fetch successful?}
-    H -->|Yes, non-empty| I[Overwrite Redis cache]
-    H -->|No or empty| J[Keep existing cache]
-    D -->|Yes, not expired| K[No refresh needed]
-    B -->|No| L[Fetch all source CSVs synchronously]
-    L --> M{Fetch successful?}
-    M -->|Yes, non-empty| N[Store in Redis, no TTL]
-    M -->|No or empty| O[Return empty result]
-    N --> P[Set debounce key, TTL 24h]
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Redis
+    participant Source as Source CSVs
+
+    Client->>Server: GET /stops/ferry:ID/timetable
+    Server->>Redis: GET timetable:ID
+    alt Cache hit
+        Redis-->>Server: cached JSON
+        Server->>Redis: EXISTS timetable:ID:refreshed
+        alt Debounce expired
+            Server->>Redis: SET refreshed EX 86400
+            Server-->>Client: cached JSON (instant)
+            Server->>Source: fetch all CSVs (retry 3x, 1s delay)
+            Source-->>Server: CSV data
+            alt Success & non-empty
+                Server->>Redis: SET timetable:ID (no TTL)
+            else Failed or empty
+                Server->>Server: keep existing cache
+            end
+        else Debounce active
+            Server-->>Client: cached JSON (instant)
+        end
+    else Cache miss
+        Server->>Source: fetch all CSVs (retry 3x, 1s delay)
+        Source-->>Server: CSV data
+        alt Success & non-empty
+            Server->>Redis: SET timetable:ID (no TTL)
+            Server->>Redis: SET refreshed EX 86400
+            Server-->>Client: fresh JSON
+        else Failed or empty
+            Server-->>Client: empty result
+        end
+    end
 ```
 
 ## Ferry timetables
