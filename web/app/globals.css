@@ -246,7 +246,6 @@ button { cursor: pointer; }
   cursor: pointer;
   color: var(--ink);
 }
-.ferry-timetable-btn:hover { background: rgba(28, 25, 21, 0.06); }
 .ferry-day { margin: 0 0 0.9rem; }
 .ferry-day.ferry-day-past { opacity: 0.4; }
 .ferry-day h3 { margin: 0 0 0.4rem; font-size: 0.8rem; font-weight: 600; color: #6f675e; }
