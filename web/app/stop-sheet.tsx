@@ -474,27 +474,38 @@ function sessionMinutes(time: string): number {
   return Number(match[1]) * 60 + Number(match[2]);
 }
 
-// Hong Kong is UTC+8 with no DST.
-function hkNow(): { year: number; month: number; day: number; hours: number; minutes: number; dayOfWeek: number } {
-  const now = new Date();
-  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
-  const hkMs = utcMs + 8 * 60 * 60 * 1000;
-  const hk = new Date(hkMs);
-  return {
-    year: hk.getUTCFullYear(),
-    month: hk.getUTCMonth() + 1,
-    day: hk.getUTCDate(),
-    hours: hk.getUTCHours(),
-    minutes: hk.getUTCMinutes(),
-    dayOfWeek: hk.getUTCDay(),
-  };
+// Hong Kong public holidays (YYYY-MM-DD). Update yearly.
+const HK_PUBLIC_HOLIDAYS = new Set([
+  // 2025
+  "2025-01-01", "2025-01-29", "2025-01-30", "2025-01-31",
+  "2025-04-04", "2025-04-05", "2025-04-06", "2025-04-18",
+  "2025-04-19", "2025-04-21", "2025-05-01", "2025-05-05",
+  "2025-05-31", "2025-07-01", "2025-10-01", "2025-10-07",
+  "2025-10-29", "2025-12-25", "2025-12-26",
+  // 2026
+  "2026-01-01", "2026-02-17", "2026-02-18", "2026-02-19",
+  "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06",
+  "2026-05-01", "2026-05-24", "2026-05-25", "2026-07-01",
+  "2026-09-26", "2026-10-01", "2026-10-19", "2026-10-26",
+  "2026-12-25", "2026-12-26",
+  // 2027
+  "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08",
+  "2027-03-26", "2027-03-27", "2027-03-29", "2027-04-05",
+  "2027-04-06", "2027-05-01", "2027-05-13", "2027-05-14",
+  "2027-07-01", "2027-09-16", "2027-10-01", "2027-10-08",
+  "2027-10-20", "2027-12-25", "2027-12-27",
+]);
+
+function isHongKongPublicHoliday(date: Date): boolean {
+  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  return HK_PUBLIC_HOLIDAYS.has(key);
 }
 
 function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean {
-  const hk = hkNow();
-  const dow = hk.dayOfWeek; // 0=Sun, 6=Sat
-  const key = `${hk.year}-${String(hk.month).padStart(2, "0")}-${String(hk.day).padStart(2, "0")}`;
-  const isHoliday = holidaySet ? holidaySet.has(key) : false;
+  const now = new Date();
+  const dow = now.getDay(); // 0=Sun, 6=Sat
+  const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const isHoliday = holidaySet ? holidaySet.has(key) : isHongKongPublicHoliday(now);
   const lower = day.toLowerCase();
   if (dow === 0 || isHoliday) {
     // Sunday or public holiday
@@ -519,7 +530,6 @@ function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean
     lower.includes("every")
   );
 }
-
 
 function operatorIcon(operator: string): string {
   switch (operator) {
@@ -681,8 +691,8 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                                     : sorted.length - 1;
                                   // Greyed index: first session >= current time.
                                   // Sessions before it are past (except index 0).
-                                  const hk = hkNow();
-                                  const currentMins = hk.hours * 60 + hk.minutes;
+                                  const now = new Date();
+                                  const currentMins = now.getHours() * 60 + now.getMinutes();
                                   const greyedIndex = sorted.findIndex((s) => sessionMinutes(s.time) >= currentMins);
                                   const isPast = index > 0 && (greyedIndex === -1 || index < greyedIndex);
                                   const highlight = [isFirst ? "first" : "", index === lastIdx ? "last" : ""]
