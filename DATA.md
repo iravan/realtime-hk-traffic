@@ -657,6 +657,7 @@ flowchart TD
     F --> G2[HKKF CSVs<br/>route_id + direction]
     F --> G3[Tsui Wah CSV<br/>single file]
     F --> G4[Star Ferry CSVs<br/>2 routes]
+    F --> G5[Chuen Kee CSV<br/>single file]
     G1 --> H[Filter by pier origin]
     G2 --> H
     G3 --> H
@@ -672,6 +673,7 @@ flowchart TD
         O[HKKF → ferry.svg]
         P[Star Ferry → ferry.svg]
         Q[Tsui Wah → ferry.svg]
+        R[Chuen Kee → ferry.svg]
     end
 ```
 
@@ -680,7 +682,7 @@ flowchart TD
 `GET /stops/ferry:{STOP_ID}/timetable` returns every scheduled sailing for a
 pier, read from the operators' timetables on data.gov.hk. Each destination has
 day groups, and each group lists its sessions in file order, with a `remark`
-code and an `operator` (`sun`, `hkkf`, `star`, or `tsuiwah`). Bands carry the
+code and an `operator` (`sun`, `hkkf`, `star`, `tsuiwah`, or `chuenkee`). Bands carry the
 same `operator`. The stop sheet's timetable modal shows one tab per destination,
 an operator icon next to each session or band, and highlights the first and last
 session of each day group.
@@ -691,6 +693,7 @@ session of each day group.
 | Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/time_table/{route_id}/{direction}` (CSV) | `101126`, `101348`, `101123`, `101108`, `101109`, `101324` |
 | Tsui Wah | `https://www.traway.com.hk/govdata/time.csv` | `101125`, `101123` |
 | Star Ferry | Central and Wan Chai to Tsim Sha Tsui timetable CSVs on starferry.com.hk (listed on data.gov.hk) | `101339`, `101119`, `101118` |
+| Chuen Kee Ferry | `https://ferry.com.hk/opendataV/time.csv` (Aberdeen–Sok Kwu Wan via Mo Tat Wan) | `101125`, `101124` |
 
 Pier rules, from the Transport Department route data and the operators' own
 timetable text:
@@ -703,6 +706,8 @@ timetable text:
 - Tsui Wah's `A` is Aberdeen (`101125`) and `Y` is Yung Shue Wan (`101123`).
   The file does not define its day codes. `W`, `S` and `H` are labelled
   Weekdays, Saturday and Public holidays. That reading is an assumption.
+- Chuen Kee Ferry's `A` is Aberdeen (`101125`) and `S` is Sok Kwu Wan (`101124`).
+  Day codes: `W` Weekdays, `WW` Saturday, `S` Sundays and public holidays.
 
 Remark codes are kept as given. HKKF defines its markers in the CSV's
 `remarks_en` column: `{}` Saturday only, `^` last sailing, `#` one-day advance
@@ -727,6 +732,16 @@ Piers with no operator source show no timetable.
 Live departures are still read from `GET /stops/{id}/arrivals`, as above. The
 service window in `web/public/service-hours.json` still applies, and a ferry
 pier stays coloured and clickable outside it.
+
+## Hong Kong public holidays
+
+`GET /holidays` returns a JSON object `{ "dates": ["2025-01-01", ...] }`
+with all Hong Kong public holidays, fetched from
+`https://www.1823.gov.hk/common/ical/en.json`. The server caches the result
+in Redis under `holidays:dates` with no TTL (kept forever). A background
+refresh is enqueued (debounced by 24 hours via the `holidays:refreshed`
+key) to fetch fresh data. The app caches the same response in IndexedDB
+under `hk-public-holidays` with a 1-year TTL.
 
 `inbound` on the HKKF feed is the sailing towards the route origin (Central,
 or Peng Chau on the Hei Ling Chau route). `outbound` leaves that origin.
