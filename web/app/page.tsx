@@ -151,6 +151,8 @@ type Stop = {
   id: string;
   mode: Mode;
   name: string;
+  name_tc?: string;
+  name_en?: string;
   latitude: number;
   longitude: number;
   routes?: string[];
@@ -550,7 +552,13 @@ export default function Page() {
       const showStopName = (stop: Stop) => {
         const node = document.createElement("div");
         node.className = "stop-name";
-        node.textContent = localizeStopName(stop.name, stop.mode, localeRef.current);
+        node.textContent = localizeStopName(
+          stop.name,
+          stop.mode,
+          localeRef.current,
+          stop.name_tc,
+          stop.name_en,
+        );
         stopPopup.setDOMContent(node).setLngLat([stop.longitude, stop.latitude]);
         if (!stopPopup.isOpen()) stopPopup.addTo(map);
         const station = mtrStationColor(stop.id);
@@ -693,7 +701,13 @@ export default function Page() {
           ? localeRef.current === "en"
             ? label.en
             : label.tc
-          : localizeStopName(stop.name, stop.mode, localeRef.current);
+          : localizeStopName(
+              stop.name,
+              stop.mode,
+              localeRef.current,
+              stop.name_tc,
+              stop.name_en,
+            );
         const node = document.createElement("div");
         node.className = "stop-name";
         node.textContent = text;
@@ -932,9 +946,15 @@ export default function Page() {
     if (cached) return Promise.resolve(cached);
     const pending = cataloguePromisesRef.current.get(mode);
     if (pending) return pending;
-    // Minibus names gained their English half after the first cache. A new key
-    // makes that copy load instead of the Chinese-only one saved for 24 hours.
-    const catalogueKey = mode === "minibus" ? "stops-minibus-bilingual" : `stops-${mode}`;
+    // Minibus names gained their English half after the first cache, and bus
+    // names gained separate Chinese and English fields. A new key makes those
+    // copies load instead of the older one saved for 24 hours.
+    const catalogueKey =
+      mode === "minibus"
+        ? "stops-minibus-bilingual"
+        : mode === "bus"
+          ? "stops-bus-bilingual"
+          : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
       if (!response.ok) throw new Error(`stops-${mode}`);
@@ -1378,6 +1398,8 @@ export default function Page() {
           id={selected.id}
           mode={selected.mode}
           name={selected.name}
+          nameTc={selected.name_tc}
+          nameEn={selected.name_en}
           latitude={selected.latitude}
           longitude={selected.longitude}
           taxi={selected.taxi}

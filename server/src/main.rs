@@ -24,6 +24,11 @@ struct Stop {
     id: String,
     mode: String,
     name: String,
+    // Bus feeds publish the two names separately. Keeping them beside the
+    // combined name lets the page show one language without guessing where
+    // the Chinese half ends.
+    name_tc: Option<String>,
+    name_en: Option<String>,
     latitude: f64,
     longitude: f64,
     mtr_code: Option<String>,
@@ -39,11 +44,23 @@ impl Stop {
             id,
             mode: mode.to_string(),
             name,
+            name_tc: None,
+            name_en: None,
             latitude,
             longitude,
             mtr_code: None,
             mtr_lines: Vec::new(),
         }
+    }
+
+    fn with_names(mut self, tc: Option<String>, en: Option<String>) -> Self {
+        self.name_tc = tc
+            .map(|value| value.trim().to_string())
+            .filter(|value| !value.is_empty());
+        self.name_en = en
+            .map(|value| value.trim().to_string())
+            .filter(|value| !value.is_empty());
+        self
     }
 }
 
@@ -52,6 +69,10 @@ struct StopOut {
     id: String,
     mode: String,
     name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name_tc: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name_en: Option<String>,
     latitude: f64,
     longitude: f64,
 }
@@ -283,6 +304,7 @@ async fn index_stops(app: &App, stops: Vec<Stop>) -> (usize, usize) {
         let owner = locations.get(&key).cloned();
         match owner.and_then(|id| index.get_mut(&id).map(|kept| (id, kept))) {
             Some((owner, kept)) => {
+                let owns_location = stop.id == owner;
                 for member in stop.member_ids {
                     members.insert(member.clone(), owner.clone());
                     if !kept.member_ids.contains(&member) {
@@ -290,10 +312,20 @@ async fn index_stops(app: &App, stops: Vec<Stop>) -> (usize, usize) {
                     }
                 }
                 // A live record carries fields the seed does not, such as MTR lines.
+                // Only the id that owns this location may rename it; a duplicate
+                // id at the same coordinates must not replace the chosen name.
+                let has_live_names =
+                    owns_location && (stop.name_tc.is_some() || stop.name_en.is_some());
                 if !stop.mtr_lines.is_empty() {
                     kept.mtr_lines = stop.mtr_lines;
                     kept.mtr_code = stop.mtr_code;
                     kept.name = stop.name;
+                } else if has_live_names {
+                    kept.name = stop.name;
+                }
+                if has_live_names {
+                    kept.name_tc = stop.name_tc;
+                    kept.name_en = stop.name_en;
                 }
                 updated += 1;
             }
@@ -365,6 +397,8 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
             id: stop.id.clone(),
             mode: stop.mode.clone(),
             name: stop.name.clone(),
+            name_tc: stop.name_tc.clone(),
+            name_en: stop.name_en.clone(),
             latitude: stop.latitude,
             longitude: stop.longitude,
         });
@@ -531,7 +565,10 @@ async fn city_places(app: &App) -> Vec<(String, String)> {
     stops
         .iter()
         .filter(|stop| stop.id.starts_with("bus:ctb:"))
-        .filter_map(|stop| catalog::bilingual_name(&stop.name))
+        .filter_map(|stop| match (&stop.name_tc, &stop.name_en) {
+            (Some(tc), Some(en)) => Some((tc.clone(), en.clone())),
+            _ => catalog::bilingual_name(&stop.name),
+        })
         .collect()
 }
 
@@ -1182,5 +1219,16 @@ mod tests {
         });
         let when = super::sun_shown(&item).expect("departure");
         assert_eq!(when.to_rfc3339(), "2026-11-21T07:23:00+08:00");
+    }
+
+    #[test]
+    fn bundled_bus_stops_keep_the_published_names_apart() {
+        let stops = super::catalog::bundled_stops();
+        let stop = stops
+            .iter()
+            .find(|stop| stop.id == "bus:kmb:1E10D70B8D3AC179")
+            .expect("stop");
+        assert_eq!(stop.name_tc.as_deref(), Some("太古廣場 (A1)"));
+        assert_eq!(stop.name_en.as_deref(), Some("PACIFIC PLACE (A1)"));
     }
 }

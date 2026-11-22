@@ -372,6 +372,10 @@ Each item in `data` is read as:
 | `name_tc`, `name_sc`, `name_en` | Stop name in Traditional Chinese, Simplified Chinese and English |
 | `lat`, `long` | WGS84 coordinates, parsed from strings. Stop `4594DE819A18CA80` (天平邨天怡樓) publishes `22.054778`, a transposition of the other Tin Yee House record `22.504778` at the same longitude. The bundled catalogue stores `22.504778`. A few identical stop names are also published `0.000001`° apart, about 10 cm, from float rounding; each of those pairs is stored on one of the two published points. A live catalogue refresh copies the published values |
 
+The bundled catalogue keeps `name_tc` and `name_en` beside the combined `name`,
+so the page can show one language without splitting a string that may contain
+Latin letters in its Chinese half.
+
 Single stop:
 
 Source dataset: [Stop Data](https://data.gov.hk/en-data/dataset/hk-td-tis_21-etakmb/resource/31ee7ca9-d9ef-42cb-8c11-cca2876650fb).
@@ -990,7 +994,7 @@ expires on its own clock:
 
 | Key | File | What a stop record contains |
 | --- | --- | --- |
-| `stops-bus` | `stops-bus.json` | `id`, `latitude`, `longitude`, `mode`, `name`, and `night` on overnight stops |
+| `stops-bus` | `stops-bus.json` | `id`, `latitude`, `longitude`, `mode`, `name`, `name_tc`, `name_en`, and `night` on overnight stops |
 | `stops-minibus` | `stops-minibus.json` | The same fields, plus `routes`, and `night` when the route runs overnight |
 | `stops-ferry` | `stops-ferry.json` | `id`, `latitude`, `longitude`, `mode`, `name` only. No `routes` or `night` |
 | `stops-taxi` | `stops-taxi.json` | The same five fields. Taxi type is joined later from `taxi-stands.geojson` and is not stored here |

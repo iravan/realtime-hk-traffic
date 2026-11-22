@@ -167,8 +167,9 @@ known = {stop["id"] for stop in document["stops"]}
 for stop in document["stops"]:
     fresh = live.get(stop["id"])
     if fresh:
-        for key in ("mode", "name", "latitude", "longitude"):
-            stop[key] = fresh[key]
+        for key in ("mode", "name", "name_tc", "name_en", "latitude", "longitude"):
+            if key in fresh:
+                stop[key] = fresh[key]
 
 document["stops"].extend(
     sorted(

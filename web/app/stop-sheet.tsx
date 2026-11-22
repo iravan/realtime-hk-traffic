@@ -63,6 +63,8 @@ export function StopSheet({
   id,
   mode,
   name,
+  nameTc,
+  nameEn,
   latitude,
   longitude,
   taxi,
@@ -74,6 +76,8 @@ export function StopSheet({
   id: string;
   mode: Mode;
   name: string;
+  nameTc?: string;
+  nameEn?: string;
   latitude: number;
   longitude: number;
   taxi?: TaxiKind;
@@ -285,7 +289,7 @@ export function StopSheet({
           <div className="stop-name">
             <div className="stop-heading">
               <div className="stop-copy">
-                <h2>{localizeStopName(name, mode, locale)}</h2>
+                <h2>{localizeStopName(name, mode, locale, nameTc, nameEn)}</h2>
               </div>
               <div className="sheet-actions">
 
@@ -299,7 +303,7 @@ export function StopSheet({
                 <MapMenu
                   latitude={latitude}
                   longitude={longitude}
-                  name={localizeStopName(name, mode, locale)}
+                  name={localizeStopName(name, mode, locale, nameTc, nameEn)}
                   label={t.sheet.otherMaps}
                   closeLabel={t.sheet.close}
                   maps={[

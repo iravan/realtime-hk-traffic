@@ -24,13 +24,16 @@ pub async fn kmb_stops(http: &reqwest::Client) -> Vec<Stop> {
         .filter_map(|stop| {
             let latitude = stop.lat.parse().ok()?;
             let longitude = stop.long.parse().ok()?;
-            Some(Stop::new(
-                format!("bus:kmb:{}", stop.stop),
-                "bus",
-                name(&stop.name_tc, &stop.name_en),
-                latitude,
-                longitude,
-            ))
+            Some(
+                Stop::new(
+                    format!("bus:kmb:{}", stop.stop),
+                    "bus",
+                    name(&stop.name_tc, &stop.name_en),
+                    latitude,
+                    longitude,
+                )
+                .with_names(Some(stop.name_tc), Some(stop.name_en)),
+            )
         })
         .collect()
 }
@@ -82,13 +85,16 @@ pub async fn citybus_stops(http: &reqwest::Client) -> Vec<Stop> {
             let parsed = response.json::<Data<CityStop>>().await.ok()?;
             let latitude = parsed.data.lat.parse().ok()?;
             let longitude = parsed.data.long.parse().ok()?;
-            Some(Stop::new(
-                format!("bus:ctb:{}", parsed.data.stop),
-                "bus",
-                name(&parsed.data.name_tc, &parsed.data.name_en),
-                latitude,
-                longitude,
-            ))
+            Some(
+                Stop::new(
+                    format!("bus:ctb:{}", parsed.data.stop),
+                    "bus",
+                    name(&parsed.data.name_tc, &parsed.data.name_en),
+                    latitude,
+                    longitude,
+                )
+                .with_names(Some(parsed.data.name_tc), Some(parsed.data.name_en)),
+            )
         })
         .buffer_unordered(12)
         .filter_map(|stop| async move { stop })
@@ -632,6 +638,10 @@ struct BundledStop {
     id: String,
     mode: String,
     name: String,
+    #[serde(default)]
+    name_tc: Option<String>,
+    #[serde(default)]
+    name_en: Option<String>,
     latitude: f64,
     longitude: f64,
 }
@@ -663,6 +673,7 @@ pub fn bundled_stops() -> Vec<Stop> {
                 stop.latitude,
                 stop.longitude,
             )
+            .with_names(stop.name_tc, stop.name_en)
         })
         .collect()
 }

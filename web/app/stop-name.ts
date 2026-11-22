@@ -38,11 +38,22 @@ export function localizeBilingualName(name: string, locale: Locale): string {
     .join(" / ");
 }
 
-export function localizeStopName(name: string, mode: Mode, locale: Locale): string {
+export function localizeStopName(
+  name: string,
+  mode: Mode,
+  locale: Locale,
+  nameTc?: string | null,
+  nameEn?: string | null,
+): string {
+  // Bus feeds publish the Chinese and English names separately. Use them when
+  // the catalogue carries them, so a name with Latin letters in its Chinese
+  // half ("太古廣場 (A1)") still splits cleanly.
+  if (mode === "bus" && (nameTc || nameEn)) {
+    return (locale === "en" ? nameEn : nameTc) || nameTc || nameEn || name;
+  }
   // MTR, ferry and green-minibus catalogues store Chinese and English in one
-  // string. Bus arrival destinations do too, once the feed has been paired.
-  // Other stop titles stay as published.
-  return mode === "mtr" || mode === "ferry" || mode === "minibus"
+  // string. Older bus catalogues do too, so they fall back to the same split.
+  return mode === "mtr" || mode === "ferry" || mode === "minibus" || mode === "bus"
     ? localizeBilingualName(name, locale)
     : name;
 }
