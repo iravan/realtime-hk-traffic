@@ -57,9 +57,10 @@ async function writeEntry(key: string, value: unknown): Promise<void> {
 // These files change with a deploy, not minute by minute. A copy newer than a
 // day is used as-is. An older copy is replaced, and kept only when the network
 // request fails.
-export async function loadCachedJson<T>(key: string, load: () => Promise<T>): Promise<T> {
+export async function loadCachedJson<T>(key: string, load: () => Promise<T>, ttl?: number): Promise<T> {
+  const effectiveTtl = ttl ?? ttlMs;
   const hit = await readEntry(key);
-  if (hit && Date.now() - hit.savedAt < ttlMs) return hit.value as T;
+  if (hit && Date.now() - hit.savedAt < effectiveTtl) return hit.value as T;
   try {
     const value = await load();
     try {

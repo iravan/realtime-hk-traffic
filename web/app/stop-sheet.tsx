@@ -10,6 +10,7 @@ import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
 import type { TaxiLabel } from "./taxi-stand";
+// public holidays loaded in FerryTimetable via fetch
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
@@ -463,37 +464,11 @@ function sessionMinutes(time: string): number {
   return Number(match[1]) * 60 + Number(match[2]);
 }
 
-// Hong Kong public holidays (YYYY-MM-DD). Update yearly.
-const HK_PUBLIC_HOLIDAYS = new Set([
-  // 2025
-  "2025-01-01", "2025-01-29", "2025-01-30", "2025-01-31",
-  "2025-04-04", "2025-04-05", "2025-04-06", "2025-04-18",
-  "2025-04-19", "2025-04-21", "2025-05-01", "2025-05-05",
-  "2025-05-31", "2025-07-01", "2025-10-01", "2025-10-07",
-  "2025-10-29", "2025-12-25", "2025-12-26",
-  // 2026
-  "2026-01-01", "2026-02-17", "2026-02-18", "2026-02-19",
-  "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-06",
-  "2026-05-01", "2026-05-24", "2026-05-25", "2026-07-01",
-  "2026-09-26", "2026-10-01", "2026-10-19", "2026-10-26",
-  "2026-12-25", "2026-12-26",
-  // 2027
-  "2027-01-01", "2027-02-06", "2027-02-07", "2027-02-08",
-  "2027-03-26", "2027-03-27", "2027-03-29", "2027-04-05",
-  "2027-04-06", "2027-05-01", "2027-05-13", "2027-05-14",
-  "2027-07-01", "2027-09-16", "2027-10-01", "2027-10-08",
-  "2027-10-20", "2027-12-25", "2027-12-27",
-]);
-
-function isHongKongPublicHoliday(date: Date): boolean {
-  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-  return HK_PUBLIC_HOLIDAYS.has(key);
-}
-
-function isCurrentDayGroup(day: string): boolean {
+function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean {
   const now = new Date();
   const dow = now.getDay(); // 0=Sun, 6=Sat
-  const isHoliday = isHongKongPublicHoliday(now);
+  const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const isHoliday = holidaySet ? holidaySet.has(key) : false;
   const lower = day.toLowerCase();
   if (dow === 0 || isHoliday) {
     // Sunday or public holiday
@@ -547,6 +522,25 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
   const [active, setActive] = useState(0);
   const [timetable, setTimetable] = useState<Timetable | null>(null);
   const [failed, setFailed] = useState(false);
+  const [holidays, setHolidays] = useState<Set<string> | null>(null);
+  useEffect(() => {
+    loadCachedJson<string[]>("hk-public-holidays", async () => {
+      const response = await fetch("https://www.1823.gov.hk/common/ical/en.json");
+      if (!response.ok) throw new Error("holidays");
+      const data = await response.json();
+      const dates: string[] = [];
+      const events = data?.vcalendar?.[0]?.vevent ?? [];
+      for (const event of events) {
+        const dtstart = event?.dtstart?.[0];
+        if (typeof dtstart === "string" && dtstart.length === 8) {
+          dates.push(`${dtstart.slice(0, 4)}-${dtstart.slice(4, 6)}-${dtstart.slice(6, 8)}`);
+        }
+      }
+      return dates;
+    }, 365 * 24 * 60 * 60 * 1000)
+      .then((dates) => setHolidays(new Set(dates)))
+      .catch(() => setHolidays(new Set()));
+  }, []);
   useEffect(() => {
     let cancelled = false;
     setFailed(false);
@@ -615,12 +609,12 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
               <div role="tabpanel">
                 {[...current.days]
                   .sort((a, b) => {
-                    const aCurrent = isCurrentDayGroup(a.day) ? 0 : 1;
-                    const bCurrent = isCurrentDayGroup(b.day) ? 0 : 1;
+                    const aCurrent = isCurrentDayGroup(a.day, holidays) ? 0 : 1;
+                    const bCurrent = isCurrentDayGroup(b.day, holidays) ? 0 : 1;
                     return aCurrent - bCurrent;
                   })
                   .map((day) => {
-                    const isCurrent = isCurrentDayGroup(day.day);
+                    const isCurrent = isCurrentDayGroup(day.day, holidays);
                     return (
                   <section key={day.day} className={`ferry-day ${isCurrent ? "" : "ferry-day-past"}`.trim()}>
                     <h3 className={isCurrent ? "ferry-day-title-current" : ""}>{t.sheet.ferryDay(day.day)}</h3>
