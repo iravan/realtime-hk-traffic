@@ -546,16 +546,45 @@ fn parse_chuen_kee_sessions(text: &str, pier: &str) -> Vec<Session> {
 }
 
 fn sun_sessions(sailings: Vec<Sailing>) -> Vec<Session> {
-    sailings
-        .into_iter()
-        .map(|s| Session {
-            destination: destination_of(&s.direction),
-            day: s.day,
-            time: s.time,
-            remark: s.remark,
-            operator: "sun",
-        })
-        .collect()
+    let mut sessions = Vec::new();
+    for s in sailings {
+        let destination = destination_of(&s.direction);
+        // Sun Ferry's "Mondays to Saturdays except public holidays" group mixes
+        // weekday and Saturday sailings. Split it so the sheet can show separate
+        // Monday-to-Friday and Saturday tabs. Remark 2 is weekday-only, remark 3
+        // (and 4, which inherits it) is Saturday-only; the rest run on both.
+        if s.day == "Mondays to Saturdays except public holidays" {
+            let weekday_only = s.remark == "2";
+            let saturday_only = s.remark == "3" || s.remark == "4";
+            if !saturday_only {
+                sessions.push(Session {
+                    destination: destination.clone(),
+                    day: "Mondays to Fridays except public holidays".to_string(),
+                    time: s.time.clone(),
+                    remark: s.remark.clone(),
+                    operator: "sun",
+                });
+            }
+            if !weekday_only {
+                sessions.push(Session {
+                    destination,
+                    day: "Saturdays except public holidays".to_string(),
+                    time: s.time,
+                    remark: s.remark,
+                    operator: "sun",
+                });
+            }
+        } else {
+            sessions.push(Session {
+                destination,
+                day: s.day,
+                time: s.time,
+                remark: s.remark,
+                operator: "sun",
+            });
+        }
+    }
+    sessions
 }
 
 use redis::aio::ConnectionManager;

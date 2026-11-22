@@ -267,6 +267,7 @@ button { cursor: pointer; }
   font-variant-numeric: tabular-nums;
 }
 .ferry-sessions li.first, .ferry-sessions li.last { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.ferry-sessions li.ferry-session-bold { font-weight: 700; }
 .ferry-sessions li.past { opacity: 0.35; text-decoration: line-through; }
 .sheet .station-chip + .station-chip { margin-left: 0.3rem; }
 .ferry-chip { border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }

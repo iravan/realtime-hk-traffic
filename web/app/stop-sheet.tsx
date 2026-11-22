@@ -693,7 +693,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                                     .filter(Boolean)
                                     .join(" ");
                                   return (
-                                    <li key={`${session.time}-${index}`} className={highlight}>
+                                    <li key={`${session.time}-${index}`} className={[highlight, (session.operator === "sun" && (session.remark === "1" || session.remark === "4")) ? "ferry-session-bold" : ""].filter(Boolean).join(" ")}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
