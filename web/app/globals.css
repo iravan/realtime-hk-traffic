@@ -1,3 +1,8 @@
+/* Tailwind utilities without its base reset, so the existing styles keep their
+   look. Unlayered rules below win over these layers. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
 :root {
   --ink: #1c1915;
   --paper: #f4efe6;
