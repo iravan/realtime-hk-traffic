@@ -689,17 +689,11 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                                   const lastIdx = markedSession
                                     ? sorted.findIndex((s) => s === markedSession)
                                     : sorted.length - 1;
-                                  // Greyed index: first session >= current time.
-                                  // Sessions before it are past (except index 0).
-                                  const now = new Date();
-                                  const currentMins = now.getHours() * 60 + now.getMinutes();
-                                  const greyedIndex = sorted.findIndex((s) => sessionMinutes(s.time) >= currentMins);
-                                  const isPast = index > 0 && (greyedIndex === -1 || index < greyedIndex);
                                   const highlight = [isFirst ? "first" : "", index === lastIdx ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
                                   return (
-                                    <li key={`${session.time}-${index}`} className={`${highlight} ${isPast ? "past" : ""}`.trim()}>
+                                    <li key={`${session.time}-${index}`} className={highlight}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
