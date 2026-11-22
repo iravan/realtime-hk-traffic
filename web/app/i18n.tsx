@@ -72,6 +72,7 @@ export type Messages = {
     ferryDay: (day: string) => string;
     timetableError: string;
     noTimetable: string;
+    ferryTimetableLegend: string;
     toilet: string;
     toiletLayout: string;
     noArrivals: string;
@@ -216,6 +217,7 @@ const en: Messages = {
     ferryDay: (day) => day,
     timetableError: "Could not load the timetable. Try again.",
     noTimetable: "No timetable available.",
+    ferryTimetableLegend: "Bold times: ordinary ferry with freight service available.",
     toilet: "Toilet",
     toiletLayout: "Layout",
     noArrivals: "No arrivals right now.",
@@ -305,6 +307,7 @@ const zhHant: Messages = {
     ferryDay: (day) => translateFerryDay(day),
     timetableError: "無法載入時間表，請再試一次。",
     noTimetable: "暫無時間表。",
+    ferryTimetableLegend: "粗體時間：普通渡輪，可載貨。",
     toilet: "洗手間",
     toiletLayout: "平面圖",
     noArrivals: "暫無到站班次。",

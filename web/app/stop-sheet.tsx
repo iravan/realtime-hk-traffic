@@ -633,6 +633,7 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                   );
                 })}
               </div>
+              <p className="ferry-timetable-legend muted">{t.sheet.ferryTimetableLegend}</p>
               <div role="tabpanel">
                 {[...current.days]
                   .sort((a, b) => {
