@@ -1,9 +1,5 @@
 use serde_json::{json, Value};
-use std::collections::HashMap;
-use std::sync::Mutex;
-use std::time::{Duration, Instant};
 
-const TTL: Duration = Duration::from_secs(6 * 60 * 60);
 const TIMETABLE_REFRESH_DEBOUNCE_SECS: u64 = 24 * 60 * 60;
 
 // Sun Ferry publishes one CSV per corridor on data.gov.hk. Each row is one
@@ -35,8 +31,6 @@ const TSUI_WAH_TIMETABLE: &str = "https://www.traway.com.hk/govdata/time.csv";
 // Chuen Kee Ferry publishes one CSV for Aberdeen - Sok Kwu Wan via Mo Tat Wan.
 const CHUEN_KEE_TIMETABLE: &str = "https://ferry.com.hk/opendataV/time.csv";
 
-static CACHE: Mutex<Option<HashMap<String, (Instant, String)>>> = Mutex::new(None);
-
 #[derive(Clone)]
 struct Sailing {
     direction: String,
@@ -66,26 +60,89 @@ struct Band {
     operator: &'static str,
 }
 
-fn cache_hit(url: &str) -> Option<String> {
-    let mut guard = CACHE.lock().ok()?;
-    let (at, text) = guard.get_or_insert_with(HashMap::new).get(url)?;
-    (at.elapsed() < TTL).then(|| text.clone())
-}
+// Redis-backed cache for a single URL: keep forever, refresh debounced by 24h,
+// only overwrite on success.
+async fn cached_text_redis(http: &reqwest::Client, redis: ConnectionManager, url: &str) -> Option<String> {
+    let key = format!("csv:{}", url);
+    let refresh_key = format!("csv:{}:refreshed", url);
 
-async fn cached_text(http: &reqwest::Client, url: &str) -> Option<String> {
-    if let Some(text) = cache_hit(url) {
+    // Redis first.
+    let mut conn = redis.clone();
+    let cached: Option<String> = redis::cmd("GET")
+        .arg(&key)
+        .query_async(&mut conn)
+        .await
+        .ok()
+        .flatten();
+
+    if let Some(text) = cached {
+        // Debounced background refresh.
+        let mut conn2 = redis.clone();
+        let needs_refresh: bool = redis::cmd("EXISTS")
+            .arg(&refresh_key)
+            .query_async::<i64>(&mut conn2)
+            .await
+            .unwrap_or(1) == 0;
+
+        if needs_refresh {
+            let mut conn3 = redis.clone();
+            let _: Result<(), _> = redis::cmd("SET")
+                .arg(&refresh_key)
+                .arg("1")
+                .arg("EX")
+                .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
+                .query_async(&mut conn3)
+                .await;
+
+            let http = http.clone();
+            let redis = redis.clone();
+            let url = url.to_string();
+            tokio::spawn(async move {
+                if let Ok(response) = http.get(&url).send().await {
+                    if response.status().is_success() {
+                        if let Ok(text) = response.text().await {
+                            if !text.is_empty() {
+                                let mut conn = redis.clone();
+                                let _: Result<(), _> = redis::cmd("SET")
+                                    .arg(format!("csv:{}", url))
+                                    .arg(&text)
+                                    .query_async(&mut conn)
+                                    .await;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         return Some(text);
     }
+
+    // No cache: fetch synchronously.
     let response = http.get(url).send().await.ok()?;
     if !response.status().is_success() {
         return None;
     }
     let text = response.text().await.ok()?;
-    CACHE
-        .lock()
-        .ok()?
-        .get_or_insert_with(HashMap::new)
-        .insert(url.to_string(), (Instant::now(), text.clone()));
+    if text.is_empty() {
+        return None;
+    }
+
+    let mut conn = redis.clone();
+    let _: Result<(), _> = redis::cmd("SET")
+        .arg(&key)
+        .arg(&text)
+        .query_async(&mut conn)
+        .await;
+    let mut conn2 = redis.clone();
+    let _: Result<(), _> = redis::cmd("SET")
+        .arg(&refresh_key)
+        .arg("1")
+        .arg("EX")
+        .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
+        .query_async(&mut conn2)
+        .await;
+
     Some(text)
 }
 
@@ -543,45 +600,41 @@ async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pie
     let key = format!("timetable:{pier}");
     let refresh_key = format!("timetable:{pier}:refreshed");
 
-    let cheung_chau_text = cached_text(http, SUN_CENTRAL_CHEUNG_CHAU).await.unwrap_or_default();
-    let mui_wo_text = cached_text(http, SUN_CENTRAL_MUI_WO).await.unwrap_or_default();
+    let cheung_chau_text = cached_text_redis(http, redis.clone(), SUN_CENTRAL_CHEUNG_CHAU).await.unwrap_or_default();
+    let mui_wo_text = cached_text_redis(http, redis.clone(), SUN_CENTRAL_MUI_WO).await.unwrap_or_default();
     let cheung_chau = parse_sun_sailings(&cheung_chau_text);
     let mui_wo = parse_sun_sailings(&mui_wo_text);
     let mut other = Vec::new();
     for url in [SUN_INTER_ISLANDS, SUN_NORTH_POINT_HUNG_HOM, SUN_NORTH_POINT_KOWLOON_CITY] {
-        let text = cached_text(http, url).await.unwrap_or_default();
+        let text = cached_text_redis(http, redis.clone(), url).await.unwrap_or_default();
         other.extend(parse_sun_sailings(&text));
     }
     let mut sessions = sun_sessions(sun_sailings_for_pier(pier, &cheung_chau, &mui_wo, &other));
     for (route, direction, destination) in hkkf_sources(pier) {
         let url = format!("{HKKF_TIMETABLE}/{route}/{direction}");
-        if let Some(text) = cached_text(http, &url).await {
+        if let Some(text) = cached_text_redis(http, redis.clone(), &url).await {
             sessions.extend(parse_hkkf_sessions(&text, destination));
         }
     }
 
-    if let Some(text) = cached_text(http, TSUI_WAH_TIMETABLE).await {
+    if let Some(text) = cached_text_redis(http, redis.clone(), TSUI_WAH_TIMETABLE).await {
         sessions.extend(parse_tsui_wah_sessions(&text, pier));
     }
 
-    // Debug: try fetching directly
-    match http.get(CHUEN_KEE_TIMETABLE).send().await {
-        Ok(resp) => {
-            eprintln!("Chuen Kee status: {}", resp.status());
-            let text = resp.text().await.unwrap_or_default();
-            eprintln!("Chuen Kee text len: {}", text.len());
-            let parsed = parse_chuen_kee_sessions(&text, pier);
-            eprintln!("Chuen Kee pier {} -> {} sessions", pier, parsed.len());
-            sessions.extend(parsed);
+    // Chuen Kee: cache the CSV in Redis forever, refresh debounced by 24h,
+    // only overwrite on success.
+    match cached_text_redis(http, redis.clone(), CHUEN_KEE_TIMETABLE).await {
+        Some(text) => {
+            sessions.extend(parse_chuen_kee_sessions(&text, pier));
         }
-        Err(e) => {
-            eprintln!("Chuen Kee fetch error: {}", e);
+        None => {
+            eprintln!("Chuen Kee cached_text_redis returned None");
         }
     }
 
     let mut bands = Vec::new();
     for url in [STAR_CENTRAL_TSIM_SHA_TSUI, STAR_WAN_CHAI_TSIM_SHA_TSUI] {
-        let text = cached_text(http, url).await.unwrap_or_default();
+        let text = cached_text_redis(http, redis.clone(), url).await.unwrap_or_default();
         bands.extend(parse_star_bands(&text, pier));
     }
 

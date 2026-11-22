@@ -677,6 +677,27 @@ flowchart TD
     end
 ```
 
+## Ferry timetable refresh flow
+
+```mermaid
+flowchart TD
+    A[Client requests /stops/ferry:ID/timetable] --> B{Redis has cached timetable?}
+    B -->|Yes| C[Return cached data instantly]
+    C --> D{Refresh debounce key exists?}
+    D -->|No, expired| E[Set debounce key, TTL 24h]
+    E --> F[Spawn background refresh task]
+    F --> G[Fetch all source CSVs]
+    G --> H{Fetch successful?}
+    H -->|Yes, non-empty| I[Overwrite Redis cache]
+    H -->|No or empty| J[Keep existing cache]
+    D -->|Yes, not expired| K[No refresh needed]
+    B -->|No| L[Fetch all source CSVs synchronously]
+    L --> M{Fetch successful?}
+    M -->|Yes, non-empty| N[Store in Redis, no TTL]
+    M -->|No or empty| O[Return empty result]
+    N --> P[Set debounce key, TTL 24h]
+```
+
 ## Ferry timetables
 
 `GET /stops/ferry:{STOP_ID}/timetable` returns every scheduled sailing for a
@@ -720,10 +741,15 @@ end time and a headway in minutes, such as `6:30am-7:25am, 10 -- 12`. The
 response lists these as `bands`, with `from`, `to` and `frequency`, not as
 `sessions`. The frequency is kept as a range, not expanded into departure times.
 
-The server caches each source file in memory for six hours, and caches the
-assembled timetable in Redis under `timetable:{pier}` with no TTL (kept
-forever). On a request, the cached timetable is returned instantly. A
-background refresh is enqueued (debounced by 24 hours via the
+All source CSVs (Sun Ferry, HKKF, Tsui Wah, Star Ferry, Chuen Kee) are cached
+in Redis under `csv:{url}` with no TTL (kept forever). On a request, the
+cached CSV is returned instantly. A background refresh is enqueued (debounced
+by 24 hours via the `csv:{url}:refreshed` key) to fetch fresh data, and the
+cache is only overwritten when the fetch succeeds and returns non-empty data.
+
+The assembled timetable is cached in Redis under `timetable:{pier}` with no
+TTL (kept forever). On a request, the cached timetable is returned instantly.
+A background refresh is enqueued (debounced by 24 hours via the
 `timetable:{pier}:refreshed` key) to fetch fresh data. The app caches the
 same response in IndexedDB under `ferry-timetable:v2:{id}` with a 24-hour
 TTL, and does not request the server while that cache is valid.
