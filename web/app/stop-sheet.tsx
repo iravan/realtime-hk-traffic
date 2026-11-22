@@ -457,6 +457,17 @@ function operatorName(operator: string, locale: Locale): string {
   }
 }
 
+function isPastSession(time: string): boolean {
+  const match = time.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return false;
+  const sessionMinutes = Number(match[1]) * 60 + Number(match[2]);
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  // A session before 06:00 is treated as next-day when viewed in the evening.
+  if (sessionMinutes < 360 && currentMinutes >= 720) return false;
+  return sessionMinutes < currentMinutes;
+}
+
 function operatorIcon(operator: string): string {
   switch (operator) {
     case "sun":
@@ -578,8 +589,9 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
                                   const highlight = [index === 0 ? "first" : "", index === last ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
+                                  const past = isPastSession(session.time);
                                   return (
-                                    <li key={`${session.time}-${index}`} className={highlight}>
+                                    <li key={`${session.time}-${index}`} className={`${highlight} ${past ? "past" : ""}`.trim()}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
