@@ -278,6 +278,7 @@ fn bilingual_destination(english: &str) -> String {
         "Wanchai" | "Wan Chai" => "灣仔 Wan Chai".to_string(),
         "Hung Hom" => "紅磡 Hung Hom".to_string(),
         "Kowloon City" => "九龍城 Kowloon City".to_string(),
+        "North Point" => "北角 North Point".to_string(),
         "Aberdeen" => "香港仔 Aberdeen".to_string(),
         other => other.to_string(),
     }
