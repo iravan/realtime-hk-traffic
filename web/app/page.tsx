@@ -947,27 +947,42 @@ export default function Page() {
   }, [board]);
 
   // Every ferry pin in view carries a board of the places it reaches, read
-  // from the pier's `destinations` in the stop catalogue.
+  // from the pier's `destinations` in the stop catalogue. Boards only appear
+  // once the pins are drawn as ferry icons, not while they are grouped.
   useEffect(() => {
     const map = mapRef.current;
     if (!map || active !== "ferry") return;
-    const markers = stops
-      .filter((stop) => stop.destinations && stop.destinations.length > 0)
-      .map((stop) =>
-        new Marker({
-          element: routeBoard(
-            stop.destinations!.map((destination) => ({
-              label: localizeBilingualName(destination, locale),
-              color: ferryDestinationColor(destination),
-            })),
-          ),
-          anchor: "left",
-          offset: [8, 0],
-        })
-          .setLngLat([stop.longitude, stop.latitude])
-          .addTo(map),
-      );
-    return () => markers.forEach((marker) => marker.remove());
+    let markers: Marker[] = [];
+    const clear = () => {
+      markers.forEach((marker) => marker.remove());
+      markers = [];
+    };
+    const draw = () => {
+      clear();
+      if (map.getZoom() < pinZoom) return;
+      markers = stops
+        .filter((stop) => stop.destinations && stop.destinations.length > 0)
+        .map((stop) =>
+          new Marker({
+            element: routeBoard(
+              stop.destinations!.map((destination) => ({
+                label: localizeBilingualName(destination, locale),
+                color: ferryDestinationColor(destination),
+              })),
+            ),
+            anchor: "left",
+            offset: [8, 0],
+          })
+            .setLngLat([stop.longitude, stop.latitude])
+            .addTo(map),
+        );
+    };
+    draw();
+    map.on("zoomend", draw);
+    return () => {
+      map.off("zoomend", draw);
+      clear();
+    };
   }, [stops, active, locale]);
 
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
