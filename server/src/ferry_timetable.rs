@@ -604,6 +604,11 @@ pub async fn for_pier(http: &reqwest::Client, redis: ConnectionManager, pier: &s
 
     if let Some(body) = cached {
         if let Ok(value) = serde_json::from_str::<Value>(&body) {
+            // An empty copy usually means the sources failed, so it is not served.
+            let has_destinations = value["destinations"].as_array().is_some_and(|d| !d.is_empty());
+            if !has_destinations {
+                return refresh_timetable(http, redis, pier).await;
+            }
             // Debounced background refresh: only trigger if the refresh key
             // has expired (i.e., more than 24 hours since last refresh).
             let mut conn2 = redis.clone();
@@ -683,22 +688,25 @@ async fn refresh_timetable(http: &reqwest::Client, redis: ConnectionManager, pie
         bands.extend(parse_star_bands(&text, pier));
     }
 
+    let has_data = !sessions.is_empty() || !bands.is_empty();
     let value = group(sessions, bands);
-    if let Ok(body) = serde_json::to_string(&value) {
-        let mut conn = redis.clone();
-        let _: Result<(), _> = redis::cmd("SET")
-            .arg(&key)
-            .arg(&body)
-            .query_async(&mut conn)
-            .await;
-        let mut conn2 = redis.clone();
-        let _: Result<(), _> = redis::cmd("SET")
-            .arg(&refresh_key)
-            .arg("1")
-            .arg("EX")
-            .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
-            .query_async(&mut conn2)
-            .await;
+    if has_data {
+        if let Ok(body) = serde_json::to_string(&value) {
+            let mut conn = redis.clone();
+            let _: Result<(), _> = redis::cmd("SET")
+                .arg(&key)
+                .arg(&body)
+                .query_async(&mut conn)
+                .await;
+            let mut conn2 = redis.clone();
+            let _: Result<(), _> = redis::cmd("SET")
+                .arg(&refresh_key)
+                .arg("1")
+                .arg("EX")
+                .arg(TIMETABLE_REFRESH_DEBOUNCE_SECS)
+                .query_async(&mut conn2)
+                .await;
+        }
     }
     value
 }
