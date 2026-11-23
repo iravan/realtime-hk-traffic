@@ -872,6 +872,98 @@ The details panel shows that line when it exists. When `Status` has no hours,
 the panel says the stand is open all day. Hong Kong publishes stand locations,
 not vehicle positions, so a taxi stand has no arrival rows.
 
+## Light Rail
+
+The Light Rail network is not in the heavy-rail MTR dataset above. It appears on
+the MTR tab as 68 stops, served by 11 routes (505, 507, 610, 614, 614P, 615,
+615P, 705, 706, 751, 761P).
+
+Stop ids and names come from the MTR open-data CSV
+`light_rail_routes_and_stops.csv` (`opendata.mtr.com.hk/data/`). The CSV has
+no coordinates. Those come from OpenStreetMap: tram-stop nodes whose `ref` is
+the 3-digit stop id, read with an Overpass query over the Tuen Mun, Yuen Long
+and Tin Shui Wai area. OSM zero-pads some refs (`001` for the CSV's `1`), so
+the ids are compared as integers. All 68 CSV stops match one OSM node. OSM also
+holds an emergency platform (`385`) that is not on the public list and is left
+out.
+
+The stops are written into `web/public/stops-mtr.json` as
+`mtr:LRT:{stop id}`, named `{Chinese name} {English name}`. The sheet colours
+them `#D3A809` (see `web/app/mtr-station-color.ts`).
+
+Status:
+
+- The stop pins and the sheet work. The sheet shows no arrivals yet, because
+  the server does not call the Light Rail feed.
+- Stops use the default MTR service hours from `service-hours.json`, not the
+  Light Rail timetable.
+- `lrt-tracks.geojson` (27 track segments from the same OSM query) is not drawn.
+
+Live feed (planned, not wired):
+
+```text
+https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stop id}&with_special=1
+```
+
+`with_special=1` adds the special routes (901, 902). Each `platform_list` entry
+holds `route_list` rows with `route_no`, `dest_en`, `dest_ch`, `time_en`,
+`time_ch`, `train_length`, and `stop`. The feed has no vehicle coordinates.
+
+## Station facilities
+
+`web/public/facilities.json` holds one record per MTR station that has at least
+one facility. Each record has the station code and names, and optional sections:
+
+| Field | Contents |
+| --- | --- |
+| `layout` | `pdf_url`, `pdf_url_zh`. The station layout PDF from MTR. Shared by the toilet, water dispenser and babycare buttons |
+| `toilet` | `location`, `location_zh`, `paid_area` |
+| `water_dispenser` | `lines` (MTR lines the station is on), `location`, `location_zh`, `paid_area` |
+| `babycare` | `location`, `location_zh`, `paid_area` |
+
+The file covers 71 stations: 65 have a toilet, 26 have a water dispenser, and
+14 have a babycare room. Each facility shows an icon in the MTR station sheet
+only when its section exists.
+
+Sources:
+
+- Toilet locations and layout PDFs: the MTR station toilet list.
+- Water dispensers: the MTR water dispenser list (East Rail, Island, Kwun Tong,
+  South Island, Tung Chung, Tseung Kwan O and Tuen Ma lines, and Tsuen Wan Line
+  at Admiralty).
+- Babycare rooms: the MTR "Babycare Rooms" notice. The notice says private
+  areas can be arranged at stations without a room, which the app does not show.
+
+The Chinese `location_zh` text was written by hand to match the English
+wording. Check it against MTR's published Chinese before relying on it.
+
+The Wi-Fi icon is not in this file. Every MTR station gets it. The modal shows
+a QR code for `WIFI:T:nopass;S:MTR Free Wi-Fi;;`, embedded in
+`web/app/stop-sheet.tsx` as a base64 PNG with a transparent background, and
+links to the MTR Free Wi-Fi page in each language. Those links and the QR code
+are in `stop-sheet.tsx`, not in the data files.
+
+The browser caches this file under the `facilities-v3` key. Bump the version in
+that key whenever the shape changes, or old copies keep working until they
+expire.
+
+## Searchable routes and destinations
+
+The stop filter matches on different fields for each mode:
+
+| Mode | Field searched | Source |
+| --- | --- | --- |
+| Bus | `routes` on each stop | KMB/LWB route-stop list and Citybus route-stop per route and direction, written by `scripts/fetch-bus-stop-routes.py` |
+| Minibus | `routes` on each stop | Green-minibus route data, from `scripts/fetch-minibus-routes.py` |
+| Ferry | `destinations` on each pier | Pier destination list, from `scripts/fetch-ferry-stops.py` |
+| MTR, taxi | `name`, `name_tc`, `name_en` | Stop catalogue |
+
+A bus or minibus route matches when it starts with the typed text, so `8`
+shows every route beginning with 8. Ferry and name matches are case-insensitive
+substrings. The bus route file has 9,335 stops with at least one route, out of
+9,366. The KMB/LWB feed is one bulk request. The Citybus feed is 818 requests,
+one per route and direction.
+
 ## Checked-in files derived from these sources
 
 | File | Contents |
@@ -887,6 +979,8 @@ not vehicle positions, so a taxi stand has no arrival rows.
 | `web/public/mtr-lines.geojson` | MTR line geometry from OpenStreetMap |
 | `web/public/taxi-stands.geojson` | Taxi stand taxi type, joined to `taxi:{OBJECTID}` |
 | `web/public/icons/citybus.svg` | Yellow double-decker used for `bus:ctb:` pins and the stop sheet. The bus tab stays on `bus.svg` |
+| `web/public/facilities.json` | Toilet, water dispenser, babycare and layout PDF data per MTR station. See [Station facilities](#station-facilities) |
+| `web/public/stops-bus.json` `routes` | Route numbers per bus stop, for the stop filter. See [Searchable routes and destinations](#searchable-routes-and-destinations) |
 
 Generation scripts:
 
@@ -894,8 +988,13 @@ Generation scripts:
 | --- | --- |
 | `scripts/fetch-minibus-routes.py` | Green-minibus route, route-stop and stop API |
 | `scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
+| `scripts/fetch-bus-stop-routes.py` | KMB/LWB route-stop list and Citybus route-stop endpoints, used to set `routes` on bus stops |
 | `scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
 | `scripts/fetch-ferry-stops.py` | Ferry stop sequence, CSDI pier coordinates, and the checked-in departure map |
+
+The Light Rail coordinates were produced outside this repository, with a
+`rails.ts` Overpass script. The stop list and its names are in
+[Light Rail](#light-rail).
 
 ## Caching
 
@@ -907,8 +1006,8 @@ The bus file is about 340 KB of that.
 
 The browser keeps each file in IndexedDB for 24 hours. A visit inside that
 window does not download the pins again. The same store keeps the other static
-files: service hours, the MTR lines, the taxi-stand types, and the ferry
-timetables. After 24 hours the page fetches a new copy, and if that request
+files: service hours, the MTR lines, the taxi-stand types, the ferry
+timetables, and the station facilities. After 24 hours the page fetches a new copy, and if that request
 fails it keeps the stored one. Vercel also sends
 `Cache-Control: public, max-age=3600, stale-while-revalidate=86400` on the
 stop files and on service hours, taxi stands, and the MTR lines, so a cache
@@ -924,6 +1023,7 @@ expires on its own clock:
 | `stops-ferry` | `stops-ferry.json` | `id`, `latitude`, `longitude`, `mode`, `name` only. No `routes` or `night` |
 | `stops-taxi` | `stops-taxi.json` | The same five fields. Taxi type is joined later from `taxi-stands.geojson` and is not stored here |
 | `stops-mtr` | `stops-mtr.json` | The same five fields |
+| `facilities-v3` | `facilities.json` | Station facilities and layout PDFs. The `-v3` suffix must change when the shape changes |
 | `service-hours` | `service-hours.json` | The service windows used to grey a closed stop |
 | `mtr-lines` | `mtr-lines.geojson` | The MTR route lines |
 | `taxi-stands` | `taxi-stands.geojson` | Stand type, joined onto `stops-taxi` after the cache read |

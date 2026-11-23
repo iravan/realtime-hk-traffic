@@ -21,7 +21,7 @@ modes:
 
 | Mode | A stop is | What an arrival shows |
 | --- | --- | --- |
-| **MTR** | A station | The next train on each line that serves the station, plus line service status when the feed includes it |
+| **MTR** | A station, or a Light Rail stop | The next train on each line that serves the station, plus line service status when the feed includes it. Light Rail stops are on this tab too, but do not show arrivals yet |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
 | **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise "No arrivals right now" |
 | **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry and Sun Ferry show the clock time of the sailing and the minutes until departure, or until arrival once the boat has left. Other piers stay on the map and show that nothing is scheduled right now |
@@ -72,6 +72,21 @@ scope. Taxi stands are places, not vehicles.
   (即將到站).
 - **Merged poles.** Feed ids that publish the same coordinate become one point
   with merged arrivals; poles at different coordinates stay separate stops.
+- **Find a stop.** A filter box under the stop count shows only matching pins.
+  On bus and minibus it matches route numbers (`86`, `281A`, `804`). On ferry
+  it matches destinations (`Central`, `中環`). On MTR and taxi it matches the
+  stop name. Changing tab clears the filter. The filter is described in
+  [docs/DATA.md](docs/DATA.md#searchable-routes-and-destinations).
+- **Station facilities.** An MTR station sheet shows an icon for each facility
+  it has: toilet, water dispenser, babycare room, and Wi-Fi. The toilet, water
+  dispenser and babycare icons open a modal with the exact location and a
+  Layout button for the station's PDF. The Wi-Fi icon opens a modal with a QR
+  code, the network name, connection steps and a link to MTR's Free Wi-Fi page.
+  The data is in
+  [docs/DATA.md](docs/DATA.md#station-facilities).
+- **Ferry boards.** A ferry pin's destination board appears only at zoom 16,
+  the level where pins draw as ferry icons. Below that, the stops are counted
+  groups and no boards are drawn.
 - **Share a stop.** The stop sheet puts Share and the external-map icon on the
   vehicle-type line, at the right. Each opens a dialog. Share shows the stop
   link and copies it. The map dialog lists Google Maps, Apple Maps, Baidu Maps,
@@ -395,13 +410,24 @@ Environment variables:
 If Redis is unreachable the process exits within 5 seconds with a clear message
 rather than hanging.
 
+### Checking it runs
+
+- The page is at `http://localhost:3000`. Use `bun run dev` in `web/`. `npm run
+  dev` fails, because the project pins Bun.
+- The API is at `http://127.0.0.1:8787`. It has no page at `/`, so a 404 there
+  is expected. Its routes are `GET /stops?south&west&north&east&modes`, which
+  returns 400 without the bounds, and `GET /stops/{id}/arrivals`.
+- The map, the stop pins, the facilities and the service hours load from the
+  web app alone. Live arrivals need the server, and the server needs Redis
+  running first.
+
 ## Project layout
 
 ```text
 web/                 Next.js app (static export)
   app/               Map page, stop sheet, service-hours helpers, icons
-  public/            Generated stops*.json, service-hours.json,
-                     MTR line GeoJSON, icons
+  public/            Generated stops*.json, facilities.json,
+                     service-hours.json, MTR line GeoJSON, icons
   scripts/           MapLibre worker copy step, per-mode stop file split
 server/              Rust API (Axum + Tokio)
   src/main.rs        Routes and feed fetchers
