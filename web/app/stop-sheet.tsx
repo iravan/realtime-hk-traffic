@@ -61,21 +61,26 @@ const FERRY_DAILY = "Daily";
 const FERRY_SCHOOL_DAYS = "Mondays to Fridays (school days only)";
 
 type StationToilet = {
-  station_code: string;
   location: string;
   location_zh: string;
+  paid_area: boolean;
   pdf_url: string;
   pdf_url_zh: string;
 };
 
 type WaterDispenser = {
-  station_code: string;
-  station_name: string;
-  station_name_zh: string;
   lines: string[];
   location: string;
   location_zh: string;
   paid_area: boolean;
+};
+
+type Facility = {
+  station_code: string;
+  station_name: string;
+  station_name_zh: string;
+  toilet?: StationToilet;
+  water_dispenser?: WaterDispenser;
 };
 
 export function StopSheet({
@@ -111,44 +116,32 @@ export function StopSheet({
 }) {
   const { locale, t } = useI18n();
   const [sign, setSign] = useState<string | null>(null);
-  const [toilet, setToilet] = useState<StationToilet | null>(null);
-  const [water, setWater] = useState<WaterDispenser | null>(null);
+  const [facility, setFacility] = useState<Facility | null>(null);
   useEffect(() => {
     if (mode !== "mtr") {
-      setToilet(null);
-      setWater(null);
+      setFacility(null);
       return;
     }
     let cancelled = false;
-    setToilet(null);
-    setWater(null);
+    setFacility(null);
     const code = id.startsWith("mtr:") ? id.slice(4) : "";
-    loadCachedJson<StationToilet[]>("station-toilet-v2", async () => {
-      const response = await fetch(`${basePath}/station-toilet.json`);
-      if (!response.ok) throw new Error("station-toilet");
-      return response.json() as Promise<StationToilet[]>;
+    loadCachedJson<Facility[]>("facilities-v1", async () => {
+      const response = await fetch(`${basePath}/facilities.json`);
+      if (!response.ok) throw new Error("facilities");
+      return response.json() as Promise<Facility[]>;
     })
       .then((body) => {
-        if (!cancelled) setToilet(body.find((entry) => entry.station_code === code) ?? null);
+        if (!cancelled) setFacility(body.find((entry) => entry.station_code === code) ?? null);
       })
       .catch(() => {
-        // A missing catalogue only hides the toilet line.
-      });
-    loadCachedJson<WaterDispenser[]>("water-dispensers-v1", async () => {
-      const response = await fetch(`${basePath}/water-dispensers.json`);
-      if (!response.ok) throw new Error("water-dispensers");
-      return response.json() as Promise<WaterDispenser[]>;
-    })
-      .then((body) => {
-        if (!cancelled) setWater(body.find((entry) => entry.station_code === code) ?? null);
-      })
-      .catch(() => {
-        // A missing catalogue only hides the water dispenser icon.
+        // A missing catalogue only hides the facility icons.
       });
     return () => {
       cancelled = true;
     };
   }, [id, mode]);
+  const toilet = facility?.toilet ?? null;
+  const water = facility?.water_dispenser ?? null;
   useEffect(() => {
     if (mode === "taxi" && taxi) return;
     let cancelled = false;
