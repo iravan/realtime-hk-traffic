@@ -1935,6 +1935,8 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
   const citybus = stop.mode === "bus" && isCitybus(stop.id);
+  const lightRail = stop.mode === "mtr" && isLightRail(stop.id);
+  if (lightRail) return "light-rail";
   if (dots) {
     const image = boat
       ? "ferry-boat-dot-sel"

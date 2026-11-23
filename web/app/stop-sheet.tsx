@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
 import { ferryDestinationColor } from "./ferry-destination-color";
-import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isStarFerry, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isLightRail, isStarFerry, lightRailIconUrl, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -167,11 +167,13 @@ export function StopSheet({
     void Promise.all([loadVehicleImages(basePath), loadTaxiKindImages(basePath)]).then(() => {
       if (!cancelled) {
         setSign(
-          mode === "ferry" && !isStarFerry(id)
-            ? ferryBoatIconUrl()
-            : mode === "bus" && isCitybus(id)
-              ? citybusIconUrl()
-              : stopIconUrl(mode),
+          mode === "mtr" && isLightRail(id)
+             ? lightRailIconUrl()
+             : mode === "ferry" && !isStarFerry(id)
+               ? ferryBoatIconUrl()
+               : mode === "bus" && isCitybus(id)
+                 ? citybusIconUrl()
+                 : stopIconUrl(mode),
         );
       }
     });

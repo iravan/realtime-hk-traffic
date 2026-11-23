@@ -104,7 +104,7 @@ async function loadVehicleImagesOnce(basePath: string): Promise<void> {
   try {
     const response = await fetch(`${basePath}/icons/light-rail.svg`);
     if (response.ok) {
-      lightRailCanvas = await rasterizeSvg(await response.text(), 192);
+      lightRailCanvas = await rasterizeSvg(await response.text(), 68);
     }
   } catch {
     // Light Rail falls back to the MTR block.
@@ -314,6 +314,11 @@ export function citybusIconUrl(): string {
 export function lightRailIconImage(): ImageData {
   if (lightRailCanvas) return imageData(lightRailCanvas);
   return stopIconImage("mtr");
+}
+
+export function lightRailIconUrl(): string {
+  if (lightRailCanvas) return lightRailCanvas.toDataURL();
+  return stopIconUrl("mtr");
 }
 
 export function citybusSignHighlight(): ImageData {
