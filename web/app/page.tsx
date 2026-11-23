@@ -505,18 +505,6 @@ export default function Page() {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-size": signSize,
-          "text-field": ["case", ["==", ["get", "mode"], "mtr"], ["get", "name"], ""],
-          "text-font": ["Noto Sans Regular"],
-          "text-size": 12,
-          "text-anchor": "bottom",
-          "text-offset": [0, -1.6],
-          "text-allow-overlap": true,
-          "text-ignore-placement": true,
-        },
-        paint: {
-          "text-color": "#1c1915",
-          "text-halo-color": "#fbf7f0",
-          "text-halo-width": 1.5,
         },
       });
 
