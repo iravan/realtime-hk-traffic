@@ -191,6 +191,24 @@ New stops are appended without `routes` or `night`; the scripts below fill those
 in. Stops removed upstream are not deleted automatically. Remove them by hand if
 the catalogue has shrunk.
 
+After changing `server/data/stops.json`, regenerate and commit the web copies:
+
+```bash
+cd web && bun run split-stops
+```
+
+Expected generated files:
+
+- `web/public/stops.json`
+- `web/public/stops-mtr.json`
+- `web/public/stops-bus.json`
+- `web/public/stops-minibus.json`
+- `web/public/stops-ferry.json`
+- `web/public/stops-taxi.json`
+
+They are committed to the repo and are not regenerated on build, so the dev and
+Vercel builds no longer need this step.
+
 The page loads one mode at a time. `web/scripts/split-stops.mjs` copies
 `server/data/stops.json` to `web/public/stops.json` and writes
 `web/public/stops-{bus,minibus,ferry,taxi,mtr}.json`. Both the full web copy and
@@ -271,11 +289,10 @@ either file changes.
 
 ### 8. Check the result
 
-The web build regenerates the web copy and per-mode files from the canonical
-catalogue:
+Regenerate and compare the committed web copies with the canonical catalogue:
 
 ```bash
-cd web && bun run build
+cd web && bun run split-stops
 cmp public/stops.json ../server/data/stops.json
 ```
 
@@ -290,7 +307,8 @@ cd ../web && bunx tsc --noEmit && bun run build
 server binary, so rebuild and redeploy the server after changing it. The web
 build needs a new static export when `server/data/stops.json`,
 `web/app/mtr-line-terminals.json`, `service-hours.json` or `mtr-lines.geojson`
-changes. Leave `LIVE_CATALOGUES` unset in production unless you want the slower
+changes. Commit any regenerated `web/public/stops*.json` files together with the
+canonical catalogue change. Leave `LIVE_CATALOGUES` unset in production unless you want the slower
 live catalogue refresh at startup.
 
 ## HTTP API

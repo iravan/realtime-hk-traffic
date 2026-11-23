@@ -9,6 +9,7 @@
     "dev": "next dev",
     "prebuild": "bun scripts/copy-maplibre-worker.mjs",
     "build": "next build",
+    "split-stops": "bun scripts/split-stops.mjs",
     "start": "next start"
   },
   "dependencies": {
