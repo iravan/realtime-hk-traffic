@@ -808,8 +808,12 @@ function WifiMenu({
       </button>
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
-          <div className="modal-location">
-            <p className="modal-address">Network name: MTR Free Wi-Fi</p>
+          <div className="flex flex-col items-center gap-3 py-6 text-center">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-16 w-16 text-[#2563eb]" fill="currentColor">
+              <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
+            </svg>
+            <p className="text-lg font-semibold">MTR Free Wi-Fi</p>
+            <p className="text-sm text-[#6f675e]">{locale === "en" ? "Connected" : "已連線"}</p>
             <a
               className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
               style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
