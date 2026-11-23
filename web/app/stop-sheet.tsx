@@ -820,7 +820,6 @@ function WaterMenu({
   station,
   label,
   closeLabel,
-  pdfLabel,
 }: {
   water: WaterDispenser;
   layout: StationToilet | null;
