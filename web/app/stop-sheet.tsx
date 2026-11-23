@@ -330,10 +330,12 @@ export function StopSheet({
                   {water ? (
                     <WaterMenu
                       water={water}
+                      layout={toilet}
                       locale={locale}
                       station={station}
                       label={locale === "en" ? "Water dispenser" : "飲水機"}
                       closeLabel={t.sheet.close}
+                      pdfLabel={t.sheet.toiletLayout}
                     />
                   ) : null}
                   {mode === "mtr" ? (
@@ -814,26 +816,27 @@ const wifiQrSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAAC
 
 function WaterMenu({
   water,
+  layout,
   locale,
   station,
   label,
   closeLabel,
+  pdfLabel,
 }: {
   water: WaterDispenser;
+  layout: StationToilet | null;
   locale: Locale;
   station: StationColor | null;
   label: string;
   closeLabel: string;
+  pdfLabel: string;
 }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setOpen(false);
   }, [water]);
   const location = locale === "en" ? water.location : water.location_zh;
-  const url =
-    locale === "en"
-      ? "https://www.mtr.com.hk/en/customer/services/water_dispenser.html"
-      : "https://www.mtr.com.hk/ch/customer/services/water_dispenser.html";
+  const pdfUrl = layout ? (locale === "en" ? layout.pdf_url : layout.pdf_url_zh) : null;
   return (
     <>
       <button
@@ -855,18 +858,20 @@ function WaterMenu({
               <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
             </svg>
             <span className="modal-address">{location}</span>
-            <a
-              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
-              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3z" />
-              </svg>
-              {locale === "en" ? "Visit official site" : "前往官方網站"}
-            </a>
+            {pdfUrl ? (
+              <a
+                className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+                style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-9.5 8.5c0 .8-.7 1.5-1.5 1.5H7v2H5.5V9H8c.8 0 1.5.7 1.5 1.5zm5 2c0 .8-.7 1.5-1.5 1.5h-2.5V9H13c.8 0 1.5.7 1.5 1.5zm4-3H17v1h1.5V13H17v2h-1.5V9h3zm-6.5 0h1v3h-1zm-5 0h1v1H7z" />
+                </svg>
+                {pdfLabel}
+              </a>
+            ) : null}
           </div>
         </Modal>
       ) : null}
