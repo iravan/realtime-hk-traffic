@@ -1383,14 +1383,31 @@ export default function Page() {
             </button>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
-          <input
-            type="search"
-            className="stop-filter"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={filterPlaceholder(active, locale)}
-            aria-label={filterPlaceholder(active, locale)}
-          />
+          <div className="stop-filter-row">
+            <input
+              type="search"
+              className="stop-filter"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={filterPlaceholder(active, locale)}
+              aria-label={filterPlaceholder(active, locale)}
+            />
+            {bookmarks.size > 0 ? (
+              <button
+                type="button"
+                className="bookmark-search"
+                aria-pressed={bookmarkOnly}
+                aria-label={locale === "en" ? `Show bookmarked stops only, ${bookmarks.size} total` : `只顯示收藏站點，共 ${bookmarks.size} 個`}
+                title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+                onClick={() => setBookmarkOnly((on) => !on)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                  <path d="M6 3h12v18l-6-4.5L6 21z" />
+                </svg>
+                <span>{bookmarks.size}</span>
+              </button>
+            ) : null}
+          </div>
         </div>
         <div className="channel">
           <div className="filters">
@@ -1413,23 +1430,13 @@ export default function Page() {
               >
                 <img src={categoryIcons[mode]} alt="" />
                 {t.mode[mode]}
+                {bookmarkedCount(bookmarks, mode) > 0 ? (
+                  <span className="tab-bookmark-count">
+                    ({bookmarkedCount(bookmarks, mode)})
+                  </span>
+                ) : null}
               </button>
             ))}
-            {bookmarks.size > 0 ? (
-              <button
-                type="button"
-                className="bookmark-tab"
-                aria-pressed={bookmarkOnly}
-                aria-label={locale === "en" ? `Bookmarked stops: ${bookmarks.size}` : `收藏站點：${bookmarks.size}`}
-                title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-                onClick={() => setBookmarkOnly((on) => !on)}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                  <path d="M6 3h12v18l-6-4.5L6 21z" />
-                </svg>
-                <span>{bookmarks.size}</span>
-              </button>
-            ) : null}
           </div>
           {mtrClosed ? (
             <div className="notice" role="status">
@@ -1743,6 +1750,15 @@ function matchesFilter(stop: Stop, filter: StopFilter): boolean {
 // Bus and minibus stops match by route number, ferry piers by destination, and
 // the rest by name. Matching ignores case and surrounding spaces, and an empty
 // filter keeps every stop.
+// A bookmark id is `mode:...`, so the mode prefix is enough to split the
+// total across the category tabs. A shared bookmark keeps its mode.
+function bookmarkedCount(bookmarks: Set<string>, mode: Mode): number {
+  const prefix = `${mode}:`;
+  let count = 0;
+  for (const id of bookmarks) if (id.startsWith(prefix)) count++;
+  return count;
+}
+
 function filterPlaceholder(mode: Mode, locale: Locale): string {
   if (mode === "bus") return locale === "en" ? "Route, e.g. 86, 281A, 1" : "路線，例如 86、281A、1";
   if (mode === "minibus") return locale === "en" ? "Route, e.g. 804, 65M" : "路線，例如 804、65M";
