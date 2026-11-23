@@ -809,12 +809,19 @@ function WifiMenu({
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
           <div className="flex items-center gap-4 py-4">
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
-              alt="MTR Free Wi-Fi QR code"
-              className="h-32 w-32 shrink-0"
-            />
-            <div className="flex-1 border-l border-[rgb(28_25_21/0.12)] pl-4 text-left">
+            <div className="flex flex-col items-center">
+              <p className="mb-2 text-sm font-medium">{locale === "en" ? "Scan QR code" : "掃描 QR 碼"}</p>
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
+                alt="MTR Free Wi-Fi QR code"
+                className="h-32 w-32 shrink-0"
+              />
+            </div>
+            <div className="relative flex items-center self-stretch">
+              <div className="h-full w-px bg-[rgb(28_25_21/0.12)]" />
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[rgb(244_239_230/0.96)] px-1 text-xs text-[#6f675e]">Or</span>
+            </div>
+            <div className="flex-1 pl-4 text-left">
               <div className="mb-2 flex items-center gap-2">
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#2563eb]" fill="currentColor">
                   <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
