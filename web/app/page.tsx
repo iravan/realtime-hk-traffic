@@ -508,6 +508,24 @@ export default function Page() {
         },
       });
 
+      map.addLayer({
+        id: "stop-names",
+        type: "symbol",
+        source: "stops",
+        filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "mode"], "mtr"]],
+        minzoom: pinZoom,
+        layout: {
+          "text-field": ["get", "name"],
+          "text-font": ["Noto Sans Regular"],
+          "text-size": 12,
+          "text-anchor": "bottom",
+          "text-offset": [0, -1.6],
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+        },
+        paint: { "text-color": "#1c1915", "text-halo-color": "#fbf7f0", "text-halo-width": 1.5 },
+      });
+
       // Hover highlight for an MTR station block. It sits above the line
       // layers and below the selected-station highlight.
       map.addSource("stops-hover", {
@@ -1049,36 +1067,6 @@ export default function Page() {
     };
   }, [stops, active, locale]);
 
-  // Every MTR pin in view carries a board with its station name, so the name
-  // is visible without hovering or opening the sheet.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || active !== "mtr") return;
-    const markers = stops.map((stop) => {
-      const station = mtrStationColor(stop.id);
-      const color = station && !station.badge ? station : null;
-      return new Marker({
-        element: routeBoard([
-          {
-            label: localizeStopName(
-              stop.name,
-              stop.mode,
-              locale,
-              stop.name_tc,
-              stop.name_en,
-            ),
-            color,
-          },
-        ]),
-        anchor: "left",
-        offset: [8, 0],
-      })
-        .setLngLat([stop.longitude, stop.latitude])
-        .addTo(map);
-    });
-    return () => markers.forEach((marker) => marker.remove());
-  }, [stops, active, locale]);
-
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
     if (cached) return Promise.resolve(cached);
@@ -1220,6 +1208,7 @@ export default function Page() {
         properties: {
           id: stop.id,
           mode: stop.mode,
+           name: localizeStopName(stop.name, stop.mode, localeRef.current, stop.name_tc, stop.name_en),
           icon:
             stop.mode === "taxi"
               ? `taxi-${stop.taxi ?? "urban"}`
