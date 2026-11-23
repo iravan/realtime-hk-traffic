@@ -42,6 +42,11 @@
       "paid_area": true,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/ymt.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/ymt.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse Exit C (Paid Area)",
+      "location_zh": "車站大堂C出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -108,6 +113,11 @@
       "location": "Station Concourse Exit A2 (Unpaid Area)",
       "location_zh": "車站大堂A2出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse of Tuen Ma Line (Paid Area)",
+      "location_zh": "屯馬綫車站大堂 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -132,6 +142,11 @@
       "paid_area": true,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/yat.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/yat.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse (Paid Area)",
+      "location_zh": "車站大堂 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -153,6 +168,11 @@
       "location": "Station Concourse Exit B (Unpaid Area)",
       "location_zh": "車站大堂B出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse (Paid Area)",
+      "location_zh": "車站大堂 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -165,6 +185,11 @@
       "paid_area": true,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/cen.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/cen.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse on L2 Exit A (Paid Area)",
+      "location_zh": "車站大堂 L2 A出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -187,6 +212,11 @@
       "location": "Station Concourse Exit B (Unpaid Area)",
       "location_zh": "車站大堂B出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit F (Paid Area)",
+      "location_zh": "車站大堂F出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -199,6 +229,11 @@
       "paid_area": false,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/tst.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/tst.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse Exit E (Unpaid Area)",
+      "location_zh": "車站大堂E出口 (未付車費區域)",
+      "paid_area": false
     }
   },
   {
@@ -232,6 +267,11 @@
       "paid_area": true,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/lak.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/lak.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse (Paid Area)",
+      "location_zh": "車站大堂 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -301,6 +341,11 @@
       "location": "Station Concourse Exit B (Unpaid Area)",
       "location_zh": "車站大堂B出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit B (Paid Area)",
+      "location_zh": "車站大堂B出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -538,6 +583,11 @@
       "paid_area": true,
       "pdf_url": "https://www.mtr.com.hk/archive/en/services/layouts/hik.pdf",
       "pdf_url_zh": "https://www.mtr.com.hk/archive/ch/services/layouts/hik.pdf"
+    },
+    "babycare": {
+      "location": "Station Concourse (Paid Area)",
+      "location_zh": "車站大堂 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -557,6 +607,11 @@
       ],
       "location": "Station Concourse Exit A (Unpaid Area)",
       "location_zh": "車站大堂A出口 (未付車費區域)",
+      "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit C (Unpaid Area)",
+      "location_zh": "車站大堂C出口 (未付車費區域)",
       "paid_area": false
     }
   },
@@ -578,6 +633,11 @@
       "location": "Station Concourse Exit A (Unpaid Area)",
       "location_zh": "車站大堂A出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit D (Paid Area)",
+      "location_zh": "車站大堂D出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -598,6 +658,11 @@
       "location": "Station Concourse Exit A (Unpaid Area)",
       "location_zh": "車站大堂A出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit B (Paid Area)",
+      "location_zh": "車站大堂B出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {
@@ -762,6 +827,11 @@
       "location": "Station Concourse Exit A (Unpaid Area)",
       "location_zh": "車站大堂A出口 (未付車費區域)",
       "paid_area": false
+    },
+    "babycare": {
+      "location": "Station Concourse Exit B (Paid Area)",
+      "location_zh": "車站大堂B出口 (已付車費區域)",
+      "paid_area": true
     }
   },
   {

@@ -75,12 +75,19 @@ type WaterDispenser = {
   paid_area: boolean;
 };
 
+type Babycare = {
+  location: string;
+  location_zh: string;
+  paid_area: boolean;
+};
+
 type Facility = {
   station_code: string;
   station_name: string;
   station_name_zh: string;
   toilet?: StationToilet;
   water_dispenser?: WaterDispenser;
+  babycare?: Babycare;
 };
 
 export function StopSheet({
@@ -142,6 +149,7 @@ export function StopSheet({
   }, [id, mode]);
   const toilet = facility?.toilet ?? null;
   const water = facility?.water_dispenser ?? null;
+  const babycare = facility?.babycare ?? null;
   useEffect(() => {
     if (mode === "taxi" && taxi) return;
     let cancelled = false;
@@ -306,7 +314,7 @@ export function StopSheet({
                 </button>
               </div>
             </div>
-            {description || toilet || water || mode === "mtr" ? (
+            {description || toilet || water || babycare || mode === "mtr" ? (
               <section className={description ? "description" : "description icon-only"}>
                 {description}
                 <div className="icon-row">
@@ -329,6 +337,15 @@ export function StopSheet({
                       label={locale === "en" ? "Water dispenser" : "飲水機"}
                       closeLabel={t.sheet.close}
                       pdfLabel={t.sheet.toiletLayout}
+                    />
+                  ) : null}
+                  {babycare ? (
+                    <BabycareMenu
+                      babycare={babycare}
+                      locale={locale}
+                      station={station}
+                      label={locale === "en" ? "Babycare room" : "育嬰室"}
+                      closeLabel={t.sheet.close}
                     />
                   ) : null}
                   {mode === "mtr" ? (
@@ -865,6 +882,50 @@ function WaterMenu({
                 {pdfLabel}
               </a>
             ) : null}
+          </div>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+function BabycareMenu({
+  babycare,
+  locale,
+  station,
+  label,
+  closeLabel,
+}: {
+  babycare: Babycare;
+  locale: Locale;
+  station: StationColor | null;
+  label: string;
+  closeLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const location = locale === "en" ? babycare.location : babycare.location_zh;
+  return (
+    <>
+      <button
+        type="button"
+        className="toilet"
+        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <circle cx="12" cy="6.5" r="3.5" />
+          <path d="M5 22v-4a7 7 0 0 1 14 0v4z" />
+        </svg>
+      </button>
+      {open ? (
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <div className="modal-location">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+            </svg>
+            <span className="modal-address">{location}</span>
           </div>
         </Modal>
       ) : null}
