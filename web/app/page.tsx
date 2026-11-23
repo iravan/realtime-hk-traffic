@@ -1701,7 +1701,8 @@ function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, query: string): 
 // the rest by name. Matching ignores case and surrounding spaces, and an empty
 // filter keeps every stop.
 function filterPlaceholder(mode: Mode, locale: Locale): string {
-  if (mode === "bus" || mode === "minibus") return locale === "en" ? "Route, e.g. 804" : "路線，例如 804";
+  if (mode === "bus") return locale === "en" ? "Route, e.g. 86, 281A, 1" : "路線，例如 86、281A、1";
+  if (mode === "minibus") return locale === "en" ? "Route, e.g. 804, 65M" : "路線，例如 804、65M";
   if (mode === "ferry") return locale === "en" ? "Destination, e.g. Central" : "目的地，例如 中環";
   return locale === "en" ? "Station or stop name" : "車站或站點名稱";
 }
