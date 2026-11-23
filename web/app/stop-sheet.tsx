@@ -819,7 +819,7 @@ function WifiMenu({
             </div>
             <div className="relative flex items-center self-stretch">
               <div className="h-full w-px bg-[rgb(28_25_21/0.12)]" />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[rgb(244_239_230/0.96)] px-1 text-xs text-[#6f675e]">Or</span>
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[rgb(244_239_230/0.96)] px-1 text-xs text-[#6f675e]">{locale === "en" ? "Or" : "或"}</span>
             </div>
             <div className="flex-1 pl-4 text-left">
               <div className="mb-2 flex items-center gap-2">
