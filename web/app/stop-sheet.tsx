@@ -108,6 +108,8 @@ export function StopSheet({
   destinations,
   timetable: ferryTimetable,
   serviceHours,
+  bookmarked,
+  onToggleBookmark,
   onClose,
 }: {
   id: string;
@@ -123,6 +125,8 @@ export function StopSheet({
   destinations?: string[];
   timetable?: TimetableDestination[];
   serviceHours?: string | null;
+  bookmarked: boolean;
+  onToggleBookmark: () => void;
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
@@ -293,6 +297,17 @@ export function StopSheet({
               </div>
               <div className="sheet-actions">
 
+                <button
+                  type="button"
+                  className="sheet-icon"
+                  aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
+                  aria-pressed={bookmarked}
+                  onClick={onToggleBookmark}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                    <path d="M6 3h12v18l-6-4.5L6 21z" />
+                  </svg>
+                </button>
                 <ShareStop
                   id={id}
                   label={t.sheet.share}

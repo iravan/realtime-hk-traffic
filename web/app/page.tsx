@@ -18,6 +18,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { Modal, StopSheet, type TimetableDestination } from "./stop-sheet";
 import { useI18n, type Locale } from "./i18n";
 import { currentPlatform, type Platform } from "./platform";
+import { readBookmarks, writeBookmarks } from "./bookmarks";
 import {
   loadTaxiKindImages,
   loadVehicleImages,
@@ -194,7 +195,12 @@ export default function Page() {
   const mtrLinesLoadingRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
   const [query, setQuery] = useState("");
-  const queryRef = useRef("");
+  const [bookmarkOnly, setBookmarkOnly] = useState(false);
+  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+  const filterRef = useRef<StopFilter>({ query: "", bookmarkOnly: false, bookmarks: new Set() });
+  useEffect(() => {
+    setBookmarks(readBookmarks());
+  }, []);
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
@@ -912,7 +918,7 @@ export default function Page() {
       const mode = activeRef.current;
       const catalogue = cataloguesRef.current[mode];
       if (!catalogue) return;
-      setStops(stopsInView(map, catalogue, mode, queryRef.current));
+      setStops(stopsInView(map, catalogue, mode, filterRef.current));
     });
     mapRef.current = map;
     return () => {
@@ -923,13 +929,21 @@ export default function Page() {
 
   const stopsRef = useRef<Stop[]>([]);
   stopsRef.current = stops;
-  queryRef.current = query;
+  filterRef.current = { query, bookmarkOnly, bookmarks };
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     drawStops(map);
-  }, [query]);
+  }, [query, bookmarkOnly, bookmarks]);
+
+  function toggleBookmark(id: string) {
+    const next = new Set(bookmarks);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setBookmarks(next);
+    writeBookmarks(next);
+  }
   selectedRef.current = selected;
   boardRef.current = board;
 
@@ -1118,8 +1132,8 @@ export default function Page() {
     }
     const hours = hoursRef.current;
     const now = new Date();
-    const query = queryRef.current;
-    setStops(stopsInView(map, catalogue, mode, query));
+    const filter = filterRef.current;
+    setStops(stopsInView(map, catalogue, mode, filter));
     const source = map.getSource("stops");
     if (!source || source.type !== "geojson") return;
     // The whole mode is clustered, not just the current view, so a count at
@@ -1127,7 +1141,7 @@ export default function Page() {
     (source as GeoJSONSource).setData({
       type: "FeatureCollection",
       features: uniqueStops(catalogue, mode)
-        .filter((stop) => matchesQuery(stop, query))
+        .filter((stop) => matchesFilter(stop, filter))
         .map((stop) => ({
         type: "Feature",
         properties: {
@@ -1366,14 +1380,28 @@ export default function Page() {
             </button>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
-          <input
-            type="search"
-            className="stop-filter"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={filterPlaceholder(active, locale)}
-            aria-label={filterPlaceholder(active, locale)}
-          />
+          <div className="stop-filter-row">
+            <input
+              type="search"
+              className="stop-filter"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={filterPlaceholder(active, locale)}
+              aria-label={filterPlaceholder(active, locale)}
+            />
+            <button
+              type="button"
+              className="bookmark-filter"
+              aria-pressed={bookmarkOnly}
+              aria-label={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+              title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+              onClick={() => setBookmarkOnly((on) => !on)}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                <path d="M6 3h12v18l-6-4.5L6 21z" />
+              </svg>
+            </button>
+          </div>
         </div>
         <div className="channel">
           <div className="filters">
@@ -1507,6 +1535,8 @@ export default function Page() {
           taxiHours={selected.taxiHours}
           destinations={selected.destinations}
           timetable={selected.timetable}
+          bookmarked={bookmarks.has(selected.id)}
+          onToggleBookmark={() => toggleBookmark(selected.id)}
           serviceHours={
             selected.mode === "ferry" && hours
               ? schedulesForStop(selected, hours)
@@ -1681,7 +1711,9 @@ function routeBoard(items: BoardItem[]): HTMLDivElement {
   return node;
 }
 
-function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, query: string): Stop[] {
+type StopFilter = { query: string; bookmarkOnly: boolean; bookmarks: Set<string> };
+
+function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, filter: StopFilter): Stop[] {
   const bounds = map.getBounds();
   const south = bounds.getSouth();
   const north = bounds.getNorth();
@@ -1693,8 +1725,15 @@ function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, query: string): 
       stop.latitude <= north &&
       stop.longitude >= west &&
       stop.longitude <= east &&
-      matchesQuery(stop, query),
+      matchesFilter(stop, filter),
   );
+}
+
+// The bookmark toggle keeps only saved stops; the search text then applies to
+// those. Both can be on at once.
+function matchesFilter(stop: Stop, filter: StopFilter): boolean {
+  if (filter.bookmarkOnly && !filter.bookmarks.has(stop.id)) return false;
+  return matchesQuery(stop, filter.query);
 }
 
 // Bus and minibus stops match by route number, ferry piers by destination, and
