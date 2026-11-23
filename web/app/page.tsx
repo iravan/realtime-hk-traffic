@@ -974,22 +974,33 @@ export default function Page() {
     if (active !== "ferry") return;
     const map = mapRef.current;
     if (!map) return;
+    let cancelled = false;
     for (const stop of stops) {
-      if (!stop.destinations || stop.destinations.length === 0) continue;
-      const node = document.createElement("div");
-      node.className = "route-board";
-      for (const destination of stop.destinations) {
-        const chip = document.createElement("span");
-        chip.className = "route-chip";
-        chip.textContent = localizeBilingualName(destination, locale);
-        node.appendChild(chip);
-      }
-      const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
-        .setLngLat([stop.longitude, stop.latitude])
-        .addTo(map);
-      ferryBoardsRef.current.push(marker);
+      fetch(`${apiBase}/stops/${encodeURIComponent(stop.id)}/timetable`)
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (cancelled || !mapRef.current || !data) return;
+          const items = (data.destinations ?? []).map((destination: { destination: string }) =>
+            localizeBilingualName(destination.destination, locale),
+          );
+          if (items.length === 0) return;
+          const node = document.createElement("div");
+          node.className = "route-board";
+          for (const item of items) {
+            const chip = document.createElement("span");
+            chip.className = "route-chip";
+            chip.textContent = item;
+            node.appendChild(chip);
+          }
+          const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
+            .setLngLat([stop.longitude, stop.latitude])
+            .addTo(map);
+          ferryBoardsRef.current.push(marker);
+        })
+        .catch(() => {});
     }
     return () => {
+      cancelled = true;
       ferryBoardsRef.current.forEach((marker) => marker.remove());
       ferryBoardsRef.current = [];
     };
