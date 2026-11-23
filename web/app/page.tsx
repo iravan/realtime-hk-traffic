@@ -1403,7 +1403,7 @@ export default function Page() {
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
                   <path d="M6 3h12v18l-6-4.5L6 21z" />
-                  <text x="12" y="13" textAnchor="middle" dominantBaseline="middle" fontSize="9" fontWeight="700" fill={bookmarkOnly ? "var(--paper)" : "currentColor"} stroke="none">
+                  <text x="12" y="13" textAnchor="middle" dominantBaseline="middle" fontSize="9" fontWeight="700" fill={bookmarkOnly ? "var(--ink)" : "currentColor"} stroke="none">
                     {bookmarks.size}
                   </text>
                 </svg>
