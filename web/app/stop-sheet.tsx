@@ -814,7 +814,7 @@ function WifiMenu({
               <img
                 src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&bgcolor=ffffff00&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
                 alt="MTR Free Wi-Fi QR code"
-                className="h-28 w-28 shrink-0"
+                className="h-28 w-28 shrink-0 mix-blend-multiply"
               />
             </div>
             <div className="relative flex items-center self-stretch">
