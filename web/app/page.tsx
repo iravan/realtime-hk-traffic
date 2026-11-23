@@ -216,7 +216,8 @@ export default function Page() {
       await Promise.all([...modesNeeded].map((mode) => loadCatalogue(mode)));
       if (cancelled) return;
       const resolved: Stop[] = [];
-      for (const id of bookmarks) {
+      // Show the most recently bookmarked stop first.
+      for (const id of [...bookmarks].reverse()) {
         const mode = id.split(":")[0] as Mode;
         const catalogue = cataloguesRef.current[mode] ?? [];
         const stop = catalogue.find((item) => item.id === id);
