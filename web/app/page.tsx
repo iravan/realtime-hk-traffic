@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   AttributionControl,
   GeoJSONSource,
+  NavigationControl,
   Map as MlMap,
   Marker,
   Popup,
@@ -260,6 +261,13 @@ export default function Page() {
       container: node,
       center: hkCenter,
       zoom: hkZoom,
+      // Keep the view inside Hong Kong: the basemap is only useful here, and
+      // panning out would just show an empty world.
+      maxBounds: [
+        [113.75, 22.1],
+        [114.55, 22.6],
+      ],
+      renderWorldCopies: false,
       attributionControl: false,
       dragRotate: false,
       pitchWithRotate: false,
@@ -279,6 +287,7 @@ export default function Page() {
       },
     });
     map.addControl(new AttributionControl({ compact: false }), "bottom-left");
+    map.addControl(new NavigationControl({ showCompass: false, showZoom: true }), "bottom-left");
     map.on("load", async () => {
       await loadVehicleImages(basePath);
       await loadTaxiKindImages(basePath);
