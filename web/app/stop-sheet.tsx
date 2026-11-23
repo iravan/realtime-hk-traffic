@@ -814,15 +814,9 @@ function WifiMenu({
             </svg>
             <p className="text-lg font-semibold">MTR Free Wi-Fi</p>
             <ol className="w-full space-y-2 text-left text-sm">
-              <li>
-                1. {locale === "en" ? "Open your device Wi-Fi settings." : "開啟裝置的 Wi-Fi 設定。"}
-              </li>
-              <li>
-                2. {locale === "en" ? 'Select "MTR Free Wi-Fi".' : '選擇「MTR Free Wi-Fi」。'}
-              </li>
-              <li>
-                3. {locale === "en" ? "Follow the on-screen prompts to connect." : "按照畫面提示完成連線。"}
-              </li>
+              <li>{locale === "en" ? "Open your device Wi-Fi settings." : "開啟裝置的 Wi-Fi 設定。"}</li>
+              <li>{locale === "en" ? 'Select "MTR Free Wi-Fi".' : '選擇「MTR Free Wi-Fi」。'}</li>
+              <li>{locale === "en" ? "Follow the on-screen prompts to connect." : "按照畫面提示完成連線。"}</li>
             </ol>
             <a
               className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
