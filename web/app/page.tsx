@@ -941,6 +941,9 @@ export default function Page() {
     const next = new Set(bookmarks);
     if (next.has(id)) next.delete(id);
     else next.add(id);
+    // With nothing saved the bookmark button is hidden, so the filter must not
+    // stay on, or the map would show no stops and offer no way out.
+    if (next.size === 0) setBookmarkOnly(false);
     setBookmarks(next);
     writeBookmarks(next);
   }
@@ -1389,18 +1392,20 @@ export default function Page() {
               placeholder={filterPlaceholder(active, locale)}
               aria-label={filterPlaceholder(active, locale)}
             />
-            <button
-              type="button"
-              className="bookmark-filter"
-              aria-pressed={bookmarkOnly}
-              aria-label={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-              title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-              onClick={() => setBookmarkOnly((on) => !on)}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                <path d="M6 3h12v18l-6-4.5L6 21z" />
-              </svg>
-            </button>
+            {bookmarks.size > 0 ? (
+              <button
+                type="button"
+                className="bookmark-filter"
+                aria-pressed={bookmarkOnly}
+                aria-label={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+                title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+                onClick={() => setBookmarkOnly((on) => !on)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                  <path d="M6 3h12v18l-6-4.5L6 21z" />
+                </svg>
+              </button>
+            ) : null}
           </div>
         </div>
         <div className="channel">
