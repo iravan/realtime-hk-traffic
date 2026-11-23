@@ -808,28 +808,24 @@ function WifiMenu({
       </button>
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
-          <div className="py-2">
-            <div className="flex items-center justify-between py-3">
-              <span className="font-medium">MTR Free Wi-Fi</span>
-              <div className="flex items-center gap-2 text-sm text-[#6f675e]">
-                <span>{locale === "en" ? "Connected" : "已連線"}</span>
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#2563eb]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              </div>
-            </div>
-            <div className="blur-sm opacity-60">
-              {["Home-WiFi", "Airport_Free", "Starbucks", "AndroidAP", "TP-Link_5G"].map((name) => (
-                <div key={name} className="flex items-center justify-between border-t border-[rgb(28_25_21/0.12)] py-3">
-                  <span>{name}</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 text-[#6f675e]" fill="currentColor">
-                    <path d="M17 11V7a5 5 0 0 0-10 0v4H5v10h14V11zm-8-4a3 3 0 0 1 6 0v4H9z" />
-                  </svg>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-col items-center gap-4 py-4 text-center">
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-16 w-16 text-[#2563eb]" fill="currentColor">
+              <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
+            </svg>
+            <p className="text-lg font-semibold">MTR Free Wi-Fi</p>
+            <ol className="w-full space-y-2 text-left text-sm">
+              <li>
+                1. {locale === "en" ? "Open your device Wi-Fi settings." : "開啟裝置的 Wi-Fi 設定。"}
+              </li>
+              <li>
+                2. {locale === "en" ? 'Select "MTR Free Wi-Fi".' : '選擇「MTR Free Wi-Fi」。'}
+              </li>
+              <li>
+                3. {locale === "en" ? "Follow the on-screen prompts to connect." : "按照畫面提示完成連線。"}
+              </li>
+            </ol>
             <a
-              className={station?.badge ? "modal-layout station-badge-chh mt-4" : "modal-layout mt-4"}
+              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
               style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
               href={url}
               target="_blank"
