@@ -70,7 +70,7 @@ those ids throttles easily, so arrivals were labelled with the numeric id
 live crawl may extend it. Regenerate it with:
 
 ```bash
-python3 server/scripts/fetch-minibus-routes.py --routes-only
+python3 scripts/fetch-minibus-routes.py --routes-only
 ```
 
 A full run of that script, without `--routes-only`, also refreshes the stop

@@ -218,7 +218,7 @@ catalogue, before dev or build:
 ### 2. Minibus route numbers and stop routes
 
 ```bash
-python3 server/scripts/fetch-minibus-routes.py --routes-only
+python3 scripts/fetch-minibus-routes.py --routes-only
 ```
 
 Builds `server/data/gmb-routes.json` from the cached `KML_GMB.zip` and exits
@@ -231,7 +231,7 @@ publisher throttles bursts, so a large refresh may need several runs with
 ### 3. Night-stop flags
 
 ```bash
-python3 server/scripts/fetch-night-stops.py
+python3 scripts/fetch-night-stops.py
 ```
 
 Rewrites `night` on `server/data/stops.json`. It uses the cached minibus data, so
@@ -248,7 +248,7 @@ Keep the coordinates and include `RAC` (Racecourse), which the CSV omits.
 Then sync the bundled stop list and line-terminal labels:
 
 ```bash
-python3 server/scripts/build-mtr-catalogue.py
+python3 scripts/build-mtr-catalogue.py
 ```
 
 This updates the `mtr:` rows in `server/data/stops.json` and writes
@@ -258,7 +258,7 @@ This updates the `mtr:` rows in `server/data/stops.json` and writes
 ### 5. MTR line geometry
 
 ```bash
-python3 server/scripts/fetch-mtr-lines.py --refresh
+python3 scripts/fetch-mtr-lines.py --refresh
 ```
 
 Rewrites `web/public/mtr-lines.geojson` from OpenStreetMap/Overpass.
@@ -273,12 +273,12 @@ Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`) runs
 public holidays the first Wan Chai boat is 07:40; the stored window opens with
 the Monday–Saturday boat. A ferry sheet lists the pier's destinations and its
 timetable, both stored on the pier row in `stops-ferry.json` by
-`server/scripts/fetch-ferry-stops.py`. See DATA.md, "Ferry timetables".
+`scripts/fetch-ferry-stops.py`. See DATA.md, "Ferry timetables".
 
 ### 7. Ferry piers
 
 ```bash
-python3 server/scripts/fetch-ferry-stops.py
+python3 scripts/fetch-ferry-stops.py
 ```
 
 Rewrites the `ferry:` rows in `server/data/stops.json` from the Transport

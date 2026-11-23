@@ -180,7 +180,7 @@ used the throttled GMB API to build the map.
 
 ## P2: Generate MTR stop entries and line terminals
 
-**Status: done.** `server/scripts/build-mtr-catalogue.py` syncs the `mtr:` rows
+**Status: done.** `scripts/build-mtr-catalogue.py` syncs the `mtr:` rows
 in `server/data/stops.json` from `mtr.json` and generates
 `web/app/mtr-line-terminals.json` from the MTR CSV. The page imports the JSON
 instead of hardcoding terminal names.

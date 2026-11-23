@@ -19,7 +19,7 @@ Every response is cached under `.cache/night`, and requests are paced, because
 the minibus host starts answering 403 to bursts.
 
 Usage:
-  python3 server/scripts/fetch-night-stops.py [--budget N]
+  python3 scripts/fetch-night-stops.py [--budget N]
 """
 
 import argparse
@@ -32,7 +32,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache" / "night"
 GMB_CACHE = ROOT / ".cache" / "gmb"
 UA = "realtime-hk-traffic/0.1 (night stop refresh)"

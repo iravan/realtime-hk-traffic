@@ -6,7 +6,7 @@ once and inverts it. Every response is cached under .cache/gmb, and the run is
 paced with a backoff, because the host starts answering 403 to bursts.
 
 Usage:
-  python3 server/scripts/fetch-minibus-routes.py [--budget N] [--routes-only]
+  python3 scripts/fetch-minibus-routes.py [--budget N] [--routes-only]
 
 --budget caps the number of network requests this run makes, so a large refresh
 can be spread over several runs; cached responses are reused. Only a run that
@@ -35,7 +35,7 @@ from pathlib import Path
 
 BASE = "https://data.etagmb.gov.hk"
 KML_URL = "https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip"
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache" / "gmb"
 UA = "realtime-hk-traffic/0.1 (stop catalogue refresh)"
 

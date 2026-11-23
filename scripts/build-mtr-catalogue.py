@@ -8,7 +8,7 @@ the stop catalogue from the server file, so only the canonical stop list is
 rewritten here.
 
 Usage:
-  python3 server/scripts/build-mtr-catalogue.py [--refresh]
+  python3 scripts/build-mtr-catalogue.py [--refresh]
 
 --refresh ignores the cached CSV and downloads it again.
 """
@@ -22,7 +22,7 @@ import urllib.request
 from pathlib import Path
 
 CSV_URL = "https://opendata.mtr.com.hk/data/mtr_lines_and_stations.csv"
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache" / "mtr"
 STATIONS = ROOT / "server" / "data" / "mtr.json"
 STOPS = ROOT / "server" / "data" / "stops.json"

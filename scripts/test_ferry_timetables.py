@@ -1,4 +1,4 @@
-"""Run with: python3 -m unittest discover server/scripts"""
+"""Run with: python3 -m unittest discover scripts"""
 
 import unittest
 

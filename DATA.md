@@ -204,7 +204,7 @@ That file has 98 stations. It includes `RAC` (馬場 Racecourse), which the CSV
 does not list, and adds the latitude, longitude and line membership needed to
 draw station pins and query the next-train feed. `catalog::mtr_stops()` reads it
 to build `mtr:` stops, and `catalog::mtr_label()` uses the names to label train
-destinations. `server/scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
+destinations. `scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
 `stops.json` and writes `web/app/mtr-line-terminals.json` from this file and the
 CSV.
 
@@ -310,7 +310,7 @@ Each item in `data` is read as:
 | `orig_tc`, `orig_sc`, `orig_en` | Origin in Traditional Chinese, Simplified Chinese and English |
 | `dest_tc`, `dest_sc`, `dest_en` | Destination in Traditional Chinese, Simplified Chinese and English |
 
-`server/scripts/fetch-night-stops.py` uses this list to find overnight routes.
+`scripts/fetch-night-stops.py` uses this list to find overnight routes.
 The Rust service itself uses the stop and ETA endpoints below.
 
 Single route variant:
@@ -351,7 +351,7 @@ https://data.etabus.gov.hk/v1/transport/kmb/route-stop/{route}/{direction}/{serv
 ```
 
 Both responses have `data[]` rows containing `route`, `bound`, `service_type`,
-`seq` and `stop`. `server/scripts/fetch-night-stops.py` uses the route list and
+`seq` and `stop`. `scripts/fetch-night-stops.py` uses the route list and
 route-stop endpoints.
 
 Stop catalogue:
@@ -607,7 +607,7 @@ lookup. The service does not read it yet.
 
 A ferry stop is a pier, not a vehicle. The map uses the Transport Department
 stop sequence for names and the CSDI pier layer for coordinates. Both are
-joined on `STOP_ID`. `server/scripts/fetch-ferry-stops.py` writes one
+joined on `STOP_ID`. `scripts/fetch-ferry-stops.py` writes one
 `ferry:{STOP_ID}` row per pier that has both.
 
 ```text
@@ -649,14 +649,14 @@ Hong Kong time), so two sailings on one route can be told apart on the sheet.
 Every ferry pier row in `server/data/stops.json` (and so in
 `web/public/stops-ferry.json`) carries its whole timetable. The page reads it
 from the stop catalogue; no server endpoint serves timetables and nothing
-fetches the operators at run time. `server/scripts/fetch-ferry-stops.py`
-builds the rows with `server/scripts/ferry_timetables.py` and refuses to
+fetches the operators at run time. `scripts/fetch-ferry-stops.py`
+builds the rows with `scripts/ferry_timetables.py` and refuses to
 write anything if a source fails to load. Re-run it to pick up new
 timetables, then rebuild the page.
 
 ```text
-python3 server/scripts/fetch-ferry-stops.py
-python3 -m unittest discover server/scripts
+python3 scripts/fetch-ferry-stops.py
+python3 -m unittest discover scripts
 ```
 
 A pier row has two extra fields:
@@ -781,8 +781,8 @@ the sheet shows as the raw name. If a pier sets `timetable` but not
 }
 ```
 
-Run `python3 server/scripts/fetch-ferry-stops.py` after editing, then
-`python3 -m unittest discover server/scripts` to check the parser and the
+Run `python3 scripts/fetch-ferry-stops.py` after editing, then
+`python3 -m unittest discover scripts` to check the parser and the
 override rules.
 
 Live departures are still read from `GET /stops/{id}/arrivals`, as above. The
@@ -892,10 +892,10 @@ Generation scripts:
 
 | Script | Source |
 | --- | --- |
-| `server/scripts/fetch-minibus-routes.py` | Green-minibus route, route-stop and stop API |
-| `server/scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
-| `server/scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
-| `server/scripts/fetch-ferry-stops.py` | Ferry stop sequence, CSDI pier coordinates, and the checked-in departure map |
+| `scripts/fetch-minibus-routes.py` | Green-minibus route, route-stop and stop API |
+| `scripts/fetch-night-stops.py` | KMB and Citybus route and route-stop endpoints, used to set `night: true` |
+| `scripts/fetch-mtr-lines.py` | OpenStreetMap Overpass API, not data.gov.hk |
+| `scripts/fetch-ferry-stops.py` | Ferry stop sequence, CSDI pier coordinates, and the checked-in departure map |
 
 ## Caching
 
@@ -989,7 +989,7 @@ A click inside the 90-second Redis TTL does not add an upstream request.
 
 - **Map tiles:** OpenStreetMap, credited on the map.
 - **MTR line geometry:** OpenStreetMap, ODbL, extracted by
-  `server/scripts/fetch-mtr-lines.py`.
+  `scripts/fetch-mtr-lines.py`.
 - **Service hours:** checked-in schedule data in
   `web/public/service-hours.json`.
 

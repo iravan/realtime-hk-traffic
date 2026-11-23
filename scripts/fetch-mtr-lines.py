@@ -13,11 +13,11 @@ grouped by route `ref`, so the whole Tsuen Wan Line is one feature with the
 `colour` from the relation.
 
 Usage:
-  python3 server/scripts/fetch-mtr-lines.py [--refresh]
+  python3 scripts/fetch-mtr-lines.py [--refresh]
 
 Set OVERPASS_URL to use a mirror:
   OVERPASS_URL=https://overpass.private.coffee/api/interpreter \
-    python3 server/scripts/fetch-mtr-lines.py --refresh
+    python3 scripts/fetch-mtr-lines.py --refresh
 
 The raw response is cached under .cache/overpass; --refresh drops the cache.
 """
@@ -32,7 +32,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache" / "overpass"
 OUTPUT = ROOT / "web" / "public" / "mtr-lines.geojson"
 UA = "realtime-hk-traffic/0.1 (mtr line refresh)"

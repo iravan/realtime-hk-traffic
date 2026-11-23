@@ -16,7 +16,7 @@ Ferry publish ETA by route, so this script also writes the pier-to-sailing map
 the server uses when a pier is opened.
 
 Usage:
-  python3 server/scripts/fetch-ferry-stops.py
+  python3 scripts/fetch-ferry-stops.py
 """
 
 import json
@@ -27,7 +27,7 @@ from pathlib import Path
 
 import ferry_timetables
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 STOPS = ROOT / "server" / "data" / "stops.json"
 DEPARTURES = ROOT / "server" / "data" / "ferry-departures.json"
 OVERRIDES = ROOT / "server" / "data" / "ferry-overrides.json"
