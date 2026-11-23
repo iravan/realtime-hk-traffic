@@ -68,6 +68,16 @@ type StationToilet = {
   pdf_url_zh: string;
 };
 
+type WaterDispenser = {
+  station_code: string;
+  station_name: string;
+  station_name_zh: string;
+  lines: string[];
+  location: string;
+  location_zh: string;
+  paid_area: boolean;
+};
+
 export function StopSheet({
   id,
   mode,
@@ -102,13 +112,16 @@ export function StopSheet({
   const { locale, t } = useI18n();
   const [sign, setSign] = useState<string | null>(null);
   const [toilet, setToilet] = useState<StationToilet | null>(null);
+  const [water, setWater] = useState<WaterDispenser | null>(null);
   useEffect(() => {
     if (mode !== "mtr") {
       setToilet(null);
+      setWater(null);
       return;
     }
     let cancelled = false;
     setToilet(null);
+    setWater(null);
     const code = id.startsWith("mtr:") ? id.slice(4) : "";
     loadCachedJson<StationToilet[]>("station-toilet-v2", async () => {
       const response = await fetch(`${basePath}/station-toilet.json`);
@@ -120,6 +133,17 @@ export function StopSheet({
       })
       .catch(() => {
         // A missing catalogue only hides the toilet line.
+      });
+    loadCachedJson<WaterDispenser[]>("water-dispensers-v1", async () => {
+      const response = await fetch(`${basePath}/water-dispensers.json`);
+      if (!response.ok) throw new Error("water-dispensers");
+      return response.json() as Promise<WaterDispenser[]>;
+    })
+      .then((body) => {
+        if (!cancelled) setWater(body.find((entry) => entry.station_code === code) ?? null);
+      })
+      .catch(() => {
+        // A missing catalogue only hides the water dispenser icon.
       });
     return () => {
       cancelled = true;
@@ -289,7 +313,7 @@ export function StopSheet({
                 </button>
               </div>
             </div>
-            {description || toilet || mode === "mtr" ? (
+            {description || toilet || water || mode === "mtr" ? (
               <section className={description ? "description" : "description icon-only"}>
                 {description}
                 <div className="icon-row">
@@ -301,6 +325,15 @@ export function StopSheet({
                       label={t.sheet.toilet}
                       closeLabel={t.sheet.close}
                       pdfLabel={t.sheet.toiletLayout}
+                    />
+                  ) : null}
+                  {water ? (
+                    <WaterMenu
+                      water={water}
+                      locale={locale}
+                      station={station}
+                      label={locale === "en" ? "Water dispenser" : "飲水機"}
+                      closeLabel={t.sheet.close}
                     />
                   ) : null}
                   {mode === "mtr" ? (
@@ -778,6 +811,65 @@ function MapMenu({
 
 // MTR Free Wi-Fi QR code (WIFI:T:nopass;S:MTR Free Wi-Fi;;), transparent background.
 const wifiQrSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACAvzbMAAAG50lEQVR42u3csY7bQBBEwR5D///L48SxYRxkLme2KnFknERSelgFnQDAD9Sff9uleMV9eLN+8H21e/21a1JLr6PvrBc8y79cAwB+QkAAEBAABAQAAQFAQABAQAAQEAAEBAABAUBAAEBAAPiCT3YPAGbxwNvmcb3NI4wT7lsvHhP1vfXF++0EAoCAACAgAAgIAAICAAICgIAAICAACAgAAgIAAgKAgAAgIADkljXeLF5MLa8x1mDftarbnv/csrQ95r45gQAgIAAICAACAoCAAICAACAgAAgIAAICgIAAgIAAICAACAgAscZLrIMmmbMYvPla9oBn0vqvEwgAAgIAAgKAgAAgIAAICAACAgACAoCAACAgAAgIAAICADGmeIdaPHg3YYSxhww3br5vOIEAICAACAgACAgAAgKAgAAgIAAICAAICAACAoCAACAgAAgIAOTVa7wWO7+jvUbLs//pHviMuiZOIAAICAACAoCAACAgACAgAAgIAAICgIAAICAAICAACAgAAgJArPFm1hos+dqqaL/8b2XIYm0vXoOd8N58bzmBACAgAAgIAAICAAICgIAAICAACAgAAgIAAgKAgAAgIAAICACxzMol2nNpjRecQAAQEAAEBAABAQABAUBAABAQAAQEAAEBAAEBQEAAEBAAsmBMsV2Ko0N5W6+J4cBcNbhZxizvGup0AgFAQAAQEAAEBAABAQABAUBAABAQAAQEAAEBAAEBQEAAEBAAcssa74TF2lq8flqLX6NVY8vGb1sa3rxi/eO/5wQCQPyEBYCAACAgAAgIAAgIAAICgIAAICAACAgACAgAAgKAgACQC5ZBk93roBY771kMnvSZs349b7E2mxebnUAAEBAABAQAAQFAQABAQAAQEAAEBAABAUBAAEBAABAQAHJ42K1dipFDeVsZs3TftlzHzSOk5QQCQPyEBYCAACAgAAgIAAgIAAICgIAAICAACAgACAgAAgKAgAAwySfWcXPZGunmxdQasv7LuTVk7+2Ln1MnEAAEBAABAUBAABAQABAQAAQEAAEBQEAAEBAAEBAABAQAAQEg1mozful2whrs08uz5eNyzYKve332c9ND1qjLCQSA+AkLAAEBQEAAEBAAEBAABAQAAQFAQAAQEAAQEAAEBAABAWCST3avwY5ZtRywBttWZDNxsbZjsfaWpeHHr4kTCAACAoCAACAgAAgIAAgIAAICgIAAICAACAgACAgAAgJADo8pxuDd0b83Ycwyi+/b1jHRLB4BnHL9O04gACAgAAgIAAICgIAAICAAICAACAgAAgKAgAAgIAAgIAAICAAZv8bbAxZapyxhlkfxmuvvXs/8bHd2rno7gQAQP2EBICAACAgACAgAAgKAgAAgIAAICAAICAACAoCAACAgAMQab6yRvnxFsxZf//bRdL9ftlhbi5/lH18TJxAA4icsAAQEAAEBQEAAQEAAEBAABAQAAQFAQABAQAAQEAAEBIBcssY7YeXz6QXNHnAtJ7zGCcun5evj6LW02PyCZ9kJBAABAUBAABAQAAQEAAQEAAEBQEAAEBAABAQABAQAAQEgh0e02uDdOD1gqHDCMzJlzHLCUKHvhMu+S5xAAIifsAAQEAAEBAABAQABAUBAABAQAAQEAAEBAAEBQEAAEBAAYo03b1r6zOKlVYu185aGY9WVLc+WEwgAAgKAgAAgIAAICAAICAACAoCAACAgAAgIAAgIAAICgIAAEKuPxGLt+uerF3/G2/fQ0WtijReA+AkLAAQEAAEBQEAAEBAABAQABAQAAQFAQAAQEAAEBAD+7pNZw3AxaplJo3BG+c6OWebhEcxePCaKEwgAAgKAgAAgIAAICAAICAACAoCAACAgAAgIAAgIAAICgIAAkCVrvLFqmWnrs+W9HX1vT7/GGrKIbHn5ou9JJxAABAQAAQFAQAAQEAAQEAAEBAABAUBAABAQABAQAAQEAAEBILes8WbxOmhZ/r1KDbhv9eD/a89ybloDLycQAOInLAAEBAABAQABAUBAABAQAAQEAAEBAAEBQEAAEBAABASAWOOFnFi5bdfk6DWpAWuwU56RXroG7gQCgIAAICAACAgAAgIAAgKAgAAgIAAICAACAgACAoCAABBjimTAUF4MDuaWocj2HLv+TiAACAgAAgKAgAAgIAAgIAAICAACAoCAACAgACAgAAgIAAICQKzxxormpXrxYm09+Bo9/zOXbsvnxgkEAAEBQEAAEBAABAQABAQAAQFAQAAQEAAEBAAEBAABAUBAAMi9a7zt8vEyE1ZMJ6z49uJ7XZ5/JxAA4icsAAQEAAEBAAEBQEAAEBAABAQAAQEAAQFAQAAQEAAEBAAA4J/9BtgGrEmvV/HsAAAAAElFTkSuQmCC";
+
+function WaterMenu({
+  water,
+  locale,
+  station,
+  label,
+  closeLabel,
+}: {
+  water: WaterDispenser;
+  locale: Locale;
+  station: StationColor | null;
+  label: string;
+  closeLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setOpen(false);
+  }, [water]);
+  const location = locale === "en" ? water.location : water.location_zh;
+  const url =
+    locale === "en"
+      ? "https://www.mtr.com.hk/en/customer/services/water_dispenser.html"
+      : "https://www.mtr.com.hk/ch/customer/services/water_dispenser.html";
+  return (
+    <>
+      <button
+        type="button"
+        className="toilet"
+        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+        </svg>
+      </button>
+      {open ? (
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <div className="modal-location">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+              <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
+            </svg>
+            <span className="modal-address">{location}</span>
+            <a
+              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {locale === "en" ? "Visit official site" : "前往官方網站"}
+            </a>
+          </div>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
 
 function WifiMenu({
   locale,
