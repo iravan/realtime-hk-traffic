@@ -49,7 +49,8 @@ import {
   serviceHoursLabel,
   type ServiceHours,
 } from "./service-hours";
-import { mtrDestinationColor, mtrStationColor } from "./mtr-station-color";
+import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
+import { ferryDestinationColor } from "./ferry-destination-color";
 import { loadCachedJson } from "./catalogue-cache";
 import { linkedStopId, readLastStop, writeLastStop, writeStopLink } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -945,7 +946,12 @@ export default function Page() {
       .filter((stop) => stop.destinations && stop.destinations.length > 0)
       .map((stop) =>
         new Marker({
-          element: routeBoard(stop.destinations!.map((destination) => localizeBilingualName(destination, locale))),
+          element: routeBoard(
+            stop.destinations!.map((destination) => ({
+              label: localizeBilingualName(destination, locale),
+              color: ferryDestinationColor(destination),
+            })),
+          ),
           anchor: "left",
           offset: [8, 0],
         })
@@ -1598,13 +1604,25 @@ function uniqueStops(catalogue: Stop[], mode: Mode): Stop[] {
   return stops;
 }
 
-function routeBoard(items: string[]): HTMLDivElement {
+type BoardItem = string | { label: string; color: StationColor | null };
+
+function routeBoard(items: BoardItem[]): HTMLDivElement {
   const node = document.createElement("div");
   node.className = "route-board";
+  const ferry = items.some((item) => typeof item !== "string");
   for (const item of items) {
+    const label = typeof item === "string" ? item : item.label;
+    const color = typeof item === "string" ? null : item.color;
     const chip = document.createElement("span");
     chip.className = "route-chip";
-    chip.textContent = item;
+    chip.textContent = label;
+    if (color) {
+      chip.style.background = color.color;
+      chip.style.color = color.font;
+    } else if (ferry) {
+      chip.style.background = "var(--ferry)";
+      chip.style.color = "var(--paper)";
+    }
     node.appendChild(chip);
   }
   return node;
