@@ -1479,6 +1479,7 @@ export default function Page() {
             </div>
           ) : null}
         </div>
+        {!bookmarkOnly ? (
         <div className="channel">
           <div className="filters">
             {modes.map((mode) => (
@@ -1518,6 +1519,7 @@ export default function Page() {
             </div>
           ) : null}
         </div>
+        ) : null}
       </div>
       <div className="map-actions">
         {locateHelp ? (
