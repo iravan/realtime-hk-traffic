@@ -342,10 +342,12 @@ export function StopSheet({
                   {babycare ? (
                     <BabycareMenu
                       babycare={babycare}
+                      layout={toilet}
                       locale={locale}
                       station={station}
                       label={locale === "en" ? "Babycare room" : "育嬰室"}
                       closeLabel={t.sheet.close}
+                      pdfLabel={t.sheet.toiletLayout}
                     />
                   ) : null}
                   {mode === "mtr" ? (
@@ -891,19 +893,24 @@ function WaterMenu({
 
 function BabycareMenu({
   babycare,
+  layout,
   locale,
   station,
   label,
   closeLabel,
+  pdfLabel,
 }: {
   babycare: Babycare;
+  layout: StationToilet | null;
   locale: Locale;
   station: StationColor | null;
   label: string;
   closeLabel: string;
+  pdfLabel: string;
 }) {
   const [open, setOpen] = useState(false);
   const location = locale === "en" ? babycare.location : babycare.location_zh;
+  const pdfUrl = layout ? (locale === "en" ? layout.pdf_url : layout.pdf_url_zh) : null;
   return (
     <>
       <button
@@ -927,6 +934,20 @@ function BabycareMenu({
               <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
             </svg>
             <span className="modal-address">{location}</span>
+            {pdfUrl ? (
+              <a
+                className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+                style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-9.5 8.5c0 .8-.7 1.5-1.5 1.5H7v2H5.5V9H8c.8 0 1.5.7 1.5 1.5zm5 2c0 .8-.7 1.5-1.5 1.5h-2.5V9H13c.8 0 1.5.7 1.5 1.5zm4-3H17v1h1.5V13H17v2h-1.5V9h3zm-6.5 0h1v3h-1zm-5 0h1v1H7z" />
+                </svg>
+                {pdfLabel}
+              </a>
+            ) : null}
           </div>
         </Modal>
       ) : null}
