@@ -7,6 +7,10 @@ carries every place it reaches (`destinations`) and its full timetable
 (`timetable`), built by ferry_timetables.py from the operator and Transport
 Department files, so the page never asks a server for them.
 
+Hand-maintained patches in server/data/ferry-overrides.json are applied last,
+so a pier the feeds cannot supply can be filled in by hand and survives every
+re-run. See DATA.md, "Manual overrides".
+
 Live departures are not in those files: Hong Kong & Kowloon Ferry and Sun
 Ferry publish ETA by route, so this script also writes the pier-to-sailing map
 the server uses when a pier is opened.
@@ -26,6 +30,7 @@ import ferry_timetables
 ROOT = Path(__file__).resolve().parents[2]
 STOPS = ROOT / "server" / "data" / "stops.json"
 DEPARTURES = ROOT / "server" / "data" / "ferry-departures.json"
+OVERRIDES = ROOT / "server" / "data" / "ferry-overrides.json"
 RSTOP_URL = "https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml"
 PIER_QUERY = (
     "https://portal.csdi.gov.hk/server/rest/services/common/"
@@ -162,23 +167,38 @@ def main() -> None:
             for row in rstop
         ],
     )
+    overrides = ferry_timetables.load_overrides(OVERRIDES)
+    unknown = sorted(set(overrides) - {str(stop_id) for stop_id in names})
+    if unknown:
+        raise SystemExit(f"{OVERRIDES.name} names piers not in RSTOP_FERRY.xml: {unknown}")
     stops = []
     for stop_id in sorted(names):
-        if stop_id not in coords:
+        patch = overrides.get(str(stop_id), {})
+        if stop_id in coords:
+            latitude, longitude = coords[stop_id]
+        elif "latitude" in patch and "longitude" in patch:
+            latitude, longitude = patch["latitude"], patch["longitude"]
+        else:
             continue
-        latitude, longitude = coords[stop_id]
+        latitude = patch.get("latitude", latitude)
+        longitude = patch.get("longitude", longitude)
         tc, en = names[stop_id]
         stop = {
             "id": f"ferry:{stop_id}",
             "latitude": latitude,
             "longitude": longitude,
             "mode": "ferry",
-            "name": bilingual(tc, en),
+            "name": patch.get("name", bilingual(tc, en)),
         }
-        if boards.get(str(stop_id)):
-            stop["destinations"] = boards[str(stop_id)]
-        if timetables.get(str(stop_id)):
-            stop["timetable"] = timetables[str(stop_id)]
+        timetable = patch.get("timetable", timetables.get(str(stop_id), []))
+        destinations = patch.get(
+            "destinations",
+            [destination["destination"] for destination in timetable] if "timetable" in patch else boards.get(str(stop_id), []),
+        )
+        if destinations:
+            stop["destinations"] = destinations
+        if timetable:
+            stop["timetable"] = timetable
         stops.append(stop)
     if len(stops) < 40:
         raise SystemExit(f"only {len(stops)} ferry piers joined; refusing to rewrite the catalogue")

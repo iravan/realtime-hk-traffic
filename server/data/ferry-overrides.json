@@ -1,0 +1,3 @@
+{
+  "_about": "Hand-maintained ferry pier patches, applied by server/scripts/fetch-ferry-stops.py after the generated data. Keys are ferry:{STOP_ID}. Fields: name, latitude, longitude, destinations, timetable. Keys starting with _ are comments. See DATA.md, Manual overrides."
+}

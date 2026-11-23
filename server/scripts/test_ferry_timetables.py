@@ -263,5 +263,61 @@ class Grouping(unittest.TestCase):
         self.assertNotIn("101125", boards)
 
 
+class Overrides(unittest.TestCase):
+    def write(self, data):
+        import json
+        import tempfile
+
+        handle = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8")
+        json.dump(data, handle, ensure_ascii=False)
+        handle.close()
+        self.addCleanup(lambda: __import__("os").unlink(handle.name))
+        return handle.name
+
+    def test_missing_file_means_no_patches(self):
+        self.assertEqual(ft.load_overrides("/nonexistent/ferry-overrides.json"), {})
+
+    def test_comments_are_skipped_and_fields_normalised(self):
+        path = self.write({
+            "_about": "note",
+            "ferry:101104": {
+                "name": " 民光街中環二號碼頭 Central Pier No. 2 ",
+                "latitude": 22.288,
+                "longitude": 114.156,
+                "destinations": ["Park Island", "珀麗灣 Park Island"],
+                "timetable": [{
+                    "destination": "Ma Wan",
+                    "days": [{
+                        "day": ft.WEEKDAYS,
+                        "sessions": [{"time": "18:20"}, {"time": "07:00", "remark": "1", "operator": "pitcl"}],
+                        "bands": [{"from": "06:30", "to": "08:00", "frequency": "10"}],
+                    }],
+                }],
+            },
+        })
+        patch = ft.load_overrides(path)["101104"]
+        self.assertEqual(patch["name"], "民光街中環二號碼頭 Central Pier No. 2")
+        self.assertEqual((patch["latitude"], patch["longitude"]), (22.288, 114.156))
+        self.assertEqual(patch["destinations"], ["珀麗灣 Park Island", "珀麗灣 Park Island"])
+        day = patch["timetable"][0]["days"][0]
+        self.assertEqual([s["time"] for s in day["sessions"]], ["07:00", "18:20"])
+        self.assertEqual(day["sessions"][1]["operator"], "manual")
+        self.assertEqual(day["bands"][0]["operator"], "manual")
+        self.assertEqual(patch["timetable"][0]["destination"], "珀麗灣 Park Island")
+
+    def test_bad_entries_stop_the_run(self):
+        cases = {
+            "wrong key": {"101104": {"name": "x"}},
+            "unknown field": {"ferry:101104": {"colour": "red"}},
+            "bad latitude": {"ferry:101104": {"latitude": 1.0, "longitude": 114.1}},
+            "bad day": {"ferry:101104": {"timetable": [{"destination": "Central", "days": [{"day": "Weekends", "sessions": []}]}]}},
+            "bad time": {"ferry:101104": {"timetable": [{"destination": "Central", "days": [{"day": ft.DAILY, "sessions": [{"time": "6:30"}]}]}]}},
+            "empty name": {"ferry:101104": {"name": "  "}},
+        }
+        for label, data in cases.items():
+            with self.subTest(label), self.assertRaises(SystemExit):
+                ft.load_overrides(self.write(data))
+
+
 if __name__ == "__main__":
     unittest.main()

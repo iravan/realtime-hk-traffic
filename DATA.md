@@ -735,6 +735,56 @@ Pier and day rules:
 - The Water Taxi sheet lists each run of departures from one place in calling
   order. A run goes to the place the next run on that route leaves from.
 
+## Manual overrides
+
+`server/data/ferry-overrides.json` holds hand-entered ferry data for the piers
+the feeds cannot supply, or where a feed is wrong. `fetch-ferry-stops.py` reads
+it after the generated data on every run, so manual entries survive a refresh.
+A run fails if the file names a pier that is not in `RSTOP_FERRY.xml` or if any
+value is malformed, so a typo cannot slip into the catalogue.
+
+Keys are `ferry:{STOP_ID}`. Keys starting with `_` are comments. Each pier
+entry may set:
+
+| Field | Effect |
+| --- | --- |
+| `name` | Replaces the TD name on the pier |
+| `latitude`, `longitude` | Replaces the CSDI coordinates. If CSDI has none, both together add the pier to the catalogue |
+| `destinations` | Replaces the generated board. Plain English place names are mapped to the `Chinese English` labels |
+| `timetable` | Replaces the generated timetable for the pier |
+
+A `timetable` is a list of `{destination, days}`, with `days` as
+`{day, sessions, bands}`. `day` must be one of the five group labels in the
+table above. A session is `{time, remark, operator}` and `time` must be `HH:MM`
+with two digits, such as `06:30`. A band is `{from, to, frequency, operator}`.
+`remark` and `operator` are optional; `operator` defaults to `manual`, which
+the sheet shows as the raw name. If a pier sets `timetable` but not
+`destinations`, its board is the timetable's destinations.
+
+```json
+{
+  "ferry:101127": {
+    "destinations": ["Central", "Peng Chau"],
+    "timetable": [
+      {
+        "destination": "Central",
+        "days": [
+          {
+            "day": "Mondays to Fridays except public holidays",
+            "sessions": [{ "time": "07:00" }, { "time": "07:30" }],
+            "bands": []
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Run `python3 server/scripts/fetch-ferry-stops.py` after editing, then
+`python3 -m unittest discover server/scripts` to check the parser and the
+override rules.
+
 Live departures are still read from `GET /stops/{id}/arrivals`, as above. The
 service window in `web/public/service-hours.json` still applies, and a ferry
 pier stays coloured and clickable outside it.

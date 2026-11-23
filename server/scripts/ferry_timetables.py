@@ -10,8 +10,10 @@ reaches, from the timetables first and the TD route stop list after.
 import ast
 import csv
 import io
+import json
 import re
 from collections import defaultdict
+from pathlib import Path
 
 WEEKDAYS = "Mondays to Fridays except public holidays"
 SATURDAY = "Saturdays except public holidays"
@@ -49,6 +51,7 @@ PLACES = {
     "Leung Shuen Wan": "糧船灣 Leung Shuen Wan",
     "Ma Liu Shui": "馬料水 Ma Liu Shui",
     "Ma Wan": "珀麗灣 Park Island",
+    "Park Island": "珀麗灣 Park Island",
     "Mo Tat": "模達 Mo Tat",
     "Mui Wo": "梅窩 Mui Wo",
     "North Point": "北角 North Point",
@@ -534,6 +537,112 @@ def build(fetch_text):
     sessions += td_water_taxi_sessions(fetch_text(TD.format(name)), operator, piers)
     bands = [band for url in STAR for band in star_bands(fetch_text(url))]
     return group(sessions, bands)
+
+
+OVERRIDE_FIELDS = {"name", "latitude", "longitude", "destinations", "timetable"}
+
+
+def load_overrides(path):
+    """Read the hand-maintained patch file. A missing file means no patches.
+
+    Keys starting with `_` are comments. Every other key is a pier id such as
+    `ferry:101337`. Each pier entry may set:
+
+    - `name`, `latitude`, `longitude`: replace the TD or CSDI values, or supply
+      coordinates for a pier the CSDI layer does not have.
+    - `destinations`: replace the generated board.
+    - `timetable`: replace the generated timetable. Same shape as the generated
+      one: a list of `{destination, days: [{day, sessions, bands}]}`.
+      Sessions are `{time, remark, operator}`, bands are
+      `{from, to, frequency, operator}`. Without `destinations`, the board is
+      the destinations of this timetable.
+    """
+    path = Path(path)
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise SystemExit(f"{path}: top level must be an object")
+    out = {}
+    for key, entry in raw.items():
+        if key.startswith("_"):
+            continue
+        where = f"{path}: {key}"
+        if not re.fullmatch(r"ferry:\d+", key):
+            raise SystemExit(f"{where}: key must look like ferry:101337")
+        if not isinstance(entry, dict):
+            raise SystemExit(f"{where}: must be an object")
+        unknown = set(entry) - OVERRIDE_FIELDS
+        if unknown:
+            raise SystemExit(f"{where}: unknown fields {sorted(unknown)}")
+        out[key.split(":", 1)[1]] = validate_override(entry, where)
+    return out
+
+
+def validate_override(entry, where):
+    patch = {}
+    if "name" in entry:
+        if not isinstance(entry["name"], str) or not entry["name"].strip():
+            raise SystemExit(f"{where}: name must be a non-empty string")
+        patch["name"] = entry["name"].strip()
+    for field, low, high in (("latitude", 22.1, 22.6), ("longitude", 113.8, 114.5)):
+        if field in entry:
+            value = entry[field]
+            if not isinstance(value, (int, float)) or not low <= value <= high:
+                raise SystemExit(f"{where}: {field} must be a number between {low} and {high}")
+            patch[field] = float(value)
+    if "destinations" in entry:
+        values = entry["destinations"]
+        if not isinstance(values, list) or not all(isinstance(v, str) and v.strip() for v in values):
+            raise SystemExit(f"{where}: destinations must be a list of strings")
+        patch["destinations"] = [place(v) if v in PLACES else v.strip() for v in values]
+    if "timetable" in entry:
+        patch["timetable"] = validate_timetable(entry["timetable"], where)
+    return patch
+
+
+def validate_timetable(value, where):
+    if not isinstance(value, list):
+        raise SystemExit(f"{where}: timetable must be a list")
+    out = []
+    for destination in value:
+        if not isinstance(destination, dict) or not isinstance(destination.get("destination"), str):
+            raise SystemExit(f"{where}: each timetable entry needs a destination string")
+        name = destination["destination"].strip()
+        days = []
+        for day in destination.get("days", []):
+            label = day.get("day")
+            if label not in DAY_ORDER:
+                raise SystemExit(f"{where}: unknown day {label!r}; use one of {DAY_ORDER}")
+            sessions = []
+            for item in day.get("sessions", []):
+                time = item.get("time", "")
+                if clock(time) != time:
+                    raise SystemExit(f"{where}: session time {time!r} must be HH:MM")
+                sessions.append({
+                    "time": time,
+                    "remark": str(item.get("remark", "")),
+                    "operator": str(item.get("operator", "manual")),
+                })
+            bands = []
+            for item in day.get("bands", []):
+                start, end = item.get("from", ""), item.get("to", "")
+                if clock(start) != start or clock(end) != end:
+                    raise SystemExit(f"{where}: band {start!r}-{end!r} must be HH:MM")
+                bands.append({
+                    "from": start,
+                    "to": end,
+                    "frequency": str(item.get("frequency", "")),
+                    "operator": str(item.get("operator", "manual")),
+                })
+            days.append({
+                "day": label,
+                "sessions": sorted(sessions, key=lambda s: (service_minutes(s["time"]), s["operator"])),
+                "bands": bands,
+            })
+        days.sort(key=lambda d: DAY_ORDER.index(d["day"]))
+        out.append({"destination": place(name), "days": days})
+    return out
 
 
 def board(timetables, route_stops):
