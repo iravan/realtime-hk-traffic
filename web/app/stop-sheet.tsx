@@ -837,7 +837,6 @@ function WifiMenu({
             >
               {locale === "en" ? "Visit official site" : "前往官方網站"}
             </a>
-          </div>
         </Modal>
       ) : null}
     </>
