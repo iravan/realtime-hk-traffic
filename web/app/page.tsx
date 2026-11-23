@@ -28,9 +28,11 @@ import {
   stopIconImage,
   ferryBoatIconImage,
   ferryBoatSignHighlight,
+  lightRailIconImage,
   citybusIconImage,
   citybusSignHighlight,
   isCitybus,
+  isLightRail,
   isStarFerry,
   modeColor,
   taxiDotHighlight,
@@ -345,6 +347,7 @@ export default function Page() {
       map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
         pixelRatio: stopIconPixelRatio,
       });
+       map.addImage("light-rail", lightRailIconImage(), { pixelRatio: stopIconPixelRatio });
       for (const kind of taxiKinds) {
         map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
         map.addImage(`taxi-${kind}-dot`, taxiDotImage(kind), {
@@ -1245,11 +1248,13 @@ export default function Page() {
           icon:
             stop.mode === "taxi"
               ? `taxi-${stop.taxi ?? "urban"}`
-              : stop.mode === "ferry" && !isStarFerry(stop.id)
-                ? "ferry-boat"
-                : stop.mode === "bus" && isCitybus(stop.id)
-                  ? "citybus"
-                  : stop.mode,
+              : stop.mode === "mtr" && isLightRail(stop.id)
+                ? "light-rail"
+                : stop.mode === "ferry" && !isStarFerry(stop.id)
+                  ? "ferry-boat"
+                  : stop.mode === "bus" && isCitybus(stop.id)
+                    ? "citybus"
+                    : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },

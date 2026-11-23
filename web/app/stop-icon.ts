@@ -23,6 +23,7 @@ const ink = "#241f1a";
 const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
 let ferryBoatImage: HTMLImageElement | undefined;
 let citybusImage: HTMLImageElement | undefined;
+let lightRailCanvas: HTMLCanvasElement | undefined;
 
 // Star Ferry piers keep the green mark. Every other pier uses the plain boat.
 const starFerryIds = new Set(["ferry:101119", "ferry:101339", "ferry:101118"]);
@@ -35,6 +36,10 @@ export function isStarFerry(id: string): boolean {
 // keep the red bus.
 export function isCitybus(id: string): boolean {
   return id.startsWith("bus:ctb:");
+}
+
+export function isLightRail(id: string): boolean {
+  return id.startsWith("mtr:LRT:");
 }
 
 export type TaxiKind = "urban" | "nt" | "lantau" | "cross" | "urban-nt" | "urban-cross";
@@ -95,6 +100,14 @@ async function loadVehicleImagesOnce(basePath: string): Promise<void> {
     citybusImage = citybus;
   } catch {
     // The canvas bus stands in for a missing Citybus file.
+  }
+  try {
+    const response = await fetch(`${basePath}/icons/light-rail.svg`);
+    if (response.ok) {
+      lightRailCanvas = await rasterizeSvg(await response.text(), 192);
+    }
+  } catch {
+    // Light Rail falls back to the MTR block.
   }
 }
 
@@ -296,6 +309,11 @@ export function citybusIconImage(): ImageData {
 
 export function citybusIconUrl(): string {
   return drawStopIcon("bus", citybusImage, citybusFill).toDataURL();
+}
+
+export function lightRailIconImage(): ImageData {
+  if (lightRailCanvas) return imageData(lightRailCanvas);
+  return stopIconImage("mtr");
 }
 
 export function citybusSignHighlight(): ImageData {
