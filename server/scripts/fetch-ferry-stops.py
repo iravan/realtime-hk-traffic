@@ -2,10 +2,14 @@
 """Refresh ferry piers in the bundled stop catalogue.
 
 Stop names come from the Transport Department ferry stop sequence. Coordinates
-come from the CSDI ferry-pier layer, joined on STOP_ID. Live departures are
-not in those files: Hong Kong & Kowloon Ferry and Sun Ferry publish ETA by
-route, so this script also writes the pier-to-sailing map the server uses
-when a pier is opened.
+come from the CSDI ferry-pier layer, joined on STOP_ID. Each pier row also
+carries every place it reaches (`destinations`) and its full timetable
+(`timetable`), built by ferry_timetables.py from the operator and Transport
+Department files, so the page never asks a server for them.
+
+Live departures are not in those files: Hong Kong & Kowloon Ferry and Sun
+Ferry publish ETA by route, so this script also writes the pier-to-sailing map
+the server uses when a pier is opened.
 
 Usage:
   python3 server/scripts/fetch-ferry-stops.py
@@ -16,6 +20,8 @@ import ssl
 import urllib.request
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import ferry_timetables
 
 ROOT = Path(__file__).resolve().parents[2]
 STOPS = ROOT / "server" / "data" / "stops.json"
@@ -111,10 +117,17 @@ def pier_coordinates() -> dict[int, tuple[float, float]]:
     return coords
 
 
-def pier_names() -> dict[int, tuple[str, str]]:
-    root = ET.fromstring(fetch(RSTOP_URL))
+def fetch_text(url: str) -> str:
+    return fetch(url).decode("utf-8-sig", errors="replace")
+
+
+def route_stops() -> list[ET.Element]:
+    return list(ET.fromstring(fetch(RSTOP_URL)))
+
+
+def pier_names(rows: list[ET.Element]) -> dict[int, tuple[str, str]]:
     names: dict[int, tuple[str, str]] = {}
-    for row in root:
+    for row in rows:
         stop_id = row.findtext("STOP_ID")
         if not stop_id:
             continue
@@ -135,10 +148,20 @@ def bilingual(tc: str, en: str) -> str:
 
 def main() -> None:
     coords = pier_coordinates()
-    names = pier_names()
+    rstop = route_stops()
+    names = pier_names(rstop)
     missing = sorted(set(SAILINGS) - {str(stop_id) for stop_id in names})
     if missing:
         raise SystemExit(f"sailing map names a pier that is not in RSTOP_FERRY.xml: {missing}")
+    # Any source that fails to load stops the refresh before anything is written.
+    timetables = ferry_timetables.build(fetch_text)
+    boards = ferry_timetables.board(
+        timetables,
+        [
+            tuple(row.findtext(field) or "" for field in ("ROUTE_ID", "ROUTE_SEQ", "STOP_SEQ", "STOP_ID", "STOP_PICK_DROP"))
+            for row in rstop
+        ],
+    )
     stops = []
     for stop_id in sorted(names):
         if stop_id not in coords:
@@ -152,14 +175,10 @@ def main() -> None:
             "mode": "ferry",
             "name": bilingual(tc, en),
         }
-        rows = SAILINGS.get(str(stop_id))
-        if rows:
-            destinations = []
-            for row in rows:
-                destination = row[4]
-                if destination not in destinations:
-                    destinations.append(destination)
-            stop["destinations"] = destinations
+        if boards.get(str(stop_id)):
+            stop["destinations"] = boards[str(stop_id)]
+        if timetables.get(str(stop_id)):
+            stop["timetable"] = timetables[str(stop_id)]
         stops.append(stop)
     if len(stops) < 40:
         raise SystemExit(f"only {len(stops)} ferry piers joined; refusing to rewrite the catalogue")
@@ -189,7 +208,12 @@ def main() -> None:
         json.dumps(departures, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"ferry piers {len(stops)}; sailings at {len(departures)} piers")
+    with_board = sum(1 for stop in stops if stop.get("destinations"))
+    with_timetable = sum(1 for stop in stops if stop.get("timetable"))
+    print(
+        f"ferry piers {len(stops)}; destinations at {with_board}; "
+        f"timetables at {with_timetable}; sailings at {len(departures)} piers"
+    )
 
 
 if __name__ == "__main__":

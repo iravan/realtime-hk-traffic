@@ -14,7 +14,7 @@ import {
   type MapGeoJSONFeature,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Modal, StopSheet } from "./stop-sheet";
+import { Modal, StopSheet, type TimetableDestination } from "./stop-sheet";
 import { useI18n } from "./i18n";
 import { currentPlatform, type Platform } from "./platform";
 import {
@@ -56,9 +56,6 @@ import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const apiBase =
-  process.env.NEXT_PUBLIC_API_BASE ||
-  (basePath ? "" : process.env.NODE_ENV === "development" ? "http://127.0.0.1:8787" : "/api");
 const modes = ["mtr", "bus", "minibus", "ferry", "taxi"] as const;
 
 // The category tabs use their own flat vehicle artwork, served from
@@ -158,6 +155,7 @@ type Stop = {
   longitude: number;
   routes?: string[];
   destinations?: string[];
+  timetable?: TimetableDestination[];
   night?: boolean;
   taxi?: TaxiKind;
   taxiType?: TaxiLabel;
@@ -187,7 +185,6 @@ export default function Page() {
   const selectedRef = useRef<Stop | null>(null);
   const boardRef = useRef<Stop | null>(null);
   const routeMarkerRef = useRef<Marker | null>(null);
-  const ferryBoardsRef = useRef<Marker[]>([]);
   const cataloguesRef = useRef<Partial<Record<Mode, Stop[]>>>({});
   const cataloguePromisesRef = useRef(new Map<Mode, Promise<Stop[]>>());
   const hoursRef = useRef<ServiceHours | null>(null);
@@ -927,83 +924,35 @@ export default function Page() {
     routeMarkerRef.current?.remove();
     routeMarkerRef.current = null;
     const map = mapRef.current;
-    if (!map || !board) return;
-    let cancelled = false;
-    let marker: Marker | null = null;
-    const render = (items: string[]) => {
-      if (cancelled || !mapRef.current || items.length === 0) return;
-      const node = document.createElement("div");
-      node.className = "route-board";
-      for (const item of items) {
-        const chip = document.createElement("span");
-        chip.className = "route-chip";
-        chip.textContent = item;
-        node.appendChild(chip);
-      }
-      marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
-        .setLngLat([board.longitude, board.latitude])
-        .addTo(map);
-      routeMarkerRef.current = marker;
-    };
-    if (board.mode === "minibus" && board.routes && board.routes.length > 0) {
-      render(board.routes);
-    } else if (board.mode === "ferry") {
-      fetch(`${apiBase}/stops/${encodeURIComponent(board.id)}/timetable`)
-        .then((response) => (response.ok ? response.json() : null))
-        .then((data) => {
-          if (cancelled || !data) return;
-          const items = (data.destinations ?? []).map((destination: { destination: string }) =>
-            localizeBilingualName(destination.destination, locale),
-          );
-          render(items);
-        })
-        .catch(() => {});
-    }
+    const routes = board?.mode === "minibus" ? board.routes : undefined;
+    if (!map || !board || !routes || routes.length === 0) return;
+    const marker = new Marker({ element: routeBoard(routes), anchor: "left", offset: [8, 0] })
+      .setLngLat([board.longitude, board.latitude])
+      .addTo(map);
+    routeMarkerRef.current = marker;
     return () => {
-      cancelled = true;
-      if (marker) {
-        marker.remove();
-        if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
-      }
+      marker.remove();
+      if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
     };
-  }, [board, locale]);
+  }, [board]);
 
+  // Every ferry pin in view carries a board of the places it reaches, read
+  // from the pier's `destinations` in the stop catalogue.
   useEffect(() => {
-    ferryBoardsRef.current.forEach((marker) => marker.remove());
-    ferryBoardsRef.current = [];
-    if (active !== "ferry") return;
     const map = mapRef.current;
-    if (!map) return;
-    let cancelled = false;
-    for (const stop of stops) {
-      fetch(`${apiBase}/stops/${encodeURIComponent(stop.id)}/timetable`)
-        .then((response) => (response.ok ? response.json() : null))
-        .then((data) => {
-          if (cancelled || !mapRef.current || !data) return;
-          const items = (data.destinations ?? []).map((destination: { destination: string }) =>
-            localizeBilingualName(destination.destination, locale),
-          );
-          if (items.length === 0) return;
-          const node = document.createElement("div");
-          node.className = "route-board";
-          for (const item of items) {
-            const chip = document.createElement("span");
-            chip.className = "route-chip";
-            chip.textContent = item;
-            node.appendChild(chip);
-          }
-          const marker = new Marker({ element: node, anchor: "left", offset: [8, 0] })
-            .setLngLat([stop.longitude, stop.latitude])
-            .addTo(map);
-          ferryBoardsRef.current.push(marker);
+    if (!map || active !== "ferry") return;
+    const markers = stops
+      .filter((stop) => stop.destinations && stop.destinations.length > 0)
+      .map((stop) =>
+        new Marker({
+          element: routeBoard(stop.destinations!.map((destination) => localizeBilingualName(destination, locale))),
+          anchor: "left",
+          offset: [8, 0],
         })
-        .catch(() => {});
-    }
-    return () => {
-      cancelled = true;
-      ferryBoardsRef.current.forEach((marker) => marker.remove());
-      ferryBoardsRef.current = [];
-    };
+          .setLngLat([stop.longitude, stop.latitude])
+          .addTo(map),
+      );
+    return () => markers.forEach((marker) => marker.remove());
   }, [stops, active, locale]);
 
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
@@ -1011,15 +960,18 @@ export default function Page() {
     if (cached) return Promise.resolve(cached);
     const pending = cataloguePromisesRef.current.get(mode);
     if (pending) return pending;
-    // Minibus names gained their English half after the first cache, and bus
-    // names gained separate Chinese and English fields. A new key makes those
-    // copies load instead of the older one saved for 24 hours.
+    // Minibus names gained their English half after the first cache, bus
+    // names gained separate Chinese and English fields, and ferry piers gained
+    // their destinations and timetables. A new key makes those copies load
+    // instead of the older one saved for 24 hours.
     const catalogueKey =
       mode === "minibus"
         ? "stops-minibus-bilingual"
         : mode === "bus"
           ? "stops-bus-bilingual"
-          : `stops-${mode}`;
+          : mode === "ferry"
+            ? "stops-ferry-timetable"
+            : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
       if (!response.ok) throw new Error(`stops-${mode}`);
@@ -1502,6 +1454,8 @@ export default function Page() {
           taxi={selected.taxi}
           taxiType={selected.taxiType}
           taxiHours={selected.taxiHours}
+          destinations={selected.destinations}
+          timetable={selected.timetable}
           serviceHours={
             selected.mode === "ferry" && hours
               ? schedulesForStop(selected, hours)
@@ -1642,6 +1596,18 @@ function uniqueStops(catalogue: Stop[], mode: Mode): Stop[] {
     stops.push(stop);
   }
   return stops;
+}
+
+function routeBoard(items: string[]): HTMLDivElement {
+  const node = document.createElement("div");
+  node.className = "route-board";
+  for (const item of items) {
+    const chip = document.createElement("span");
+    chip.className = "route-chip";
+    chip.textContent = item;
+    node.appendChild(chip);
+  }
+  return node;
 }
 
 function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode): Stop[] {

@@ -644,137 +644,96 @@ still ahead, the same as Sun Ferry, so a boat under way is not dropped.
 Each ferry row carries the clock of the sailing it shows as `time` (`HH:MM`,
 Hong Kong time), so two sailings on one route can be told apart on the sheet.
 
-## Ferry timetable flow
-
-```mermaid
-flowchart TD
-    A[User opens ferry stop sheet] --> B[StopSheet renders]
-    B --> C{User taps timetable icon}
-    C --> D[FerryTimetable modal opens]
-    D --> E[Fetch GET /stops/ferry:ID/timetable]
-    E --> F[Server for_pier]
-    F --> G1[Sun Ferry CSVs<br/>5 corridors]
-    F --> G2[HKKF CSVs<br/>route_id + direction]
-    F --> G3[Tsui Wah CSV<br/>single file]
-    F --> G4[Star Ferry CSVs<br/>2 routes]
-    F --> G5[Chuen Kee CSV<br/>single file]
-    G1 --> H[Filter by pier origin]
-    G2 --> H
-    G3 --> H
-    G4 --> H
-    H --> I[Group by destination + day]
-    I --> J[JSON response<br/>sessions + bands with operator]
-    J --> K[Modal renders tabs per destination]
-    K --> L[Each session shows operator icon<br/>ferry.svg or ferry-boat.svg]
-    K --> M[First and last session highlighted]
-
-    subgraph "Operator icons"
-        N[Sun Ferry → ferry-boat.svg]
-        O[HKKF → ferry.svg]
-        P[Star Ferry → ferry.svg]
-        Q[Tsui Wah → ferry.svg]
-        R[Chuen Kee → ferry.svg]
-    end
-```
-
-## Ferry timetable refresh flow
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Server
-    participant Redis
-    participant Source as Source CSVs
-
-    Client->>Server: GET /stops/ferry:ID/timetable
-    Server->>Redis: GET timetable:ID
-    alt Cache hit
-        Redis-->>Server: cached JSON
-        Server->>Redis: EXISTS timetable:ID:refreshed
-        alt Debounce expired
-            Server->>Redis: SET refreshed EX 86400
-            Server-->>Client: cached JSON (instant)
-            Server->>Source: fetch all CSVs (retry 3x, 1s delay)
-            Source-->>Server: CSV data
-            alt Success & non-empty
-                Server->>Redis: SET timetable:ID (no TTL)
-            else Failed or empty
-                Server->>Server: keep existing cache
-            end
-        else Debounce active
-            Server-->>Client: cached JSON (instant)
-        end
-    else Cache miss
-        Server->>Source: fetch all CSVs (retry 3x, 1s delay)
-        Source-->>Server: CSV data
-        alt Success & non-empty
-            Server->>Redis: SET timetable:ID (no TTL)
-            Server->>Redis: SET refreshed EX 86400
-            Server-->>Client: fresh JSON
-        else Failed or empty
-            Server-->>Client: empty result
-        end
-    end
-```
-
 ## Ferry timetables
 
-`GET /stops/ferry:{STOP_ID}/timetable` returns every scheduled sailing for a
-pier, read from the operators' timetables on data.gov.hk. Each destination has
-day groups, and each group lists its sessions in file order, with a `remark`
-code and an `operator` (`sun`, `hkkf`, `star`, `tsuiwah`, or `chuenkee`). Bands carry the
-same `operator`. The stop sheet's timetable modal shows one tab per destination,
-an operator icon next to each session or band, and highlights the first and last
-session of each day group.
+Every ferry pier row in `server/data/stops.json` (and so in
+`web/public/stops-ferry.json`) carries its whole timetable. The page reads it
+from the stop catalogue; no server endpoint serves timetables and nothing
+fetches the operators at run time. `server/scripts/fetch-ferry-stops.py`
+builds the rows with `server/scripts/ferry_timetables.py` and refuses to
+write anything if a source fails to load. Re-run it to pick up new
+timetables, then rebuild the page.
 
-| Operator | Source | Piers |
+```text
+python3 server/scripts/fetch-ferry-stops.py
+python3 -m unittest discover server/scripts
+```
+
+A pier row has two extra fields:
+
+- `destinations`: every place the pier reaches, as `"Chinese English"`
+  labels. The map draws them as a board beside every ferry pin, and the sheet
+  shows them as chips. Places from the timetable come first, then the places
+  later on any route in `RSTOP_FERRY.xml` that boards at this pier
+  (`STOP_PICK_DROP` 2 or 3) and lets passengers off further on (1 or 3). All
+  72 piers have destinations.
+- `timetable`: a list of `{destination, days: [{day, sessions, bands}]}`.
+  A session is `{time, remark, operator}` with `time` as `HH:MM`, sorted by
+  service day (00:00 to 03:59 come last). A band is `{from, to, frequency,
+  operator}`. 44 piers have a timetable. The kaito piers (Sai Kung, Tap Mun,
+  Po Toi, Tung Lung, Ap Lei Chau and the like) have destinations only.
+
+Every source day label is mapped onto five groups, so "Mondays to Saturdays"
+fills both the weekday and the Saturday group, and "Saturdays, Sundays and
+public holidays" fills both Saturday and Sunday:
+
+| `day` | Chinese label |
+| --- | --- |
+| `Mondays to Fridays except public holidays` | 星期一至五（公眾假期除外） |
+| `Saturdays except public holidays` | 星期六（公眾假期除外） |
+| `Sundays and public holidays` | 星期日及公眾假期 |
+| `Daily` | 每日 |
+| `Mondays to Fridays (school days only)` | 星期一至五（只限上課日） |
+
+An unknown day label stops the build, so a new spelling cannot slip through
+as its own group.
+
+| Operator (`operator`) | Source | Piers |
 | --- | --- | --- |
-| Sun Ferry | Five English CSVs on sunferry.com.hk: Central–Cheung Chau, Central–Mui Wo, inter-islands, North Point–Hung Hom, North Point–Kowloon City | `101101`, `101102`, `101107`, `101108`, `101109`, `101110`, `101111`, `101112`, `101115` |
-| Hong Kong & Kowloon Ferry | `https://www.hkkfeta.com/opendata/time_table/{route_id}/{direction}` (CSV) | `101126`, `101348`, `101123`, `101108`, `101109`, `101324` |
-| Tsui Wah | `https://www.traway.com.hk/govdata/time.csv` | `101125`, `101123` |
-| Star Ferry | Central and Wan Chai to Tsim Sha Tsui timetable CSVs on starferry.com.hk (listed on data.gov.hk) | `101339`, `101119`, `101118` |
-| Chuen Kee Ferry | `https://ferry.com.hk/opendataV/time.csv` (Aberdeen–Sok Kwu Wan via Mo Tat Wan) | `101125`, `101124` |
+| Sun Ferry (`sun`) | Five English CSVs on sunferry.com.hk: Central–Cheung Chau, Central–Mui Wo, inter-islands, North Point–Hung Hom, North Point–Kowloon City | `101101`, `101102`, `101107`, `101108`, `101109`, `101110`, `101111`, `101112`, `101115` |
+| Hong Kong & Kowloon Ferry (`hkkf`) | `https://www.hkkfeta.com/opendata/time_table/{route_id}/{direction}` | `101126`, `101348`, `101123`, `101108`, `101109`, `101324` |
+| Star Ferry (`star`) | Central and Wan Chai to Tsim Sha Tsui CSVs on starferry.com.hk | `101339`, `101119`, `101118` |
+| Tsui Wah (`tsuiwah`) | `https://www.traway.com.hk/govdata/time.csv`, plus TD for Pak Kok Tsuen and Peng Chau–Discovery Bay–Trappist Monastery | `101125`, `101123`, `101122`, `101356`, `101128`, `101340` |
+| Chuen Kee Ferry (`chuenkee`) | `https://ferry.com.hk/opendataV/time.csv` | `101125`, `101124` |
+| Discovery Bay Transportation (`dbtsl`) | TD Central–Discovery Bay | `101337`, `101127`, `80000019` |
+| Park Island Transport (`pitcl`) | TD Ma Wan–Central, Ma Wan–Tsuen Wan | `101103`, `101104`, `101105` |
+| Fortune Ferry (`fortune`) | TD Central–Hung Hom, North Point–Kwun Tong–Kai Tak, Tuen Mun–Tung Chung–Sha Lo Wan–Tai O, Water Taxi | `101358`, `101357`, `101349`, `101320`, `101355`, `101113`, `101114`, `101117`, `101120`, `80000002`, `80000003`, `80000015`, `80000025` |
+| Coral Sea Ferry (`coralsea`) | TD Sai Wan Ho–Kwun Tong, Sai Wan Ho–Sam Ka Tsuen | `101321`, `101320`, `101322` |
+| Peng Chau Kaito (`pckaito`) | TD Discovery Bay–Mui Wo | `101128`, `101356`, `101350` |
 
-Pier rules, from the Transport Department route data and the operators' own
-timetable text:
+TD files are the English timetable CSVs in the Transport Department's
+"Schedules and Fare Tables of Licensed Ferry Services" dataset:
+`https://www.td.gov.hk/datagovhk_td/ferry-tt-ft/resources/en/ferry_{name}_timetable_eng.csv`.
+They are used only for routes no operator file covers; the operator files are
+newer where both exist. The two dangerous-goods vehicular ferries are left out.
 
-- Central to Cheung Chau leaves Central Pier No. 5 (`101102`).
-- Central to Mui Wo leaves Central Pier No. 6 (`101108`), except the 03:00
-  sailing, which leaves Pier No. 5.
-- Inter-island and North Point sailings leave the pier named by their origin.
-- Star Ferry's Central Pier No. 7 is `101339`, Tsim Sha Tsui (Kowloon Point) is `101119`, and Wan Chai Ferry Pier is `101118`.
-- Tsui Wah's `A` is Aberdeen (`101125`) and `Y` is Yung Shue Wan (`101123`).
-  The file does not define its day codes. `W`, `S` and `H` are labelled
-  Weekdays, Saturday and Public holidays. That reading is an assumption.
-- Chuen Kee Ferry's `A` is Aberdeen (`101125`) and `S` is Sok Kwu Wan (`101124`).
-  Day codes: `W` Weekdays, `WW` Saturday, `S` Sundays and public holidays.
+Pier and day rules:
 
-Remark codes are kept as given. HKKF defines its markers in the CSV's
-`remarks_en` column: `{}` Saturday only, `^` last sailing, `#` one-day advance
-booking for large freight, `*` small freight only, and `@` optional service.
-The meaning of Sun Ferry's numeric remarks (such as `1`) is not confirmed, so
-they are passed through unchanged.
-
-Star Ferry publishes frequency bands, not sailings. Each band has a start and
-end time and a headway in minutes, such as `6:30am-7:25am, 10 -- 12`. The
-response lists these as `bands`, with `from`, `to` and `frequency`, not as
-`sessions`. The frequency is kept as a range, not expanded into departure times.
-
-All source CSVs (Sun Ferry, HKKF, Tsui Wah, Star Ferry, Chuen Kee) are cached
-in Redis under `csv:{url}` with no TTL (kept forever). On a request, the
-cached CSV is returned instantly. A background refresh is enqueued (debounced
-by 24 hours via the `csv:{url}:refreshed` key) to fetch fresh data, and the
-cache is only overwritten when the fetch succeeds and returns non-empty data.
-
-The assembled timetable is cached in Redis under `timetable:{pier}` with no
-TTL (kept forever). On a request, the cached timetable is returned instantly.
-A background refresh is enqueued (debounced by 24 hours via the
-`timetable:{pier}:refreshed` key) to fetch fresh data. All fetches retry up
-to 3 times with a 1-second delay on failure, and the cache is only overwritten
-when the fetch succeeds and returns non-empty data. The app caches the
-same response in IndexedDB under `ferry-timetable:v2:{id}` with a 24-hour
-TTL, and does not request the server while that cache is valid.
-Piers with no operator source show no timetable.
+- Central to Cheung Chau leaves Central Pier No. 5 (`101102`). Central to Mui
+  Wo leaves Central Pier No. 6 (`101108`), except the 03:00 sailing, which
+  leaves Pier No. 5. Other Sun Ferry sailings leave the pier of their origin.
+- On Sun Ferry's Cheung Chau sheet, remark `1` is an ordinary ferry that takes
+  freight, `2` runs Monday to Friday only, `3` runs on Saturdays only, and `4`
+  is `1` and `3` together. A "Mondays to Saturdays" sailing with `2` goes only
+  in the weekday group, and one with `3` or `4` only in the Saturday group. The
+  sheet shows Sun Ferry `1` and `4` sailings in bold.
+- HKKF's day columns are "Monday to Saturday" and "Sunday and Public
+  Holidays". A cell is a list such as `['{ 03:00 }', '#🞁09:15', '^#{ 00:30}']`.
+  Every clock is kept, and the characters around it become its `remark`.
+  Each route defines its markers in its own `remarks_en` column. `^` is the
+  last sailing on every route, and the sheet uses it to mark the last boat.
+  On Yung Shue Wan `{ }` is "Only available on Saturdays", so those sailings
+  go only into the Saturday group. On Peng Chau `{ }` means no freight and
+  `#` continues to Hei Ling Chau.
+- Tsui Wah's `A` is Aberdeen and `Y` Yung Shue Wan. `W` is Monday to
+  Saturday and `S` (or `H`) Sundays and public holidays, read by matching the
+  TD timetable for the same route.
+- Chuen Kee's `A` is Aberdeen and `S` Sok Kwu Wan. `W` is Monday to Saturday,
+  `WW` the extra Saturday sailing, and `S` Sundays and public holidays.
+- Star Ferry publishes frequency bands, not sailings, so its rows are `bands`
+  such as `06:30`–`07:25` every `10–12` minutes.
+- The Water Taxi sheet lists each run of departures from one place in calling
+  order. A run goes to the place the next run on that route leaves from.
 
 Live departures are still read from `GET /stops/{id}/arrivals`, as above. The
 service window in `web/public/service-hours.json` still applies, and a ferry

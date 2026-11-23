@@ -51,9 +51,14 @@ type TimetableBand = { from: string; to: string; frequency: string; operator: st
 
 type TimetableDay = { day: string; sessions: TimetableSession[]; bands: TimetableBand[] };
 
-type TimetableDestination = { destination: string; days: TimetableDay[] };
+export type TimetableDestination = { destination: string; days: TimetableDay[] };
 
-type Timetable = { source: string; destinations: TimetableDestination[] };
+// The day groups server/scripts/ferry_timetables.py files every sailing under.
+const FERRY_WEEKDAYS = "Mondays to Fridays except public holidays";
+const FERRY_SATURDAY = "Saturdays except public holidays";
+const FERRY_SUNDAY = "Sundays and public holidays";
+const FERRY_DAILY = "Daily";
+const FERRY_SCHOOL_DAYS = "Mondays to Fridays (school days only)";
 
 type StationToilet = {
   station_code: string;
@@ -74,6 +79,8 @@ export function StopSheet({
   taxi,
   taxiType,
   taxiHours,
+  destinations,
+  timetable: ferryTimetable,
   serviceHours,
   onClose,
 }: {
@@ -87,6 +94,8 @@ export function StopSheet({
   taxi?: TaxiKind;
   taxiType?: TaxiLabel;
   taxiHours?: TaxiLabel | null;
+  destinations?: string[];
+  timetable?: TimetableDestination[];
   serviceHours?: string | null;
   onClose: () => void;
 }) {
@@ -213,8 +222,8 @@ export function StopSheet({
         <p className="muted">{t.sheet.hours}</p>
         <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
       </>
-    ) : apiBase && mode === "ferry" ? (
-      <FerryTimetable id={id} locale={locale} t={t} />
+    ) : mode === "ferry" ? (
+      <FerryTimetable destinations={destinations ?? []} timetable={ferryTimetable ?? []} locale={locale} t={t} />
     ) : apiBase && serviceHours ? (
       <>
         <p className="muted">{t.sheet.hours}</p>
@@ -463,6 +472,16 @@ function operatorName(operator: string, locale: Locale): string {
       return locale === "en" ? "Tsui Wah Ferry" : "翠華船務";
     case "chuenkee":
       return locale === "en" ? "Chuen Kee Ferry" : "全記渡輪";
+    case "dbtsl":
+      return locale === "en" ? "Discovery Bay Transportation" : "愉景灣航運";
+    case "pitcl":
+      return locale === "en" ? "Park Island Transport" : "珀麗灣客運";
+    case "fortune":
+      return locale === "en" ? "Fortune Ferry" : "富裕小輪";
+    case "coralsea":
+      return locale === "en" ? "Coral Sea Ferry" : "珊瑚海船務";
+    case "pckaito":
+      return locale === "en" ? "Peng Chau Kaito" : "坪洲街渡";
     default:
       return operator;
   }
@@ -506,51 +525,42 @@ function isCurrentDayGroup(day: string, holidaySet: Set<string> | null): boolean
   const dow = now.getDay(); // 0=Sun, 6=Sat
   const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const isHoliday = holidaySet ? holidaySet.has(key) : isHongKongPublicHoliday(now);
-  const lower = day.toLowerCase();
-  if (dow === 0 || isHoliday) {
-    // Sunday or public holiday
-    return (
-      lower.includes("sun") ||
-      lower.includes("public") ||
-      lower.includes("holiday") ||
-      lower.includes("daily") ||
-      lower.includes("every")
-    );
+  switch (day) {
+    case FERRY_DAILY:
+      return true;
+    case FERRY_SUNDAY:
+      return dow === 0 || isHoliday;
+    case FERRY_SATURDAY:
+      return dow === 6 && !isHoliday;
+    case FERRY_WEEKDAYS:
+    case FERRY_SCHOOL_DAYS:
+      return dow >= 1 && dow <= 5 && !isHoliday;
+    default:
+      return false;
   }
-  if (dow === 6) {
-    // Saturday
-    return lower.includes("sat") || lower.includes("daily") || lower.includes("every");
-  }
-  // Weekday (Mon-Fri, not holiday)
-  return (
-    lower.includes("mon") ||
-    lower.includes("week") ||
-    lower.includes("fri") ||
-    lower.includes("daily") ||
-    lower.includes("every")
-  );
 }
 
 function operatorIcon(operator: string): string {
-  switch (operator) {
-    case "sun":
-      return `${basePath}/icons/ferry-boat.svg`;
-    case "hkkf":
-    case "star":
-    case "tsuiwah":
-    case "chuenkee":
-    default:
-      return `${basePath}/icons/ferry.svg`;
-  }
+  return operator === "sun" ? `${basePath}/icons/ferry-boat.svg` : `${basePath}/icons/ferry.svg`;
 }
 
-function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Messages }) {
+function FerryTimetable({
+  destinations,
+  timetable,
+  locale,
+  t,
+}: {
+  destinations: string[];
+  timetable: TimetableDestination[];
+  locale: Locale;
+  t: Messages;
+}) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const [timetable, setTimetable] = useState<Timetable | null>(null);
-  const [failed, setFailed] = useState(false);
   const [holidays, setHolidays] = useState<Set<string> | null>(null);
   useEffect(() => {
+    // Without an API the bundled holiday list decides the day group.
+    if (!apiBase) return;
     loadCachedJson<string[]>("hk-public-holidays", async () => {
       const response = await fetch(`${apiBase}/holidays`);
       if (!response.ok) throw new Error("holidays");
@@ -558,60 +568,40 @@ function FerryTimetable({ id, locale, t }: { id: string; locale: Locale; t: Mess
       return (data.dates ?? []) as string[];
     }, 365 * 24 * 60 * 60 * 1000)
       .then((dates) => setHolidays(new Set(dates)))
-      .catch(() => setHolidays(new Set()));
+      .catch(() => setHolidays(null));
   }, []);
-  useEffect(() => {
-    let cancelled = false;
-    setFailed(false);
-    loadCachedJson<Timetable>(`ferry-timetable:v3:${id}`, async () => {
-      const response = await fetch(`${apiBase}/stops/${encodeURIComponent(id)}/timetable`);
-      if (!response.ok) throw new Error("timetable");
-      return response.json() as Promise<Timetable>;
-    })
-      .then((body) => {
-        if (!cancelled) setTimetable(body);
-      })
-      .catch(() => {
-        if (!cancelled) setFailed(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
-  const destinations = timetable?.destinations ?? [];
-  const current = destinations[active];
+  const current = timetable[active];
   return (
     <>
       {destinations.length > 0 ? (
         <div className="ferry-destinations">
-          {destinations.map((dest, index) => (
-            <FerryDestination key={`${dest.destination}-${index}`} name={dest.destination} locale={locale} />
+          {destinations.map((destination, index) => (
+            <FerryDestination key={`${destination}-${index}`} name={destination} locale={locale} />
           ))}
         </div>
       ) : null}
-      <button
-        type="button"
-        className="ferry-timetable-btn"
-        aria-label={t.sheet.ferryTimetable}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        onClick={() => setOpen(true)}
-      >
-        <img
-          src={`${basePath}/icons/ferry-timetable.svg`}
-          alt=""
-          className="ferry-timetable-icon"
-        />
-      </button>
+      {timetable.length === 0 ? <p className="muted">{t.sheet.noTimetable}</p> : (
+        <button
+          type="button"
+          className="ferry-timetable-btn"
+          aria-label={t.sheet.ferryTimetable}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          onClick={() => setOpen(true)}
+        >
+          <img
+            src={`${basePath}/icons/ferry-timetable.svg`}
+            alt=""
+            className="ferry-timetable-icon"
+          />
+        </button>
+      )}
       {open ? (
         <Modal title={t.sheet.ferryTimetable} closeLabel={t.sheet.close} onClose={() => setOpen(false)}>
-          {failed ? <p className="stale">{t.sheet.timetableError}</p> : null}
-          {!failed && !timetable ? <p className="muted">{t.sheet.loading}</p> : null}
-          {timetable && destinations.length === 0 ? <p className="muted">{t.sheet.noTimetable}</p> : null}
-          {timetable && current ? (
+          {current ? (
             <>
               <div className="ferry-tabs" role="tablist">
-                {destinations.map((item, index) => {
+                {timetable.map((item, index) => {
                   const color = ferryDestinationColor(item.destination);
                   const selected = index === active;
                   return (

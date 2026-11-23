@@ -130,8 +130,11 @@ to the web app. A static host serves the same page from `404.html`.
 
 The server can pick up the latest official stop lists at startup with
 `LIVE_CATALOGUES=1`, but that only changes the in-memory catalogue. The canonical
-bundled catalogue is `server/data/stops.json`; the web copy is generated from
-it during the web build.
+bundled catalogue is `server/data/stops.json`. The web copies
+(`web/public/stops.json` and `web/public/stops-{mtr,bus,minibus,ferry,taxi}.json`)
+are committed to the repo so the build does not regenerate them; regenerate them
+manually with `bun run split-stops` (see below) after changing the canonical
+catalogue.
 
 ### 1. Refresh the base stop list
 
@@ -188,10 +191,11 @@ New stops are appended without `routes` or `night`; the scripts below fill those
 in. Stops removed upstream are not deleted automatically. Remove them by hand if
 the catalogue has shrunk.
 
-The page loads one mode at a time. `web/scripts/split-stops.mjs` runs before
-dev and build, copies `server/data/stops.json` to `web/public/stops.json`, and
-writes `web/public/stops-{bus,minibus,ferry,taxi,mtr}.json`. Both the full web copy and
-the per-mode files are generated and ignored by Git.
+The page loads one mode at a time. `web/scripts/split-stops.mjs` copies
+`server/data/stops.json` to `web/public/stops.json` and writes
+`web/public/stops-{bus,minibus,ferry,taxi,mtr}.json`. Both the full web copy and
+the per-mode files are committed. Run it manually after changing the canonical
+catalogue, before dev or build:
 
 ### 2. Minibus route numbers and stop routes
 
@@ -249,9 +253,9 @@ route entries keyed by stop id: Central Pier 7 (`ferry:101339`) and Tsim Sha
 Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`) runs
 07:30–23:00. Other piers use the ferry default, 03:00–01:00. On Sundays and
 public holidays the first Wan Chai boat is 07:40; the stored window opens with
-the Monday–Saturday boat. A ferry sheet lists destination, first boat, and
-timetable from `GET /stops/{id}/timetable`, read from the operators'
-data.gov.hk timetables. See DATA.md, "Ferry timetables".
+the Monday–Saturday boat. A ferry sheet lists the pier's destinations and its
+timetable, both stored on the pier row in `stops-ferry.json` by
+`server/scripts/fetch-ferry-stops.py`. See DATA.md, "Ferry timetables".
 
 ### 7. Ferry piers
 

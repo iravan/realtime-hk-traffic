@@ -70,7 +70,6 @@ export type Messages = {
     ferryTimetable: string;
     everyMinutes: (frequency: string) => string;
     ferryDay: (day: string) => string;
-    timetableError: string;
     noTimetable: string;
     ferryTimetableLegend: string;
     toilet: string;
@@ -92,22 +91,13 @@ export type Messages = {
   };
 };
 
+// The day groups in the ferry stop catalogue (server/scripts/ferry_timetables.py).
 const FERRY_DAY_ZH: Record<string, string> = {
-  "Monday to Saturday": "星期一至六",
-  "Sunday and Public Holidays": "星期日及公眾假期",
   "Mondays to Fridays except public holidays": "星期一至五（公眾假期除外）",
   "Saturdays except public holidays": "星期六（公眾假期除外）",
   "Sundays and public holidays": "星期日及公眾假期",
-  "Mondays to Saturdays except public holidays": "星期一至六（公眾假期除外）",
-  "Sundays & Public Holidays": "星期日及公眾假期",
-  "Mon – Fri (Except Public Holidays)": "星期一至五（公眾假期除外）",
-  "Sat, Sun & Public Holidays": "星期六、日及公眾假期",
-  "Mon – Sat (Except Public Holidays)": "星期一至六（公眾假期除外）",
-  "Sun & Public Holidays": "星期日及公眾假期",
-  Weekdays: "平日",
-  Saturday: "星期六",
-  "Public holidays": "公眾假期",
   Daily: "每日",
+  "Mondays to Fridays (school days only)": "星期一至五（只限上課日）",
 };
 
 function translateFerryDay(day: string): string {
@@ -215,7 +205,6 @@ const en: Messages = {
     ferryTimetable: "Timetable",
     everyMinutes: (frequency) => `every ${frequency} min`,
     ferryDay: (day) => day,
-    timetableError: "Could not load the timetable. Try again.",
     noTimetable: "No timetable available.",
     ferryTimetableLegend: "Bold times: ordinary ferry with freight service available.",
     toilet: "Toilet",
@@ -305,7 +294,6 @@ const zhHant: Messages = {
     ferryTimetable: "時間表",
     everyMinutes: (frequency) => `每 ${frequency} 分鐘`,
     ferryDay: (day) => translateFerryDay(day),
-    timetableError: "無法載入時間表，請再試一次。",
     noTimetable: "暫無時間表。",
     ferryTimetableLegend: "粗體時間：普通渡輪，可載貨。",
     toilet: "洗手間",

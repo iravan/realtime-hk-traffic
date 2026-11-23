@@ -5,9 +5,9 @@
   "license": "MIT",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "predev": "bun scripts/copy-maplibre-worker.mjs && bun scripts/split-stops.mjs",
+    "predev": "bun scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
-    "prebuild": "bun scripts/copy-maplibre-worker.mjs && bun scripts/split-stops.mjs",
+    "prebuild": "bun scripts/copy-maplibre-worker.mjs",
     "build": "next build",
     "start": "next start"
   },
