@@ -809,7 +809,7 @@ function WifiMenu({
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
           <div className="modal-location">
-            <p className="modal-address">MTR Free Wi-Fi</p>
+            <p className="modal-address">Network name: MTR Free Wi-Fi</p>
             <a
               className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
               style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
@@ -817,7 +817,7 @@ function WifiMenu({
               target="_blank"
               rel="noopener noreferrer"
             >
-              MTR Free Wi-Fi
+              {locale === "en" ? "Visit official site" : "前往官方網站"}
             </a>
           </div>
         </Modal>
