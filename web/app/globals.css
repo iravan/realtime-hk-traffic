@@ -271,7 +271,7 @@ button { cursor: pointer; }
 .ferry-timetable-legend { text-align: right; margin: 0.25rem 0 0.5rem; font-size: 0.8rem; }
 .ferry-sessions li.past { opacity: 0.35; text-decoration: line-through; }
 .sheet .station-chip + .station-chip { margin-left: 0.3rem; }
-.ferry-chip { border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }
+.ferry-chip { display: inline-block; box-sizing: border-box; border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }
 .sheet .sheet-icon {
   display: grid;
   place-items: center;
