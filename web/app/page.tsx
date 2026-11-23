@@ -1617,21 +1617,29 @@ type BoardItem = string | { label: string; color: StationColor | null };
 
 function routeBoard(items: BoardItem[]): HTMLDivElement {
   const node = document.createElement("div");
+  if (items.some((item) => typeof item !== "string")) {
+    node.className = "ferry-board";
+    for (const item of items) {
+      const label = typeof item === "string" ? item : item.label;
+      const color = typeof item === "string" ? null : item.color;
+      const row = document.createElement("div");
+      row.className = "ferry-board-row";
+      const swatch = document.createElement("span");
+      swatch.className = "ferry-board-swatch";
+      swatch.style.background = color?.color ?? "var(--ferry)";
+      const text = document.createElement("span");
+      text.className = "ferry-board-label";
+      text.textContent = label;
+      row.append(swatch, text);
+      node.appendChild(row);
+    }
+    return node;
+  }
   node.className = "route-board";
-  const ferry = items.some((item) => typeof item !== "string");
   for (const item of items) {
-    const label = typeof item === "string" ? item : item.label;
-    const color = typeof item === "string" ? null : item.color;
     const chip = document.createElement("span");
     chip.className = "route-chip";
-    chip.textContent = label;
-    if (color) {
-      chip.style.background = color.color;
-      chip.style.color = color.font;
-    } else if (ferry) {
-      chip.style.background = "var(--ferry)";
-      chip.style.color = "var(--paper)";
-    }
+    chip.textContent = typeof item === "string" ? item : item.label;
     node.appendChild(chip);
   }
   return node;
