@@ -132,7 +132,7 @@ export function StopSheet({
     let cancelled = false;
     setFacility(null);
     const code = id.startsWith("mtr:") ? id.slice(4) : "";
-    loadCachedJson<Facility[]>("facilities-v1", async () => {
+    loadCachedJson<Facility[]>("facilities-v2", async () => {
       const response = await fetch(`${basePath}/facilities.json`);
       if (!response.ok) throw new Error("facilities");
       return response.json() as Promise<Facility[]>;
