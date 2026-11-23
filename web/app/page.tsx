@@ -1500,7 +1500,6 @@ export default function Page() {
                 }}
               >
                 <img src={categoryIcons[mode]} alt="" />
-                {t.mode[mode]}
                 {bookmarkedCount(bookmarks, mode) > 0 ? (
                   <svg className="tab-bookmark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
                     <path d="M6 3h12v18l-6-4.5L6 21z" />
