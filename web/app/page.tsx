@@ -1049,6 +1049,36 @@ export default function Page() {
     };
   }, [stops, active, locale]);
 
+  // Every MTR pin in view carries a board with its station name, so the name
+  // is visible without hovering or opening the sheet.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || active !== "mtr") return;
+    const markers = stops.map((stop) => {
+      const station = mtrStationColor(stop.id);
+      const color = station && !station.badge ? station : null;
+      return new Marker({
+        element: routeBoard([
+          {
+            label: localizeStopName(
+              stop.name,
+              stop.mode,
+              locale,
+              stop.name_tc,
+              stop.name_en,
+            ),
+            color,
+          },
+        ]),
+        anchor: "left",
+        offset: [8, 0],
+      })
+        .setLngLat([stop.longitude, stop.latitude])
+        .addTo(map);
+    });
+    return () => markers.forEach((marker) => marker.remove());
+  }, [stops, active, locale]);
+
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
     if (cached) return Promise.resolve(cached);
