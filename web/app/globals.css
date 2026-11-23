@@ -89,6 +89,20 @@ button { cursor: pointer; }
 }
 .bookmark-filter svg { width: 18px; height: 18px; }
 .bookmark-filter[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.bookmark-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0 0.6rem;
+  border: 0;
+  background: transparent;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.bookmark-tab svg { width: 18px; height: 18px; }
+.bookmark-tab span { font-size: 0.85rem; font-weight: 700; }
+.bookmark-tab[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-radius: 0.45rem; }
 .lang-toggle {
   display: inline-flex;
   flex: none;
