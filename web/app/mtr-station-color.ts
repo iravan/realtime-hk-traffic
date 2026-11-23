@@ -13,7 +13,10 @@ for (const stop of mtrStops.stops) {
 const choiHung = byCode.CHH;
 if (choiHung) choiHung.badge = "station-badge-chh";
 
+const lightRail: StationColor = { color: "#D3A809", font: "#1c1915" };
+
 export function mtrStationColor(stopId: string): StationColor | null {
+  if (stopId.startsWith("mtr:LRT:")) return lightRail;
   const code = stopId.startsWith("mtr:") ? stopId.slice(4) : "";
   return byCode[code] ?? null;
 }
