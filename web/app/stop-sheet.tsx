@@ -808,7 +808,7 @@ function WifiMenu({
       </button>
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
-          <div className="flex items-center gap-5 py-5">
+          <div className="flex items-center gap-3 py-5">
             <div className="flex flex-col items-center gap-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-[#6f675e]">{locale === "en" ? "Scan QR code" : "掃描 QR 碼"}</p>
               <img
