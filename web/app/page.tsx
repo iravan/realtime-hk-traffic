@@ -1066,7 +1066,7 @@ export default function Page() {
           : mode === "ferry"
             ? "stops-ferry-timetable"
             : mode === "mtr"
-              ? "stops-mtr-lrt"
+              ? "stops-mtr-lrt2"
               : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);

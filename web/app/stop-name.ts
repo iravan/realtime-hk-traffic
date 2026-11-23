@@ -45,10 +45,10 @@ export function localizeStopName(
   nameTc?: string | null,
   nameEn?: string | null,
 ): string {
-  // Bus feeds publish the Chinese and English names separately. Use them when
-  // the catalogue carries them, so a name with Latin letters in its Chinese
-  // half ("太古廣場 (A1)") still splits cleanly.
-  if (mode === "bus" && (nameTc || nameEn)) {
+  // Feeds that publish the Chinese and English names separately (bus, and the
+  // Light Rail stops) use them directly, so a name with Latin letters in its
+  // Chinese half ("太古廣場 (A1)") still splits cleanly.
+  if (nameTc || nameEn) {
     return (locale === "en" ? nameEn : nameTc) || nameTc || nameEn || name;
   }
   // MTR, ferry and green-minibus catalogues store Chinese and English in one
