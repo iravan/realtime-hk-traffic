@@ -110,8 +110,7 @@ button { cursor: pointer; }
   color: var(--ink);
   cursor: pointer;
 }
-.bookmark-search svg { width: 16px; height: 16px; }
-.bookmark-search span { font-size: 0.85rem; font-weight: 700; }
+.bookmark-search svg { width: 18px; height: 18px; }
 .bookmark-search[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .lang-toggle {
   display: inline-flex;
