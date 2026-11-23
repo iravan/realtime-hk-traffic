@@ -149,13 +149,8 @@ export function schedulesForStop(stop: TimedStop, hours: ServiceHours): Schedule
   return fallback?.length ? [fallback] : [];
 }
 
-export function isStopOpen(stop: TimedStop, hours: ServiceHours | null, now: Date): boolean {
-  // Few piers, so a closed ferry stays coloured and clickable. The sheet still
-  // shows its hours.
-  if (stop.mode === "ferry" || stop.night) return true;
-  if (!hours) return true;
-  const schedules = schedulesForStop(stop, hours);
-  if (schedules.length === 0) return true;
-  const clock = clockAt(now, hours.timezone || defaultTimezone);
-  return schedules.some((schedule) => isScheduleOpen(schedule, clock));
+export function isStopOpen(_stop: TimedStop, _hours: ServiceHours | null, _now: Date): boolean {
+  // Greyed-out (out-of-service) pins are disabled: every stop is treated as
+  // open and clickable, regardless of service hours.
+  return true;
 }
