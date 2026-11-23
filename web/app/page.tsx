@@ -505,17 +505,7 @@ export default function Page() {
           "icon-allow-overlap": true,
           "icon-ignore-placement": true,
           "icon-size": signSize,
-        },
-      });
-
-      map.addLayer({
-        id: "stop-names",
-        type: "symbol",
-        source: "stops",
-        filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "mode"], "mtr"]],
-        minzoom: pinZoom,
-        layout: {
-          "text-field": ["get", "name"],
+          "text-field": ["case", ["==", ["get", "mode"], "mtr"], ["get", "name"], ""],
           "text-font": ["Noto Sans Regular"],
           "text-size": 12,
           "text-anchor": "bottom",
@@ -523,8 +513,13 @@ export default function Page() {
           "text-allow-overlap": true,
           "text-ignore-placement": true,
         },
-        paint: { "text-color": "#1c1915", "text-halo-color": "#fbf7f0", "text-halo-width": 1.5 },
+        paint: {
+          "text-color": "#1c1915",
+          "text-halo-color": "#fbf7f0",
+          "text-halo-width": 1.5,
+        },
       });
+
 
       // Hover highlight for an MTR station block. It sits above the line
       // layers and below the selected-station highlight.
