@@ -392,7 +392,8 @@ button { cursor: pointer; }
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  width: 10.5rem;
+  width: max-content;
+  max-width: 8.5rem;
   padding: 0.35rem;
   background: var(--paper);
   border: 1px solid rgba(28, 25, 21, 0.18);
