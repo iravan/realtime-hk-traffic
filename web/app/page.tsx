@@ -1050,6 +1050,51 @@ export default function Page() {
     };
   }, [stops, active, locale]);
 
+  // Keep the station-name tooltip visible on every MTR pin, not only on
+  // hover or tap.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || active !== "mtr") return;
+    const popups = stops.map((stop) => {
+      const node = document.createElement("div");
+      node.className = "stop-name";
+      node.textContent = localizeStopName(
+        stop.name,
+        stop.mode,
+        locale,
+        stop.name_tc,
+        stop.name_en,
+      );
+      const popup = new Popup({
+        className: "stop-popup",
+        closeButton: false,
+        closeOnClick: false,
+        offset: 30,
+        maxWidth: "260px",
+      })
+        .setDOMContent(node)
+        .setLngLat([stop.longitude, stop.latitude])
+        .addTo(map);
+      const element = popup.getElement();
+      if (element) {
+        const station = mtrStationColor(stop.id);
+        element.classList.toggle(
+          "station-badge-chh",
+          station?.badge === "station-badge-chh",
+        );
+        if (station && !station.badge) {
+          element.style.setProperty("--stop-bg", station.color);
+          element.style.setProperty("--stop-fg", station.font);
+        } else {
+          element.style.removeProperty("--stop-bg");
+          element.style.removeProperty("--stop-fg");
+        }
+      }
+      return popup;
+    });
+    return () => popups.forEach((popup) => popup.remove());
+  }, [stops, active, locale]);
+
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
     if (cached) return Promise.resolve(cached);
