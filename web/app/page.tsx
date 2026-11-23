@@ -197,10 +197,38 @@ export default function Page() {
   const [query, setQuery] = useState("");
   const [bookmarkOnly, setBookmarkOnly] = useState(false);
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+  const [bookmarkedStops, setBookmarkedStops] = useState<Stop[]>([]);
   const filterRef = useRef<StopFilter>({ query: "", bookmarkOnly: false, bookmarks: new Set() });
   useEffect(() => {
     setBookmarks(readBookmarks());
   }, []);
+
+  // Resolve bookmark ids to Stop records once their catalogues are loaded.
+  // Catalogues load lazily, so retry when a new mode's stops arrive.
+  useEffect(() => {
+    let cancelled = false;
+    const resolve = async () => {
+      const modesNeeded = new Set<Mode>();
+      for (const id of bookmarks) {
+        const mode = id.split(":")[0] as Mode;
+        if (modes.includes(mode)) modesNeeded.add(mode);
+      }
+      await Promise.all([...modesNeeded].map((mode) => loadCatalogue(mode)));
+      if (cancelled) return;
+      const resolved: Stop[] = [];
+      for (const id of bookmarks) {
+        const mode = id.split(":")[0] as Mode;
+        const catalogue = cataloguesRef.current[mode] ?? [];
+        const stop = catalogue.find((item) => item.id === id);
+        if (stop) resolved.push(stop);
+      }
+      setBookmarkedStops(resolved);
+    };
+    void resolve();
+    return () => {
+      cancelled = true;
+    };
+  }, [bookmarks, stops]);
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
@@ -948,6 +976,14 @@ export default function Page() {
     setBookmarks(next);
     writeBookmarks(next);
   }
+
+  function openBookmark(stop: Stop) {
+    if (stop.mode !== activeRef.current) setActive(stop.mode);
+    // Wait for the tab change to settle before selecting.
+    setTimeout(() => {
+      showStopRef.current(stop, true);
+    }, 0);
+  }
   selectedRef.current = selected;
   boardRef.current = board;
 
@@ -1394,6 +1430,7 @@ export default function Page() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder={filterPlaceholder(active, locale)}
               aria-label={filterPlaceholder(active, locale)}
+              disabled={bookmarkOnly}
             />
             {bookmarks.size > 0 ? (
               <button
@@ -1413,6 +1450,29 @@ export default function Page() {
               </button>
             ) : null}
           </div>
+          {bookmarkOnly ? (
+            <div className="bookmark-list">
+              {bookmarkedStops.length === 0 ? (
+                <p className="bookmark-list-empty">
+                  {locale === "en" ? "No bookmarked stops yet." : "尚未收藏任何站點。"}
+                </p>
+              ) : (
+                bookmarkedStops.map((stop) => (
+                  <button
+                    key={stop.id}
+                    type="button"
+                    className="bookmark-list-row"
+                    onClick={() => openBookmark(stop)}
+                  >
+                    <span className="bookmark-list-name">
+                      {localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}
+                    </span>
+                    <span className="bookmark-list-mode">{stop.mode}</span>
+                  </button>
+                ))
+              )}
+            </div>
+          ) : null}
         </div>
         <div className="channel">
           <div className="filters">

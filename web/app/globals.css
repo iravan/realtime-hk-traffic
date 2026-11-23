@@ -74,6 +74,57 @@ button { cursor: pointer; }
   color: var(--ink);
   font-size: 0.85rem;
 }
+.stop-filter:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.bookmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  padding: 0.4rem;
+  border: 1px solid rgba(28, 25, 21, 0.14);
+  border-radius: 0.45rem;
+  background: var(--paper);
+}
+.bookmark-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  min-height: 32px;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.bookmark-list-row:hover {
+  background: rgba(28, 25, 21, 0.06);
+}
+.bookmark-list-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.bookmark-list-mode {
+  flex: none;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6f675e;
+}
+.bookmark-list-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6f675e;
+}
 .bookmark-filter {
   display: grid;
   flex: none;
