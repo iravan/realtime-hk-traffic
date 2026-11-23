@@ -809,10 +809,17 @@ function WifiMenu({
       {open ? (
         <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
           <div className="flex flex-col items-center gap-4 py-4 text-center">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-16 w-16 text-[#2563eb]" fill="currentColor">
-              <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
-            </svg>
-            <p className="text-lg font-semibold">MTR Free Wi-Fi</p>
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
+              alt="MTR Free Wi-Fi QR code"
+              className="h-40 w-40"
+            />
+            <div className="flex items-center gap-2">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 text-[#2563eb]" fill="currentColor">
+                <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
+              </svg>
+              <p className="text-lg font-semibold">MTR Free Wi-Fi</p>
+            </div>
             <ol className="w-full space-y-2 text-left text-sm">
               <li>{locale === "en" ? "Open your device Wi-Fi settings." : "開啟裝置的 Wi-Fi 設定。"}</li>
               <li>{locale === "en" ? 'Select "MTR Free Wi-Fi".' : '選擇「MTR Free Wi-Fi」。'}</li>
