@@ -1383,30 +1383,14 @@ export default function Page() {
             </button>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
-          <div className="stop-filter-row">
-            <input
-              type="search"
-              className="stop-filter"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={filterPlaceholder(active, locale)}
-              aria-label={filterPlaceholder(active, locale)}
-            />
-            {bookmarks.size > 0 ? (
-              <button
-                type="button"
-                className="bookmark-filter"
-                aria-pressed={bookmarkOnly}
-                aria-label={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-                title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-                onClick={() => setBookmarkOnly((on) => !on)}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                  <path d="M6 3h12v18l-6-4.5L6 21z" />
-                </svg>
-              </button>
-            ) : null}
-          </div>
+          <input
+            type="search"
+            className="stop-filter"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={filterPlaceholder(active, locale)}
+            aria-label={filterPlaceholder(active, locale)}
+          />
         </div>
         <div className="channel">
           <div className="filters">
@@ -1431,6 +1415,21 @@ export default function Page() {
                 {t.mode[mode]}
               </button>
             ))}
+            {bookmarks.size > 0 ? (
+              <button
+                type="button"
+                className="bookmark-tab"
+                aria-pressed={bookmarkOnly}
+                aria-label={locale === "en" ? `Bookmarked stops: ${bookmarks.size}` : `收藏站點：${bookmarks.size}`}
+                title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
+                onClick={() => setBookmarkOnly((on) => !on)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                  <path d="M6 3h12v18l-6-4.5L6 21z" />
+                </svg>
+                <span>{bookmarks.size}</span>
+              </button>
+            ) : null}
           </div>
           {mtrClosed ? (
             <div className="notice" role="status">
