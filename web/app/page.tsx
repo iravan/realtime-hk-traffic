@@ -1065,7 +1065,9 @@ export default function Page() {
           ? "stops-bus-bilingual"
           : mode === "ferry"
             ? "stops-ferry-timetable"
-            : `stops-${mode}`;
+            : mode === "mtr"
+              ? "stops-mtr-lrt"
+              : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
       if (!response.ok) throw new Error(`stops-${mode}`);
