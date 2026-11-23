@@ -915,8 +915,9 @@ function BabycareMenu({
         onClick={() => setOpen(true)}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-          <circle cx="12" cy="6.5" r="3.5" />
-          <path d="M5 22v-4a7 7 0 0 1 14 0v4z" />
+          <path d="M10 5V2.8C10 1.8 10.7 1 12 1s2 .8 2 1.8V5z" />
+          <rect x="7.5" y="5" width="9" height="3" rx="1" />
+          <rect x="6" y="8" width="12" height="14" rx="3" />
         </svg>
       </button>
       {open ? (
