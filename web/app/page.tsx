@@ -1472,7 +1472,6 @@ export default function Page() {
                     <span className="bookmark-list-name">
                       {localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}
                     </span>
-                    <span className="bookmark-list-mode">{stop.mode}</span>
                   </button>
                 ))
               )}

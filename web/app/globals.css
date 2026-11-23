@@ -93,7 +93,6 @@ button { cursor: pointer; }
 .bookmark-list-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.6rem;
   min-height: 32px;
   padding: 0 0.5rem;
