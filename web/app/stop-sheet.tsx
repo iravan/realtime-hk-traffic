@@ -812,7 +812,7 @@ function WifiMenu({
             <div className="flex flex-col items-center gap-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-[#6f675e]">{locale === "en" ? "Scan QR code" : "掃描 QR 碼"}</p>
               <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&bgcolor=transparent&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&bgcolor=ffffff00&data=WIFI%3AT%3Anopass%3BS%3AMTR%20Free%20Wi-Fi%3B%3B"
                 alt="MTR Free Wi-Fi QR code"
                 className="h-28 w-28 shrink-0"
               />
