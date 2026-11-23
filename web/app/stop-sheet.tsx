@@ -835,15 +835,17 @@ function WifiMenu({
               </ol>
             </div>
           </div>
-            <a
-              className={station?.badge ? "modal-layout station-badge-chh mt-1" : "modal-layout mt-1"}
-              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {locale === "en" ? "Visit official site" : "前往官方網站"}
-            </a>
+            <div className="flex justify-end">
+              <a
+                className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+                style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {locale === "en" ? "Visit official site" : "前往官方網站"}
+              </a>
+            </div>
         </Modal>
       ) : null}
     </>
