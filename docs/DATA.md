@@ -893,8 +893,8 @@ them `#D3A809` (see `web/app/mtr-station-color.ts`).
 
 Status:
 
-- The stop pins and the sheet work. The sheet shows no arrivals yet, because
-  the server does not call the Light Rail feed.
+- The stop pins and the sheet work. The sheet now shows Light Rail arrivals from
+  the `getSchedule` feed.
 - Stops use the default MTR service hours from `service-hours.json`, not the
   Light Rail timetable.
 - `lrt-tracks.geojson` (27 track segments from the same OSM query) is not drawn.

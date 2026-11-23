@@ -228,6 +228,11 @@ async fn load_catalogues(app: Arc<App>) {
     let (added, updated) = remember_local(&app, mtr).await;
     eprintln!("mtr stops {count} ({added} new, {updated} updated)");
 
+    let lrt = catalog::lrt_stops();
+    let count = lrt.len();
+    let (added, updated) = remember_local(&app, lrt).await;
+    eprintln!("light rail stops {count} ({added} new, {updated} updated)");
+
     if live_catalogues_enabled() {
         eprintln!("live catalogue refresh enabled");
         refresh_live_catalogues(&app).await;
@@ -484,7 +489,13 @@ async fn events(
 
 async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
     match stop.mode.as_str() {
-        "mtr" => mtr_arrivals(&app.http, stop).await,
+        "mtr" => {
+            if stop.id.starts_with("mtr:LRT:") {
+                lrt_arrivals(&app.http, stop).await
+            } else {
+                mtr_arrivals(&app.http, stop).await
+            }
+        }
         "bus" => bus_arrivals(app, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
         "ferry" => ferry_arrivals(&app.http, stop).await,
@@ -867,6 +878,77 @@ async fn gmb_destinations(app: &App, route_ids: &[i64]) -> HashMap<(i64, i64), S
         }
     }
     destinations
+}
+
+async fn lrt_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
+    let station_id = stop.id.strip_prefix("mtr:LRT:").unwrap_or(&stop.id);
+    // The stop id stored on the catalogue is the numeric station id.
+    let station_id = stop.mtr_code.as_deref().unwrap_or(station_id);
+    let url = format!(
+        "https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={station_id}&with_special=1"
+    );
+    let Ok(response) = http.get(url).send().await else {
+        return None;
+    };
+    let Ok(parsed) = response.json::<Value>().await else {
+        return None;
+    };
+    let mut rows = Vec::new();
+    if let Some(platforms) = parsed.get("platform_list").and_then(|value| value.as_array()) {
+        for platform in platforms {
+            let Some(routes) = platform.get("route_list").and_then(|value| value.as_array()) else {
+                continue;
+            };
+            for route in routes {
+                let route_no = route
+                    .get("route_no")
+                    .and_then(|value| value.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let dest_tc = route
+                    .get("dest_ch")
+                    .and_then(|value| value.as_str())
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
+                let dest_en = route
+                    .get("dest_en")
+                    .and_then(|value| value.as_str())
+                    .unwrap_or("")
+                    .trim()
+                    .to_string();
+                let destination = if !dest_tc.is_empty() && !dest_en.is_empty() {
+                    format!("{dest_tc} {dest_en}")
+                } else if !dest_tc.is_empty() {
+                    dest_tc
+                } else {
+                    dest_en
+                };
+                let time = route
+                    .get("time_en")
+                    .and_then(|value| value.as_str())
+                    .or_else(|| route.get("time_ch").and_then(|value| value.as_str()))
+                    .map(|value| value.to_string());
+                rows.push(Row {
+                    route: route_no,
+                    destination,
+                    minutes: None,
+                    time,
+                    not_departed: false,
+                    operator: None,
+                });
+            }
+        }
+    }
+    // Keep the list short and stable.
+    rows.truncate(16);
+    Some(Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live: true,
+        status: None,
+        note: None,
+        rows,
+    })
 }
 
 async fn mtr_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {

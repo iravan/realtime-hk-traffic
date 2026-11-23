@@ -678,6 +678,35 @@ pub fn bundled_stops() -> Vec<Stop> {
         .collect()
 }
 
+
+#[derive(Deserialize)]
+struct LrtStop {
+    id: String,
+    name_tc: String,
+    name_en: String,
+    lat: f64,
+    lng: f64,
+    stop_id: String,
+}
+
+pub fn lrt_stops() -> Vec<Stop> {
+    let raw: Vec<LrtStop> =
+        serde_json::from_str(include_str!("../data/lrt-stops.json")).unwrap_or_default();
+    raw.into_iter()
+        .map(|stop| {
+            let mut s = Stop::new(
+                stop.id,
+                "mtr",
+                name(&stop.name_tc, &stop.name_en),
+                stop.lat,
+                stop.lng,
+            );
+            s.mtr_code = Some(stop.stop_id);
+            s.with_names(Some(stop.name_tc), Some(stop.name_en))
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     #[test]
