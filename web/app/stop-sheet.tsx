@@ -60,12 +60,15 @@ const FERRY_SUNDAY = "Sundays and public holidays";
 const FERRY_DAILY = "Daily";
 const FERRY_SCHOOL_DAYS = "Mondays to Fridays (school days only)";
 
+type Layout = {
+  pdf_url: string;
+  pdf_url_zh: string;
+};
+
 type StationToilet = {
   location: string;
   location_zh: string;
   paid_area: boolean;
-  pdf_url: string;
-  pdf_url_zh: string;
 };
 
 type WaterDispenser = {
@@ -85,6 +88,7 @@ type Facility = {
   station_code: string;
   station_name: string;
   station_name_zh: string;
+  layout?: Layout;
   toilet?: StationToilet;
   water_dispenser?: WaterDispenser;
   babycare?: Babycare;
@@ -132,7 +136,7 @@ export function StopSheet({
     let cancelled = false;
     setFacility(null);
     const code = id.startsWith("mtr:") ? id.slice(4) : "";
-    loadCachedJson<Facility[]>("facilities-v2", async () => {
+    loadCachedJson<Facility[]>("facilities-v3", async () => {
       const response = await fetch(`${basePath}/facilities.json`);
       if (!response.ok) throw new Error("facilities");
       return response.json() as Promise<Facility[]>;
@@ -147,6 +151,7 @@ export function StopSheet({
       cancelled = true;
     };
   }, [id, mode]);
+  const layout = facility?.layout ?? null;
   const toilet = facility?.toilet ?? null;
   const water = facility?.water_dispenser ?? null;
   const babycare = facility?.babycare ?? null;
@@ -321,6 +326,7 @@ export function StopSheet({
                   {toilet ? (
                     <ToiletMenu
                       toilet={toilet}
+                      layout={layout}
                       locale={locale}
                       station={station}
                       label={t.sheet.toilet}
@@ -331,7 +337,7 @@ export function StopSheet({
                   {water ? (
                     <WaterMenu
                       water={water}
-                      layout={toilet}
+                      layout={layout}
                       locale={locale}
                       station={station}
                       label={locale === "en" ? "Water dispenser" : "飲水機"}
@@ -342,7 +348,7 @@ export function StopSheet({
                   {babycare ? (
                     <BabycareMenu
                       babycare={babycare}
-                      layout={toilet}
+                      layout={layout}
                       locale={locale}
                       station={station}
                       label={locale === "en" ? "Babycare room" : "育嬰室"}
@@ -836,7 +842,7 @@ function WaterMenu({
   pdfLabel,
 }: {
   water: WaterDispenser;
-  layout: StationToilet | null;
+  layout: Layout | null;
   locale: Locale;
   station: StationColor | null;
   label: string;
@@ -901,7 +907,7 @@ function BabycareMenu({
   pdfLabel,
 }: {
   babycare: Babycare;
-  layout: StationToilet | null;
+  layout: Layout | null;
   locale: Locale;
   station: StationColor | null;
   label: string;
@@ -1033,6 +1039,7 @@ function WifiMenu({
 
 function ToiletMenu({
   toilet,
+  layout,
   locale,
   station,
   label,
@@ -1040,6 +1047,7 @@ function ToiletMenu({
   pdfLabel,
 }: {
   toilet: StationToilet;
+  layout: Layout | null;
   locale: Locale;
   station: StationColor | null;
   label: string;
@@ -1051,7 +1059,7 @@ function ToiletMenu({
     setOpen(false);
   }, [toilet]);
   const location = locale === "en" ? toilet.location : toilet.location_zh;
-  const pdfUrl = locale === "en" ? toilet.pdf_url : toilet.pdf_url_zh;
+  const pdfUrl = layout ? (locale === "en" ? layout.pdf_url : layout.pdf_url_zh) : null;
   return (
     <>
       <button
@@ -1073,18 +1081,20 @@ function ToiletMenu({
               <path d="M12 11.5A2.5 2.5 0 0 1 9.5 9A2.5 2.5 0 0 1 12 6.5A2.5 2.5 0 0 1 14.5 9a2.5 2.5 0 0 1-2.5 2.5M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7" />
             </svg>
             <span className="modal-address">{location}</span>
-            <a
-              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
-              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-9.5 8.5c0 .8-.7 1.5-1.5 1.5H7v2H5.5V9H8c.8 0 1.5.7 1.5 1.5zm5 2c0 .8-.7 1.5-1.5 1.5h-2.5V9H13c.8 0 1.5.7 1.5 1.5zm4-3H17v1h1.5V13H17v2h-1.5V9h3zm-6.5 0h1v3h-1zm-5 0h1v1H7z" />
-              </svg>
-              {pdfLabel}
-            </a>
+            {pdfUrl ? (
+              <a
+                className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+                style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+                href={pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-9.5 8.5c0 .8-.7 1.5-1.5 1.5H7v2H5.5V9H8c.8 0 1.5.7 1.5 1.5zm5 2c0 .8-.7 1.5-1.5 1.5h-2.5V9H13c.8 0 1.5.7 1.5 1.5zm4-3H17v1h1.5V13H17v2h-1.5V9h3zm-6.5 0h1v3h-1zm-5 0h1v1H7z" />
+                </svg>
+                {pdfLabel}
+              </a>
+            ) : null}
           </div>
         </Modal>
       ) : null}
