@@ -292,24 +292,26 @@ export function StopSheet({
             {description || toilet || mode === "mtr" ? (
               <section className={description ? "description" : "description icon-only"}>
                 {description}
-                {toilet ? (
-                  <ToiletMenu
-                    toilet={toilet}
-                    locale={locale}
-                    station={station}
-                    label={t.sheet.toilet}
-                    closeLabel={t.sheet.close}
-                    pdfLabel={t.sheet.toiletLayout}
-                  />
-                ) : null}
-                {mode === "mtr" ? (
-                  <WifiMenu
-                    locale={locale}
-                    station={station}
-                    label="Wi-Fi"
-                    closeLabel={t.sheet.close}
-                  />
-                ) : null}
+                <div className="icon-row">
+                  {toilet ? (
+                    <ToiletMenu
+                      toilet={toilet}
+                      locale={locale}
+                      station={station}
+                      label={t.sheet.toilet}
+                      closeLabel={t.sheet.close}
+                      pdfLabel={t.sheet.toiletLayout}
+                    />
+                  ) : null}
+                  {mode === "mtr" ? (
+                    <WifiMenu
+                      locale={locale}
+                      station={station}
+                      label="Wi-Fi"
+                      closeLabel={t.sheet.close}
+                    />
+                  ) : null}
+                </div>
               </section>
             ) : null}
           </div>

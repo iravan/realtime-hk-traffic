@@ -282,6 +282,7 @@ button { cursor: pointer; }
 .sheet .toilet { display: block; min-height: 0; margin: 0.3rem 0 0; padding: 0; color: inherit; cursor: pointer; }
 .sheet .description.icon-only { margin-top: 0; }
 .sheet .toilet svg { display: block; width: 20px; height: 20px; }
+.sheet .icon-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.3rem; }
 .locate-help p { margin: 0.6rem 0 0; font-size: 0.9rem; line-height: 1.5; }
 .locate-help h4 { margin: 0.9rem 0 0; font-size: 0.9rem; }
 .locate-help ol { margin: 0.4rem 0 0; padding-left: 1.2rem; font-size: 0.9rem; line-height: 1.5; }
