@@ -53,7 +53,7 @@ scope. Taxi stands are places, not vehicles.
   return visit draws the pins without downloading them again. Service hours,
   the MTR lines, taxi-stand types, and ferry timetables stay in that same
   store. The IndexedDB keys and a ferry check are in
-  [DATA.md](DATA.md#caching). Panning does not
+  [docs/DATA.md](docs/DATA.md#caching). Panning does not
   ask the server for stops. Below zoom 16 those stops are counted groups; a tap
   on a count zooms in, and at zoom 16 each stop is its own pin. The bus tab and the KMB, LWB, and New Lantao pins
   use the red bus. A Citybus stop (`bus:ctb:`) uses the yellow double-decker
@@ -113,7 +113,7 @@ map. Next.js only renders.
 | Taxi | Taxi-stand dataset on data.gov.hk | Stand id, name, coordinates (no vehicle positions) |
 
 The exact endpoints, fields read, checked-in snapshots and request limits are in
-[DATA.md](DATA.md).
+[docs/DATA.md](docs/DATA.md).
 
 A stop id is the publisher's id prefixed by its mode, so feeds cannot collide:
 `mtr:`, `bus:`, `minibus:`, `ferry:`, `taxi:`.
@@ -273,7 +273,7 @@ Tsui (`ferry:101119`) run 06:30–23:30, and Wan Chai (`ferry:101118`) runs
 public holidays the first Wan Chai boat is 07:40; the stored window opens with
 the Monday–Saturday boat. A ferry sheet lists the pier's destinations and its
 timetable, both stored on the pier row in `stops-ferry.json` by
-`scripts/fetch-ferry-stops.py`. See DATA.md, "Ferry timetables".
+`scripts/fetch-ferry-stops.py`. See docs/DATA.md, "Ferry timetables".
 
 ### 7. Ferry piers
 
@@ -353,7 +353,7 @@ arrivals:{id}    string, EX 90    { "fetched_at", "live", "status"?, "rows" }
 
 Redis holds only ephemeral arrival snapshots. The stop index (bundled, with an
 optional live catalogue refresh) lives in the Rust process memory. See
-[REDIS.md](REDIS.md).
+[docs/REDIS.md](docs/REDIS.md).
 
 ## Running locally
 
@@ -415,19 +415,19 @@ server/              Rust API (Axum + Tokio)
 `vercel.json` declares two services in one project: `web/` as a static Next.js
 export and `server/` as a container built from `server/Dockerfile`. Requests to
 `/api/*` are routed to the server; everything else goes to the page. See
-[DEPLOY.md](DEPLOY.md) for the required environment variables and the GitHub
+[docs/DEPLOY.md](docs/DEPLOY.md) for the required environment variables and the GitHub
 Pages setup.
 
 ## Documentation
 
-- [DESIGN.md](DESIGN.md) — product goal and behaviour
-- [DATA.md](DATA.md) — feed endpoints, fields, caching and request limits
-- [TECH-STACK.md](TECH-STACK.md) — stack and feed choices
-- [CHECKLIST.md](CHECKLIST.md) — frontend work list
+- [docs/DESIGN.md](docs/DESIGN.md) — product goal and behaviour
+- [docs/DATA.md](docs/DATA.md) — feed endpoints, fields, caching and request limits
+- [docs/TECH-STACK.md](docs/TECH-STACK.md) — stack and feed choices
+- [docs/CHECKLIST.md](docs/CHECKLIST.md) — frontend work list
 - [server/CHECKLIST.md](server/CHECKLIST.md) — backend work list
-- [DEPLOY.md](DEPLOY.md) — Vercel and GitHub Pages deployment
-- [REDIS.md](REDIS.md) — Redis key layout
-- [MTR.md](MTR.md) — MTR line colours and stations
+- [docs/DEPLOY.md](docs/DEPLOY.md) — Vercel and GitHub Pages deployment
+- [docs/REDIS.md](docs/REDIS.md) — Redis key layout
+- [docs/MTR.md](docs/MTR.md) — MTR line colours and stations
 
 ## License
 

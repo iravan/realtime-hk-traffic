@@ -1,6 +1,6 @@
 # Backend
 
-The Rust service. The build spec is [TECH-STACK.md](../TECH-STACK.md). The product is [DESIGN.md](../DESIGN.md). The page list is [CHECKLIST.md](../CHECKLIST.md). This service fetches an official feed when a stop is opened, stores that snapshot, and answers the public routes. Next.js does not call the feeds. There is no sign-in.
+The Rust service. The build spec is [TECH-STACK.md](../docs/TECH-STACK.md). The product is [DESIGN.md](../docs/DESIGN.md). The page list is [CHECKLIST.md](../docs/CHECKLIST.md). This service fetches an official feed when a stop is opened, stores that snapshot, and answers the public routes. Next.js does not call the feeds. There is no sign-in.
 
 The first demo is running locally. Redis for local development is `127.0.0.1:6379`. KMB, the MTR station list, and taxi stands load before Citybus and green minibus, which continue in the background.
 
