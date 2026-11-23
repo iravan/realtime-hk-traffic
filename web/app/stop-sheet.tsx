@@ -828,7 +828,7 @@ function WifiMenu({
                 </svg>
                 <p className="text-base font-semibold">MTR Free Wi-Fi</p>
               </div>
-              <ol className="list-none space-y-1.5 pl-0 text-sm leading-relaxed text-[#4b453f]">
+              <ol className="list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-[#4b453f]">
                 <li>{locale === "en" ? "Open your device Wi-Fi settings." : "開啟裝置的 Wi-Fi 設定。"}</li>
                 <li>{locale === "en" ? 'Select "MTR Free Wi-Fi".' : '選擇「MTR Free Wi-Fi」。'}</li>
                 <li>{locale === "en" ? "Follow the on-screen prompts to connect." : "按照畫面提示完成連線。"}</li>
