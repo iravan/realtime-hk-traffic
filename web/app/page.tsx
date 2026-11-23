@@ -232,6 +232,7 @@ export default function Page() {
   }, [bookmarks, stops]);
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(0);
   const [locateState, setLocateState] = useState<LocateState>("idle");
   // Set only when a manual locate fails: the platform decides which device steps
   // show, and the reason decides the intro.
@@ -952,7 +953,11 @@ export default function Page() {
       setStops(stopsInView(map, catalogue, mode, filterRef.current));
     });
     mapRef.current = map;
+    const updateZoom = () => setZoomLevel(map.getZoom());
+    updateZoom();
+    map.on("zoomend", updateZoom);
     return () => {
+      map.off("zoomend", updateZoom);
       map.remove();
       mapRef.current = null;
     };
@@ -1054,7 +1059,7 @@ export default function Page() {
   // hover or tap.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || active !== "mtr") return;
+    if (!map || active !== "mtr" || map.getZoom() < pinZoom) return;
     const popups = stops.map((stop) => {
       const node = document.createElement("div");
       node.className = "stop-name";
@@ -1093,7 +1098,7 @@ export default function Page() {
       return popup;
     });
     return () => popups.forEach((popup) => popup.remove());
-  }, [stops, active, locale]);
+  }, [stops, active, locale, zoomLevel]);
 
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
