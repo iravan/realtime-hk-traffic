@@ -237,13 +237,14 @@ export default function Page() {
     });
   };
   showStopRef.current = (stop, focus = false) => {
-    const open = isStopOpen(stop, hoursRef.current, new Date());
+    // A greyed (out-of-service) stop now opens the details sheet too, instead of
+    // only showing its route board.
     // The map reads these refs while drawing. State updates land on the next
     // render, so a tab change would otherwise highlight the previous mode.
-    selectedRef.current = open ? stop : null;
+    selectedRef.current = stop;
     boardRef.current = stop;
     setBoard(stop);
-    setSelected(open ? stop : null);
+    setSelected(stop);
     const drawn = mapRef.current;
     if (drawn?.isStyleLoaded()) refreshSelection(drawn);
     writeLastStop(stop.id);
@@ -1206,8 +1207,9 @@ export default function Page() {
         setHours(body);
         const map = mapRef.current;
         if (map) drawWhenReady(map);
+        // Keep a greyed stop open in the sheet; only its pin changes.
         const current = selectedRef.current;
-        if (current && !isStopOpen(current, body, new Date())) setSelected(null);
+        if (current) setSelected(current);
       })
       .catch(() => {
         // Without service hours every stop stays open, which matches the map
@@ -1347,8 +1349,9 @@ export default function Page() {
       const map = mapRef.current;
       if (!map?.isStyleLoaded()) return;
       drawStops(map);
+      // Keep a greyed stop open in the sheet; only its pin changes.
       const current = selectedRef.current;
-      if (current && !isStopOpen(current, hoursRef.current, tick)) setSelected(null);
+      if (current) setSelected(current);
     }, 60_000);
     return () => clearInterval(timer);
   }, []);
