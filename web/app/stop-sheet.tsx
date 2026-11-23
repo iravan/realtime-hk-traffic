@@ -373,7 +373,7 @@ export function StopSheet({
                       pdfLabel={t.sheet.toiletLayout}
                     />
                   ) : null}
-                  {mode === "mtr" ? (
+                  {mode === "mtr" && !isLightRail(id) ? (
                     <WifiMenu
                       locale={locale}
                       station={station}
