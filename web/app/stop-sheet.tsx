@@ -289,7 +289,7 @@ export function StopSheet({
                 </button>
               </div>
             </div>
-            {description || toilet ? (
+            {description || toilet || mode === "mtr" ? (
               <section className={description ? "description" : "description icon-only"}>
                 {description}
                 {toilet ? (
@@ -300,6 +300,14 @@ export function StopSheet({
                     label={t.sheet.toilet}
                     closeLabel={t.sheet.close}
                     pdfLabel={t.sheet.toiletLayout}
+                  />
+                ) : null}
+                {mode === "mtr" ? (
+                  <WifiMenu
+                    locale={locale}
+                    station={station}
+                    label="Wi-Fi"
+                    closeLabel={t.sheet.close}
                   />
                 ) : null}
               </section>
@@ -760,6 +768,56 @@ function MapMenu({
               </li>
             ))}
           </ul>
+        </Modal>
+      ) : null}
+    </>
+  );
+}
+
+function WifiMenu({
+  locale,
+  station,
+  label,
+  closeLabel,
+}: {
+  locale: Locale;
+  station: StationColor | null;
+  label: string;
+  closeLabel: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const url =
+    locale === "en"
+      ? "https://www.mtr.com.hk/en/customer/services/free_wifi.html"
+      : "https://www.mtr.com.hk/ch/customer/services/free_wifi.html";
+  return (
+    <>
+      <button
+        type="button"
+        className="toilet"
+        aria-label={label}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => setOpen(true)}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
+        </svg>
+      </button>
+      {open ? (
+        <Modal title={label} closeLabel={closeLabel} onClose={() => setOpen(false)}>
+          <div className="modal-location">
+            <p className="modal-address">MTR Free Wi-Fi</p>
+            <a
+              className={station?.badge ? "modal-layout station-badge-chh" : "modal-layout"}
+              style={station && !station.badge ? { background: station.color, color: station.font } : undefined}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              MTR Free Wi-Fi
+            </a>
+          </div>
         </Modal>
       ) : null}
     </>
