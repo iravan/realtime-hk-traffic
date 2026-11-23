@@ -51,9 +51,9 @@ export function localizeStopName(
   if (nameTc || nameEn) {
     return (locale === "en" ? nameEn : nameTc) || nameTc || nameEn || name;
   }
-  // MTR, ferry and green-minibus catalogues store Chinese and English in one
-  // string. Older bus catalogues do too, so they fall back to the same split.
-  return mode === "mtr" || mode === "ferry" || mode === "minibus" || mode === "bus"
+  // MTR, ferry, green-minibus, taxi and older bus catalogues store Chinese and
+  // English in one string, so they fall back to the same split.
+  return mode === "mtr" || mode === "ferry" || mode === "minibus" || mode === "bus" || mode === "taxi"
     ? localizeBilingualName(name, locale)
     : name;
 }
