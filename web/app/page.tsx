@@ -16,7 +16,7 @@ import {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Modal, StopSheet, type TimetableDestination } from "./stop-sheet";
-import { useI18n } from "./i18n";
+import { useI18n, type Locale } from "./i18n";
 import { currentPlatform, type Platform } from "./platform";
 import {
   loadTaxiKindImages,
@@ -193,6 +193,8 @@ export default function Page() {
   const mtrLinesLoadedRef = useRef(false);
   const mtrLinesLoadingRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
+  const [query, setQuery] = useState("");
+  const queryRef = useRef("");
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
@@ -910,7 +912,7 @@ export default function Page() {
       const mode = activeRef.current;
       const catalogue = cataloguesRef.current[mode];
       if (!catalogue) return;
-      setStops(stopsInView(map, catalogue, mode));
+      setStops(stopsInView(map, catalogue, mode, queryRef.current));
     });
     mapRef.current = map;
     return () => {
@@ -921,6 +923,13 @@ export default function Page() {
 
   const stopsRef = useRef<Stop[]>([]);
   stopsRef.current = stops;
+  queryRef.current = query;
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded()) return;
+    drawStops(map);
+  }, [query]);
   selectedRef.current = selected;
   boardRef.current = board;
 
@@ -1109,14 +1118,17 @@ export default function Page() {
     }
     const hours = hoursRef.current;
     const now = new Date();
-    setStops(stopsInView(map, catalogue, mode));
+    const query = queryRef.current;
+    setStops(stopsInView(map, catalogue, mode, query));
     const source = map.getSource("stops");
     if (!source || source.type !== "geojson") return;
     // The whole mode is clustered, not just the current view, so a count at
     // the edge does not split when the map moves.
     (source as GeoJSONSource).setData({
       type: "FeatureCollection",
-      features: uniqueStops(catalogue, mode).map((stop) => ({
+      features: uniqueStops(catalogue, mode)
+        .filter((stop) => matchesQuery(stop, query))
+        .map((stop) => ({
         type: "Feature",
         properties: {
           id: stop.id,
@@ -1354,6 +1366,14 @@ export default function Page() {
             </button>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
+          <input
+            type="search"
+            className="stop-filter"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={filterPlaceholder(active, locale)}
+            aria-label={filterPlaceholder(active, locale)}
+          />
         </div>
         <div className="channel">
           <div className="filters">
@@ -1370,6 +1390,7 @@ export default function Page() {
                   linkedStopRef.current = remembered;
                   holdSharedViewRef.current = remembered !== null;
                   clearFocusPadding();
+                  setQuery("");
                   setActive(mode);
                 }}
               >
@@ -1660,7 +1681,7 @@ function routeBoard(items: BoardItem[]): HTMLDivElement {
   return node;
 }
 
-function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode): Stop[] {
+function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, query: string): Stop[] {
   const bounds = map.getBounds();
   const south = bounds.getSouth();
   const north = bounds.getNorth();
@@ -1671,7 +1692,33 @@ function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode): Stop[] {
       stop.latitude >= south &&
       stop.latitude <= north &&
       stop.longitude >= west &&
-      stop.longitude <= east,
+      stop.longitude <= east &&
+      matchesQuery(stop, query),
+  );
+}
+
+// Bus and minibus stops match by route number, ferry piers by destination, and
+// the rest by name. Matching ignores case and surrounding spaces, and an empty
+// filter keeps every stop.
+function filterPlaceholder(mode: Mode, locale: Locale): string {
+  if (mode === "bus" || mode === "minibus") return locale === "en" ? "Route, e.g. 804" : "路線，例如 804";
+  if (mode === "ferry") return locale === "en" ? "Destination, e.g. Central" : "目的地，例如 中環";
+  return locale === "en" ? "Station or stop name" : "車站或站點名稱";
+}
+
+function matchesQuery(stop: Stop, query: string): boolean {
+  const needle = query.trim().toLowerCase();
+  if (!needle) return true;
+  if (stop.mode === "bus" || stop.mode === "minibus") {
+    return (stop.routes ?? []).some((route) => route.toLowerCase().startsWith(needle));
+  }
+  if (stop.mode === "ferry") {
+    return (stop.destinations ?? []).some((destination) =>
+      destination.toLowerCase().includes(needle),
+    );
+  }
+  return [stop.name, stop.name_tc, stop.name_en].some((name) =>
+    name?.toLowerCase().includes(needle),
   );
 }
 

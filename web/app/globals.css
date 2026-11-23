@@ -56,6 +56,19 @@ button { cursor: pointer; }
 .brand h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
 .brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
+.stop-filter {
+  display: block;
+  width: 100%;
+  min-width: 12rem;
+  min-height: 36px;
+  margin-top: 0.5rem;
+  padding: 0 0.6rem;
+  border: 1px solid rgba(28, 25, 21, 0.2);
+  border-radius: 0.45rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.85rem;
+}
 .lang-toggle {
   display: inline-flex;
   flex: none;
