@@ -104,6 +104,11 @@ button { cursor: pointer; }
   cursor: pointer;
   text-align: left;
 }
+.bookmark-list-icon {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
 .bookmark-list-row:hover {
   background: rgba(28, 25, 21, 0.06);
 }

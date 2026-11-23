@@ -1464,6 +1464,11 @@ export default function Page() {
                     className="bookmark-list-row"
                     onClick={() => openBookmark(stop)}
                   >
+                    <img
+                      className="bookmark-list-icon"
+                      src={categoryIcons[stop.mode]}
+                      alt=""
+                    />
                     <span className="bookmark-list-name">
                       {localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}
                     </span>
