@@ -90,15 +90,11 @@ button { cursor: pointer; }
 .bookmark-filter svg { width: 18px; height: 18px; }
 .bookmark-filter[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .tab-bookmark {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
+  width: 16px;
+  height: 16px;
   margin-left: 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 700;
   color: #6f675e;
 }
-.tab-bookmark svg { width: 12px; height: 12px; }
 .filters button.on .tab-bookmark { color: inherit; }
 
 .bookmark-search {
