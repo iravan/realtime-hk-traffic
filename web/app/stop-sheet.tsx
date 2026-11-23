@@ -814,7 +814,7 @@ function WifiMenu({
               alt="MTR Free Wi-Fi QR code"
               className="h-32 w-32 shrink-0"
             />
-            <div className="flex-1 text-left">
+            <div className="flex-1 border-l border-[rgb(28_25_21/0.12)] pl-4 text-left">
               <div className="mb-2 flex items-center gap-2">
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5 text-[#2563eb]" fill="currentColor">
                   <path d="M12 18a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-4.24-4.24a6 6 0 0 1 8.48 0l-1.41 1.41a4 4 0 0 0-5.66 0zm-2.83-2.83a10 10 0 0 1 14.14 0l-1.41 1.41a8 8 0 0 0-11.31 0zM1.96 8.17a14 14 0 0 1 20.08 0l-1.41 1.41a12 12 0 0 0-17.25 0z" />
