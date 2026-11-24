@@ -417,7 +417,7 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
 async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let mut redis = app.redis.clone();
     if let Ok(Some(body)) = redis::cmd("GET")
-        .arg("weather:current:v4")
+        .arg("weather:current:v5")
         .query_async::<Option<String>>(&mut redis)
         .await
     {
@@ -457,7 +457,7 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let body = json!({"raining": raining, "temperature": temperature, "icon": icon}).to_string();
     let mut redis = app.redis.clone();
     let _: Result<(), _> = redis::cmd("SET")
-        .arg("weather:current:v4")
+        .arg("weather:current:v5")
         .arg(&body)
         .arg("EX")
         .arg(600)
