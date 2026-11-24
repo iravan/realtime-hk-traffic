@@ -1525,12 +1525,12 @@ export default function Page() {
       ? raining
         ? "🌧️"
         : "☀️"
-      : weatherIcon <= 4
-        ? "☀️"
-        : weatherIcon <= 9
-          ? "☁️"
-          : weatherIcon <= 19
-            ? "🌧️"
+      : weatherIcon >= 50
+        ? "🌧️"
+        : weatherIcon <= 4
+          ? "☀️"
+          : weatherIcon <= 9
+            ? "☁️"
             : weatherIcon <= 24
               ? "🌫️"
               : "☀️";
