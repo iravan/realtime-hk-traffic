@@ -321,6 +321,24 @@ export function lightRailIconUrl(): string {
   return stopIconUrl("mtr");
 }
 
+export function lightRailSignHighlight(): ImageData {
+  if (!lightRailCanvas) return stopIconHighlight("mtr");
+  const pad = 5;
+  const base = lightRailCanvas;
+  const baseWidth = base.width / ratio;
+  const baseHeight = base.height / ratio;
+  const canvas = document.createElement("canvas");
+  canvas.width = (baseWidth + pad * 2) * ratio;
+  canvas.height = (baseHeight + pad * 2) * ratio;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("canvas");
+  ctx.scale(ratio, ratio);
+  stampOutline(ctx, base, paper, pad, 4.2);
+  stampOutline(ctx, base, ink, pad, 2.6);
+  ctx.drawImage(base, pad, pad, baseWidth, baseHeight);
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
 export function citybusSignHighlight(): ImageData {
   return stopIconHighlight("bus", citybusImage, citybusFill);
 }

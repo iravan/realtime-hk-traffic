@@ -29,6 +29,7 @@ import {
   ferryBoatIconImage,
   ferryBoatSignHighlight,
   lightRailIconImage,
+  lightRailSignHighlight,
   citybusIconImage,
   citybusSignHighlight,
   isCitybus,
@@ -1937,7 +1938,14 @@ function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
   const citybus = stop.mode === "bus" && isCitybus(stop.id);
   const lightRail = stop.mode === "mtr" && isLightRail(stop.id);
-  if (lightRail) return "light-rail";
+  if (lightRail) {
+    const image = "light-rail-sel";
+    if (!map.hasImage(image)) {
+      map.addImage(image, lightRailSignHighlight(), { pixelRatio: stopIconPixelRatio });
+    }
+    if (dots) return "light-rail"; // dots not used for light rail? keep simple
+    return image;
+  }
   if (dots) {
     const image = boat
       ? "ferry-boat-dot-sel"
