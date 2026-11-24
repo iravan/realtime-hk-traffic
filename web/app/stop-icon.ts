@@ -23,6 +23,7 @@ const ink = "#241f1a";
 const vehicleImages: Partial<Record<Mode, HTMLImageElement>> = {};
 let ferryBoatImage: HTMLImageElement | undefined;
 let citybusImage: HTMLImageElement | undefined;
+let lantauBusImage: HTMLImageElement | undefined;
 let lightRailCanvas: HTMLCanvasElement | undefined;
 
 // Star Ferry piers keep the green mark. Every other pier uses the plain boat.
@@ -36,6 +37,10 @@ export function isStarFerry(id: string): boolean {
 // keep the red bus.
 export function isCitybus(id: string): boolean {
   return id.startsWith("bus:ctb:");
+}
+
+export function isLantauBus(id: string): boolean {
+  return id.startsWith("bus:nlb:");
 }
 
 export function isLightRail(id: string): boolean {
@@ -100,6 +105,15 @@ async function loadVehicleImagesOnce(basePath: string): Promise<void> {
     citybusImage = citybus;
   } catch {
     // The canvas bus stands in for a missing Citybus file.
+  }
+  try {
+    const lantauBus = new Image();
+    lantauBus.decoding = "async";
+    lantauBus.src = `${basePath}/icons/lantau-bus.svg`;
+    await lantauBus.decode();
+    lantauBusImage = lantauBus;
+  } catch {
+    // Fall back to the generic bus.
   }
   try {
     const response = await fetch(`${basePath}/icons/light-rail.svg`);
@@ -309,6 +323,20 @@ export function citybusIconImage(): ImageData {
 
 export function citybusIconUrl(): string {
   return drawStopIcon("bus", citybusImage, citybusFill).toDataURL();
+}
+
+const lantauBusFill = "#16A34A";
+
+export function lantauBusIconImage(): ImageData {
+  return imageData(drawStopIcon("bus", lantauBusImage, lantauBusFill));
+}
+
+export function lantauBusIconUrl(): string {
+  return drawStopIcon("bus", lantauBusImage, lantauBusFill).toDataURL();
+}
+
+export function lantauBusSignHighlight(): ImageData {
+  return stopIconHighlight("bus", lantauBusImage, lantauBusFill);
 }
 
 export function lightRailIconImage(): ImageData {

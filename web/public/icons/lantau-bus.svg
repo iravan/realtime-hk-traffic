@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <!-- Main Crisp White Single-Deck Bus Body -->
+  <path d="M4.2 5.5h15.2c1.2 0 2.2.9 2.4 2.1l.4 2.8v4.2c0 1.1-.9 1.9-2 1.9H4c-1.1 0-2-.8-2-1.9V7.7c0-1.2 1-2.2 2.2-2.2z" fill="#FFFFFF" stroke="#1E293B" stroke-width="1.2" stroke-linejoin="round" />
+
+  <!-- NLB Green Roof Trim & Lower Livery Skirt -->
+  <path d="M2 7.7c0-1.2 1-2.2 2.2-2.2h15.2c.9 0 1.7.5 2.1 1.2H2v1z" fill="#16A34A" />
+  <path d="M2 13.4h20.2v1.2c0 1.1-.9 1.9-2 1.9H4c-1.1 0-2-.8-2-1.9v-1.2z" fill="#16A34A" />
+
+  <!-- Signature NLB Slanted Green & Lime Livery Sweep -->
+  <path d="M2 13.4L6.8 10.6h2.8l-4.8 2.8H2z" fill="#16A34A" />
+  <path d="M4.8 13.4L9.6 10.6h1.8l-4.8 2.8H4.8z" fill="#86EFAC" />
+
+  <!-- Rounded Passenger Windows & Front Cab Windshield -->
+  <path d="M4.3 8h3.4c.3 0 .5.2.5.5v2.2c0 .3-.2.5-.5.5H4.3c-.3 0-.5-.2-.5-.5V8.5c0-.3.2-.5.5-.5z" fill="#1E293B" />
+  <path d="M9.3 8h3.4c.3 0 .5.2.5.5v2.2c0 .3-.2.5-.5.5H9.3c-.3 0-.5-.2-.5-.5V8.5c0-.3.2-.5.5-.5z" fill="#1E293B" />
+  <path d="M14.3 8h5.7c.3 0 .5.2.6.5l.4 2.2c.1.3-.2.5-.5.5h-6.2c-.3 0-.5-.2-.5-.5V8.5c0-.3.2-.5.5-.5z" fill="#1E293B" />
+
+  <!-- Headlight & Taillight -->
+  <circle cx="21.1" cy="14.8" r="0.6" fill="#FEF08A" />
+  <circle cx="2.9" cy="14.8" r="0.5" fill="#FCA5A5" />
+
+  <!-- 2-Axle Wheels -->
+  <circle cx="6.5" cy="17.2" r="2.2" fill="#0F172A" />
+  <circle cx="6.5" cy="17.2" r="0.8" fill="#CBD5E1" />
+  <circle cx="17.5" cy="17.2" r="2.2" fill="#0F172A" />
+  <circle cx="17.5" cy="17.2" r="0.8" fill="#CBD5E1" />
+</svg>

@@ -28,11 +28,14 @@ import {
   stopIconImage,
   ferryBoatIconImage,
   ferryBoatSignHighlight,
+  lantauBusIconImage,
+  lantauBusSignHighlight,
   lightRailIconImage,
   lightRailSignHighlight,
   citybusIconImage,
   citybusSignHighlight,
   isCitybus,
+  isLantauBus,
   isLightRail,
   isStarFerry,
   modeColor,
@@ -336,6 +339,7 @@ export default function Page() {
       if (!map.hasImage("citybus-dot")) map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
         pixelRatio: stopIconPixelRatio,
       });
+      if (!map.hasImage("lantau-bus")) map.addImage("lantau-bus", lantauBusIconImage(), { pixelRatio: stopIconPixelRatio });
       if (!map.hasImage("bus-stop")) map.addImage("bus-stop", stopIconImage("bus"), { pixelRatio: stopIconPixelRatio });
       if (!map.hasImage("bus-stop-dot")) map.addImage("bus-stop-dot", stopDotImage("bus"), { pixelRatio: stopIconPixelRatio });
        if (!map.hasImage("light-rail")) map.addImage("light-rail", lightRailIconImage(), { pixelRatio: stopIconPixelRatio });
@@ -1260,9 +1264,11 @@ export default function Page() {
                   ? "ferry-boat"
                   : stop.mode === "bus" && isCitybus(stop.id)
                     ? "citybus"
-                    : stop.mode === "bus"
-                      ? "bus-stop"
-                      : stop.mode,
+                    : stop.mode === "bus" && isLantauBus(stop.id)
+                      ? "lantau-bus"
+                      : stop.mode === "bus"
+                        ? "bus-stop"
+                        : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
@@ -1943,6 +1949,7 @@ function highlightSelection(map: MlMap, stop: Stop | null, dots: boolean) {
 function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
   const boat = stop.mode === "ferry" && !isStarFerry(stop.id);
   const citybus = stop.mode === "bus" && isCitybus(stop.id);
+  const lantauBus = stop.mode === "bus" && isLantauBus(stop.id);
   const lightRail = stop.mode === "mtr" && isLightRail(stop.id);
   if (lightRail) {
     const image = "light-rail-sel";
@@ -1957,7 +1964,9 @@ function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
       ? "ferry-boat-dot-sel"
       : citybus
         ? "citybus-dot-sel"
-        : stop.mode === "taxi"
+        : lantauBus
+          ? "lantau-bus-dot-sel"
+          : stop.mode === "taxi"
           ? `taxi-${stop.taxi ?? "urban"}-dot-sel`
           : `${stop.mode}-dot-sel`;
     if (!map.hasImage(image)) {
@@ -1979,7 +1988,9 @@ function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
     ? "ferry-boat-sel"
     : citybus
       ? "citybus-sel"
-      : stop.mode === "taxi"
+      : lantauBus
+        ? "lantau-bus-sel"
+        : stop.mode === "taxi"
         ? `taxi-${stop.taxi ?? "urban"}-sel`
         : `${stop.mode}-sel`;
   if (!map.hasImage(image)) {
@@ -1989,7 +2000,9 @@ function selectionImage(map: MlMap, stop: Stop, dots: boolean): string {
         ? ferryBoatSignHighlight()
         : citybus
           ? citybusSignHighlight()
-          : stop.mode === "taxi"
+          : lantauBus
+            ? lantauBusSignHighlight()
+            : stop.mode === "taxi"
             ? taxiSignHighlight(stop.taxi ?? "urban")
             : stopIconHighlight(stop.mode),
       { pixelRatio: stopIconPixelRatio },

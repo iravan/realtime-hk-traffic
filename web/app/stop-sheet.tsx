@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
 import { ferryDestinationColor } from "./ferry-destination-color";
-import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isLightRail, isStarFerry, lightRailIconUrl, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isLantauBus, isLightRail, isStarFerry, lantauBusIconUrl, lightRailIconUrl, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -199,7 +199,9 @@ export function StopSheet({
                ? ferryBoatIconUrl()
                : mode === "bus" && isCitybus(id)
                  ? citybusIconUrl()
-                 : stopIconUrl(mode),
+                 : mode === "bus" && isLantauBus(id)
+                   ? lantauBusIconUrl()
+                   : stopIconUrl(mode),
         );
       }
     });
