@@ -116,7 +116,7 @@ map stop is opened, not on a timer.
 | HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
 | Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
-| SSE arrival events | Pushed with the snapshot from that click | Browser stream |
+| Arrival polling | Client polls `/stops/{id}/arrivals` every 60s; a missing snapshot returns 202 and the client retries after 2s | Browser |
 
 Dynamic data is never committed to the repository. The only persisted copy is
 the Redis snapshot, and it expires. Static data is the material a new server
