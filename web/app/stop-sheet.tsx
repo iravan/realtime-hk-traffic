@@ -37,6 +37,15 @@ const MTR_LINE_COLOR: Record<string, string> = {
   TKL: "#7d499d",
   TML: "#923011",
   TWL: "#ed1d24",
+  "505": "#e2231a",
+  "507": "#00ab4e",
+  "610": "#007dc5",
+  "614": "#f7943e",
+  "614P": "#f7943e",
+  "705": "#7d499d",
+  "706": "#923011",
+  "751": "#00888a",
+  "761P": "#B6BD00",
 };
 
 const MTR_LINE_NAME: Record<string, { zh: string; en: string }> = {
