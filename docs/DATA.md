@@ -36,6 +36,7 @@ portal. Add new sources here when the service starts using them.
 | Sun Ferry ETA | Sun Ferry / data.gov.hk | `https://www.sunferry.com.hk/eta/?route={route_code}` | Arrival of the current trip, or the next departure when no arrival is published yet |
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
+| Current weather | HK Observatory | `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread` | Rain overlay on the map |
 
 The KML route and fare feeds (KML_BUS, KML_GMB) are documented in the publisher's
 dataspec: `https://static.data.gov.hk/td/routes-fares-kml/dataspec/ptroutefare_kml_dataspec.pdf`.
