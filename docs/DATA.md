@@ -207,8 +207,20 @@ to build `mtr:` stops, and `catalog::mtr_label()` uses the names to label train
 destinations. `scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
 `stops.json` and writes `web/app/mtr-line-terminals.json` from this file and the
 CSV. Station coordinates are maintained in this file; refresh them from
-OpenStreetMap with `scripts/fetch-mtr-geolocation.py` (Overpass query for
-`railway=station` tagged `operator~"MTR|港鐵"`).
+OpenStreetMap with `scripts/fetch-mtr-geolocation.py`, which runs:
+
+```sh
+curl -s -X POST "https://overpass-api.de/api/interpreter" \\
+  -H "Accept: application/json" \\
+  -H "User-Agent: HKTransitMap/1.0" \\
+  --data-urlencode 'data=[out:json][timeout:25];
+area["ISO3166-1"="HK"]->.hk;
+(
+  node["railway"="station"]["operator"~"MTR|港鐵"](area.hk);
+  way["railway"="station"]["operator"~"MTR|港鐵"](area.hk);
+);
+out center tags;'
+```
 
 Line colours and the human-readable station lists are in [MTR.md](MTR.md).
 
