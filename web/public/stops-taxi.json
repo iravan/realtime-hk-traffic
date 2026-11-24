@@ -1,1 +1,3630 @@
-{"stops":[{"id":"taxi:1","latitude":22.279159212699245,"longitude":114.16466773391758,"mode":"taxi","name":"金鐘港鐵站 （1） Admiralty MTR Station (1)"},{"id":"taxi:10","latitude":22.287191710730905,"longitude":114.13565284818092,"mode":"taxi","name":"干諾道西第188號 Connaught Road West no. 188"},{"id":"taxi:100","latitude":22.317121820057015,"longitude":114.19158774739851,"mode":"taxi","name":"美光街 Mei Kwong Street"},{"id":"taxi:101","latitude":22.328699812796017,"longitude":114.20093557599331,"mode":"taxi","name":"沐寧街近啟德一號 Muk Ning Street near One Kai Tak"},{"id":"taxi:102","latitude":22.302832389122084,"longitude":114.1876299016116,"mode":"taxi","name":"愛景街 Oi King Street"},{"id":"taxi:103","latitude":22.3233904815893,"longitude":114.18963023376617,"mode":"taxi","name":"北帝街 Pak Tai Street"},{"id":"taxi:104","latitude":22.33030105073788,"longitude":114.19278783889992,"mode":"taxi","name":"沙浦道 Sa Po Rd."},{"id":"taxi:105","latitude":22.31194671477556,"longitude":114.18644384782684,"mode":"taxi","name":"新圍街 San Wai St."},{"id":"taxi:106","latitude":22.336491194619366,"longitude":114.17631641214317,"mode":"taxi","name":"多福道 To Fuk Rd."},{"id":"taxi:107","latitude":22.309765097491255,"longitude":114.18375999686356,"mode":"taxi","name":"山谷道 Valley Rd."},{"id":"taxi:108","latitude":22.326222584281822,"longitude":114.21781297187562,"mode":"taxi","name":"彩禧路彩月樓外 Choi Hei Road o/s Choi Yuet Hse."},{"id":"taxi:109","latitude":22.33209328653137,"longitude":114.21358697703504,"mode":"taxi","name":"彩盛里 Choi Shing Lane"},{"id":"taxi:11","latitude":22.28359495663521,"longitude":114.12655202489618,"mode":"taxi","name":"爹核士街 Davis Street"},{"id":"taxi:110","latitude":22.296622103385623,"longitude":114.23879808780312,"mode":"taxi","name":"大本型 Domain"},{"id":"taxi:111","latitude":22.32358008364023,"longitude":114.21548607635188,"mode":"taxi","name":"福淘街 Fuk To Street"},{"id":"taxi:112","latitude":22.3235911267818,"longitude":114.21719578808342,"mode":"taxi","name":"佐敦谷北道 Jordan Valley North Rd."},{"id":"taxi:113","latitude":22.312041281435494,"longitude":114.23005345572405,"mode":"taxi","name":"佳廉道 Kai Lim Rd"},{"id":"taxi:114","latitude":22.32768936339969,"longitude":114.20956869353466,"mode":"taxi","name":"啟樂街近宏照道 Kai Lok Street near Wang Chiu Rd."},{"id":"taxi:115","latitude":22.32442994210341,"longitude":114.207733491796,"mode":"taxi","name":"臨興街近宏冠道 Lam Hing St. near Wang Kwun Road"},{"id":"taxi:116","latitude":22.322513747683185,"longitude":114.20757695073088,"mode":"taxi","name":"臨樂街南豐商業中心外 Lam Lok St.o/s Nam Fung Commercial Centre"},{"id":"taxi:117","latitude":22.30735892760008,"longitude":114.23336571638916,"mode":"taxi","name":"藍田公共運輸交匯處 Lam Tin P.T.I. (2 nos.)"},{"id":"taxi:118","latitude":22.331324551044784,"longitude":114.22657582216712,"mode":"taxi","name":"利安道順利邨利溢樓外 Lee On Rd. o/s Lee Yat Hse.,Shun Lee Est."},{"id":"taxi:119","latitude":22.332024206312006,"longitude":114.2256480478575,"mode":"taxi","name":"利安道順利邨利明樓外 Lee On Road o/s Lee Ming Hse., Shun Lee Est."},{"id":"taxi:12","latitude":22.28170515009813,"longitude":114.15743850700098,"mode":"taxi","name":"畢打街東面行車線 Eastern kerbside lane of Pedder Street outside Central Building"},{"id":"taxi:120","latitude":22.292337401328226,"longitude":114.23815980006265,"mode":"taxi","name":"鯉魚門徑 Lei Yue Mun Path"},{"id":"taxi:121","latitude":22.313774973224444,"longitude":114.2203662022492,"mode":"taxi","name":"創業街北面路旁行車線美亞工業大廈外 Northern kerbside lane of Chong Yip Street outside Meyer Industrial Building"},{"id":"taxi:122","latitude":22.320992163034376,"longitude":114.23472958339556,"mode":"taxi","name":"安翠街安達邨智達樓外 On Chui Street o/s Chi Tat Hse On Tat Est"},{"id":"taxi:123","latitude":22.306239322661835,"longitude":114.23711378724192,"mode":"taxi","name":"安田街平田購物中心外 On Tin Street o/s Ping Ting Shopping Centre"},{"id":"taxi:124","latitude":22.327975757035663,"longitude":114.2290787426904,"mode":"taxi","name":"安茵街安泰邨居泰樓外 On Yan Street o/s Kui Tai Hse On Tai Est"},{"id":"taxi:125","latitude":22.302584622805337,"longitude":114.23978694107778,"mode":"taxi","name":"碧雲道廣田商場外 Pik Wan Rd. o/s Kwong Tin Shopping Centre"},{"id":"taxi:126","latitude":22.333761532395872,"longitude":114.21016218671612,"mode":"taxi","name":"坪石邨 Ping Shek Est."},{"id":"taxi:127","latitude":22.31743757825386,"longitude":114.23647955648865,"mode":"taxi","name":"寶達公共運輸交匯處 Po Tat Public Transport Interchange"},{"id":"taxi:128","latitude":22.31871041433948,"longitude":114.2319123632782,"mode":"taxi","name":"秀明道秀華樓外 Sau Ming Road o/s Sau Wah Hse."},{"id":"taxi:129","latitude":22.323116291169782,"longitude":114.2277032406444,"mode":"taxi","name":"秀雅道基督教聯合醫院P座外 Sau Nga Road o/s United Christian Hospital Block P"},{"id":"taxi:13","latitude":22.283249742397903,"longitude":114.16066954998414,"mode":"taxi","name":"愛丁堡廣場 Edinburgh Place"},{"id":"taxi:130","latitude":22.305190316842,"longitude":114.22939409012504,"mode":"taxi","name":"觀塘茜發道西行近其與麗港南街交界處 Sin Fat Road westbound near its junction with South Laguna Street"},{"id":"taxi:131","latitude":22.309921935391664,"longitude":114.23622940712292,"mode":"taxi","name":"德田街藍蔚樓外 Tak Tin Street o/s Lam Wai House"},{"id":"taxi:132","latitude":22.321633624512813,"longitude":114.21306768504648,"mode":"taxi","name":"德福廣場\n公共運輸交匯處 Telford Plaza P.T.I."},{"id":"taxi:133","latitude":22.31569959617603,"longitude":114.22929530373008,"mode":"taxi","name":"翠屏道翠屏邨翠榆樓外 Tsui Ping Rd. o/s Tsui Yue Hse., Tsui Ping Est."},{"id":"taxi:134","latitude":22.323944656676854,"longitude":114.20442828511172,"mode":"taxi","name":"宏展街香港郵政中央郵政中心外 Wang Chin St. o/s Hong Kong Post - Central Mail Centre"},{"id":"taxi:135","latitude":22.32287474902388,"longitude":114.2089697357912,"mode":"taxi","name":"宏照道南行近臨華街 Wang Chiu Rd (S/B) near Lam Wah St."},{"id":"taxi:136","latitude":22.322570368428742,"longitude":114.20614940524972,"mode":"taxi","name":"宏光道介乎宏展街及臨華街 Wang Kwong Road between Wang Chin St and Lam Wah St"},{"id":"taxi:137","latitude":22.32012521879396,"longitude":114.2097334482926,"mode":"taxi","name":"宏泰道近臨豐街 Wang Tai Road near Lam Fung St"},{"id":"taxi:138","latitude":22.314571967179923,"longitude":114.22646990851626,"mode":"taxi","name":"月華街佳景樓外 Yuet Wah Street o/s Kai King Building"},{"id":"taxi:139","latitude":22.329640382419633,"longitude":114.21711968081937,"mode":"taxi","name":"彩榮路彩和樓外 Choi Wing Road outside Choi Wo House"},{"id":"taxi:14","latitude":22.283800388924575,"longitude":114.1585735286903,"mode":"taxi","name":"交易廣場公共交通交滙處 Exchange Square PTI"},{"id":"taxi:140","latitude":22.31490704095953,"longitude":114.21503794493594,"mode":"taxi","name":"海濱道海濱道公園外 Hoi Bun Road near Hoi Bun Road Park"},{"id":"taxi:141","latitude":22.32979876451358,"longitude":114.20822425435408,"mode":"taxi","name":"宏照道麗晶花園18座對面 Wang Chiu Road opposite to Richland Gardens Block 18"},{"id":"taxi:142","latitude":22.334170710375172,"longitude":114.2101499269554,"mode":"taxi","name":"坪石公共運輸交匯處一樓 1/F of Ping Shek P.T.I"},{"id":"taxi:143","latitude":22.31766104882131,"longitude":114.16201407956191,"mode":"taxi","name":"櫻桃街近奧海城第二期 Cherry Street near Olympian City Phase II"},{"id":"taxi:144","latitude":22.317595262940152,"longitude":114.1620360993602,"mode":"taxi","name":"櫻桃街近奧海城第二期 Cherry Street near Olympian City Phase II"},{"id":"taxi:145","latitude":22.315724783895956,"longitude":114.17248000163455,"mode":"taxi","name":"登打士街介乎廣華街及花園街 Dundas Street between Kwong Wa Street and Fa Yuen Street"},{"id":"taxi:146","latitude":22.318904807613077,"longitude":114.17127495595952,"mode":"taxi","name":"花園街介乎亞皆老街及奶路臣街 Fa Yuen Street between Argyle Street and Nelson Street"},{"id":"taxi:147","latitude":22.324852896636763,"longitude":114.17005172868777,"mode":"taxi","name":"花園街介乎運動場道及太子道西 Fa Yuen Street between Playing Field Road and Prince Edward Road West"},{"id":"taxi:148","latitude":22.31996724507944,"longitude":114.17096108178542,"mode":"taxi","name":"花園街近亞皆老街 Fa Yuen Street near Argyle Street"},{"id":"taxi:149","latitude":22.324166147259643,"longitude":114.16046997496817,"mode":"taxi","name":"褔利街近樂群街 Fuk Lee Street near Lok Kwan St (o/s Metro Harbour View)"},{"id":"taxi:15","latitude":22.28648890664051,"longitude":114.14246504692028,"mode":"taxi","name":"第一街 First Street"},{"id":"taxi:150","latitude":22.31872092136193,"longitude":114.1583019234285,"mode":"taxi","name":"海帆道, 大角咀（維港灣） Hoi Fan Road, Tai Kok Tsui (Island Harbourview)"},{"id":"taxi:151","latitude":22.318904452426302,"longitude":114.15820365767892,"mode":"taxi","name":"海帆道, 大角咀（維港灣） Hoi Fan Road, Tai Kok Tsui (Island Harbourview)"},{"id":"taxi:152","latitude":22.318944343261677,"longitude":114.16113919653334,"mode":"taxi","name":"海景街介乎櫻桃街及富貴街 Hoi King Street between Cherry Street and Foo Kwai Street"},{"id":"taxi:153","latitude":22.314671785705908,"longitude":114.16423951434112,"mode":"taxi","name":"海泓道南行線（近富榮花園八座） Hoi Wang Road S/B (near Charming Garden Block 8)"},{"id":"taxi:154","latitude":22.3153975933726,"longitude":114.16341066565926,"mode":"taxi","name":"大角咀海泓道（栢景灣） Hoi Wang Road, Tai Kok Tsui (Park Avenue)"},{"id":"taxi:155","latitude":22.321395422831493,"longitude":114.16154086889787,"mode":"taxi","name":"埃華街介乎大角咀道及大政街 Ivy St. between Tai Kok Tsui Road and Tai Ching Street"},{"id":"taxi:156","latitude":22.321964967935937,"longitude":114.17239557539578,"mode":"taxi","name":"旺角東港鐵站 Mong Kok East MTR Station Podium"},{"id":"taxi:157","latitude":22.31868808408155,"longitude":114.16883125468448,"mode":"taxi","name":"砵蘭街介乎奶路臣街及亞皆老街 Portland Street between Nelson Street and Argyle Street"},{"id":"taxi:158","latitude":22.320086100194057,"longitude":114.16979971314603,"mode":"taxi","name":"西洋菜南街介乎快富街及亞皆老街 Sai Yeung Choi Street South between Fife Street and Argyle Street"},{"id":"taxi:159","latitude":22.31779051359092,"longitude":114.1711245505258,"mode":"taxi","name":"山東街與通菜街及花園街交界 Shantung Street between Tung Choi Street and Fa Yuen Street"},{"id":"taxi:16","latitude":22.284251901950253,"longitude":114.15840850988756,"mode":"taxi","name":"港景街 Harbour View Street"},{"id":"taxi:160","latitude":22.33850638390035,"longitude":114.1487814666578,"mode":"taxi","name":"青山道與大南西街交界 Castle Peak Road near Tai Nam West Street"},{"id":"taxi:161","latitude":22.33692604706059,"longitude":114.14885944019592,"mode":"taxi","name":"長順街 Cheung Shun St."},{"id":"taxi:162","latitude":22.33614117841143,"longitude":114.15389759528028,"mode":"taxi","name":"幸祥街與興華街及發祥街交界 Hang Cheung Street between Hing Wah Street and Fat Tseung Street"},{"id":"taxi:163","latitude":22.33221184768736,"longitude":114.14751112760248,"mode":"taxi","name":"海麗邨 Hoi Lai Estate PTI"},{"id":"taxi:164","latitude":22.33729394908172,"longitude":114.13753105797107,"mode":"taxi","name":"荔灣道 （美孚港鐵站） Lai Wan Road (Mei Foo MTR Station)"},{"id":"taxi:165","latitude":22.33882028598762,"longitude":114.13823926390155,"mode":"taxi","name":"荔灣道 （美孚港鐵站） Lai Wan Road (Mei Foo MTR Station)"},{"id":"taxi:166","latitude":22.33686487696155,"longitude":114.16587613308992,"mode":"taxi","name":"白雲街 Pak Wan Street"},{"id":"taxi:167","latitude":22.329205437197174,"longitude":114.15215153283798,"mode":"taxi","name":"深旺道（北行）海達公共運輸交匯處外 Sham Mong Road northbound outside Hoi Tat Public Transport Interchange"},{"id":"taxi:168","latitude":22.332892905492756,"longitude":114.17008681892764,"mode":"taxi","name":"大坑西街 Tai Hang Sai St."},{"id":"taxi:169","latitude":22.34033119074881,"longitude":114.15270289781104,"mode":"taxi","name":"集輝街近永康街 Tsap Fai Street near Wing Hong Street"},{"id":"taxi:17","latitude":22.2878000073418,"longitude":114.15148924623034,"mode":"taxi","name":"港澳碼頭 （近信德中心） Hong Kong - Macau Ferry Terminal (Near Shun Tak Centre)"},{"id":"taxi:170","latitude":22.33108480469507,"longitude":114.1600136912774,"mode":"taxi","name":"欽州街公共運輸交匯處/ 西九龍中心 Yen Chow St. P.T.I./ Dragon Centre"},{"id":"taxi:171","latitude":22.340831283919226,"longitude":114.19289232136404,"mode":"taxi","name":"正德街 Ching Tak Street"},{"id":"taxi:172","latitude":22.34524589497431,"longitude":114.19233808701276,"mode":"taxi","name":"竹園道 Chuk Yuen Road"},{"id":"taxi:173","latitude":22.33464602915468,"longitude":114.21142663952152,"mode":"taxi","name":"清水灣道 (近彩雲聖若瑟小學) Clear Water Bay Rd. (near Choi Wan St. Joseph Primary School)"},{"id":"taxi:174","latitude":22.33355510591984,"longitude":114.21501677594829,"mode":"taxi","name":"清水灣道 (彩雲巴士總站外) Clear Water Bay Rd. (outside Choi Wan Bus Terminus)"},{"id":"taxi:175","latitude":22.34066941001354,"longitude":114.20210349865036,"mode":"taxi","name":"鑽石山公共運輸交匯處 Diamond Hill Station PTI"},{"id":"taxi:176","latitude":22.338349032961343,"longitude":114.20328395157529,"mode":"taxi","name":"鑽石山(彩虹道)公共運輸交匯處 Diamond Hill (Choi Hung Road) Public Transport Interchange"},{"id":"taxi:177","latitude":22.33776214424856,"longitude":114.2145135236141,"mode":"taxi","name":"豐盛街\n（豐盛街紀律部隊宿舍外） Fung Shing Street (outside Fung Shing Street Disciplined Services Quarters)"},{"id":"taxi:178","latitude":22.334668375678895,"longitude":114.19710048446696,"mode":"taxi","name":"康強街 Hong Keung St."},{"id":"taxi:179","latitude":22.33579829566102,"longitude":114.19578901429692,"mode":"taxi","name":"錦榮街近崇齡街 Kam Wing Street near Shung Ling Street"},{"id":"taxi:18","latitude":22.287827141412837,"longitude":114.15176094737213,"mode":"taxi","name":"港澳碼頭 （近信德中心） Hong Kong - Macau Ferry Terminal (Near Shun Tak Centre)"},{"id":"taxi:180","latitude":22.34159991102572,"longitude":114.20115866993126,"mode":"taxi","name":"龍蟠街 Lung Poon St."},{"id":"taxi:181","latitude":22.344231978585945,"longitude":114.19657629274388,"mode":"taxi","name":"鳴鳳街 Ming Fung St."},{"id":"taxi:182","latitude":22.334949588954764,"longitude":114.21804193817664,"mode":"taxi","name":"牛池灣街 Ngau Chi Wan St."},{"id":"taxi:183","latitude":22.333632620664552,"longitude":114.19553954408616,"mode":"taxi","name":"寧遠街 Ning Yuen St."},{"id":"taxi:184","latitude":22.348902576552444,"longitude":114.20049088059336,"mode":"taxi","name":"惠華街 Wai Wah Street"},{"id":"taxi:185","latitude":22.343847775888076,"longitude":114.197915973408,"mode":"taxi","name":"環鳳街 Wan Fung St."},{"id":"taxi:186","latitude":22.33860481626434,"longitude":114.1872302074364,"mode":"taxi","name":"橫頭磡南道 Wang Tau Hom South Rd."},{"id":"taxi:187","latitude":22.342372725446257,"longitude":114.19630889831252,"mode":"taxi","name":"盈鳳里 Ying Fung Lane"},{"id":"taxi:188","latitude":22.34355740955329,"longitude":114.19209785943148,"mode":"taxi","name":"黃大仙道詠善樓外 Wong Tai Sin Road outside Wing Sin Hse."},{"id":"taxi:189","latitude":22.33517449237032,"longitude":114.19441098370302,"mode":"taxi","name":"衍慶街 Yin Hing St."},{"id":"taxi:19","latitude":22.277712033148717,"longitude":114.15939809178562,"mode":"taxi","name":"低座山頂纜車站 Lower Peak Tram Station"},{"id":"taxi:190","latitude":22.304910477694868,"longitude":114.16555565510215,"mode":"taxi","name":"香港西九龍站 B2層 B2/F of Hong Kong West Kowloon Station"},{"id":"taxi:191","latitude":22.304896639839946,"longitude":114.16551315137032,"mode":"taxi","name":"香港西九龍站 B2層 B2/F of Hong Kong West Kowloon Station"},{"id":"taxi:192","latitude":22.298602743133543,"longitude":114.16875565502598,"mode":"taxi","name":"廣東道近海防道 Canton Road near Haiphong Road"},{"id":"taxi:193","latitude":22.305454261089498,"longitude":114.16319982539892,"mode":"taxi","name":"九龍站公共交通交匯處 Kowloon Station PTI"},{"id":"taxi:194","latitude":22.29680560587716,"longitude":114.17162750885365,"mode":"taxi","name":"樂道近北京道 Lock Road near Peking Road"},{"id":"taxi:195","latitude":22.298577698240617,"longitude":114.17727990784238,"mode":"taxi","name":"麼地廣場帝苑酒店外 Mody Square outside Royal Garden Hotel"},{"id":"taxi:196","latitude":22.300450676312177,"longitude":114.17888742953244,"mode":"taxi","name":"科學館廣場 Science Museum Square"},{"id":"taxi:197","latitude":22.303044203036293,"longitude":114.16976831805256,"mode":"taxi","name":"柯士甸道香港童軍中心外 Austin Road o/s HK Scout Centre"},{"id":"taxi:198","latitude":22.30438734426988,"longitude":114.17144761803458,"mode":"taxi","name":"寶靈街與彌敦道交界 Bowring St. J/W Nathan Rd."},{"id":"taxi:199","latitude":22.29878824660516,"longitude":114.17284217852364,"mode":"taxi","name":"金馬倫道近金馬倫里 Cameron Rd. near Cameron Lane"},{"id":"taxi:2","latitude":22.279123085043224,"longitude":114.16459981473342,"mode":"taxi","name":"金鐘港鐵站 （2） Admiralty MTR Station (2)"},{"id":"taxi:20","latitude":22.280875212945173,"longitude":114.16735540179198,"mode":"taxi","name":"龍匯道西行中信大廈外 Lung Wui Road westbound outside Citic Tower"},{"id":"taxi:200","latitude":22.296509867562115,"longitude":114.16920565997086,"mode":"taxi","name":"廣東道近北京道 Canton Road near Peking Road"},{"id":"taxi:201","latitude":22.30149822228157,"longitude":114.15891265600231,"mode":"taxi","name":"文化道 Cultural Drive"},{"id":"taxi:202","latitude":22.30030043582356,"longitude":114.17516879996155,"mode":"taxi","name":"加連威老道近漆咸道南 Granville Rd. near Chatham Road S."},{"id":"taxi:203","latitude":22.297398945517394,"longitude":114.17106529072656,"mode":"taxi","name":"漢口道近海防道 Hankow Road near Haiphong Road"},{"id":"taxi:204","latitude":22.303234104930695,"longitude":114.18256538488386,"mode":"taxi","name":"紅磡港鐵站 Hung Hom MTR Station"},{"id":"taxi:205","latitude":22.30240620856038,"longitude":114.18255363447662,"mode":"taxi","name":"紅磡港鐵站 Hung Hom MTR Station"},{"id":"taxi:206","latitude":22.297625529219015,"longitude":114.17711129554472,"mode":"taxi","name":"麼地道介乎香格里拉酒店及尖沙咀中心 Mody Rd. between Shangrilla Hotel & TST Centre"},{"id":"taxi:207","latitude":22.306532159414,"longitude":114.17116033150371,"mode":"taxi","name":"寧波街與彌敦道交界 Ning Po St. J/W Nathan Rd."},{"id":"taxi:208","latitude":22.30106434031313,"longitude":114.1756011150132,"mode":"taxi","name":"天文臺道介乎金巴利道及漆咸道南 Observatory Rd bet'n Kimberley Rd and Chatham Rd South"},{"id":"taxi:209","latitude":22.30776122748247,"longitude":114.17112347409292,"mode":"taxi","name":"北海街近彌敦道 Pak Hoi Street near Nathan Road"},{"id":"taxi:21","latitude":22.282475942829706,"longitude":114.12915294035496,"mode":"taxi","name":"北街 North Street"},{"id":"taxi:210","latitude":22.31394348078888,"longitude":114.17098024592735,"mode":"taxi","name":"碧街介乎\n彌敦道及東方街 Pitt Street between Nathan Road and Tung Fong Street"},{"id":"taxi:211","latitude":22.294126255525025,"longitude":114.16914034398444,"mode":"taxi","name":"天星碼頭 Star Ferry Pier"},{"id":"taxi:212","latitude":22.31091012050585,"longitude":114.1708078542697,"mode":"taxi","name":"永星里介乎鴉打街及彌敦道 Wing Sing Lane between Arthur Street and Nathan Road"},{"id":"taxi:213","latitude":22.31092790458587,"longitude":114.17137241952862,"mode":"taxi","name":"永星里介乎石壁道及彌敦道 Wing Sing Lane between Cliff Road and Nathan Road"},{"id":"taxi:214","latitude":22.305647144564528,"longitude":114.1701895723086,"mode":"taxi","name":"吳松街與佐敦道交界 Woosung St. J/W Jordan Rd."},{"id":"taxi:215","latitude":22.355566169698985,"longitude":114.09748821183004,"mode":"taxi","name":"長亨邨近長亨邨巴士總站 Cheung Hang Estate near the Cheung Hang Bus Terminus"},{"id":"taxi:216","latitude":22.361483929284596,"longitude":114.10331989450424,"mode":"taxi","name":"長安邨近長安邨巴士總站 Cheung On Estate near the Cheung On Estate Bus Terminus"},{"id":"taxi:217","latitude":22.349606574078905,"longitude":114.09865655243011,"mode":"taxi","name":"青康路長康邨巴士總站外 Ching Hong Road outside Cheung Hong Estate Bus Terminus"},{"id":"taxi:218","latitude":22.35453926848894,"longitude":114.12648777327908,"mode":"taxi","name":"貨櫃碼頭路公共運輸交匯處 Container Port Road Public Transport Interchange"},{"id":"taxi:219","latitude":22.35711322683264,"longitude":114.12730236882818,"mode":"taxi","name":"興寧路近新都會廣場 Hing Ning Road inside Metroplaza"},{"id":"taxi:22","latitude":22.286923341964844,"longitude":114.1473750251076,"mode":"taxi","name":"皇后街 Queen Street"},{"id":"taxi:220","latitude":22.367435490139428,"longitude":114.1284638335527,"mode":"taxi","name":"葵涌邨巴士總站 Kwai Chung Estate PTI"},{"id":"taxi:221","latitude":22.35603872446701,"longitude":114.12773963128994,"mode":"taxi","name":"葵芳港鐵站 Kwai Fong MTR Station"},{"id":"taxi:222","latitude":22.36324620711499,"longitude":114.1315333251093,"mode":"taxi","name":"葵興港鐵站 Kwai Hing MTR Station"},{"id":"taxi:223","latitude":22.36186243656547,"longitude":114.12457248709298,"mode":"taxi","name":"葵聯路近葵聯邨 Kwai Luen Road near Kwai Luen Estate"},{"id":"taxi:224","latitude":22.361184585212847,"longitude":114.1228639809086,"mode":"taxi","name":"葵聯路近葵盛西邨巴士總站 Kwai Luen Road near Kwai Shing West Estate Bus Terminus"},{"id":"taxi:225","latitude":22.35311403727527,"longitude":114.13191522493668,"mode":"taxi","name":"麗瑤巴士總站 Lai Yiu Bus Terminus"},{"id":"taxi:226","latitude":22.36234493249725,"longitude":114.1384172551186,"mode":"taxi","name":"梨貝街近巴士總站 Lei Pui Street near Bus Terminus"},{"id":"taxi:227","latitude":22.357012234759846,"longitude":114.08281775241932,"mode":"taxi","name":"青衣西北交匯處 North West Tsing Yi Interchange"},{"id":"taxi:228","latitude":22.36984110642184,"longitude":114.1420659557406,"mode":"taxi","name":"安足街近安蔭邨巴士總站 On Chuk Street near On Yam Estate Bus Terminus"},{"id":"taxi:229","latitude":22.365641142602247,"longitude":114.13867849853564,"mode":"taxi","name":"大隴街近圍乪街 Tai Loong Street near Wai Kek Street"},{"id":"taxi:23","latitude":22.282896977193673,"longitude":114.15570142568316,"mode":"taxi","name":"皇后大道中卡佛大廈外 Queen's Road Central outside Crawford House"},{"id":"taxi:230","latitude":22.35551495541377,"longitude":114.10379874132622,"mode":"taxi","name":"青綠街近偉景花園 Tsing Luk Street near Broadview Garden"},{"id":"taxi:231","latitude":22.35351023066321,"longitude":114.10392599444356,"mode":"taxi","name":"青綠街近青衣邨 Tsing Luk Street near Tsing Yi Estate"},{"id":"taxi:232","latitude":22.353955023093462,"longitude":114.1092168165806,"mode":"taxi","name":"青衣碼頭 Tsing Yi Ferry Pier"},{"id":"taxi:233","latitude":22.359607172033257,"longitude":114.10692282441694,"mode":"taxi","name":"青衣城（近港鐵站A1出口） Tsing Yi Maritime Square\n(near MTR exit A1)"},{"id":"taxi:234","latitude":22.358171231653312,"longitude":114.10672936805838,"mode":"taxi","name":"青衣機鐵站 Tsing Yi Station (Airport Express)"},{"id":"taxi:235","latitude":22.265013412005004,"longitude":114.00153613356365,"mode":"taxi","name":"梅窩巴士總站 Adjacent to Mui Wo Bus Terminus"},{"id":"taxi:236","latitude":22.32008112944156,"longitude":113.9435325024477,"mode":"taxi","name":"亞洲國際博覽館 Asia World Expo"},{"id":"taxi:237","latitude":22.320181023295824,"longitude":113.94392057498357,"mode":"taxi","name":"亞洲國際博覽館 Asia World Expo"},{"id":"taxi:238","latitude":22.281261143439608,"longitude":113.93895879033424,"mode":"taxi","name":"松仁路逸東邨外 Chung Yan Road outside Yat Tung Estate"},{"id":"taxi:239","latitude":22.281216047509773,"longitude":113.93899767969329,"mode":"taxi","name":"松仁路逸東邨外 Chung Yan Road outside Yat Tung Estate"},{"id":"taxi:24","latitude":22.286472793370177,"longitude":114.15341081673338,"mode":"taxi","name":"林士街無限極廣場外 Rumsey Street (outside Infinitus Plaza)"},{"id":"taxi:240","latitude":22.31724360951068,"longitude":113.93603466653322,"mode":"taxi","name":"香港國際機場 Hong Kong International Airport"},{"id":"taxi:241","latitude":22.31715317461541,"longitude":113.93594746989858,"mode":"taxi","name":"香港國際機場 Hong Kong International Airport"},{"id":"taxi:242","latitude":22.317116893920986,"longitude":113.9358407689202,"mode":"taxi","name":"香港國際機場 Hong Kong International Airport"},{"id":"taxi:243","latitude":22.31620102440351,"longitude":113.95207025361844,"mode":"taxi","name":"港珠澳大橋香港口岸 HZMB HK Port"},{"id":"taxi:244","latitude":22.31627293213192,"longitude":113.95182749603852,"mode":"taxi","name":"港珠澳大橋香港口岸 HZMB HK Port"},{"id":"taxi:245","latitude":22.31611953434732,"longitude":113.95191509308336,"mode":"taxi","name":"港珠澳大橋香港口岸 HZMB HK Port"},{"id":"taxi:246","latitude":22.264372407413177,"longitude":114.00085778234528,"mode":"taxi","name":"梅窩碼頭路銀礦中心大廈外 Mui Wo Ferry Pier Road outside Silver Centre House"},{"id":"taxi:247","latitude":22.266732833022665,"longitude":113.996576117611,"mode":"taxi","name":"銀石街梅窩區域市政綜合大樓對出 Ngan Shek Street opposite Mui Wo Regional Council Complex"},{"id":"taxi:248","latitude":22.255737764803875,"longitude":113.90270860377964,"mode":"taxi","name":"寶昂路（昂平公共運輸交匯處） Po Ngong Drive (Ngong Ping Public Transport Interchange)"},{"id":"taxi:249","latitude":22.231063968620393,"longitude":113.9416916240012,"mode":"taxi","name":"嶼南道近長沙海灘 South Lantau Road near Cheung Sha Beach"},{"id":"taxi:25","latitude":22.28248152986823,"longitude":114.15541038555256,"mode":"taxi","name":"士丹利街28號 Stanley Street No. 28"},{"id":"taxi:250","latitude":22.24333758000169,"longitude":113.97684577401702,"mode":"taxi","name":"嶼南道近貝澳 South Lantau Road near Pui O"},{"id":"taxi:251","latitude":22.236927634886374,"longitude":113.96335214559964,"mode":"taxi","name":"嶼南道近東涌道 South Lantau Road near the junction with Tung Chung Road"},{"id":"taxi:252","latitude":22.252603572677877,"longitude":113.86248355637926,"mode":"taxi","name":"大澳近大澳巴士站 Tai O near Tai O Bus Terminus"},{"id":"taxi:253","latitude":22.22755539432551,"longitude":113.93238588545354,"mode":"taxi","name":"塘福近塘福村 Tong Fuk near Tong Fuk Village B/T"},{"id":"taxi:254","latitude":22.28919397059275,"longitude":113.94169155086657,"mode":"taxi","name":"東涌港鐵站 Tung Chung MTR Station"},{"id":"taxi:255","latitude":22.288786948571193,"longitude":113.94124585714364,"mode":"taxi","name":"東涌港鐵站 Tung Chung MTR Station"},{"id":"taxi:256","latitude":22.290142647918618,"longitude":113.93891368186618,"mode":"taxi","name":"昂坪360東涌站 Tung Chung Ngong Ping 360 Terminal"},{"id":"taxi:257","latitude":22.290087452037277,"longitude":113.93883905538704,"mode":"taxi","name":"昂坪360東涌站 Tung Chung Ngong Ping 360 Terminal"},{"id":"taxi:258","latitude":22.29347209431161,"longitude":113.9400638064602,"mode":"taxi","name":"東涌海濱路近碼頭 Tung Chung Waterfront Road near the Pier"},{"id":"taxi:259","latitude":22.293255332918125,"longitude":113.94004476341472,"mode":"taxi","name":"東涌海濱路近碼頭 Tung Chung Waterfront Road near the Pier"},{"id":"taxi:26","latitude":22.270294080192887,"longitude":114.14981819098304,"mode":"taxi","name":"山頂公共交通總站 The Peak Public Transport Terminus"},{"id":"taxi:260","latitude":22.281798729100228,"longitude":113.93607599798644,"mode":"taxi","name":"逸東邨公共運輸總站 Yat Tung Estate Public Transport Terminus"},{"id":"taxi:261","latitude":22.282235406714552,"longitude":113.93641389693262,"mode":"taxi","name":"逸東街傑逸樓外 Yat Tung Street outside Kit Yat House"},{"id":"taxi:262","latitude":22.296572475135207,"longitude":113.94838490084148,"mode":"taxi","name":"怡東路近迴旋處 Yi Tung Road near the cul-de-sac"},{"id":"taxi:263","latitude":22.296536612409373,"longitude":113.94856934146428,"mode":"taxi","name":"怡東路近迴旋處 Yi Tung Road near the cul-de-sac"},{"id":"taxi:264","latitude":22.29723895775491,"longitude":113.95359507072388,"mode":"taxi","name":"迎東邨 Ying Tung Estate"},{"id":"taxi:265","latitude":22.297229780318396,"longitude":113.95348833708992,"mode":"taxi","name":"迎東邨 Ying Tung Estate"},{"id":"taxi:266","latitude":22.48429885994681,"longitude":114.14176352337677,"mode":"taxi","name":"近華明邨巴士總站 Adjacent to Wah Ming Bus Terminus"},{"id":"taxi:267","latitude":22.49280998891963,"longitude":114.14151306359744,"mode":"taxi","name":"祥華邨 Cheung Wah Estate"},{"id":"taxi:268","latitude":22.502812145888957,"longitude":114.1303531850478,"mode":"taxi","name":"石湖墟智昌路 Chi Cheong Road, Shek Wu Hui"},{"id":"taxi:269","latitude":22.494599369908254,"longitude":114.12778042750264,"mode":"taxi","name":"清曉路 清河邨 巴士總站 Ching Ho Estate Public Transport Interchange"},{"id":"taxi:27","latitude":22.281190212278865,"longitude":114.15589574866796,"mode":"taxi","name":"威靈頓街12至24號 Wellington Street No. 12-24"},{"id":"taxi:270","latitude":22.49452970750288,"longitude":114.12765562259789,"mode":"taxi","name":"清曉路 清河邨 巴士總站 Ching Ho Estate Public Transport Interchange"},{"id":"taxi:271","latitude":22.482314626715176,"longitude":114.13885796234617,"mode":"taxi","name":"暉明路, 五旬節于良發小學對面 Fai Ming Road opposite to Pentecostal Yu Leung Fat Primary School"},{"id":"taxi:272","latitude":22.49320553233002,"longitude":114.13840828096042,"mode":"taxi","name":"粉嶺港鐵站 Fanling MTR Station Forecourt"},{"id":"taxi:273","latitude":22.507335795080326,"longitude":114.128585938705,"mode":"taxi","name":"鳳南路 Fung Nam Road"},{"id":"taxi:274","latitude":22.552789499846128,"longitude":114.15346646752565,"mode":"taxi","name":"香園圍邊境管制站\n公共運輸交匯處 HYWBCP PTI"},{"id":"taxi:275","latitude":22.552640824060298,"longitude":114.1534639453595,"mode":"taxi","name":"香園圍邊境管制站\n公共運輸交匯處 HYWBCP PTI"},{"id":"taxi:276","latitude":22.501632919167488,"longitude":114.12716782104384,"mode":"taxi","name":"彩園路近上水港鐵站 Layby on Choi Yuen Road near Sheung Shui MTR Station"},{"id":"taxi:277","latitude":22.501969381172835,"longitude":114.12649469366828,"mode":"taxi","name":"彩園路近上水港鐵站 Layby on Choi Yuen Road near Sheung Shui MTR Station"},{"id":"taxi:278","latitude":22.493026835898437,"longitude":114.13618831381191,"mode":"taxi","name":"置福圍 Loop Road on Chi Fuk Circuit"},{"id":"taxi:279","latitude":22.5014983835224,"longitude":114.14200372764442,"mode":"taxi","name":"粉嶺聯捷街 Luen Chit Street, Fanling"},{"id":"taxi:28","latitude":22.268391921036503,"longitude":114.24219217600584,"mode":"taxi","name":"柴灣碼頭（常平街） Chai Wan Ferry (Sheung Ping Street)"},{"id":"taxi:280","latitude":22.49796734218596,"longitude":114.14317249856168,"mode":"taxi","name":"聯和路介乎其與聯興街及聯盛街的交界 Luen Wo Road between its junction with Luen Hing Street and Luen Shing Street"},{"id":"taxi:281","latitude":22.491251868768423,"longitude":114.13788328572176,"mode":"taxi","name":"百和路 停車場 近 蓬瀛仙館 Pak Wo Road carpark near Fung Ying Seen Koon"},{"id":"taxi:282","latitude":22.49141996431521,"longitude":114.1411755826704,"mode":"taxi","name":"新運路粉嶺中心外 San Wan Road outside Fanling Centre"},{"id":"taxi:283","latitude":22.54564369197019,"longitude":114.22350637722532,"mode":"taxi","name":"沙頭角巴士站 Sha Tau Kok Bus Terminus"},{"id":"taxi:284","latitude":22.50401801936613,"longitude":114.12697370119048,"mode":"taxi","name":"符興街南面路旁行車線 Southern kerbside of Fu Hing Street, outside House No. 43-49"},{"id":"taxi:285","latitude":22.502166760983332,"longitude":114.12761353269728,"mode":"taxi","name":"公共運輸交匯處上水港鐵站外 The northernmost bay in the public transport terminus outside Sheung Shui MTR Station"},{"id":"taxi:286","latitude":22.503141813186954,"longitude":114.1345287017579,"mode":"taxi","name":"天平路天朗樓外 Tin Ping Road outside Tin Long House"},{"id":"taxi:287","latitude":22.48305420893274,"longitude":114.13928439052452,"mode":"taxi","name":"華明路雍盛商場外 Wah Ming Road outside Yung Shing Shopping Centre"},{"id":"taxi:288","latitude":22.50128904912264,"longitude":114.14455695613812,"mode":"taxi","name":"聯和墟和滿街 Wo Mun Street at Luen Wo Hui"},{"id":"taxi:289","latitude":22.499995892932805,"longitude":114.14426732366088,"mode":"taxi","name":"和滿街近新聯和墟街巿 Wo Mun Street near New Luen Wo Hui Market"},{"id":"taxi:29","latitude":22.264832441555548,"longitude":114.24118440491424,"mode":"taxi","name":"柴灣道介乎金源里與永泰道 Chai Wan Road (between Kam Yuen Lane and Wing Tai Road)"},{"id":"taxi:290","latitude":22.323039597964467,"longitude":114.24896141948892,"mode":"taxi","name":"翠林邨 Adjacent to Tsui Lam Estate"},{"id":"taxi:291","latitude":22.32923351740562,"longitude":114.2335417737081,"mode":"taxi","name":"安達臣(安愉道)公共交通總站 Anderson (On Yu Road) Public Transport Terminus"},{"id":"taxi:292","latitude":22.382345572352538,"longitude":114.27186792727562,"mode":"taxi","name":"親民街 Chan Man Street"},{"id":"taxi:293","latitude":22.313003601087168,"longitude":114.26644326106916,"mode":"taxi","name":"昭信路新寶城外 Chiu Shun Road outside La Cite Noble"},{"id":"taxi:294","latitude":22.30624384644986,"longitude":114.25293613324232,"mode":"taxi","name":"彩明街 Choi Ming Street"},{"id":"taxi:295","latitude":22.308074291903097,"longitude":114.25011992477664,"mode":"taxi","name":"翠嶺路 Chui Ling Road, Tseung Kwan O"},{"id":"taxi:296","latitude":22.28718796675422,"longitude":114.28699797376694,"mode":"taxi","name":"清水灣二灘 Clear Water Bay Second Beach PTI"},{"id":"taxi:297","latitude":22.2870853081852,"longitude":114.28687593691366,"mode":"taxi","name":"清水灣二灘 Clear Water Bay Second Beach PTI"},{"id":"taxi:298","latitude":22.37984844330996,"longitude":114.26847321467778,"mode":"taxi","name":"灰窰里 Fui Yiu Lane"},{"id":"taxi:299","latitude":22.379876563122902,"longitude":114.26895245809764,"mode":"taxi","name":"灰窰里 Fui Yiu Lane"},{"id":"taxi:3","latitude":22.28693414488431,"longitude":114.159737568909,"mode":"taxi","name":"介乎中環五號及六號碼頭之間 Between Central Ferry Piers Nos. 5 and 6"},{"id":"taxi:30","latitude":22.29049761146426,"longitude":114.1941008409286,"mode":"taxi","name":"城市花園道城市花園酒店外 City Garden Road (outside City Garden Hotel)"},{"id":"taxi:300","latitude":22.38188197658957,"longitude":114.27385458005416,"mode":"taxi","name":"福民路的北面路旁行車線 Fuk Man Road (Northern kerbside)"},{"id":"taxi:301","latitude":22.381724363378527,"longitude":114.27372498423334,"mode":"taxi","name":"福民路的南面路旁行車線 Fuk Man Road (Southern kerbside)"},{"id":"taxi:302","latitude":22.31803858095256,"longitude":114.27123228234434,"mode":"taxi","name":"坑口道 Hang Hau Road"},{"id":"taxi:303","latitude":22.31772363527977,"longitude":114.26479965793884,"mode":"taxi","name":"厚德邨 Hau Tak Estate"},{"id":"taxi:304","latitude":22.365444222455515,"longitude":114.37405737193438,"mode":"taxi","name":"萬宜水庫東壩 High Island Reservoir East Dam"},{"id":"taxi:305","latitude":22.33869396428065,"longitude":114.2623180320984,"mode":"taxi","name":"香港科技大學 (北) Hong Kong University of Science and Technology (North)"},{"id":"taxi:306","latitude":22.333130816840935,"longitude":114.26291646972147,"mode":"taxi","name":"香港科技大學 (南) Hong Kong University of Science and Technology (South)"},{"id":"taxi:307","latitude":22.319508643485523,"longitude":114.25297890561818,"mode":"taxi","name":"康盛花園 Hong Sing Garden"},{"id":"taxi:308","latitude":22.321148155627473,"longitude":114.26117172942376,"mode":"taxi","name":"景林邨 King Lam Estate"},{"id":"taxi:309","latitude":22.296245250053865,"longitude":114.26917902080116,"mode":"taxi","name":"將軍澳康城站公共運輸交匯處 Lohas Park PTI"},{"id":"taxi:31","latitude":22.28814989028745,"longitude":114.19165325164798,"mode":"taxi","name":"福蔭道 Fook Yum Road"},{"id":"taxi:310","latitude":22.322675955106696,"longitude":114.25746998897657,"mode":"taxi","name":"貿業路寶琳站外 Mau Yip Road outside Po Lam Station"},{"id":"taxi:311","latitude":22.315376729099416,"longitude":114.26284734499237,"mode":"taxi","name":"安寧花園 On Ning Garden"},{"id":"taxi:312","latitude":22.364600050561243,"longitude":114.25909766036315,"mode":"taxi","name":"白沙灣 Pak Sha Wan"},{"id":"taxi:313","latitude":22.323053622708013,"longitude":114.25830181507057,"mode":"taxi","name":"寶琳公共運輸交匯處 Po Lam Public Transport Interchange"},{"id":"taxi:314","latitude":22.38430050584618,"longitude":114.27146981548071,"mode":"taxi","name":"西貢北公共運輸交匯處 Sai Kung North Public Transport Interchange"},{"id":"taxi:315","latitude":22.384239280240138,"longitude":114.2715756277018,"mode":"taxi","name":"西貢北公共運輸交匯處 Sai Kung North Public Transport Interchange"},{"id":"taxi:316","latitude":22.31105747272714,"longitude":114.25955738797776,"mode":"taxi","name":"尚德邨 Sheung Tak Estate"},{"id":"taxi:317","latitude":22.39275455958941,"longitude":114.29874697060572,"mode":"taxi","name":"大網仔停車場 Tai Mong Tsai Car Park"},{"id":"taxi:318","latitude":22.315780602850857,"longitude":114.26496896969898,"mode":"taxi","name":"坑口站公共交通交匯處的最北落客處 The northernmost loading bay of Hang Hau Station Public Transport Interchange"},{"id":"taxi:319","latitude":22.315894417859983,"longitude":114.26483139465071,"mode":"taxi","name":"坑口站公共交通交匯處的最北落客處 The northernmost loading bay of Hang Hau Station Public Transport Interchange"},{"id":"taxi:32","latitude":22.264821822532294,"longitude":114.2492478952213,"mode":"taxi","name":"富欣道（富欣花園第6座對出） Harmony Road \n(outside Block 6 Harmony Garden)"},{"id":"taxi:320","latitude":22.39707384670661,"longitude":114.31922179102482,"mode":"taxi","name":"北潭涌巴士總站 Pak Tam Chung Bus Terminus"},{"id":"taxi:321","latitude":22.305220193380983,"longitude":114.2523714667429,"mode":"taxi","name":"調景嶺站公共交通交匯處 Tiu Keng Leng Station Public Transport Interchange"},{"id":"taxi:322","latitude":22.308014843150815,"longitude":114.25697525155638,"mode":"taxi","name":"唐德街近唐明苑 Tong Tak Street near Tong Ming Court"},{"id":"taxi:323","latitude":22.283417197787003,"longitude":114.2702898019732,"mode":"taxi","name":"將軍澳工業中心 Tseung Kwan O Industrial Estate"},{"id":"taxi:324","latitude":22.308576216901617,"longitude":114.26061207674988,"mode":"taxi","name":"將軍澳站公共交通交匯處 Tseung Kwan O Station Public Transport Interchange"},{"id":"taxi:325","latitude":22.38118192416013,"longitude":114.27116304751858,"mode":"taxi","name":"宜春街 Yi Chun Street"},{"id":"taxi:326","latitude":22.324279999882386,"longitude":114.25431095675296,"mode":"taxi","name":"毓雅里 Yuk Ngan Lane"},{"id":"taxi:327","latitude":22.42545750612299,"longitude":114.23117280286851,"mode":"taxi","name":"海柏花園 Bayshore Towers"},{"id":"taxi:328","latitude":22.425492135254228,"longitude":114.23136852039956,"mode":"taxi","name":"海柏花園 Bayshore Towers"},{"id":"taxi:329","latitude":22.405526666794135,"longitude":114.22366650375686,"mode":"taxi","name":"富安花園 Chevalier Garden"},{"id":"taxi:33","latitude":22.264238136799857,"longitude":114.23669009418111,"mode":"taxi","name":"吉勝街近柴灣港鐵站 Kut Shing Street (near Chai Wan MTR Station)"},{"id":"taxi:330","latitude":22.405499552779723,"longitude":114.22374419015208,"mode":"taxi","name":"富安花園 Chevalier Garden"},{"id":"taxi:331","latitude":22.382004852541005,"longitude":114.20421632605596,"mode":"taxi","name":"翠欣街欣廷軒對面 Chui Yan Street opposite to Prima Villa"},{"id":"taxi:332","latitude":22.42246703657243,"longitude":114.22669349538992,"mode":"taxi","name":"馬鞍山頌安邨 Chung On Estate, Ma On Shan"},{"id":"taxi:333","latitude":22.42232375592167,"longitude":114.226849582392,"mode":"taxi","name":"馬鞍山頌安邨 Chung On Estate, Ma On Shan"},{"id":"taxi:334","latitude":22.382947780219112,"longitude":114.1876431799298,"mode":"taxi","name":"沙田連城廣場 Citylink Plaza"},{"id":"taxi:335","latitude":22.413990735442663,"longitude":114.22490987271988,"mode":"taxi","name":"恆智街欣安邨外 Hang Chi Street outside Yan On Estate"},{"id":"taxi:336","latitude":22.41706324912232,"longitude":114.22915628065287,"mode":"taxi","name":"恆安邨 Heng On Estate"},{"id":"taxi:337","latitude":22.408949783228845,"longitude":114.22169607933394,"mode":"taxi","name":"馬鞍山錦泰苑 Kam Tai Court, Ma On Shan"},{"id":"taxi:338","latitude":22.42332943054273,"longitude":114.2370538258492,"mode":"taxi","name":"錦英苑巴士總站 Kam Ying Court Bus Terminus"},{"id":"taxi:339","latitude":22.423658117985884,"longitude":114.23708824545491,"mode":"taxi","name":"錦英苑巴士總站 Kam Ying Court Bus Terminus"},{"id":"taxi:34","latitude":22.28550643527616,"longitude":114.2220000946152,"mode":"taxi","name":"鯉景道 Lei King Road"},{"id":"taxi:340","latitude":22.38104691345857,"longitude":114.21631736749936,"mode":"taxi","name":"廣源邨 Kwong Yuen Estate"},{"id":"taxi:341","latitude":22.428897538702035,"longitude":114.2441451737404,"mode":"taxi","name":"利安邨 Lee On Estate"},{"id":"taxi:342","latitude":22.428791503525147,"longitude":114.24416544336847,"mode":"taxi","name":"利安邨 Lee On Estate"},{"id":"taxi:343","latitude":22.399575402327734,"longitude":114.20065400480505,"mode":"taxi","name":"樂信徑駿景園外 Lok Shun Path outside Royal Ascot"},{"id":"taxi:344","latitude":22.36393842433092,"longitude":114.17921512839156,"mode":"taxi","name":"龍柏街世界花園外 Lung Pak Street outside Worldwide Gardens"},{"id":"taxi:345","latitude":22.41284678850271,"longitude":114.21104235925824,"mode":"taxi","name":"馬料水公共運輸交匯處 Ma Liu Shui Public Transport Interchange"},{"id":"taxi:346","latitude":22.412890460041304,"longitude":114.21099923696109,"mode":"taxi","name":"馬料水公共運輸交匯處 Ma Liu Shui Public Transport Interchange"},{"id":"taxi:347","latitude":22.42248697516879,"longitude":114.22675424833582,"mode":"taxi","name":"馬鞍山市中心公共運輸交匯處 Ma On Shan Town Centre Public Transport Terminus"},{"id":"taxi:348","latitude":22.42405643014717,"longitude":114.23196605149492,"mode":"taxi","name":"馬鞍山市中心公共運輸交匯處 Ma On Shan Town Centre Public Transport Terminus"},{"id":"taxi:349","latitude":22.380329240696163,"longitude":114.17288348984222,"mode":"taxi","name":"大圍美松苑 Mei Chung Court, Tai Wai"},{"id":"taxi:35","latitude":22.29175801022732,"longitude":114.19652895130646,"mode":"taxi","name":"北角道介乎和富道與渣華道 North Point Road (between Wharf Road and Java Road)"},{"id":"taxi:350","latitude":22.377656243861356,"longitude":114.1751557062093,"mode":"taxi","name":"美林邨 Mei Lam Estate"},{"id":"taxi:351","latitude":22.376337671330464,"longitude":114.17050467398025,"mode":"taxi","name":"美田邨公共運輸交匯處 Mei Tin Estate PTI"},{"id":"taxi:352","latitude":22.388372799665525,"longitude":114.20789771239032,"mode":"taxi","name":"安群街 On Kwan Street"},{"id":"taxi:353","latitude":22.385176580048615,"longitude":114.1873131942376,"mode":"taxi","name":"排頭街近沙田港鐵站 Pai Tau Street near Sha Tin MTR Station"},{"id":"taxi:354","latitude":22.37945141513365,"longitude":114.20171288560482,"mode":"taxi","name":"威爾斯親王醫院 Prince of Wales Hospital"},{"id":"taxi:355","latitude":22.379523654867626,"longitude":114.20174202884596,"mode":"taxi","name":"威爾斯親王醫院 Prince of Wales Hospital"},{"id":"taxi:356","latitude":22.381855045431173,"longitude":114.18824513382025,"mode":"taxi","name":"沙田正街近沙田市中心巴士總站 Sha Tin Centre Street fronting Sha Tin Central Bus Terminus"},{"id":"taxi:357","latitude":22.40127770327944,"longitude":114.2045817027774,"mode":"taxi","name":"沙田馬場 Sha Tin Racecourse (1)"},{"id":"taxi:358","latitude":22.398713269326528,"longitude":114.20321187726324,"mode":"taxi","name":"沙田馬場 Sha Tin Racecourse (2)"},{"id":"taxi:359","latitude":22.373130834863893,"longitude":114.1857403032226,"mode":"taxi","name":"沙田頭路秦石邨外 Sha Tin Tau Road outside Chun Shek Estate"},{"id":"taxi:36","latitude":22.280890886775435,"longitude":114.228057356628,"mode":"taxi","name":"愛賢街愛東商場外 Oi Yin Street (outside Oi Tung Shopping Centre)"},{"id":"taxi:360","latitude":22.39292443019696,"longitude":114.19447362522564,"mode":"taxi","name":"穗禾苑 Sui Wo Court"},{"id":"taxi:361","latitude":22.37030531113922,"longitude":114.18213692053466,"mode":"taxi","name":"新翠邨 Sun Chui Estate"},{"id":"taxi:362","latitude":22.36956057646155,"longitude":114.18710520426484,"mode":"taxi","name":"新田圍邨 Sun Tin Wai Estate"},{"id":"taxi:363","latitude":22.375480940715423,"longitude":114.17751495469716,"mode":"taxi","name":"大圍道 Tai Wai Road"},{"id":"taxi:364","latitude":22.372182455899793,"longitude":114.17875936292558,"mode":"taxi","name":"大圍站公共運輸交匯處 Tai Wai Station PTI"},{"id":"taxi:365","latitude":22.381701354394867,"longitude":114.19046877643154,"mode":"taxi","name":"担杆莆街 Tam Kon Po Street"},{"id":"taxi:366","latitude":22.385176580048615,"longitude":114.1873131942376,"mode":"taxi","name":"排頭街北面路旁行車線近上禾輋路 The northern kerbside lane of Pai Tau Street near Sheung Wo Che Road"},{"id":"taxi:367","latitude":22.37339417883441,"longitude":114.17819592522088,"mode":"taxi","name":"村南道大圍港鐵站外 Tsuen Nam Road o/s Tai Wai MTR Station"},{"id":"taxi:368","latitude":22.388322307669032,"longitude":114.19447780312773,"mode":"taxi","name":"禾輋邨近禾輋巴士總站 Wo Che Estate near Wo Che Bus Terminus"},{"id":"taxi:369","latitude":22.386013285130243,"longitude":114.1931899370866,"mode":"taxi","name":"禾輋街 Wo Che Street"},{"id":"taxi:37","latitude":22.28503431279044,"longitude":114.22452966957428,"mode":"taxi","name":"西灣河（嘉亨灣）公共運輸交匯處 Sai Wan Ho (Grand Promenade) PTI"},{"id":"taxi:370","latitude":22.428897538702035,"longitude":114.2441451737404,"mode":"taxi","name":"烏溪沙站公共運輸交匯處 Wu Kai Sha Station PTI"},{"id":"taxi:371","latitude":22.42884857460873,"longitude":114.24440686248012,"mode":"taxi","name":"烏溪沙站公共運輸交匯處 Wu Kai Sha Station PTI"},{"id":"taxi:372","latitude":22.376973554610995,"longitude":114.19531624456836,"mode":"taxi","name":"逸泰街 Yat Tai Street"},{"id":"taxi:373","latitude":22.3798946156159,"longitude":114.18827253139118,"mode":"taxi","name":"宜正里 Yi Ching Lane"},{"id":"taxi:374","latitude":22.380897040593005,"longitude":114.19630454542158,"mode":"taxi","name":"怡成坊 Yi Shing Square"},{"id":"taxi:375","latitude":22.419130836501232,"longitude":114.22991838966168,"mode":"taxi","name":"耀安邨巴士總站 Yiu On Bus Terminus"},{"id":"taxi:376","latitude":22.419184109712575,"longitude":114.2299110766829,"mode":"taxi","name":"耀安邨巴士總站 Yiu On Bus Terminus"},{"id":"taxi:377","latitude":22.381347841971515,"longitude":114.20160640990248,"mode":"taxi","name":"圓洲角巴士總站 Yuen Chau Kok Bus Terminus"},{"id":"taxi:378","latitude":22.374174556789423,"longitude":114.19778329058678,"mode":"taxi","name":"多石街近水泉澳公共運輸交匯處 To Shek Street near Shui Chuen O PTI"},{"id":"taxi:379","latitude":22.45973899880628,"longitude":114.1743380054595,"mode":"taxi","name":"全安路公共運輸交匯處 Chuen On Road Public Transport Terminus"},{"id":"taxi:38","latitude":22.276278112175245,"longitude":114.24059775810096,"mode":"taxi","name":"盛泰道近杏花邨商場 Shing Tai Road (near Heng Fa Chuen shopping centre)"},{"id":"taxi:380","latitude":22.46346149056657,"longitude":114.17023158049378,"mode":"taxi","name":"全安路公共運輸交匯處 Chuen On Road Public Transport Terminus"},{"id":"taxi:381","latitude":22.461379373714912,"longitude":114.16872548326772,"mode":"taxi","name":"富亨邨 Fu Heng Estate"},{"id":"taxi:382","latitude":22.4613347737212,"longitude":114.16893421088906,"mode":"taxi","name":"富亨邨 Fu Heng Estate"},{"id":"taxi:383","latitude":22.45419477035377,"longitude":114.17447283707747,"mode":"taxi","name":"富善邨（富善邨巴士總站對出） Fu Shin Estate (next to Fu Shin Bus Terminus)"},{"id":"taxi:384","latitude":22.45431177944636,"longitude":114.1745864170574,"mode":"taxi","name":"富善邨（富善邨巴士總站對出） Fu Shin Estate (next to Fu Shin Bus Terminus)"},{"id":"taxi:385","latitude":22.4486697870926,"longitude":114.157287288652,"mode":"taxi","name":"錦山路近石蓮路 Kam Shan Road near Shek Lin Road"},{"id":"taxi:386","latitude":22.44620093325679,"longitude":114.173346263558,"mode":"taxi","name":"廣進街近大埔公路元洲仔段 Kwong Chun Street near Tai Po Road - Yuen Chau Tsai"},{"id":"taxi:387","latitude":22.449178181739804,"longitude":114.16599843209556,"mode":"taxi","name":"廣福道第27座外 Kwong Fuk Road o/s House No. 27"},{"id":"taxi:388","latitude":22.466275760517984,"longitude":114.19357447162947,"mode":"taxi","name":"露屏路公共運輸交匯處 Lo Ping Road Public Transport Interchange"},{"id":"taxi:389","latitude":22.46617075582184,"longitude":114.19347598573914,"mode":"taxi","name":"露屏路公共運輸交匯處 Lo Ping Road Public Transport Interchange"},{"id":"taxi:39","latitude":22.27834410140667,"longitude":114.2388356361668,"mode":"taxi","name":"盛泰道杏花邨街市外 Shing Tai Road outside Heng Fa Chuen market"},{"id":"taxi:390","latitude":22.45328525372876,"longitude":114.16469247875078,"mode":"taxi","name":"美新里 Mei Sun Lane"},{"id":"taxi:391","latitude":22.44620093325679,"longitude":114.173346263558,"mode":"taxi","name":"年明路近香港浸信會神學院 Nin Ming Road near Hong Kong Baptist Theological Seminary"},{"id":"taxi:392","latitude":22.452299998929245,"longitude":114.16860000563535,"mode":"taxi","name":"安慈路近安邦路 On Chee Road near On Pong Road"},{"id":"taxi:393","latitude":22.45357581312006,"longitude":114.16747458967085,"mode":"taxi","name":"安祥路 On Cheung Road"},{"id":"taxi:394","latitude":22.453954575689473,"longitude":114.16745084916327,"mode":"taxi","name":"安祥路 On Cheung Road"},{"id":"taxi:395","latitude":22.448663413257265,"longitude":114.16539229871292,"mode":"taxi","name":"安富道 On Fu Road"},{"id":"taxi:396","latitude":22.45207371513961,"longitude":114.16936546813874,"mode":"taxi","name":"安邦路 On Pong Road"},{"id":"taxi:397","latitude":22.452529579637215,"longitude":114.17060668800912,"mode":"taxi","name":"安泰路（北） On Tai Road (North)"},{"id":"taxi:398","latitude":22.48898616314955,"longitude":114.14049198924492,"mode":"taxi","name":"白石角科城路公共運輸交匯處 Pak Shek Kok Fo Shing Road Public Transport Interchange"},{"id":"taxi:399","latitude":22.448669368582102,"longitude":114.17476543798152,"mode":"taxi","name":"寶湖路東行近廣福邨停車場 Plover Cove Road E/B Kwong Fuk Est. car park"},{"id":"taxi:4","latitude":22.286735534232303,"longitude":114.16034892690364,"mode":"taxi","name":"介乎中環六號及七號碼頭之間 Between Central Ferry Piers Nos. 6 and 7"},{"id":"taxi:40","latitude":22.266677051508893,"longitude":114.25051403284854,"mode":"taxi","name":"小西灣 （藍灣半島） 公共運輸交匯處 Siu Sai Wan (Island Resort) Public Transport Terminus"},{"id":"taxi:400","latitude":22.448657042163124,"longitude":114.17477668806492,"mode":"taxi","name":"寶湖路西行近廣福邨街市 Plover Cove Road W/B Kwong Fuk Est. Market"},{"id":"taxi:401","latitude":22.4493,"longitude":114.166865,"mode":"taxi","name":"寶鄉街 Po Heung Street"},{"id":"taxi:402","latitude":22.451149556501463,"longitude":114.16035302092118,"mode":"taxi","name":"太和邨寶雅路 Po Nga Raod, Tai Wo Estate"},{"id":"taxi:403","latitude":22.45605989523492,"longitude":114.16424123586664,"mode":"taxi","name":"新圍仔 San Wai Tsai"},{"id":"taxi:404","latitude":22.47240065147544,"longitude":114.23263515492664,"mode":"taxi","name":"大美督公共運輸交匯處 Tai Mei Tuk Public Transport Interchange"},{"id":"taxi:405","latitude":22.44421863336431,"longitude":114.17119313332634,"mode":"taxi","name":"大埔墟站 Tai Po Market Station"},{"id":"taxi:406","latitude":22.454763537603643,"longitude":114.16085963850854,"mode":"taxi","name":"大埔頭公共運輸交匯處 Tai Po Tau Public Transport Interchange"},{"id":"taxi:407","latitude":22.44225420810778,"longitude":114.16655705812998,"mode":"taxi","name":"運頭塘邨 Wan Tau Tong Estate"},{"id":"taxi:408","latitude":22.36718470183371,"longitude":114.0612272269328,"mode":"taxi","name":"碧堤半島 Bellagio"},{"id":"taxi:409","latitude":22.37858898652239,"longitude":114.1311787981183,"mode":"taxi","name":"象山邨西路近秀山樓 Cheung Shan Estate Road West near Sau Shan House"},{"id":"taxi:41","latitude":22.26631451749169,"longitude":114.25140160330844,"mode":"taxi","name":"小西灣 （藍灣半島） 公共運輸交匯處 Siu Sai Wan (Island Resort) Public Transport Terminus"},{"id":"taxi:410","latitude":22.36915629143635,"longitude":114.116462407146,"mode":"taxi","name":"眾安街近河貝街 Chung On Street near Hoi Pui Street"},{"id":"taxi:411","latitude":22.36876557344212,"longitude":114.11032624572609,"mode":"taxi","name":"海貴路 Hoi Kwai Road"},{"id":"taxi:412","latitude":22.3699313255391,"longitude":114.11233555089314,"mode":"taxi","name":"海盛路 Hoi Shing Road"},{"id":"taxi:413","latitude":22.316023095804216,"longitude":114.0448085038943,"mode":"taxi","name":"香港迪士尼樂園 Hong Kong Disneyland"},{"id":"taxi:414","latitude":22.316140406306104,"longitude":114.04470163060496,"mode":"taxi","name":"香港迪士尼樂園 Hong Kong Disneyland"},{"id":"taxi:415","latitude":22.315932592345085,"longitude":114.04456594625138,"mode":"taxi","name":"香港迪士尼樂園 Hong Kong Disneyland"},{"id":"taxi:416","latitude":22.377732471305663,"longitude":114.13638364130868,"mode":"taxi","name":"梨木樹邨近和宜合道 Lei Muk Shue Estate near Wo Yi Hop Road"},{"id":"taxi:417","latitude":22.37652366174039,"longitude":114.112458742453,"mode":"taxi","name":"美環街近愉景新城巴士總站 Mei Wan Street near Discovery Park Bus Terminus"},{"id":"taxi:418","latitude":22.375897921638668,"longitude":114.10614761031368,"mode":"taxi","name":"安育路近翠豐臺 On Yuk Road Near Summit Terrace"},{"id":"taxi:419","latitude":22.333384361499615,"longitude":114.0291057945388,"mode":"taxi","name":"欣澳站公共運輸交匯處 Sunny Bay Station PTI"},{"id":"taxi:42","latitude":22.263742256636824,"longitude":114.25212110794097,"mode":"taxi","name":"小西灣道近富景花園 Siu Sai Wan Road (near Fullview Garden)"},{"id":"taxi:420","latitude":22.333474764275373,"longitude":114.02921247543556,"mode":"taxi","name":"欣澳站公共運輸交匯處 Sunny Bay Station PTI"},{"id":"taxi:421","latitude":22.366887472462285,"longitude":114.11093882062772,"mode":"taxi","name":"大河道近荃灣碼頭及荃灣西站 Tai Ho Road near Tsuen Wan Ferry Pier and Tsuen Wan West Station"},{"id":"taxi:422","latitude":22.37716122584314,"longitude":114.10396223045085,"mode":"taxi","name":"荃景圍近荃威花園巴士總站 Tsuen King Circuit near Allway Gardens Bus Terminus"},{"id":"taxi:423","latitude":22.376511475476914,"longitude":114.10496269036166,"mode":"taxi","name":"荃景圍近荃灣港安醫院 Tsuen King Circuit near Hong Kong Adventist Hospital - Tsuen Wan"},{"id":"taxi:424","latitude":22.3726700278647,"longitude":114.11881062826492,"mode":"taxi","name":"西樓角路政府多層停車場 Underneath Tsuen Wan Station Multi-storey Car Park, Sai Lau Kok Road"},{"id":"taxi:425","latitude":22.372624868249076,"longitude":114.11879122768008,"mode":"taxi","name":"西樓角路政府多層停車場 Underneath Tsuen Wan Station Multi-storey Car Park, Sai Lau Kok Road"},{"id":"taxi:426","latitude":22.369697297615417,"longitude":114.11428725761289,"mode":"taxi","name":"禾笛街 Wo Tik Street"},{"id":"taxi:427","latitude":22.37432103723336,"longitude":113.95838546289204,"mode":"taxi","name":"蝴蝶灣停車場 Butterfly Beach Car Park"},{"id":"taxi:428","latitude":22.374366438490306,"longitude":113.95856987680334,"mode":"taxi","name":"蝴蝶灣停車場 Butterfly Beach Car Park"},{"id":"taxi:429","latitude":22.358732676897688,"longitude":114.01908886113426,"mode":"taxi","name":"青山公路 - 大欖段近屯門公路巴士轉乘站（往屯門方向） Castle Peak Road - Tai Lam near Tuen Mun Rod Bus-Bus Interchange (Tuen Mun bound)"},{"id":"taxi:43","latitude":22.266341034582464,"longitude":114.24866944964867,"mode":"taxi","name":"小西灣道 （小西灣運動場對面） Siu Sai Wan Road (opposite Siu Sai Wan Sports Ground)"},{"id":"taxi:430","latitude":22.41315601748981,"longitude":113.98273211136984,"mode":"taxi","name":"富泰公共運輸交匯處 Fu Tai PTI"},{"id":"taxi:431","latitude":22.41317376318964,"longitude":113.98246985110912,"mode":"taxi","name":"富泰公共運輸交匯處 Fu Tai PTI"},{"id":"taxi:432","latitude":22.381780095557307,"longitude":113.9721041020197,"mode":"taxi","name":"恆貴街東行近南浪海灣 Hang Kwai Street eastbound near Nerine Cove"},{"id":"taxi:433","latitude":22.413870528964512,"longitude":113.96909480311344,"mode":"taxi","name":"興貴街 Hing Kwai Street"},{"id":"taxi:434","latitude":22.406684753056915,"longitude":113.96404554872224,"mode":"taxi","name":"良景邨巴士總站 Leung King Bus Terminus"},{"id":"taxi:435","latitude":22.407296286597024,"longitude":113.96903659299416,"mode":"taxi","name":"良運街 Leung Wan St"},{"id":"taxi:436","latitude":22.38466183444173,"longitude":113.96586578067692,"mode":"taxi","name":"龍門居公共運輸交匯處 Lung Mun Oasis Public Transport Interchange"},{"id":"taxi:437","latitude":22.38486031453088,"longitude":113.96571982454938,"mode":"taxi","name":"龍門居公共運輸交匯處 Lung Mun Oasis Public Transport Interchange"},{"id":"taxi:438","latitude":22.386616142632988,"longitude":113.97588415214028,"mode":"taxi","name":"安定邨通路西行近定德樓 On Ting Estate access road westbound near Ting Tak House"},{"id":"taxi:439","latitude":22.410345938328984,"longitude":113.96699249034737,"mode":"taxi","name":"寶田公共運輸交匯處 Po Tin PTI"},{"id":"taxi:44","latitude":22.283863190627997,"longitude":114.22079730153996,"mode":"taxi","name":"太祥街介乎筲箕灣道與康祥街 Tai Cheong Street between Shau Kei Wan Road and Hong Cheung Street"},{"id":"taxi:440","latitude":22.410201527067247,"longitude":113.96705098051854,"mode":"taxi","name":"寶田公共運輸交匯處 Po Tin PTI"},{"id":"taxi:441","latitude":22.39662805557123,"longitude":113.97357790524752,"mode":"taxi","name":"連接建豐街及屯門港鐵站的斜路 Ramp linking Kin Fung Circuit and Tuen Mun MTR Station"},{"id":"taxi:442","latitude":22.396952870876643,"longitude":113.9733540732032,"mode":"taxi","name":"連接建豐街及屯門港鐵站的斜路 Ramp linking Kin Fung Circuit and Tuen Mun MTR Station"},{"id":"taxi:443","latitude":22.382265619662956,"longitude":113.97763825110586,"mode":"taxi","name":"三聖邨巴士總站 Sam Shing Bus Terminus"},{"id":"taxi:444","latitude":22.397768901813524,"longitude":113.97598466311612,"mode":"taxi","name":"新青街南行近新墟街市 San Tsing Street southbound near San Hui Market"},{"id":"taxi:445","latitude":22.38511731468147,"longitude":113.97607080410008,"mode":"taxi","name":"兆興里南行近兆麟苑 Siu Hing Lane southbound near Siu Lun Court"},{"id":"taxi:446","latitude":22.412998488293713,"longitude":113.979420396018,"mode":"taxi","name":"兆康港鐵站北面公共運輸交匯處 Siu Hong MTR Station North PTI"},{"id":"taxi:447","latitude":22.413639886385308,"longitude":113.97961373891432,"mode":"taxi","name":"兆康港鐵站北面公共運輸交匯處 Siu Hong MTR Station North PTI"},{"id":"taxi:448","latitude":22.410856930487157,"longitude":113.97832593569228,"mode":"taxi","name":"兆康港鐵站南面公共運輸交匯處 Siu Hong MTR Station South PTI"},{"id":"taxi:449","latitude":22.410061977432772,"longitude":113.97810368418628,"mode":"taxi","name":"兆康港鐵站南面公共運輸交匯處 Siu Hong MTR Station South PTI"},{"id":"taxi:45","latitude":22.286110887304545,"longitude":114.2174356836622,"mode":"taxi","name":"太古城道太古城中心二期外 Tai Koo Shing Road (outside City Plaza II)"},{"id":"taxi:450","latitude":22.40286398376658,"longitude":113.97032512805808,"mode":"taxi","name":"大興邨大興街的東面路旁行車線近大興邨商場 Tai Hing Estate, Tai Hing Street, eastern kerbside by Tai Hing Commercial Complex"},{"id":"taxi:451","latitude":22.402709894987815,"longitude":113.96987861762793,"mode":"taxi","name":"大興邨大興街的西面路旁行車線近興盛樓 Tai Hing Estate, Tai Hing Street, western kerbside outside Hing Shing House"},{"id":"taxi:452","latitude":22.405142421597606,"longitude":113.96547554094532,"mode":"taxi","name":"田景路兆畦苑 Tin King Road outside Siu Kwai Court"},{"id":"taxi:453","latitude":22.40509740905687,"longitude":113.96558243948732,"mode":"taxi","name":"田景路兆畦苑 Tin King Road outside Siu Kwai Court"},{"id":"taxi:454","latitude":22.37372314190431,"longitude":113.96374613980068,"mode":"taxi","name":"蝶景路近湖碧樓 Tip King Road southbound near Wu Pik House"},{"id":"taxi:455","latitude":22.403397272319875,"longitude":113.97791892617762,"mode":"taxi","name":"井財街 Tseng Choi Street"},{"id":"taxi:456","latitude":22.38754280822611,"longitude":113.9804079827206,"mode":"taxi","name":"青匯街東行仁愛街市對面 Tsing Wui Street eastbound opposite to Yan Oi Market"},{"id":"taxi:457","latitude":22.39259417429826,"longitude":113.97576874265918,"mode":"taxi","name":"屯合街西行近屯門時代廣場 Tuen Hop Street westbound near Tuen Mun Trend Plaza"},{"id":"taxi:458","latitude":22.39142415515609,"longitude":113.97896531628038,"mode":"taxi","name":"屯利街東行近華都花園 Tuen Lee Street eastbound near Waldorf Garden"},{"id":"taxi:459","latitude":22.39137453082955,"longitude":113.97534321592116,"mode":"taxi","name":"屯門市中心巴士總站 Tuen Mun Central Bus Terminus"},{"id":"taxi:46","latitude":22.291590189933924,"longitude":114.19525769761267,"mode":"taxi","name":"保良局余李慕芬紀念學校外的和富道 Wharf Road outside Po Leung Kuk Yu Lee Mo Fan Memorial School"},{"id":"taxi:460","latitude":22.372553745159745,"longitude":113.96724337648034,"mode":"taxi","name":"屯門碼頭公共運輸交匯處 Tuen Mun Pier Head Public Transport Interchange"},{"id":"taxi:461","latitude":22.37256290134799,"longitude":113.967340458805,"mode":"taxi","name":"屯門碼頭公共運輸交匯處 Tuen Mun Pier Head Public Transport Interchange"},{"id":"taxi:462","latitude":22.395246762403577,"longitude":113.97387124849396,"mode":"taxi","name":"屯門站公共運輸交匯處 （室內） Tuen Mun Station PTI (Indoor)"},{"id":"taxi:463","latitude":22.395273719652167,"longitude":113.97376438636076,"mode":"taxi","name":"屯門站公共運輸交匯處 （室內） Tuen Mun Station PTI (Indoor)"},{"id":"taxi:464","latitude":22.39254286038578,"longitude":113.97808974401548,"mode":"taxi","name":"屯盛街東行近屯門市廣場 Tuen Shing Street eastbound near Tuen Mun Town Plaza"},{"id":"taxi:465","latitude":22.3924053182268,"longitude":113.97640022814424,"mode":"taxi","name":"屯順街的東面路旁行車線 Tuen Shun Street eastern kerbside"},{"id":"taxi:466","latitude":22.380848767726437,"longitude":113.96418195896004,"mode":"taxi","name":"屯青里西行新屯門中心對面 Tuen Tsing Lane westbound opposite to Sun Tuen Mun Centre"},{"id":"taxi:467","latitude":22.37677117653172,"longitude":113.96739241992633,"mode":"taxi","name":"湖康街南行屯門湖康診所對面 Wu Hong Street southbound opposite to Tuen Mun Wu Hong Clinic"},{"id":"taxi:468","latitude":22.39561885689284,"longitude":113.97534681182832,"mode":"taxi","name":"仁政街介乎德政圍與啟發里的南面路旁行車線 Yan Ching Street, southern kerbside between Tak Ching Circuit and Kai Fat Path"},{"id":"taxi:469","latitude":22.45210559576073,"longitude":114.00575344468456,"mode":"taxi","name":"往天祐苑（近祐泰閣）的通路 Access road to Tin Yau Court near Yau Tai House"},{"id":"taxi:47","latitude":22.28114455914287,"longitude":114.21894020546902,"mode":"taxi","name":"耀興道近興東邨 Yiu Hing Road (near Hing Tung Estate)"},{"id":"taxi:470","latitude":22.46753371633985,"longitude":113.98429920509528,"mode":"taxi","name":"停車場近流浮山回旋處 Carpark near Lau Fau Shan roundabout"},{"id":"taxi:471","latitude":22.444810045980297,"longitude":114.02885519129156,"mode":"taxi","name":"福康街介乎青山公路與壽富街的東面路旁行車線 Fook Hong Street (eastern kerbside lane) between Castle Peak Road and Sau Fu Street"},{"id":"taxi:472","latitude":22.443745900592916,"longitude":114.02785470876036,"mode":"taxi","name":"康景街的東面路旁行車線 Hong King Street (eastern kerbside lane)"},{"id":"taxi:473","latitude":22.44967154338217,"longitude":114.03210326177177,"mode":"taxi","name":"康業街近采葉庭 Hong Yip Street near The Parcville"},{"id":"taxi:474","latitude":22.443222290670036,"longitude":114.02991601279976,"mode":"taxi","name":"合財街介乎元朗新街及牡丹街 Hop Choi Street between Yuen Long New Street and Mau Tan Street"},{"id":"taxi:475","latitude":22.458101468341184,"longitude":114.00164898438372,"mode":"taxi","name":"嘉恩街 Ka Yan Street"},{"id":"taxi:476","latitude":22.457996959030663,"longitude":114.00178176222876,"mode":"taxi","name":"嘉恩街 Ka Yan Street"},{"id":"taxi:477","latitude":22.434389491521877,"longitude":114.06514985180722,"mode":"taxi","name":"錦上路港鐵站公共運輸交匯處 Kam Sheung Road MTR Station PTI"},{"id":"taxi:478","latitude":22.43469130360887,"longitude":114.06520974936386,"mode":"taxi","name":"錦上路港鐵站公共運輸交匯處 Kam Sheung Road MTR Station PTI"},{"id":"taxi:479","latitude":22.441464681972363,"longitude":114.03041646587585,"mode":"taxi","name":"建德街的西面路旁行車線近合益街 Kin Tak Street (western kerbside lane) near Hop Yick Road"},{"id":"taxi:48","latitude":22.27687710024382,"longitude":114.22398159247372,"mode":"taxi","name":"耀興道耀東邨巴士總站對面 Yiu Hing Road (opposite Yiu Tung Estate Bus Terminus)"},{"id":"taxi:480","latitude":22.50282630686677,"longitude":114.08231978190616,"mode":"taxi","name":"落馬洲（新田）公共運輸交匯處 Lok Ma Chau (San Tin) Public Transport Interchange"},{"id":"taxi:481","latitude":22.502784083654408,"longitude":114.08243244068224,"mode":"taxi","name":"落馬洲（新田）公共運輸交匯處 Lok Ma Chau (San Tin) Public Transport Interchange"},{"id":"taxi:482","latitude":22.50826759716345,"longitude":114.07487250584025,"mode":"taxi","name":"落馬洲管制站 Lok Ma Chau Control Point"},{"id":"taxi:483","latitude":22.508114277469677,"longitude":114.07518362873589,"mode":"taxi","name":"落馬洲管制站 Lok Ma Chau Control Point"},{"id":"taxi:484","latitude":22.51584907456036,"longitude":114.0669835873878,"mode":"taxi","name":"落馬洲支線管制站 Lok Ma Chau Spur Line Control Point PTI"},{"id":"taxi:485","latitude":22.515797830433858,"longitude":114.06698825442656,"mode":"taxi","name":"落馬洲支線管制站 Lok Ma Chau Spur Line Control Point PTI"},{"id":"taxi:486","latitude":22.44459264474414,"longitude":114.03468068552338,"mode":"taxi","name":"朗樂路 Long Lok Road adjacent to Yuen Long LRT Interchange (the first lay-by)"},{"id":"taxi:487","latitude":22.450436040592173,"longitude":114.02303156507904,"mode":"taxi","name":"朗屏邨巴士總站 Long Ping Estate adjacent to Long Ping Estate Bus Terminus"},{"id":"taxi:488","latitude":22.447603215650098,"longitude":114.0251808141991,"mode":"taxi","name":"朗屏港鐵站南面公共運輸交匯處 Long Ping MTR Station South PTI"},{"id":"taxi:489","latitude":22.421432218892413,"longitude":114.06371381085415,"mode":"taxi","name":"八鄉路停車灣 Pat Heung Road Layby"},{"id":"taxi:49","latitude":22.244200559203215,"longitude":114.15087414897458,"mode":"taxi","name":"鴨脷洲邨巴士總站外 Ap Lei Chau Estate outside Bus Terminus"},{"id":"taxi:490","latitude":22.42712991900552,"longitude":114.10842281229506,"mode":"taxi","name":"荃錦公路雷公田村外 Route Twisk outside Lui Kung Tin Tsuen"},{"id":"taxi:491","latitude":22.442381638895657,"longitude":114.02667764404912,"mode":"taxi","name":"西裕街的西面路旁行車線近教育路 Sai Yu Street (western kerbside lane) near Kau Yuk Road"},{"id":"taxi:492","latitude":22.501517631766973,"longitude":113.94502359225176,"mode":"taxi","name":"深圳灣口岸公共運輸交匯處 Shenzhen Bay Port PTI"},{"id":"taxi:493","latitude":22.501517560540215,"longitude":113.94497409569512,"mode":"taxi","name":"深圳灣口岸公共運輸交匯處 Shenzhen Bay Port PTI"},{"id":"taxi:494","latitude":22.446371013779892,"longitude":114.0213369665538,"mode":"taxi","name":"媽廟路永發大樓外 The lay-by off Ma Miu Road outside Wing Fat Building"},{"id":"taxi:495","latitude":22.455383770345243,"longitude":113.99848720821213,"mode":"taxi","name":"天瑞邨巴士總站外最北面的停車灣位 the northermost layby outside Tin Shui Estate Bus Terminus"},{"id":"taxi:496","latitude":22.46280519111683,"longitude":113.99839498153726,"mode":"taxi","name":"天富苑近巴士站 Tin Fu Court near bus terminus"},{"id":"taxi:497","latitude":22.46280938140244,"longitude":113.99873019386536,"mode":"taxi","name":"天富苑近巴士站 Tin Fu Court near bus terminus"},{"id":"taxi:498","latitude":22.44997355033535,"longitude":114.0061033813582,"mode":"taxi","name":"天福路近天水圍港鐵站 Tin Fuk Rd near Tin Shui Wai MTR Station"},{"id":"taxi:499","latitude":22.4693421846372,"longitude":113.99941436646024,"mode":"taxi","name":"天恆邨巴士總站 Tin Heng Estate Bus Terminus"},{"id":"taxi:5","latitude":22.286094479881022,"longitude":114.16158136784088,"mode":"taxi","name":"介乎中環七號及八號碼頭之間 （新天星碼頭） Between Central Ferry Piers Nos. 7 and 8 \n(new Star Ferry Piers)"},{"id":"taxi:50","latitude":22.24117316870905,"longitude":114.15907242632493,"mode":"taxi","name":"鴨脷洲海旁道（南灣外） Ap Lei Chau Praya Road outside Larvotto"},{"id":"taxi:500","latitude":22.469433799800015,"longitude":113.99929290224712,"mode":"taxi","name":"天恆邨巴士總站 Tin Heng Estate Bus Terminus"},{"id":"taxi:501","latitude":22.449552785013495,"longitude":114.0017270111274,"mode":"taxi","name":"天美街 Tin Mei Street"},{"id":"taxi:502","latitude":22.44963808461696,"longitude":114.00167548265637,"mode":"taxi","name":"天美街 Tin Mei Street"},{"id":"taxi:503","latitude":22.45548000143975,"longitude":114.00740650571343,"mode":"taxi","name":"天柏路天水圍游泳池外 Tin Pak Road outside Tin Shui Wai Swimming Pool"},{"id":"taxi:504","latitude":22.455491364379036,"longitude":113.99855775968877,"mode":"taxi","name":"天瑞邨近天瑞邨商場 Tin Shui Estate near Tin Shui Estate Commercial Complex"},{"id":"taxi:505","latitude":22.460407592924863,"longitude":113.99747584436784,"mode":"taxi","name":"天瑞路天頌苑外 Tin Shui Road outside Tin Chung Court"},{"id":"taxi:506","latitude":22.46024642342932,"longitude":113.99756988611644,"mode":"taxi","name":"天瑞路天頌苑外 Tin Shui Road outside Tin Chung Court"},{"id":"taxi:507","latitude":22.45948465577635,"longitude":113.99681674606984,"mode":"taxi","name":"天壇街近天瑞路 Tin Tan Street near Tin Shui Road, Tin Shui Wai"},{"id":"taxi:508","latitude":22.45345271101674,"longitude":114.0072705756648,"mode":"taxi","name":"天慈邨 Tin Tsz Estate"},{"id":"taxi:509","latitude":22.462703775100376,"longitude":113.99640978711128,"mode":"taxi","name":"天恩邨公共運輸交匯處 Tin Yan Estate Public Transport Interchange"},{"id":"taxi:51","latitude":22.23666684175417,"longitude":114.19760774778976,"mode":"taxi","name":"海灘道公共停車場對面 Beach Road (opposite public car park)"},{"id":"taxi:510","latitude":22.4626548359592,"longitude":113.99644713029976,"mode":"taxi","name":"天恩邨公共運輸交匯處 Tin Yan Estate Public Transport Interchange"},{"id":"taxi:511","latitude":22.45820013789269,"longitude":114.00374386801968,"mode":"taxi","name":"天恩路近嘉湖銀座 Tin Yan Road near Kingswood Ginza"},{"id":"taxi:512","latitude":22.450678326686234,"longitude":114.00315551681156,"mode":"taxi","name":"天耀邨近天耀邨商場 Tin Yiu Estate near Tin Yiu Estate Commercial Complex"},{"id":"taxi:513","latitude":22.450500440346325,"longitude":114.0032598446854,"mode":"taxi","name":"天耀邨近天耀邨商場 Tin Yiu Estate near Tin Yiu Estate Commercial Complex"},{"id":"taxi:514","latitude":22.441946260647622,"longitude":114.0443898294164,"mode":"taxi","name":"友全街近善勇樓 Yau Chuen Street near Shin Yung House"},{"id":"taxi:515","latitude":22.44365063714652,"longitude":114.02808822240172,"mode":"taxi","name":"裕景坊 Yu King Square"},{"id":"taxi:516","latitude":22.44612476184938,"longitude":114.0354674559242,"mode":"taxi","name":"元朗港鐵站北面公共運輸交匯處 Yuen Long MTR Station (North) PTI"},{"id":"taxi:517","latitude":22.445445628173964,"longitude":114.03046225005578,"mode":"taxi","name":"泰祥街 Yuen Long Tai Cheung Street"},{"id":"taxi:518","latitude":22.442633525022092,"longitude":114.03671240985064,"mode":"taxi","name":"元龍街近YOHO Town 第一期 Yuen Lung Street near YOHO Town Phase I"},{"id":"taxi:52","latitude":22.26190835681309,"longitude":114.13028994923552,"mode":"taxi","name":"數碼港公共運輸交匯處 Cybeport PTI"},{"id":"taxi:53","latitude":22.247779222350538,"longitude":114.1673168065716,"mode":"taxi","name":"香葉道（近黃竹坑公共交通運輸設施） Heung Yip Road (near Wong Chuk Hang PTF)"},{"id":"taxi:54","latitude":22.247033689094216,"longitude":114.15873566552186,"mode":"taxi","name":"觀海徑 Kwun Hoi Path"},{"id":"taxi:55","latitude":22.239245693570624,"longitude":114.15243268993484,"mode":"taxi","name":"新海怡廣場外的利榮街 Lee Wing Street outside Horizon Plaza"},{"id":"taxi:56","latitude":22.241282170814063,"longitude":114.1561102147829,"mode":"taxi","name":"利東邨道利東商場外 Lei Tung Estate Road outside Lei Tung Commercial Centre"},{"id":"taxi:57","latitude":22.22024931330922,"longitude":114.209420528583,"mode":"taxi","name":"馬坑邨公共運輸交匯處 Ma Hang Estate Public Transport Interchange"},{"id":"taxi:58","latitude":22.24803293215719,"longitude":114.1539284955536,"mode":"taxi","name":"南寧街 （南面） Nam Ning Street (Southern Section)"},{"id":"taxi:59","latitude":22.248298419967387,"longitude":114.17501665981892,"mode":"taxi","name":"海洋公園正門 Ocean Park (Main entrance)"},{"id":"taxi:6","latitude":22.281833862851855,"longitude":114.12616451968232,"mode":"taxi","name":"加多近街 Cadogan Street"},{"id":"taxi:60","latitude":22.238611769022363,"longitude":114.19466101579192,"mode":"taxi","name":"淺水灣道 （淺水灣花園大廈對面） Repulse Bay Road (opposite to the Repulse Bay Apartments)"},{"id":"taxi:61","latitude":22.250070956263222,"longitude":114.15732241444938,"mode":"taxi","name":"石排灣邨公共運輸交匯處 Shek Pai Wan Estate Public Transport Interchange"},{"id":"taxi:62","latitude":22.24325948692143,"longitude":114.16403362325372,"mode":"taxi","name":"深灣道公共運輸交匯處 Shum Wan Road PTI"},{"id":"taxi:63","latitude":22.219702394368067,"longitude":114.21273082886162,"mode":"taxi","name":"赤柱村道 Stanley Village Road"},{"id":"taxi:64","latitude":22.22809546921502,"longitude":114.21746340773518,"mode":"taxi","name":"大潭道 （曼克頓花園外） Tai Tam Road (outside the Manhattan)"},{"id":"taxi:65","latitude":22.24985663136752,"longitude":114.13973654404462,"mode":"taxi","name":"華貴邨 Wah Kwai Estate"},{"id":"taxi:66","latitude":22.280649717193604,"longitude":114.17541885285748,"mode":"taxi","name":"港灣道 （鷹君中心商場/海港中心商場對面） Harbour Road (opposite to Great Eagle Centre/Harbour Centre)"},{"id":"taxi:67","latitude":22.273443234900316,"longitude":114.17338133801076,"mode":"taxi","name":"堅尼地道 Kennedy Road"},{"id":"taxi:68","latitude":22.278798229071036,"longitude":114.18515114547874,"mode":"taxi","name":"恩平道近蘭芳道 Yun Ping Road near Lan Fong Road"},{"id":"taxi:69","latitude":22.28314149041018,"longitude":114.19177886857982,"mode":"taxi","name":"電氣道近留仙街 Electric Road (near Lau Sin Street)"},{"id":"taxi:7","latitude":22.287683356927065,"longitude":114.15684575220364,"mode":"taxi","name":"中環二號碼頭 Central Ferry Pier No. 2"},{"id":"taxi:70","latitude":22.281254763423735,"longitude":114.17480753675146,"mode":"taxi","name":"會展站公共運輸交匯處 Exhibition Centre Station Public Transport Interchange"},{"id":"taxi:71","latitude":22.283810414935676,"longitude":114.1736624858133,"mode":"taxi","name":"博覽道東行（香港會議展覽中心二期下） Expo Drive eastbound underneath HKCEC Phase II"},{"id":"taxi:72","latitude":22.279249961248052,"longitude":114.1788926109564,"mode":"taxi","name":"駱克道353號（介乎杜老誌道與馬師道交界） House No.353 Lockhart Road (between Tonnochy Road and Marsh Road)"},{"id":"taxi:73","latitude":22.28086637535093,"longitude":114.18202680294604,"mode":"taxi","name":"謝斐道伊利莎伯大廈對出 Jaffe Road outside Elizabeth House"},{"id":"taxi:74","latitude":22.28421615447353,"longitude":114.19157520854482,"mode":"taxi","name":"琉璃街介乎興發街與電氣道 Lau Li Street (between Hing Fat Street and Electric Road)"},{"id":"taxi:75","latitude":22.28068571576247,"longitude":114.1833270377705,"mode":"taxi","name":"駱克道介乎景隆街與波斯富街 Lockhart Road (between Cannon Street and Percival Street)"},{"id":"taxi:76","latitude":22.278256558537493,"longitude":114.17298339189314,"mode":"taxi","name":"駱克道介乎盧押道與柯布連道 Lockhart Road (between Luard Road and O'brien Road)"},{"id":"taxi:77","latitude":22.282004111360894,"longitude":114.18503489459792,"mode":"taxi","name":"百德新街介乎京士頓街與告士打道 Paterson Street (between Kingston Street and Gloucester Road)"},{"id":"taxi:78","latitude":22.280739799065696,"longitude":114.18548117254112,"mode":"taxi","name":"百德新街介乎京士頓街與記利佐治街 Paterson Street between Kingston Street and Great George Street"},{"id":"taxi:79","latitude":22.278780289948937,"longitude":114.18226930490697,"mode":"taxi","name":"羅素街 Russell Street"},{"id":"taxi:8","latitude":22.28175042942206,"longitude":114.15852527795435,"mode":"taxi","name":"遮打道 （歷山大廈） Chater Road (outside Alexandra House)"},{"id":"taxi:80","latitude":22.278680952588587,"longitude":114.18227900421977,"mode":"taxi","name":"羅素街 （時代廣場內） Russell Street (within Times Square)"},{"id":"taxi:81","latitude":22.278825534337862,"longitude":114.17680642393046,"mode":"taxi","name":"史釗域道介乎謝斐道與駱克道 Stewart Road (between Jaffe Road and Lockhart Road)"},{"id":"taxi:82","latitude":22.275782183920697,"longitude":114.1796396876871,"mode":"taxi","name":"崇德街 Sung Tak Street"},{"id":"taxi:83","latitude":22.27579023189879,"longitude":114.19491214216654,"mode":"taxi","name":"大坑道香港真光中學外 （近虎豹別墅） Tai Hang Road outside The True Light Middle School of Hong Kong (near Villa Haw Par)"},{"id":"taxi:84","latitude":22.27707350043659,"longitude":114.17143093693124,"mode":"taxi","name":"譚臣道近盧押道 Thomson Road (near Luard Road)"},{"id":"taxi:85","latitude":22.279213849639696,"longitude":114.177670008074,"mode":"taxi","name":"杜老誌道介乎駱克道與謝斐道 Tonnochy Road (between Lockhart Road and Jaffe Road)"},{"id":"taxi:86","latitude":22.269632096687232,"longitude":114.18568424240074,"mode":"taxi","name":"載德街友誼大廈外 Tsoi Tak St (os Friendship Court)"},{"id":"taxi:87","latitude":22.279511122697336,"longitude":114.19233156578728,"mode":"taxi","name":"銅鑼灣道 （浣紗街以東） Tung Lo Wan Road (east of Wun Sha Street)"},{"id":"taxi:88","latitude":22.286076575212256,"longitude":114.19030422334733,"mode":"taxi","name":"威非路道（近興發街） Whitfield Road (near Hing Fat Street)"},{"id":"taxi:89","latitude":22.31237195470465,"longitude":114.18871059636984,"mode":"taxi","name":"庇利街 Bailey St."},{"id":"taxi:9","latitude":22.2816962662858,"longitude":114.15870964892162,"mode":"taxi","name":"遮打道 （歷山大廈） Chater Road (outside Alexandra House)"},{"id":"taxi:90","latitude":22.311054935760207,"longitude":114.1780682809816,"mode":"taxi","name":"治民街 Chi Man St."},{"id":"taxi:91","latitude":22.313127208141132,"longitude":114.17777984978696,"mode":"taxi","name":"忠孝街 Chung Hau St."},{"id":"taxi:92","latitude":22.32776355263792,"longitude":114.18757843174346,"mode":"taxi","name":"福佬村道近太子道西 Fuk Lo Tsun Road near Prince Edward Road West"},{"id":"taxi:93","latitude":22.301600946438224,"longitude":114.18881634127828,"mode":"taxi","name":"紅磡（紅鸞道）公共運輸交匯處 Hung Hom (Hung Luen Road) Public Transport Interchange"},{"id":"taxi:94","latitude":22.306033277198186,"longitude":114.21345483127764,"mode":"taxi","name":"啟德郵輪碼頭 Kai Tak Cruise Terminal"},{"id":"taxi:95","latitude":22.339591846725575,"longitude":114.18006879082824,"mode":"taxi","name":"金城道 Kam Shing Rd."},{"id":"taxi:96","latitude":22.31830828894788,"longitude":114.19400614104792,"mode":"taxi","name":"九龍城碼頭 Kowloon City Ferry Pier"},{"id":"taxi:97","latitude":22.31907604207029,"longitude":114.19305102623048,"mode":"taxi","name":"新碼頭街近翔龍灣 San Ma Tau Street near Grand Waterfront"},{"id":"taxi:98","latitude":22.32766388949924,"longitude":114.18197330953473,"mode":"taxi","name":"喇沙利道 La Salle Road"},{"id":"taxi:99","latitude":22.31999726751173,"longitude":114.18823786503836,"mode":"taxi","name":"馬坑涌道 Ma Hang Chung Rd."}]}
+{
+  "stops": [
+    {
+      "id": "taxi:1",
+      "latitude": 22.279159212699245,
+      "longitude": 114.16466773391758,
+      "mode": "taxi",
+      "name": "金鐘港鐵站 （1） Admiralty MTR Station (1)"
+    },
+    {
+      "id": "taxi:10",
+      "latitude": 22.287191710730905,
+      "longitude": 114.13565284818092,
+      "mode": "taxi",
+      "name": "干諾道西第188號 Connaught Road West no. 188"
+    },
+    {
+      "id": "taxi:100",
+      "latitude": 22.317121820057015,
+      "longitude": 114.19158774739851,
+      "mode": "taxi",
+      "name": "美光街 Mei Kwong Street"
+    },
+    {
+      "id": "taxi:101",
+      "latitude": 22.328699812796017,
+      "longitude": 114.20093557599331,
+      "mode": "taxi",
+      "name": "沐寧街近啟德一號 Muk Ning Street near One Kai Tak"
+    },
+    {
+      "id": "taxi:102",
+      "latitude": 22.302832389122084,
+      "longitude": 114.1876299016116,
+      "mode": "taxi",
+      "name": "愛景街 Oi King Street"
+    },
+    {
+      "id": "taxi:103",
+      "latitude": 22.3233904815893,
+      "longitude": 114.18963023376617,
+      "mode": "taxi",
+      "name": "北帝街 Pak Tai Street"
+    },
+    {
+      "id": "taxi:104",
+      "latitude": 22.33030105073788,
+      "longitude": 114.19278783889992,
+      "mode": "taxi",
+      "name": "沙浦道 Sa Po Rd."
+    },
+    {
+      "id": "taxi:105",
+      "latitude": 22.31194671477556,
+      "longitude": 114.18644384782684,
+      "mode": "taxi",
+      "name": "新圍街 San Wai St."
+    },
+    {
+      "id": "taxi:106",
+      "latitude": 22.336491194619366,
+      "longitude": 114.17631641214317,
+      "mode": "taxi",
+      "name": "多福道 To Fuk Rd."
+    },
+    {
+      "id": "taxi:107",
+      "latitude": 22.309765097491255,
+      "longitude": 114.18375999686356,
+      "mode": "taxi",
+      "name": "山谷道 Valley Rd."
+    },
+    {
+      "id": "taxi:108",
+      "latitude": 22.326222584281822,
+      "longitude": 114.21781297187562,
+      "mode": "taxi",
+      "name": "彩禧路彩月樓外 Choi Hei Road o/s Choi Yuet Hse."
+    },
+    {
+      "id": "taxi:109",
+      "latitude": 22.33209328653137,
+      "longitude": 114.21358697703504,
+      "mode": "taxi",
+      "name": "彩盛里 Choi Shing Lane"
+    },
+    {
+      "id": "taxi:11",
+      "latitude": 22.28359495663521,
+      "longitude": 114.12655202489618,
+      "mode": "taxi",
+      "name": "爹核士街 Davis Street"
+    },
+    {
+      "id": "taxi:110",
+      "latitude": 22.296622103385623,
+      "longitude": 114.23879808780312,
+      "mode": "taxi",
+      "name": "大本型 Domain"
+    },
+    {
+      "id": "taxi:111",
+      "latitude": 22.32358008364023,
+      "longitude": 114.21548607635188,
+      "mode": "taxi",
+      "name": "福淘街 Fuk To Street"
+    },
+    {
+      "id": "taxi:112",
+      "latitude": 22.3235911267818,
+      "longitude": 114.21719578808342,
+      "mode": "taxi",
+      "name": "佐敦谷北道 Jordan Valley North Rd."
+    },
+    {
+      "id": "taxi:113",
+      "latitude": 22.312041281435494,
+      "longitude": 114.23005345572405,
+      "mode": "taxi",
+      "name": "佳廉道 Kai Lim Rd"
+    },
+    {
+      "id": "taxi:114",
+      "latitude": 22.32768936339969,
+      "longitude": 114.20956869353466,
+      "mode": "taxi",
+      "name": "啟樂街近宏照道 Kai Lok Street near Wang Chiu Rd."
+    },
+    {
+      "id": "taxi:115",
+      "latitude": 22.32442994210341,
+      "longitude": 114.207733491796,
+      "mode": "taxi",
+      "name": "臨興街近宏冠道 Lam Hing St. near Wang Kwun Road"
+    },
+    {
+      "id": "taxi:116",
+      "latitude": 22.322513747683185,
+      "longitude": 114.20757695073088,
+      "mode": "taxi",
+      "name": "臨樂街南豐商業中心外 Lam Lok St.o/s Nam Fung Commercial Centre"
+    },
+    {
+      "id": "taxi:117",
+      "latitude": 22.30735892760008,
+      "longitude": 114.23336571638916,
+      "mode": "taxi",
+      "name": "藍田公共運輸交匯處 Lam Tin P.T.I. (2 nos.)"
+    },
+    {
+      "id": "taxi:118",
+      "latitude": 22.331324551044784,
+      "longitude": 114.22657582216712,
+      "mode": "taxi",
+      "name": "利安道順利邨利溢樓外 Lee On Rd. o/s Lee Yat Hse.,Shun Lee Est."
+    },
+    {
+      "id": "taxi:119",
+      "latitude": 22.332024206312006,
+      "longitude": 114.2256480478575,
+      "mode": "taxi",
+      "name": "利安道順利邨利明樓外 Lee On Road o/s Lee Ming Hse., Shun Lee Est."
+    },
+    {
+      "id": "taxi:12",
+      "latitude": 22.28170515009813,
+      "longitude": 114.15743850700098,
+      "mode": "taxi",
+      "name": "畢打街東面行車線 Eastern kerbside lane of Pedder Street outside Central Building"
+    },
+    {
+      "id": "taxi:120",
+      "latitude": 22.292337401328226,
+      "longitude": 114.23815980006265,
+      "mode": "taxi",
+      "name": "鯉魚門徑 Lei Yue Mun Path"
+    },
+    {
+      "id": "taxi:121",
+      "latitude": 22.313774973224444,
+      "longitude": 114.2203662022492,
+      "mode": "taxi",
+      "name": "創業街北面路旁行車線美亞工業大廈外 Northern kerbside lane of Chong Yip Street outside Meyer Industrial Building"
+    },
+    {
+      "id": "taxi:122",
+      "latitude": 22.320992163034376,
+      "longitude": 114.23472958339556,
+      "mode": "taxi",
+      "name": "安翠街安達邨智達樓外 On Chui Street o/s Chi Tat Hse On Tat Est"
+    },
+    {
+      "id": "taxi:123",
+      "latitude": 22.306239322661835,
+      "longitude": 114.23711378724192,
+      "mode": "taxi",
+      "name": "安田街平田購物中心外 On Tin Street o/s Ping Ting Shopping Centre"
+    },
+    {
+      "id": "taxi:124",
+      "latitude": 22.327975757035663,
+      "longitude": 114.2290787426904,
+      "mode": "taxi",
+      "name": "安茵街安泰邨居泰樓外 On Yan Street o/s Kui Tai Hse On Tai Est"
+    },
+    {
+      "id": "taxi:125",
+      "latitude": 22.302584622805337,
+      "longitude": 114.23978694107778,
+      "mode": "taxi",
+      "name": "碧雲道廣田商場外 Pik Wan Rd. o/s Kwong Tin Shopping Centre"
+    },
+    {
+      "id": "taxi:126",
+      "latitude": 22.333761532395872,
+      "longitude": 114.21016218671612,
+      "mode": "taxi",
+      "name": "坪石邨 Ping Shek Est."
+    },
+    {
+      "id": "taxi:127",
+      "latitude": 22.31743757825386,
+      "longitude": 114.23647955648865,
+      "mode": "taxi",
+      "name": "寶達公共運輸交匯處 Po Tat Public Transport Interchange"
+    },
+    {
+      "id": "taxi:128",
+      "latitude": 22.31871041433948,
+      "longitude": 114.2319123632782,
+      "mode": "taxi",
+      "name": "秀明道秀華樓外 Sau Ming Road o/s Sau Wah Hse."
+    },
+    {
+      "id": "taxi:129",
+      "latitude": 22.323116291169782,
+      "longitude": 114.2277032406444,
+      "mode": "taxi",
+      "name": "秀雅道基督教聯合醫院P座外 Sau Nga Road o/s United Christian Hospital Block P"
+    },
+    {
+      "id": "taxi:13",
+      "latitude": 22.283249742397903,
+      "longitude": 114.16066954998414,
+      "mode": "taxi",
+      "name": "愛丁堡廣場 Edinburgh Place"
+    },
+    {
+      "id": "taxi:130",
+      "latitude": 22.305190316842,
+      "longitude": 114.22939409012504,
+      "mode": "taxi",
+      "name": "觀塘茜發道西行近其與麗港南街交界處 Sin Fat Road westbound near its junction with South Laguna Street"
+    },
+    {
+      "id": "taxi:131",
+      "latitude": 22.309921935391664,
+      "longitude": 114.23622940712292,
+      "mode": "taxi",
+      "name": "德田街藍蔚樓外 Tak Tin Street o/s Lam Wai House"
+    },
+    {
+      "id": "taxi:132",
+      "latitude": 22.321633624512813,
+      "longitude": 114.21306768504648,
+      "mode": "taxi",
+      "name": "德福廣場\n公共運輸交匯處 Telford Plaza P.T.I."
+    },
+    {
+      "id": "taxi:133",
+      "latitude": 22.31569959617603,
+      "longitude": 114.22929530373008,
+      "mode": "taxi",
+      "name": "翠屏道翠屏邨翠榆樓外 Tsui Ping Rd. o/s Tsui Yue Hse., Tsui Ping Est."
+    },
+    {
+      "id": "taxi:134",
+      "latitude": 22.323944656676854,
+      "longitude": 114.20442828511172,
+      "mode": "taxi",
+      "name": "宏展街香港郵政中央郵政中心外 Wang Chin St. o/s Hong Kong Post - Central Mail Centre"
+    },
+    {
+      "id": "taxi:135",
+      "latitude": 22.32287474902388,
+      "longitude": 114.2089697357912,
+      "mode": "taxi",
+      "name": "宏照道南行近臨華街 Wang Chiu Rd (S/B) near Lam Wah St."
+    },
+    {
+      "id": "taxi:136",
+      "latitude": 22.322570368428742,
+      "longitude": 114.20614940524972,
+      "mode": "taxi",
+      "name": "宏光道介乎宏展街及臨華街 Wang Kwong Road between Wang Chin St and Lam Wah St"
+    },
+    {
+      "id": "taxi:137",
+      "latitude": 22.32012521879396,
+      "longitude": 114.2097334482926,
+      "mode": "taxi",
+      "name": "宏泰道近臨豐街 Wang Tai Road near Lam Fung St"
+    },
+    {
+      "id": "taxi:138",
+      "latitude": 22.314571967179923,
+      "longitude": 114.22646990851626,
+      "mode": "taxi",
+      "name": "月華街佳景樓外 Yuet Wah Street o/s Kai King Building"
+    },
+    {
+      "id": "taxi:139",
+      "latitude": 22.329640382419633,
+      "longitude": 114.21711968081937,
+      "mode": "taxi",
+      "name": "彩榮路彩和樓外 Choi Wing Road outside Choi Wo House"
+    },
+    {
+      "id": "taxi:14",
+      "latitude": 22.283800388924575,
+      "longitude": 114.1585735286903,
+      "mode": "taxi",
+      "name": "交易廣場公共交通交滙處 Exchange Square PTI"
+    },
+    {
+      "id": "taxi:140",
+      "latitude": 22.31490704095953,
+      "longitude": 114.21503794493594,
+      "mode": "taxi",
+      "name": "海濱道海濱道公園外 Hoi Bun Road near Hoi Bun Road Park"
+    },
+    {
+      "id": "taxi:141",
+      "latitude": 22.32979876451358,
+      "longitude": 114.20822425435408,
+      "mode": "taxi",
+      "name": "宏照道麗晶花園18座對面 Wang Chiu Road opposite to Richland Gardens Block 18"
+    },
+    {
+      "id": "taxi:142",
+      "latitude": 22.334170710375172,
+      "longitude": 114.2101499269554,
+      "mode": "taxi",
+      "name": "坪石公共運輸交匯處一樓 1/F of Ping Shek P.T.I"
+    },
+    {
+      "id": "taxi:143",
+      "latitude": 22.31766104882131,
+      "longitude": 114.16201407956191,
+      "mode": "taxi",
+      "name": "櫻桃街近奧海城第二期 Cherry Street near Olympian City Phase II"
+    },
+    {
+      "id": "taxi:144",
+      "latitude": 22.317595262940152,
+      "longitude": 114.1620360993602,
+      "mode": "taxi",
+      "name": "櫻桃街近奧海城第二期 Cherry Street near Olympian City Phase II"
+    },
+    {
+      "id": "taxi:145",
+      "latitude": 22.315724783895956,
+      "longitude": 114.17248000163455,
+      "mode": "taxi",
+      "name": "登打士街介乎廣華街及花園街 Dundas Street between Kwong Wa Street and Fa Yuen Street"
+    },
+    {
+      "id": "taxi:146",
+      "latitude": 22.318904807613077,
+      "longitude": 114.17127495595952,
+      "mode": "taxi",
+      "name": "花園街介乎亞皆老街及奶路臣街 Fa Yuen Street between Argyle Street and Nelson Street"
+    },
+    {
+      "id": "taxi:147",
+      "latitude": 22.324852896636763,
+      "longitude": 114.17005172868777,
+      "mode": "taxi",
+      "name": "花園街介乎運動場道及太子道西 Fa Yuen Street between Playing Field Road and Prince Edward Road West"
+    },
+    {
+      "id": "taxi:148",
+      "latitude": 22.31996724507944,
+      "longitude": 114.17096108178542,
+      "mode": "taxi",
+      "name": "花園街近亞皆老街 Fa Yuen Street near Argyle Street"
+    },
+    {
+      "id": "taxi:149",
+      "latitude": 22.324166147259643,
+      "longitude": 114.16046997496817,
+      "mode": "taxi",
+      "name": "褔利街近樂群街 Fuk Lee Street near Lok Kwan St (o/s Metro Harbour View)"
+    },
+    {
+      "id": "taxi:15",
+      "latitude": 22.28648890664051,
+      "longitude": 114.14246504692028,
+      "mode": "taxi",
+      "name": "第一街 First Street"
+    },
+    {
+      "id": "taxi:150",
+      "latitude": 22.31872092136193,
+      "longitude": 114.1583019234285,
+      "mode": "taxi",
+      "name": "海帆道, 大角咀（維港灣） Hoi Fan Road, Tai Kok Tsui (Island Harbourview)"
+    },
+    {
+      "id": "taxi:151",
+      "latitude": 22.318904452426302,
+      "longitude": 114.15820365767892,
+      "mode": "taxi",
+      "name": "海帆道, 大角咀（維港灣） Hoi Fan Road, Tai Kok Tsui (Island Harbourview)"
+    },
+    {
+      "id": "taxi:152",
+      "latitude": 22.318944343261677,
+      "longitude": 114.16113919653334,
+      "mode": "taxi",
+      "name": "海景街介乎櫻桃街及富貴街 Hoi King Street between Cherry Street and Foo Kwai Street"
+    },
+    {
+      "id": "taxi:153",
+      "latitude": 22.314671785705908,
+      "longitude": 114.16423951434112,
+      "mode": "taxi",
+      "name": "海泓道南行線（近富榮花園八座） Hoi Wang Road S/B (near Charming Garden Block 8)"
+    },
+    {
+      "id": "taxi:154",
+      "latitude": 22.3153975933726,
+      "longitude": 114.16341066565926,
+      "mode": "taxi",
+      "name": "大角咀海泓道（栢景灣） Hoi Wang Road, Tai Kok Tsui (Park Avenue)"
+    },
+    {
+      "id": "taxi:155",
+      "latitude": 22.321395422831493,
+      "longitude": 114.16154086889787,
+      "mode": "taxi",
+      "name": "埃華街介乎大角咀道及大政街 Ivy St. between Tai Kok Tsui Road and Tai Ching Street"
+    },
+    {
+      "id": "taxi:156",
+      "latitude": 22.321964967935937,
+      "longitude": 114.17239557539578,
+      "mode": "taxi",
+      "name": "旺角東港鐵站 Mong Kok East MTR Station Podium"
+    },
+    {
+      "id": "taxi:157",
+      "latitude": 22.31868808408155,
+      "longitude": 114.16883125468448,
+      "mode": "taxi",
+      "name": "砵蘭街介乎奶路臣街及亞皆老街 Portland Street between Nelson Street and Argyle Street"
+    },
+    {
+      "id": "taxi:158",
+      "latitude": 22.320086100194057,
+      "longitude": 114.16979971314603,
+      "mode": "taxi",
+      "name": "西洋菜南街介乎快富街及亞皆老街 Sai Yeung Choi Street South between Fife Street and Argyle Street"
+    },
+    {
+      "id": "taxi:159",
+      "latitude": 22.31779051359092,
+      "longitude": 114.1711245505258,
+      "mode": "taxi",
+      "name": "山東街與通菜街及花園街交界 Shantung Street between Tung Choi Street and Fa Yuen Street"
+    },
+    {
+      "id": "taxi:16",
+      "latitude": 22.284251901950253,
+      "longitude": 114.15840850988756,
+      "mode": "taxi",
+      "name": "港景街 Harbour View Street"
+    },
+    {
+      "id": "taxi:160",
+      "latitude": 22.33850638390035,
+      "longitude": 114.1487814666578,
+      "mode": "taxi",
+      "name": "青山道與大南西街交界 Castle Peak Road near Tai Nam West Street"
+    },
+    {
+      "id": "taxi:161",
+      "latitude": 22.33692604706059,
+      "longitude": 114.14885944019592,
+      "mode": "taxi",
+      "name": "長順街 Cheung Shun St."
+    },
+    {
+      "id": "taxi:162",
+      "latitude": 22.33614117841143,
+      "longitude": 114.15389759528028,
+      "mode": "taxi",
+      "name": "幸祥街與興華街及發祥街交界 Hang Cheung Street between Hing Wah Street and Fat Tseung Street"
+    },
+    {
+      "id": "taxi:163",
+      "latitude": 22.33221184768736,
+      "longitude": 114.14751112760248,
+      "mode": "taxi",
+      "name": "海麗邨 Hoi Lai Estate PTI"
+    },
+    {
+      "id": "taxi:164",
+      "latitude": 22.33729394908172,
+      "longitude": 114.13753105797107,
+      "mode": "taxi",
+      "name": "荔灣道 （美孚港鐵站） Lai Wan Road (Mei Foo MTR Station)"
+    },
+    {
+      "id": "taxi:165",
+      "latitude": 22.33882028598762,
+      "longitude": 114.13823926390155,
+      "mode": "taxi",
+      "name": "荔灣道 （美孚港鐵站） Lai Wan Road (Mei Foo MTR Station)"
+    },
+    {
+      "id": "taxi:166",
+      "latitude": 22.33686487696155,
+      "longitude": 114.16587613308992,
+      "mode": "taxi",
+      "name": "白雲街 Pak Wan Street"
+    },
+    {
+      "id": "taxi:167",
+      "latitude": 22.329205437197174,
+      "longitude": 114.15215153283798,
+      "mode": "taxi",
+      "name": "深旺道（北行）海達公共運輸交匯處外 Sham Mong Road northbound outside Hoi Tat Public Transport Interchange"
+    },
+    {
+      "id": "taxi:168",
+      "latitude": 22.332892905492756,
+      "longitude": 114.17008681892764,
+      "mode": "taxi",
+      "name": "大坑西街 Tai Hang Sai St."
+    },
+    {
+      "id": "taxi:169",
+      "latitude": 22.34033119074881,
+      "longitude": 114.15270289781104,
+      "mode": "taxi",
+      "name": "集輝街近永康街 Tsap Fai Street near Wing Hong Street"
+    },
+    {
+      "id": "taxi:17",
+      "latitude": 22.2878000073418,
+      "longitude": 114.15148924623034,
+      "mode": "taxi",
+      "name": "港澳碼頭 （近信德中心） Hong Kong - Macau Ferry Terminal (Near Shun Tak Centre)"
+    },
+    {
+      "id": "taxi:170",
+      "latitude": 22.33108480469507,
+      "longitude": 114.1600136912774,
+      "mode": "taxi",
+      "name": "欽州街公共運輸交匯處/ 西九龍中心 Yen Chow St. P.T.I./ Dragon Centre"
+    },
+    {
+      "id": "taxi:171",
+      "latitude": 22.340831283919226,
+      "longitude": 114.19289232136404,
+      "mode": "taxi",
+      "name": "正德街 Ching Tak Street"
+    },
+    {
+      "id": "taxi:172",
+      "latitude": 22.34524589497431,
+      "longitude": 114.19233808701276,
+      "mode": "taxi",
+      "name": "竹園道 Chuk Yuen Road"
+    },
+    {
+      "id": "taxi:173",
+      "latitude": 22.33464602915468,
+      "longitude": 114.21142663952152,
+      "mode": "taxi",
+      "name": "清水灣道 (近彩雲聖若瑟小學) Clear Water Bay Rd. (near Choi Wan St. Joseph Primary School)"
+    },
+    {
+      "id": "taxi:174",
+      "latitude": 22.33355510591984,
+      "longitude": 114.21501677594829,
+      "mode": "taxi",
+      "name": "清水灣道 (彩雲巴士總站外) Clear Water Bay Rd. (outside Choi Wan Bus Terminus)"
+    },
+    {
+      "id": "taxi:175",
+      "latitude": 22.34066941001354,
+      "longitude": 114.20210349865036,
+      "mode": "taxi",
+      "name": "鑽石山公共運輸交匯處 Diamond Hill Station PTI"
+    },
+    {
+      "id": "taxi:176",
+      "latitude": 22.338349032961343,
+      "longitude": 114.20328395157529,
+      "mode": "taxi",
+      "name": "鑽石山(彩虹道)公共運輸交匯處 Diamond Hill (Choi Hung Road) Public Transport Interchange"
+    },
+    {
+      "id": "taxi:177",
+      "latitude": 22.33776214424856,
+      "longitude": 114.2145135236141,
+      "mode": "taxi",
+      "name": "豐盛街\n（豐盛街紀律部隊宿舍外） Fung Shing Street (outside Fung Shing Street Disciplined Services Quarters)"
+    },
+    {
+      "id": "taxi:178",
+      "latitude": 22.334668375678895,
+      "longitude": 114.19710048446696,
+      "mode": "taxi",
+      "name": "康強街 Hong Keung St."
+    },
+    {
+      "id": "taxi:179",
+      "latitude": 22.33579829566102,
+      "longitude": 114.19578901429692,
+      "mode": "taxi",
+      "name": "錦榮街近崇齡街 Kam Wing Street near Shung Ling Street"
+    },
+    {
+      "id": "taxi:18",
+      "latitude": 22.287827141412837,
+      "longitude": 114.15176094737213,
+      "mode": "taxi",
+      "name": "港澳碼頭 （近信德中心） Hong Kong - Macau Ferry Terminal (Near Shun Tak Centre)"
+    },
+    {
+      "id": "taxi:180",
+      "latitude": 22.34159991102572,
+      "longitude": 114.20115866993126,
+      "mode": "taxi",
+      "name": "龍蟠街 Lung Poon St."
+    },
+    {
+      "id": "taxi:181",
+      "latitude": 22.344231978585945,
+      "longitude": 114.19657629274388,
+      "mode": "taxi",
+      "name": "鳴鳳街 Ming Fung St."
+    },
+    {
+      "id": "taxi:182",
+      "latitude": 22.334949588954764,
+      "longitude": 114.21804193817664,
+      "mode": "taxi",
+      "name": "牛池灣街 Ngau Chi Wan St."
+    },
+    {
+      "id": "taxi:183",
+      "latitude": 22.333632620664552,
+      "longitude": 114.19553954408616,
+      "mode": "taxi",
+      "name": "寧遠街 Ning Yuen St."
+    },
+    {
+      "id": "taxi:184",
+      "latitude": 22.348902576552444,
+      "longitude": 114.20049088059336,
+      "mode": "taxi",
+      "name": "惠華街 Wai Wah Street"
+    },
+    {
+      "id": "taxi:185",
+      "latitude": 22.343847775888076,
+      "longitude": 114.197915973408,
+      "mode": "taxi",
+      "name": "環鳳街 Wan Fung St."
+    },
+    {
+      "id": "taxi:186",
+      "latitude": 22.33860481626434,
+      "longitude": 114.1872302074364,
+      "mode": "taxi",
+      "name": "橫頭磡南道 Wang Tau Hom South Rd."
+    },
+    {
+      "id": "taxi:187",
+      "latitude": 22.342372725446257,
+      "longitude": 114.19630889831252,
+      "mode": "taxi",
+      "name": "盈鳳里 Ying Fung Lane"
+    },
+    {
+      "id": "taxi:188",
+      "latitude": 22.34355740955329,
+      "longitude": 114.19209785943148,
+      "mode": "taxi",
+      "name": "黃大仙道詠善樓外 Wong Tai Sin Road outside Wing Sin Hse."
+    },
+    {
+      "id": "taxi:189",
+      "latitude": 22.33517449237032,
+      "longitude": 114.19441098370302,
+      "mode": "taxi",
+      "name": "衍慶街 Yin Hing St."
+    },
+    {
+      "id": "taxi:19",
+      "latitude": 22.277712033148717,
+      "longitude": 114.15939809178562,
+      "mode": "taxi",
+      "name": "低座山頂纜車站 Lower Peak Tram Station"
+    },
+    {
+      "id": "taxi:190",
+      "latitude": 22.304910477694868,
+      "longitude": 114.16555565510215,
+      "mode": "taxi",
+      "name": "香港西九龍站 B2層 B2/F of Hong Kong West Kowloon Station"
+    },
+    {
+      "id": "taxi:191",
+      "latitude": 22.304896639839946,
+      "longitude": 114.16551315137032,
+      "mode": "taxi",
+      "name": "香港西九龍站 B2層 B2/F of Hong Kong West Kowloon Station"
+    },
+    {
+      "id": "taxi:192",
+      "latitude": 22.298602743133543,
+      "longitude": 114.16875565502598,
+      "mode": "taxi",
+      "name": "廣東道近海防道 Canton Road near Haiphong Road"
+    },
+    {
+      "id": "taxi:193",
+      "latitude": 22.305454261089498,
+      "longitude": 114.16319982539892,
+      "mode": "taxi",
+      "name": "九龍站公共交通交匯處 Kowloon Station PTI"
+    },
+    {
+      "id": "taxi:194",
+      "latitude": 22.29680560587716,
+      "longitude": 114.17162750885365,
+      "mode": "taxi",
+      "name": "樂道近北京道 Lock Road near Peking Road"
+    },
+    {
+      "id": "taxi:195",
+      "latitude": 22.298577698240617,
+      "longitude": 114.17727990784238,
+      "mode": "taxi",
+      "name": "麼地廣場帝苑酒店外 Mody Square outside Royal Garden Hotel"
+    },
+    {
+      "id": "taxi:196",
+      "latitude": 22.300450676312177,
+      "longitude": 114.17888742953244,
+      "mode": "taxi",
+      "name": "科學館廣場 Science Museum Square"
+    },
+    {
+      "id": "taxi:197",
+      "latitude": 22.303044203036293,
+      "longitude": 114.16976831805256,
+      "mode": "taxi",
+      "name": "柯士甸道香港童軍中心外 Austin Road o/s HK Scout Centre"
+    },
+    {
+      "id": "taxi:198",
+      "latitude": 22.30438734426988,
+      "longitude": 114.17144761803458,
+      "mode": "taxi",
+      "name": "寶靈街與彌敦道交界 Bowring St. J/W Nathan Rd."
+    },
+    {
+      "id": "taxi:199",
+      "latitude": 22.29878824660516,
+      "longitude": 114.17284217852364,
+      "mode": "taxi",
+      "name": "金馬倫道近金馬倫里 Cameron Rd. near Cameron Lane"
+    },
+    {
+      "id": "taxi:2",
+      "latitude": 22.279123085043224,
+      "longitude": 114.16459981473342,
+      "mode": "taxi",
+      "name": "金鐘港鐵站 （2） Admiralty MTR Station (2)"
+    },
+    {
+      "id": "taxi:20",
+      "latitude": 22.280875212945173,
+      "longitude": 114.16735540179198,
+      "mode": "taxi",
+      "name": "龍匯道西行中信大廈外 Lung Wui Road westbound outside Citic Tower"
+    },
+    {
+      "id": "taxi:200",
+      "latitude": 22.296509867562115,
+      "longitude": 114.16920565997086,
+      "mode": "taxi",
+      "name": "廣東道近北京道 Canton Road near Peking Road"
+    },
+    {
+      "id": "taxi:201",
+      "latitude": 22.30149822228157,
+      "longitude": 114.15891265600231,
+      "mode": "taxi",
+      "name": "文化道 Cultural Drive"
+    },
+    {
+      "id": "taxi:202",
+      "latitude": 22.30030043582356,
+      "longitude": 114.17516879996155,
+      "mode": "taxi",
+      "name": "加連威老道近漆咸道南 Granville Rd. near Chatham Road S."
+    },
+    {
+      "id": "taxi:203",
+      "latitude": 22.297398945517394,
+      "longitude": 114.17106529072656,
+      "mode": "taxi",
+      "name": "漢口道近海防道 Hankow Road near Haiphong Road"
+    },
+    {
+      "id": "taxi:204",
+      "latitude": 22.303234104930695,
+      "longitude": 114.18256538488386,
+      "mode": "taxi",
+      "name": "紅磡港鐵站 Hung Hom MTR Station"
+    },
+    {
+      "id": "taxi:205",
+      "latitude": 22.30240620856038,
+      "longitude": 114.18255363447662,
+      "mode": "taxi",
+      "name": "紅磡港鐵站 Hung Hom MTR Station"
+    },
+    {
+      "id": "taxi:206",
+      "latitude": 22.297625529219015,
+      "longitude": 114.17711129554472,
+      "mode": "taxi",
+      "name": "麼地道介乎香格里拉酒店及尖沙咀中心 Mody Rd. between Shangrilla Hotel & TST Centre"
+    },
+    {
+      "id": "taxi:207",
+      "latitude": 22.306532159414,
+      "longitude": 114.17116033150371,
+      "mode": "taxi",
+      "name": "寧波街與彌敦道交界 Ning Po St. J/W Nathan Rd."
+    },
+    {
+      "id": "taxi:208",
+      "latitude": 22.30106434031313,
+      "longitude": 114.1756011150132,
+      "mode": "taxi",
+      "name": "天文臺道介乎金巴利道及漆咸道南 Observatory Rd bet'n Kimberley Rd and Chatham Rd South"
+    },
+    {
+      "id": "taxi:209",
+      "latitude": 22.30776122748247,
+      "longitude": 114.17112347409292,
+      "mode": "taxi",
+      "name": "北海街近彌敦道 Pak Hoi Street near Nathan Road"
+    },
+    {
+      "id": "taxi:21",
+      "latitude": 22.282475942829706,
+      "longitude": 114.12915294035496,
+      "mode": "taxi",
+      "name": "北街 North Street"
+    },
+    {
+      "id": "taxi:210",
+      "latitude": 22.31394348078888,
+      "longitude": 114.17098024592735,
+      "mode": "taxi",
+      "name": "碧街介乎\n彌敦道及東方街 Pitt Street between Nathan Road and Tung Fong Street"
+    },
+    {
+      "id": "taxi:211",
+      "latitude": 22.294126255525025,
+      "longitude": 114.16914034398444,
+      "mode": "taxi",
+      "name": "天星碼頭 Star Ferry Pier"
+    },
+    {
+      "id": "taxi:212",
+      "latitude": 22.31091012050585,
+      "longitude": 114.1708078542697,
+      "mode": "taxi",
+      "name": "永星里介乎鴉打街及彌敦道 Wing Sing Lane between Arthur Street and Nathan Road"
+    },
+    {
+      "id": "taxi:213",
+      "latitude": 22.31092790458587,
+      "longitude": 114.17137241952862,
+      "mode": "taxi",
+      "name": "永星里介乎石壁道及彌敦道 Wing Sing Lane between Cliff Road and Nathan Road"
+    },
+    {
+      "id": "taxi:214",
+      "latitude": 22.305647144564528,
+      "longitude": 114.1701895723086,
+      "mode": "taxi",
+      "name": "吳松街與佐敦道交界 Woosung St. J/W Jordan Rd."
+    },
+    {
+      "id": "taxi:215",
+      "latitude": 22.355566169698985,
+      "longitude": 114.09748821183004,
+      "mode": "taxi",
+      "name": "長亨邨近長亨邨巴士總站 Cheung Hang Estate near the Cheung Hang Bus Terminus"
+    },
+    {
+      "id": "taxi:216",
+      "latitude": 22.361483929284596,
+      "longitude": 114.10331989450424,
+      "mode": "taxi",
+      "name": "長安邨近長安邨巴士總站 Cheung On Estate near the Cheung On Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:217",
+      "latitude": 22.349606574078905,
+      "longitude": 114.09865655243011,
+      "mode": "taxi",
+      "name": "青康路長康邨巴士總站外 Ching Hong Road outside Cheung Hong Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:218",
+      "latitude": 22.35453926848894,
+      "longitude": 114.12648777327908,
+      "mode": "taxi",
+      "name": "貨櫃碼頭路公共運輸交匯處 Container Port Road Public Transport Interchange"
+    },
+    {
+      "id": "taxi:219",
+      "latitude": 22.35711322683264,
+      "longitude": 114.12730236882818,
+      "mode": "taxi",
+      "name": "興寧路近新都會廣場 Hing Ning Road inside Metroplaza"
+    },
+    {
+      "id": "taxi:22",
+      "latitude": 22.286923341964844,
+      "longitude": 114.1473750251076,
+      "mode": "taxi",
+      "name": "皇后街 Queen Street"
+    },
+    {
+      "id": "taxi:220",
+      "latitude": 22.367435490139428,
+      "longitude": 114.1284638335527,
+      "mode": "taxi",
+      "name": "葵涌邨巴士總站 Kwai Chung Estate PTI"
+    },
+    {
+      "id": "taxi:221",
+      "latitude": 22.35603872446701,
+      "longitude": 114.12773963128994,
+      "mode": "taxi",
+      "name": "葵芳港鐵站 Kwai Fong MTR Station"
+    },
+    {
+      "id": "taxi:222",
+      "latitude": 22.36324620711499,
+      "longitude": 114.1315333251093,
+      "mode": "taxi",
+      "name": "葵興港鐵站 Kwai Hing MTR Station"
+    },
+    {
+      "id": "taxi:223",
+      "latitude": 22.36186243656547,
+      "longitude": 114.12457248709298,
+      "mode": "taxi",
+      "name": "葵聯路近葵聯邨 Kwai Luen Road near Kwai Luen Estate"
+    },
+    {
+      "id": "taxi:224",
+      "latitude": 22.361184585212847,
+      "longitude": 114.1228639809086,
+      "mode": "taxi",
+      "name": "葵聯路近葵盛西邨巴士總站 Kwai Luen Road near Kwai Shing West Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:225",
+      "latitude": 22.35311403727527,
+      "longitude": 114.13191522493668,
+      "mode": "taxi",
+      "name": "麗瑤巴士總站 Lai Yiu Bus Terminus"
+    },
+    {
+      "id": "taxi:226",
+      "latitude": 22.36234493249725,
+      "longitude": 114.1384172551186,
+      "mode": "taxi",
+      "name": "梨貝街近巴士總站 Lei Pui Street near Bus Terminus"
+    },
+    {
+      "id": "taxi:227",
+      "latitude": 22.357012234759846,
+      "longitude": 114.08281775241932,
+      "mode": "taxi",
+      "name": "青衣西北交匯處 North West Tsing Yi Interchange"
+    },
+    {
+      "id": "taxi:228",
+      "latitude": 22.36984110642184,
+      "longitude": 114.1420659557406,
+      "mode": "taxi",
+      "name": "安足街近安蔭邨巴士總站 On Chuk Street near On Yam Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:229",
+      "latitude": 22.365641142602247,
+      "longitude": 114.13867849853564,
+      "mode": "taxi",
+      "name": "大隴街近圍乪街 Tai Loong Street near Wai Kek Street"
+    },
+    {
+      "id": "taxi:23",
+      "latitude": 22.282896977193673,
+      "longitude": 114.15570142568316,
+      "mode": "taxi",
+      "name": "皇后大道中卡佛大廈外 Queen's Road Central outside Crawford House"
+    },
+    {
+      "id": "taxi:230",
+      "latitude": 22.35551495541377,
+      "longitude": 114.10379874132622,
+      "mode": "taxi",
+      "name": "青綠街近偉景花園 Tsing Luk Street near Broadview Garden"
+    },
+    {
+      "id": "taxi:231",
+      "latitude": 22.35351023066321,
+      "longitude": 114.10392599444356,
+      "mode": "taxi",
+      "name": "青綠街近青衣邨 Tsing Luk Street near Tsing Yi Estate"
+    },
+    {
+      "id": "taxi:232",
+      "latitude": 22.353955023093462,
+      "longitude": 114.1092168165806,
+      "mode": "taxi",
+      "name": "青衣碼頭 Tsing Yi Ferry Pier"
+    },
+    {
+      "id": "taxi:233",
+      "latitude": 22.359607172033257,
+      "longitude": 114.10692282441694,
+      "mode": "taxi",
+      "name": "青衣城（近港鐵站A1出口） Tsing Yi Maritime Square\n(near MTR exit A1)"
+    },
+    {
+      "id": "taxi:234",
+      "latitude": 22.358171231653312,
+      "longitude": 114.10672936805838,
+      "mode": "taxi",
+      "name": "青衣機鐵站 Tsing Yi Station (Airport Express)"
+    },
+    {
+      "id": "taxi:235",
+      "latitude": 22.265013412005004,
+      "longitude": 114.00153613356365,
+      "mode": "taxi",
+      "name": "梅窩巴士總站 Adjacent to Mui Wo Bus Terminus"
+    },
+    {
+      "id": "taxi:236",
+      "latitude": 22.32008112944156,
+      "longitude": 113.9435325024477,
+      "mode": "taxi",
+      "name": "亞洲國際博覽館 Asia World Expo"
+    },
+    {
+      "id": "taxi:237",
+      "latitude": 22.320181023295824,
+      "longitude": 113.94392057498357,
+      "mode": "taxi",
+      "name": "亞洲國際博覽館 Asia World Expo"
+    },
+    {
+      "id": "taxi:238",
+      "latitude": 22.281261143439608,
+      "longitude": 113.93895879033424,
+      "mode": "taxi",
+      "name": "松仁路逸東邨外 Chung Yan Road outside Yat Tung Estate"
+    },
+    {
+      "id": "taxi:239",
+      "latitude": 22.281216047509773,
+      "longitude": 113.93899767969329,
+      "mode": "taxi",
+      "name": "松仁路逸東邨外 Chung Yan Road outside Yat Tung Estate"
+    },
+    {
+      "id": "taxi:24",
+      "latitude": 22.286472793370177,
+      "longitude": 114.15341081673338,
+      "mode": "taxi",
+      "name": "林士街無限極廣場外 Rumsey Street (outside Infinitus Plaza)"
+    },
+    {
+      "id": "taxi:240",
+      "latitude": 22.31724360951068,
+      "longitude": 113.93603466653322,
+      "mode": "taxi",
+      "name": "香港國際機場 Hong Kong International Airport"
+    },
+    {
+      "id": "taxi:241",
+      "latitude": 22.31715317461541,
+      "longitude": 113.93594746989858,
+      "mode": "taxi",
+      "name": "香港國際機場 Hong Kong International Airport"
+    },
+    {
+      "id": "taxi:242",
+      "latitude": 22.317116893920986,
+      "longitude": 113.9358407689202,
+      "mode": "taxi",
+      "name": "香港國際機場 Hong Kong International Airport"
+    },
+    {
+      "id": "taxi:243",
+      "latitude": 22.31620102440351,
+      "longitude": 113.95207025361844,
+      "mode": "taxi",
+      "name": "港珠澳大橋香港口岸 HZMB HK Port"
+    },
+    {
+      "id": "taxi:244",
+      "latitude": 22.31627293213192,
+      "longitude": 113.95182749603852,
+      "mode": "taxi",
+      "name": "港珠澳大橋香港口岸 HZMB HK Port"
+    },
+    {
+      "id": "taxi:245",
+      "latitude": 22.31611953434732,
+      "longitude": 113.95191509308336,
+      "mode": "taxi",
+      "name": "港珠澳大橋香港口岸 HZMB HK Port"
+    },
+    {
+      "id": "taxi:246",
+      "latitude": 22.264372407413177,
+      "longitude": 114.00085778234528,
+      "mode": "taxi",
+      "name": "梅窩碼頭路銀礦中心大廈外 Mui Wo Ferry Pier Road outside Silver Centre House"
+    },
+    {
+      "id": "taxi:247",
+      "latitude": 22.266732833022665,
+      "longitude": 113.996576117611,
+      "mode": "taxi",
+      "name": "銀石街梅窩區域市政綜合大樓對出 Ngan Shek Street opposite Mui Wo Regional Council Complex"
+    },
+    {
+      "id": "taxi:248",
+      "latitude": 22.255737764803875,
+      "longitude": 113.90270860377964,
+      "mode": "taxi",
+      "name": "寶昂路（昂平公共運輸交匯處） Po Ngong Drive (Ngong Ping Public Transport Interchange)"
+    },
+    {
+      "id": "taxi:249",
+      "latitude": 22.231063968620393,
+      "longitude": 113.9416916240012,
+      "mode": "taxi",
+      "name": "嶼南道近長沙海灘 South Lantau Road near Cheung Sha Beach"
+    },
+    {
+      "id": "taxi:25",
+      "latitude": 22.28248152986823,
+      "longitude": 114.15541038555256,
+      "mode": "taxi",
+      "name": "士丹利街28號 Stanley Street No. 28"
+    },
+    {
+      "id": "taxi:250",
+      "latitude": 22.24333758000169,
+      "longitude": 113.97684577401702,
+      "mode": "taxi",
+      "name": "嶼南道近貝澳 South Lantau Road near Pui O"
+    },
+    {
+      "id": "taxi:251",
+      "latitude": 22.236927634886374,
+      "longitude": 113.96335214559964,
+      "mode": "taxi",
+      "name": "嶼南道近東涌道 South Lantau Road near the junction with Tung Chung Road"
+    },
+    {
+      "id": "taxi:252",
+      "latitude": 22.252603572677877,
+      "longitude": 113.86248355637926,
+      "mode": "taxi",
+      "name": "大澳近大澳巴士站 Tai O near Tai O Bus Terminus"
+    },
+    {
+      "id": "taxi:253",
+      "latitude": 22.22755539432551,
+      "longitude": 113.93238588545354,
+      "mode": "taxi",
+      "name": "塘福近塘福村 Tong Fuk near Tong Fuk Village B/T"
+    },
+    {
+      "id": "taxi:254",
+      "latitude": 22.28919397059275,
+      "longitude": 113.94169155086657,
+      "mode": "taxi",
+      "name": "東涌港鐵站 Tung Chung MTR Station"
+    },
+    {
+      "id": "taxi:255",
+      "latitude": 22.288786948571193,
+      "longitude": 113.94124585714364,
+      "mode": "taxi",
+      "name": "東涌港鐵站 Tung Chung MTR Station"
+    },
+    {
+      "id": "taxi:256",
+      "latitude": 22.290142647918618,
+      "longitude": 113.93891368186618,
+      "mode": "taxi",
+      "name": "昂坪360東涌站 Tung Chung Ngong Ping 360 Terminal"
+    },
+    {
+      "id": "taxi:257",
+      "latitude": 22.290087452037277,
+      "longitude": 113.93883905538704,
+      "mode": "taxi",
+      "name": "昂坪360東涌站 Tung Chung Ngong Ping 360 Terminal"
+    },
+    {
+      "id": "taxi:258",
+      "latitude": 22.29347209431161,
+      "longitude": 113.9400638064602,
+      "mode": "taxi",
+      "name": "東涌海濱路近碼頭 Tung Chung Waterfront Road near the Pier"
+    },
+    {
+      "id": "taxi:259",
+      "latitude": 22.293255332918125,
+      "longitude": 113.94004476341472,
+      "mode": "taxi",
+      "name": "東涌海濱路近碼頭 Tung Chung Waterfront Road near the Pier"
+    },
+    {
+      "id": "taxi:26",
+      "latitude": 22.270294080192887,
+      "longitude": 114.14981819098304,
+      "mode": "taxi",
+      "name": "山頂公共交通總站 The Peak Public Transport Terminus"
+    },
+    {
+      "id": "taxi:260",
+      "latitude": 22.281798729100228,
+      "longitude": 113.93607599798644,
+      "mode": "taxi",
+      "name": "逸東邨公共運輸總站 Yat Tung Estate Public Transport Terminus"
+    },
+    {
+      "id": "taxi:261",
+      "latitude": 22.282235406714552,
+      "longitude": 113.93641389693262,
+      "mode": "taxi",
+      "name": "逸東街傑逸樓外 Yat Tung Street outside Kit Yat House"
+    },
+    {
+      "id": "taxi:262",
+      "latitude": 22.296572475135207,
+      "longitude": 113.94838490084148,
+      "mode": "taxi",
+      "name": "怡東路近迴旋處 Yi Tung Road near the cul-de-sac"
+    },
+    {
+      "id": "taxi:263",
+      "latitude": 22.296536612409373,
+      "longitude": 113.94856934146428,
+      "mode": "taxi",
+      "name": "怡東路近迴旋處 Yi Tung Road near the cul-de-sac"
+    },
+    {
+      "id": "taxi:264",
+      "latitude": 22.29723895775491,
+      "longitude": 113.95359507072388,
+      "mode": "taxi",
+      "name": "迎東邨 Ying Tung Estate"
+    },
+    {
+      "id": "taxi:265",
+      "latitude": 22.297229780318396,
+      "longitude": 113.95348833708992,
+      "mode": "taxi",
+      "name": "迎東邨 Ying Tung Estate"
+    },
+    {
+      "id": "taxi:266",
+      "latitude": 22.48429885994681,
+      "longitude": 114.14176352337677,
+      "mode": "taxi",
+      "name": "近華明邨巴士總站 Adjacent to Wah Ming Bus Terminus"
+    },
+    {
+      "id": "taxi:267",
+      "latitude": 22.49280998891963,
+      "longitude": 114.14151306359744,
+      "mode": "taxi",
+      "name": "祥華邨 Cheung Wah Estate"
+    },
+    {
+      "id": "taxi:268",
+      "latitude": 22.502812145888957,
+      "longitude": 114.1303531850478,
+      "mode": "taxi",
+      "name": "石湖墟智昌路 Chi Cheong Road, Shek Wu Hui"
+    },
+    {
+      "id": "taxi:269",
+      "latitude": 22.494599369908254,
+      "longitude": 114.12778042750264,
+      "mode": "taxi",
+      "name": "清曉路 清河邨 巴士總站 Ching Ho Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:27",
+      "latitude": 22.281190212278865,
+      "longitude": 114.15589574866796,
+      "mode": "taxi",
+      "name": "威靈頓街12至24號 Wellington Street No. 12-24"
+    },
+    {
+      "id": "taxi:270",
+      "latitude": 22.49452970750288,
+      "longitude": 114.12765562259789,
+      "mode": "taxi",
+      "name": "清曉路 清河邨 巴士總站 Ching Ho Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:271",
+      "latitude": 22.482314626715176,
+      "longitude": 114.13885796234617,
+      "mode": "taxi",
+      "name": "暉明路, 五旬節于良發小學對面 Fai Ming Road opposite to Pentecostal Yu Leung Fat Primary School"
+    },
+    {
+      "id": "taxi:272",
+      "latitude": 22.49320553233002,
+      "longitude": 114.13840828096042,
+      "mode": "taxi",
+      "name": "粉嶺港鐵站 Fanling MTR Station Forecourt"
+    },
+    {
+      "id": "taxi:273",
+      "latitude": 22.507335795080326,
+      "longitude": 114.128585938705,
+      "mode": "taxi",
+      "name": "鳳南路 Fung Nam Road"
+    },
+    {
+      "id": "taxi:274",
+      "latitude": 22.552789499846128,
+      "longitude": 114.15346646752565,
+      "mode": "taxi",
+      "name": "香園圍邊境管制站\n公共運輸交匯處 HYWBCP PTI"
+    },
+    {
+      "id": "taxi:275",
+      "latitude": 22.552640824060298,
+      "longitude": 114.1534639453595,
+      "mode": "taxi",
+      "name": "香園圍邊境管制站\n公共運輸交匯處 HYWBCP PTI"
+    },
+    {
+      "id": "taxi:276",
+      "latitude": 22.501632919167488,
+      "longitude": 114.12716782104384,
+      "mode": "taxi",
+      "name": "彩園路近上水港鐵站 Layby on Choi Yuen Road near Sheung Shui MTR Station"
+    },
+    {
+      "id": "taxi:277",
+      "latitude": 22.501969381172835,
+      "longitude": 114.12649469366828,
+      "mode": "taxi",
+      "name": "彩園路近上水港鐵站 Layby on Choi Yuen Road near Sheung Shui MTR Station"
+    },
+    {
+      "id": "taxi:278",
+      "latitude": 22.493026835898437,
+      "longitude": 114.13618831381191,
+      "mode": "taxi",
+      "name": "置福圍 Loop Road on Chi Fuk Circuit"
+    },
+    {
+      "id": "taxi:279",
+      "latitude": 22.5014983835224,
+      "longitude": 114.14200372764442,
+      "mode": "taxi",
+      "name": "粉嶺聯捷街 Luen Chit Street, Fanling"
+    },
+    {
+      "id": "taxi:28",
+      "latitude": 22.268391921036503,
+      "longitude": 114.24219217600584,
+      "mode": "taxi",
+      "name": "柴灣碼頭（常平街） Chai Wan Ferry (Sheung Ping Street)"
+    },
+    {
+      "id": "taxi:280",
+      "latitude": 22.49796734218596,
+      "longitude": 114.14317249856168,
+      "mode": "taxi",
+      "name": "聯和路介乎其與聯興街及聯盛街的交界 Luen Wo Road between its junction with Luen Hing Street and Luen Shing Street"
+    },
+    {
+      "id": "taxi:281",
+      "latitude": 22.491251868768423,
+      "longitude": 114.13788328572176,
+      "mode": "taxi",
+      "name": "百和路 停車場 近 蓬瀛仙館 Pak Wo Road carpark near Fung Ying Seen Koon"
+    },
+    {
+      "id": "taxi:282",
+      "latitude": 22.49141996431521,
+      "longitude": 114.1411755826704,
+      "mode": "taxi",
+      "name": "新運路粉嶺中心外 San Wan Road outside Fanling Centre"
+    },
+    {
+      "id": "taxi:283",
+      "latitude": 22.54564369197019,
+      "longitude": 114.22350637722532,
+      "mode": "taxi",
+      "name": "沙頭角巴士站 Sha Tau Kok Bus Terminus"
+    },
+    {
+      "id": "taxi:284",
+      "latitude": 22.50401801936613,
+      "longitude": 114.12697370119048,
+      "mode": "taxi",
+      "name": "符興街南面路旁行車線 Southern kerbside of Fu Hing Street, outside House No. 43-49"
+    },
+    {
+      "id": "taxi:285",
+      "latitude": 22.502166760983332,
+      "longitude": 114.12761353269728,
+      "mode": "taxi",
+      "name": "公共運輸交匯處上水港鐵站外 The northernmost bay in the public transport terminus outside Sheung Shui MTR Station"
+    },
+    {
+      "id": "taxi:286",
+      "latitude": 22.503141813186954,
+      "longitude": 114.1345287017579,
+      "mode": "taxi",
+      "name": "天平路天朗樓外 Tin Ping Road outside Tin Long House"
+    },
+    {
+      "id": "taxi:287",
+      "latitude": 22.48305420893274,
+      "longitude": 114.13928439052452,
+      "mode": "taxi",
+      "name": "華明路雍盛商場外 Wah Ming Road outside Yung Shing Shopping Centre"
+    },
+    {
+      "id": "taxi:288",
+      "latitude": 22.50128904912264,
+      "longitude": 114.14455695613812,
+      "mode": "taxi",
+      "name": "聯和墟和滿街 Wo Mun Street at Luen Wo Hui"
+    },
+    {
+      "id": "taxi:289",
+      "latitude": 22.499995892932805,
+      "longitude": 114.14426732366088,
+      "mode": "taxi",
+      "name": "和滿街近新聯和墟街巿 Wo Mun Street near New Luen Wo Hui Market"
+    },
+    {
+      "id": "taxi:29",
+      "latitude": 22.264832441555548,
+      "longitude": 114.24118440491424,
+      "mode": "taxi",
+      "name": "柴灣道介乎金源里與永泰道 Chai Wan Road (between Kam Yuen Lane and Wing Tai Road)"
+    },
+    {
+      "id": "taxi:290",
+      "latitude": 22.323039597964467,
+      "longitude": 114.24896141948892,
+      "mode": "taxi",
+      "name": "翠林邨 Adjacent to Tsui Lam Estate"
+    },
+    {
+      "id": "taxi:291",
+      "latitude": 22.32923351740562,
+      "longitude": 114.2335417737081,
+      "mode": "taxi",
+      "name": "安達臣(安愉道)公共交通總站 Anderson (On Yu Road) Public Transport Terminus"
+    },
+    {
+      "id": "taxi:292",
+      "latitude": 22.382345572352538,
+      "longitude": 114.27186792727562,
+      "mode": "taxi",
+      "name": "親民街 Chan Man Street"
+    },
+    {
+      "id": "taxi:293",
+      "latitude": 22.313003601087168,
+      "longitude": 114.26644326106916,
+      "mode": "taxi",
+      "name": "昭信路新寶城外 Chiu Shun Road outside La Cite Noble"
+    },
+    {
+      "id": "taxi:294",
+      "latitude": 22.30624384644986,
+      "longitude": 114.25293613324232,
+      "mode": "taxi",
+      "name": "彩明街 Choi Ming Street"
+    },
+    {
+      "id": "taxi:295",
+      "latitude": 22.308074291903097,
+      "longitude": 114.25011992477664,
+      "mode": "taxi",
+      "name": "翠嶺路 Chui Ling Road, Tseung Kwan O"
+    },
+    {
+      "id": "taxi:296",
+      "latitude": 22.28718796675422,
+      "longitude": 114.28699797376694,
+      "mode": "taxi",
+      "name": "清水灣二灘 Clear Water Bay Second Beach PTI"
+    },
+    {
+      "id": "taxi:297",
+      "latitude": 22.2870853081852,
+      "longitude": 114.28687593691366,
+      "mode": "taxi",
+      "name": "清水灣二灘 Clear Water Bay Second Beach PTI"
+    },
+    {
+      "id": "taxi:298",
+      "latitude": 22.37984844330996,
+      "longitude": 114.26847321467778,
+      "mode": "taxi",
+      "name": "灰窰里 Fui Yiu Lane"
+    },
+    {
+      "id": "taxi:299",
+      "latitude": 22.379876563122902,
+      "longitude": 114.26895245809764,
+      "mode": "taxi",
+      "name": "灰窰里 Fui Yiu Lane"
+    },
+    {
+      "id": "taxi:3",
+      "latitude": 22.28693414488431,
+      "longitude": 114.159737568909,
+      "mode": "taxi",
+      "name": "介乎中環五號及六號碼頭之間 Between Central Ferry Piers Nos. 5 and 6"
+    },
+    {
+      "id": "taxi:30",
+      "latitude": 22.29049761146426,
+      "longitude": 114.1941008409286,
+      "mode": "taxi",
+      "name": "城市花園道城市花園酒店外 City Garden Road (outside City Garden Hotel)"
+    },
+    {
+      "id": "taxi:300",
+      "latitude": 22.38188197658957,
+      "longitude": 114.27385458005416,
+      "mode": "taxi",
+      "name": "福民路的北面路旁行車線 Fuk Man Road (Northern kerbside)"
+    },
+    {
+      "id": "taxi:301",
+      "latitude": 22.381724363378527,
+      "longitude": 114.27372498423334,
+      "mode": "taxi",
+      "name": "福民路的南面路旁行車線 Fuk Man Road (Southern kerbside)"
+    },
+    {
+      "id": "taxi:302",
+      "latitude": 22.31803858095256,
+      "longitude": 114.27123228234434,
+      "mode": "taxi",
+      "name": "坑口道 Hang Hau Road"
+    },
+    {
+      "id": "taxi:303",
+      "latitude": 22.31772363527977,
+      "longitude": 114.26479965793884,
+      "mode": "taxi",
+      "name": "厚德邨 Hau Tak Estate"
+    },
+    {
+      "id": "taxi:304",
+      "latitude": 22.365444222455515,
+      "longitude": 114.37405737193438,
+      "mode": "taxi",
+      "name": "萬宜水庫東壩 High Island Reservoir East Dam"
+    },
+    {
+      "id": "taxi:305",
+      "latitude": 22.33869396428065,
+      "longitude": 114.2623180320984,
+      "mode": "taxi",
+      "name": "香港科技大學 (北) Hong Kong University of Science and Technology (North)"
+    },
+    {
+      "id": "taxi:306",
+      "latitude": 22.333130816840935,
+      "longitude": 114.26291646972147,
+      "mode": "taxi",
+      "name": "香港科技大學 (南) Hong Kong University of Science and Technology (South)"
+    },
+    {
+      "id": "taxi:307",
+      "latitude": 22.319508643485523,
+      "longitude": 114.25297890561818,
+      "mode": "taxi",
+      "name": "康盛花園 Hong Sing Garden"
+    },
+    {
+      "id": "taxi:308",
+      "latitude": 22.321148155627473,
+      "longitude": 114.26117172942376,
+      "mode": "taxi",
+      "name": "景林邨 King Lam Estate"
+    },
+    {
+      "id": "taxi:309",
+      "latitude": 22.296245250053865,
+      "longitude": 114.26917902080116,
+      "mode": "taxi",
+      "name": "將軍澳康城站公共運輸交匯處 Lohas Park PTI"
+    },
+    {
+      "id": "taxi:31",
+      "latitude": 22.28814989028745,
+      "longitude": 114.19165325164798,
+      "mode": "taxi",
+      "name": "福蔭道 Fook Yum Road"
+    },
+    {
+      "id": "taxi:310",
+      "latitude": 22.322675955106696,
+      "longitude": 114.25746998897657,
+      "mode": "taxi",
+      "name": "貿業路寶琳站外 Mau Yip Road outside Po Lam Station"
+    },
+    {
+      "id": "taxi:311",
+      "latitude": 22.315376729099416,
+      "longitude": 114.26284734499237,
+      "mode": "taxi",
+      "name": "安寧花園 On Ning Garden"
+    },
+    {
+      "id": "taxi:312",
+      "latitude": 22.364600050561243,
+      "longitude": 114.25909766036315,
+      "mode": "taxi",
+      "name": "白沙灣 Pak Sha Wan"
+    },
+    {
+      "id": "taxi:313",
+      "latitude": 22.323053622708013,
+      "longitude": 114.25830181507057,
+      "mode": "taxi",
+      "name": "寶琳公共運輸交匯處 Po Lam Public Transport Interchange"
+    },
+    {
+      "id": "taxi:314",
+      "latitude": 22.38430050584618,
+      "longitude": 114.27146981548071,
+      "mode": "taxi",
+      "name": "西貢北公共運輸交匯處 Sai Kung North Public Transport Interchange"
+    },
+    {
+      "id": "taxi:315",
+      "latitude": 22.384239280240138,
+      "longitude": 114.2715756277018,
+      "mode": "taxi",
+      "name": "西貢北公共運輸交匯處 Sai Kung North Public Transport Interchange"
+    },
+    {
+      "id": "taxi:316",
+      "latitude": 22.31105747272714,
+      "longitude": 114.25955738797776,
+      "mode": "taxi",
+      "name": "尚德邨 Sheung Tak Estate"
+    },
+    {
+      "id": "taxi:317",
+      "latitude": 22.39275455958941,
+      "longitude": 114.29874697060572,
+      "mode": "taxi",
+      "name": "大網仔停車場 Tai Mong Tsai Car Park"
+    },
+    {
+      "id": "taxi:318",
+      "latitude": 22.315780602850857,
+      "longitude": 114.26496896969898,
+      "mode": "taxi",
+      "name": "坑口站公共交通交匯處的最北落客處 The northernmost loading bay of Hang Hau Station Public Transport Interchange"
+    },
+    {
+      "id": "taxi:319",
+      "latitude": 22.315894417859983,
+      "longitude": 114.26483139465071,
+      "mode": "taxi",
+      "name": "坑口站公共交通交匯處的最北落客處 The northernmost loading bay of Hang Hau Station Public Transport Interchange"
+    },
+    {
+      "id": "taxi:32",
+      "latitude": 22.264821822532294,
+      "longitude": 114.2492478952213,
+      "mode": "taxi",
+      "name": "富欣道（富欣花園第6座對出） Harmony Road \n(outside Block 6 Harmony Garden)"
+    },
+    {
+      "id": "taxi:320",
+      "latitude": 22.39707384670661,
+      "longitude": 114.31922179102482,
+      "mode": "taxi",
+      "name": "北潭涌巴士總站 Pak Tam Chung Bus Terminus"
+    },
+    {
+      "id": "taxi:321",
+      "latitude": 22.305220193380983,
+      "longitude": 114.2523714667429,
+      "mode": "taxi",
+      "name": "調景嶺站公共交通交匯處 Tiu Keng Leng Station Public Transport Interchange"
+    },
+    {
+      "id": "taxi:322",
+      "latitude": 22.308014843150815,
+      "longitude": 114.25697525155638,
+      "mode": "taxi",
+      "name": "唐德街近唐明苑 Tong Tak Street near Tong Ming Court"
+    },
+    {
+      "id": "taxi:323",
+      "latitude": 22.283417197787003,
+      "longitude": 114.2702898019732,
+      "mode": "taxi",
+      "name": "將軍澳工業中心 Tseung Kwan O Industrial Estate"
+    },
+    {
+      "id": "taxi:324",
+      "latitude": 22.308576216901617,
+      "longitude": 114.26061207674988,
+      "mode": "taxi",
+      "name": "將軍澳站公共交通交匯處 Tseung Kwan O Station Public Transport Interchange"
+    },
+    {
+      "id": "taxi:325",
+      "latitude": 22.38118192416013,
+      "longitude": 114.27116304751858,
+      "mode": "taxi",
+      "name": "宜春街 Yi Chun Street"
+    },
+    {
+      "id": "taxi:326",
+      "latitude": 22.324279999882386,
+      "longitude": 114.25431095675296,
+      "mode": "taxi",
+      "name": "毓雅里 Yuk Ngan Lane"
+    },
+    {
+      "id": "taxi:327",
+      "latitude": 22.42545750612299,
+      "longitude": 114.23117280286851,
+      "mode": "taxi",
+      "name": "海柏花園 Bayshore Towers"
+    },
+    {
+      "id": "taxi:328",
+      "latitude": 22.425492135254228,
+      "longitude": 114.23136852039956,
+      "mode": "taxi",
+      "name": "海柏花園 Bayshore Towers"
+    },
+    {
+      "id": "taxi:329",
+      "latitude": 22.405526666794135,
+      "longitude": 114.22366650375686,
+      "mode": "taxi",
+      "name": "富安花園 Chevalier Garden"
+    },
+    {
+      "id": "taxi:33",
+      "latitude": 22.264238136799857,
+      "longitude": 114.23669009418111,
+      "mode": "taxi",
+      "name": "吉勝街近柴灣港鐵站 Kut Shing Street (near Chai Wan MTR Station)"
+    },
+    {
+      "id": "taxi:330",
+      "latitude": 22.405499552779723,
+      "longitude": 114.22374419015208,
+      "mode": "taxi",
+      "name": "富安花園 Chevalier Garden"
+    },
+    {
+      "id": "taxi:331",
+      "latitude": 22.382004852541005,
+      "longitude": 114.20421632605596,
+      "mode": "taxi",
+      "name": "翠欣街欣廷軒對面 Chui Yan Street opposite to Prima Villa"
+    },
+    {
+      "id": "taxi:332",
+      "latitude": 22.42246703657243,
+      "longitude": 114.22669349538992,
+      "mode": "taxi",
+      "name": "馬鞍山頌安邨 Chung On Estate, Ma On Shan"
+    },
+    {
+      "id": "taxi:333",
+      "latitude": 22.42232375592167,
+      "longitude": 114.226849582392,
+      "mode": "taxi",
+      "name": "馬鞍山頌安邨 Chung On Estate, Ma On Shan"
+    },
+    {
+      "id": "taxi:334",
+      "latitude": 22.382947780219112,
+      "longitude": 114.1876431799298,
+      "mode": "taxi",
+      "name": "沙田連城廣場 Citylink Plaza"
+    },
+    {
+      "id": "taxi:335",
+      "latitude": 22.413990735442663,
+      "longitude": 114.22490987271988,
+      "mode": "taxi",
+      "name": "恆智街欣安邨外 Hang Chi Street outside Yan On Estate"
+    },
+    {
+      "id": "taxi:336",
+      "latitude": 22.41706324912232,
+      "longitude": 114.22915628065287,
+      "mode": "taxi",
+      "name": "恆安邨 Heng On Estate"
+    },
+    {
+      "id": "taxi:337",
+      "latitude": 22.408949783228845,
+      "longitude": 114.22169607933394,
+      "mode": "taxi",
+      "name": "馬鞍山錦泰苑 Kam Tai Court, Ma On Shan"
+    },
+    {
+      "id": "taxi:338",
+      "latitude": 22.42332943054273,
+      "longitude": 114.2370538258492,
+      "mode": "taxi",
+      "name": "錦英苑巴士總站 Kam Ying Court Bus Terminus"
+    },
+    {
+      "id": "taxi:339",
+      "latitude": 22.423658117985884,
+      "longitude": 114.23708824545491,
+      "mode": "taxi",
+      "name": "錦英苑巴士總站 Kam Ying Court Bus Terminus"
+    },
+    {
+      "id": "taxi:34",
+      "latitude": 22.28550643527616,
+      "longitude": 114.2220000946152,
+      "mode": "taxi",
+      "name": "鯉景道 Lei King Road"
+    },
+    {
+      "id": "taxi:340",
+      "latitude": 22.38104691345857,
+      "longitude": 114.21631736749936,
+      "mode": "taxi",
+      "name": "廣源邨 Kwong Yuen Estate"
+    },
+    {
+      "id": "taxi:341",
+      "latitude": 22.428897538702035,
+      "longitude": 114.2441451737404,
+      "mode": "taxi",
+      "name": "利安邨 Lee On Estate"
+    },
+    {
+      "id": "taxi:342",
+      "latitude": 22.428791503525147,
+      "longitude": 114.24416544336847,
+      "mode": "taxi",
+      "name": "利安邨 Lee On Estate"
+    },
+    {
+      "id": "taxi:343",
+      "latitude": 22.399575402327734,
+      "longitude": 114.20065400480505,
+      "mode": "taxi",
+      "name": "樂信徑駿景園外 Lok Shun Path outside Royal Ascot"
+    },
+    {
+      "id": "taxi:344",
+      "latitude": 22.36393842433092,
+      "longitude": 114.17921512839156,
+      "mode": "taxi",
+      "name": "龍柏街世界花園外 Lung Pak Street outside Worldwide Gardens"
+    },
+    {
+      "id": "taxi:345",
+      "latitude": 22.41284678850271,
+      "longitude": 114.21104235925824,
+      "mode": "taxi",
+      "name": "馬料水公共運輸交匯處 Ma Liu Shui Public Transport Interchange"
+    },
+    {
+      "id": "taxi:346",
+      "latitude": 22.412890460041304,
+      "longitude": 114.21099923696109,
+      "mode": "taxi",
+      "name": "馬料水公共運輸交匯處 Ma Liu Shui Public Transport Interchange"
+    },
+    {
+      "id": "taxi:347",
+      "latitude": 22.42248697516879,
+      "longitude": 114.22675424833582,
+      "mode": "taxi",
+      "name": "馬鞍山市中心公共運輸交匯處 Ma On Shan Town Centre Public Transport Terminus"
+    },
+    {
+      "id": "taxi:348",
+      "latitude": 22.42405643014717,
+      "longitude": 114.23196605149492,
+      "mode": "taxi",
+      "name": "馬鞍山市中心公共運輸交匯處 Ma On Shan Town Centre Public Transport Terminus"
+    },
+    {
+      "id": "taxi:349",
+      "latitude": 22.380329240696163,
+      "longitude": 114.17288348984222,
+      "mode": "taxi",
+      "name": "大圍美松苑 Mei Chung Court, Tai Wai"
+    },
+    {
+      "id": "taxi:35",
+      "latitude": 22.29175801022732,
+      "longitude": 114.19652895130646,
+      "mode": "taxi",
+      "name": "北角道介乎和富道與渣華道 North Point Road (between Wharf Road and Java Road)"
+    },
+    {
+      "id": "taxi:350",
+      "latitude": 22.377656243861356,
+      "longitude": 114.1751557062093,
+      "mode": "taxi",
+      "name": "美林邨 Mei Lam Estate"
+    },
+    {
+      "id": "taxi:351",
+      "latitude": 22.376337671330464,
+      "longitude": 114.17050467398025,
+      "mode": "taxi",
+      "name": "美田邨公共運輸交匯處 Mei Tin Estate PTI"
+    },
+    {
+      "id": "taxi:352",
+      "latitude": 22.388372799665525,
+      "longitude": 114.20789771239032,
+      "mode": "taxi",
+      "name": "安群街 On Kwan Street"
+    },
+    {
+      "id": "taxi:353",
+      "latitude": 22.385176580048615,
+      "longitude": 114.1873131942376,
+      "mode": "taxi",
+      "name": "排頭街近沙田港鐵站 Pai Tau Street near Sha Tin MTR Station"
+    },
+    {
+      "id": "taxi:354",
+      "latitude": 22.37945141513365,
+      "longitude": 114.20171288560482,
+      "mode": "taxi",
+      "name": "威爾斯親王醫院 Prince of Wales Hospital"
+    },
+    {
+      "id": "taxi:355",
+      "latitude": 22.379523654867626,
+      "longitude": 114.20174202884596,
+      "mode": "taxi",
+      "name": "威爾斯親王醫院 Prince of Wales Hospital"
+    },
+    {
+      "id": "taxi:356",
+      "latitude": 22.381855045431173,
+      "longitude": 114.18824513382025,
+      "mode": "taxi",
+      "name": "沙田正街近沙田市中心巴士總站 Sha Tin Centre Street fronting Sha Tin Central Bus Terminus"
+    },
+    {
+      "id": "taxi:357",
+      "latitude": 22.40127770327944,
+      "longitude": 114.2045817027774,
+      "mode": "taxi",
+      "name": "沙田馬場 Sha Tin Racecourse (1)"
+    },
+    {
+      "id": "taxi:358",
+      "latitude": 22.398713269326528,
+      "longitude": 114.20321187726324,
+      "mode": "taxi",
+      "name": "沙田馬場 Sha Tin Racecourse (2)"
+    },
+    {
+      "id": "taxi:359",
+      "latitude": 22.373130834863893,
+      "longitude": 114.1857403032226,
+      "mode": "taxi",
+      "name": "沙田頭路秦石邨外 Sha Tin Tau Road outside Chun Shek Estate"
+    },
+    {
+      "id": "taxi:36",
+      "latitude": 22.280890886775435,
+      "longitude": 114.228057356628,
+      "mode": "taxi",
+      "name": "愛賢街愛東商場外 Oi Yin Street (outside Oi Tung Shopping Centre)"
+    },
+    {
+      "id": "taxi:360",
+      "latitude": 22.39292443019696,
+      "longitude": 114.19447362522564,
+      "mode": "taxi",
+      "name": "穗禾苑 Sui Wo Court"
+    },
+    {
+      "id": "taxi:361",
+      "latitude": 22.37030531113922,
+      "longitude": 114.18213692053466,
+      "mode": "taxi",
+      "name": "新翠邨 Sun Chui Estate"
+    },
+    {
+      "id": "taxi:362",
+      "latitude": 22.36956057646155,
+      "longitude": 114.18710520426484,
+      "mode": "taxi",
+      "name": "新田圍邨 Sun Tin Wai Estate"
+    },
+    {
+      "id": "taxi:363",
+      "latitude": 22.375480940715423,
+      "longitude": 114.17751495469716,
+      "mode": "taxi",
+      "name": "大圍道 Tai Wai Road"
+    },
+    {
+      "id": "taxi:364",
+      "latitude": 22.372182455899793,
+      "longitude": 114.17875936292558,
+      "mode": "taxi",
+      "name": "大圍站公共運輸交匯處 Tai Wai Station PTI"
+    },
+    {
+      "id": "taxi:365",
+      "latitude": 22.381701354394867,
+      "longitude": 114.19046877643154,
+      "mode": "taxi",
+      "name": "担杆莆街 Tam Kon Po Street"
+    },
+    {
+      "id": "taxi:366",
+      "latitude": 22.385176580048615,
+      "longitude": 114.1873131942376,
+      "mode": "taxi",
+      "name": "排頭街北面路旁行車線近上禾輋路 The northern kerbside lane of Pai Tau Street near Sheung Wo Che Road"
+    },
+    {
+      "id": "taxi:367",
+      "latitude": 22.37339417883441,
+      "longitude": 114.17819592522088,
+      "mode": "taxi",
+      "name": "村南道大圍港鐵站外 Tsuen Nam Road o/s Tai Wai MTR Station"
+    },
+    {
+      "id": "taxi:368",
+      "latitude": 22.388322307669032,
+      "longitude": 114.19447780312773,
+      "mode": "taxi",
+      "name": "禾輋邨近禾輋巴士總站 Wo Che Estate near Wo Che Bus Terminus"
+    },
+    {
+      "id": "taxi:369",
+      "latitude": 22.386013285130243,
+      "longitude": 114.1931899370866,
+      "mode": "taxi",
+      "name": "禾輋街 Wo Che Street"
+    },
+    {
+      "id": "taxi:37",
+      "latitude": 22.28503431279044,
+      "longitude": 114.22452966957428,
+      "mode": "taxi",
+      "name": "西灣河（嘉亨灣）公共運輸交匯處 Sai Wan Ho (Grand Promenade) PTI"
+    },
+    {
+      "id": "taxi:370",
+      "latitude": 22.428897538702035,
+      "longitude": 114.2441451737404,
+      "mode": "taxi",
+      "name": "烏溪沙站公共運輸交匯處 Wu Kai Sha Station PTI"
+    },
+    {
+      "id": "taxi:371",
+      "latitude": 22.42884857460873,
+      "longitude": 114.24440686248012,
+      "mode": "taxi",
+      "name": "烏溪沙站公共運輸交匯處 Wu Kai Sha Station PTI"
+    },
+    {
+      "id": "taxi:372",
+      "latitude": 22.376973554610995,
+      "longitude": 114.19531624456836,
+      "mode": "taxi",
+      "name": "逸泰街 Yat Tai Street"
+    },
+    {
+      "id": "taxi:373",
+      "latitude": 22.3798946156159,
+      "longitude": 114.18827253139118,
+      "mode": "taxi",
+      "name": "宜正里 Yi Ching Lane"
+    },
+    {
+      "id": "taxi:374",
+      "latitude": 22.380897040593005,
+      "longitude": 114.19630454542158,
+      "mode": "taxi",
+      "name": "怡成坊 Yi Shing Square"
+    },
+    {
+      "id": "taxi:375",
+      "latitude": 22.419130836501232,
+      "longitude": 114.22991838966168,
+      "mode": "taxi",
+      "name": "耀安邨巴士總站 Yiu On Bus Terminus"
+    },
+    {
+      "id": "taxi:376",
+      "latitude": 22.419184109712575,
+      "longitude": 114.2299110766829,
+      "mode": "taxi",
+      "name": "耀安邨巴士總站 Yiu On Bus Terminus"
+    },
+    {
+      "id": "taxi:377",
+      "latitude": 22.381347841971515,
+      "longitude": 114.20160640990248,
+      "mode": "taxi",
+      "name": "圓洲角巴士總站 Yuen Chau Kok Bus Terminus"
+    },
+    {
+      "id": "taxi:378",
+      "latitude": 22.374174556789423,
+      "longitude": 114.19778329058678,
+      "mode": "taxi",
+      "name": "多石街近水泉澳公共運輸交匯處 To Shek Street near Shui Chuen O PTI"
+    },
+    {
+      "id": "taxi:379",
+      "latitude": 22.45973899880628,
+      "longitude": 114.1743380054595,
+      "mode": "taxi",
+      "name": "全安路公共運輸交匯處 Chuen On Road Public Transport Terminus"
+    },
+    {
+      "id": "taxi:38",
+      "latitude": 22.276278112175245,
+      "longitude": 114.24059775810096,
+      "mode": "taxi",
+      "name": "盛泰道近杏花邨商場 Shing Tai Road (near Heng Fa Chuen shopping centre)"
+    },
+    {
+      "id": "taxi:380",
+      "latitude": 22.46346149056657,
+      "longitude": 114.17023158049378,
+      "mode": "taxi",
+      "name": "全安路公共運輸交匯處 Chuen On Road Public Transport Terminus"
+    },
+    {
+      "id": "taxi:381",
+      "latitude": 22.461379373714912,
+      "longitude": 114.16872548326772,
+      "mode": "taxi",
+      "name": "富亨邨 Fu Heng Estate"
+    },
+    {
+      "id": "taxi:382",
+      "latitude": 22.4613347737212,
+      "longitude": 114.16893421088906,
+      "mode": "taxi",
+      "name": "富亨邨 Fu Heng Estate"
+    },
+    {
+      "id": "taxi:383",
+      "latitude": 22.45419477035377,
+      "longitude": 114.17447283707747,
+      "mode": "taxi",
+      "name": "富善邨（富善邨巴士總站對出） Fu Shin Estate (next to Fu Shin Bus Terminus)"
+    },
+    {
+      "id": "taxi:384",
+      "latitude": 22.45431177944636,
+      "longitude": 114.1745864170574,
+      "mode": "taxi",
+      "name": "富善邨（富善邨巴士總站對出） Fu Shin Estate (next to Fu Shin Bus Terminus)"
+    },
+    {
+      "id": "taxi:385",
+      "latitude": 22.4486697870926,
+      "longitude": 114.157287288652,
+      "mode": "taxi",
+      "name": "錦山路近石蓮路 Kam Shan Road near Shek Lin Road"
+    },
+    {
+      "id": "taxi:386",
+      "latitude": 22.44620093325679,
+      "longitude": 114.173346263558,
+      "mode": "taxi",
+      "name": "廣進街近大埔公路元洲仔段 Kwong Chun Street near Tai Po Road - Yuen Chau Tsai"
+    },
+    {
+      "id": "taxi:387",
+      "latitude": 22.449178181739804,
+      "longitude": 114.16599843209556,
+      "mode": "taxi",
+      "name": "廣福道第27座外 Kwong Fuk Road o/s House No. 27"
+    },
+    {
+      "id": "taxi:388",
+      "latitude": 22.466275760517984,
+      "longitude": 114.19357447162947,
+      "mode": "taxi",
+      "name": "露屏路公共運輸交匯處 Lo Ping Road Public Transport Interchange"
+    },
+    {
+      "id": "taxi:389",
+      "latitude": 22.46617075582184,
+      "longitude": 114.19347598573914,
+      "mode": "taxi",
+      "name": "露屏路公共運輸交匯處 Lo Ping Road Public Transport Interchange"
+    },
+    {
+      "id": "taxi:39",
+      "latitude": 22.27834410140667,
+      "longitude": 114.2388356361668,
+      "mode": "taxi",
+      "name": "盛泰道杏花邨街市外 Shing Tai Road outside Heng Fa Chuen market"
+    },
+    {
+      "id": "taxi:390",
+      "latitude": 22.45328525372876,
+      "longitude": 114.16469247875078,
+      "mode": "taxi",
+      "name": "美新里 Mei Sun Lane"
+    },
+    {
+      "id": "taxi:391",
+      "latitude": 22.44620093325679,
+      "longitude": 114.173346263558,
+      "mode": "taxi",
+      "name": "年明路近香港浸信會神學院 Nin Ming Road near Hong Kong Baptist Theological Seminary"
+    },
+    {
+      "id": "taxi:392",
+      "latitude": 22.452299998929245,
+      "longitude": 114.16860000563535,
+      "mode": "taxi",
+      "name": "安慈路近安邦路 On Chee Road near On Pong Road"
+    },
+    {
+      "id": "taxi:393",
+      "latitude": 22.45357581312006,
+      "longitude": 114.16747458967085,
+      "mode": "taxi",
+      "name": "安祥路 On Cheung Road"
+    },
+    {
+      "id": "taxi:394",
+      "latitude": 22.453954575689473,
+      "longitude": 114.16745084916327,
+      "mode": "taxi",
+      "name": "安祥路 On Cheung Road"
+    },
+    {
+      "id": "taxi:395",
+      "latitude": 22.448663413257265,
+      "longitude": 114.16539229871292,
+      "mode": "taxi",
+      "name": "安富道 On Fu Road"
+    },
+    {
+      "id": "taxi:396",
+      "latitude": 22.45207371513961,
+      "longitude": 114.16936546813874,
+      "mode": "taxi",
+      "name": "安邦路 On Pong Road"
+    },
+    {
+      "id": "taxi:397",
+      "latitude": 22.452529579637215,
+      "longitude": 114.17060668800912,
+      "mode": "taxi",
+      "name": "安泰路（北） On Tai Road (North)"
+    },
+    {
+      "id": "taxi:398",
+      "latitude": 22.48898616314955,
+      "longitude": 114.14049198924492,
+      "mode": "taxi",
+      "name": "白石角科城路公共運輸交匯處 Pak Shek Kok Fo Shing Road Public Transport Interchange"
+    },
+    {
+      "id": "taxi:399",
+      "latitude": 22.448669368582102,
+      "longitude": 114.17476543798152,
+      "mode": "taxi",
+      "name": "寶湖路東行近廣福邨停車場 Plover Cove Road E/B Kwong Fuk Est. car park"
+    },
+    {
+      "id": "taxi:4",
+      "latitude": 22.286735534232303,
+      "longitude": 114.16034892690364,
+      "mode": "taxi",
+      "name": "介乎中環六號及七號碼頭之間 Between Central Ferry Piers Nos. 6 and 7"
+    },
+    {
+      "id": "taxi:40",
+      "latitude": 22.266677051508893,
+      "longitude": 114.25051403284854,
+      "mode": "taxi",
+      "name": "小西灣 （藍灣半島） 公共運輸交匯處 Siu Sai Wan (Island Resort) Public Transport Terminus"
+    },
+    {
+      "id": "taxi:400",
+      "latitude": 22.448657042163124,
+      "longitude": 114.17477668806492,
+      "mode": "taxi",
+      "name": "寶湖路西行近廣福邨街市 Plover Cove Road W/B Kwong Fuk Est. Market"
+    },
+    {
+      "id": "taxi:401",
+      "latitude": 22.4493,
+      "longitude": 114.166865,
+      "mode": "taxi",
+      "name": "寶鄉街 Po Heung Street"
+    },
+    {
+      "id": "taxi:402",
+      "latitude": 22.451149556501463,
+      "longitude": 114.16035302092118,
+      "mode": "taxi",
+      "name": "太和邨寶雅路 Po Nga Raod, Tai Wo Estate"
+    },
+    {
+      "id": "taxi:403",
+      "latitude": 22.45605989523492,
+      "longitude": 114.16424123586664,
+      "mode": "taxi",
+      "name": "新圍仔 San Wai Tsai"
+    },
+    {
+      "id": "taxi:404",
+      "latitude": 22.47240065147544,
+      "longitude": 114.23263515492664,
+      "mode": "taxi",
+      "name": "大美督公共運輸交匯處 Tai Mei Tuk Public Transport Interchange"
+    },
+    {
+      "id": "taxi:405",
+      "latitude": 22.44421863336431,
+      "longitude": 114.17119313332634,
+      "mode": "taxi",
+      "name": "大埔墟站 Tai Po Market Station"
+    },
+    {
+      "id": "taxi:406",
+      "latitude": 22.454763537603643,
+      "longitude": 114.16085963850854,
+      "mode": "taxi",
+      "name": "大埔頭公共運輸交匯處 Tai Po Tau Public Transport Interchange"
+    },
+    {
+      "id": "taxi:407",
+      "latitude": 22.44225420810778,
+      "longitude": 114.16655705812998,
+      "mode": "taxi",
+      "name": "運頭塘邨 Wan Tau Tong Estate"
+    },
+    {
+      "id": "taxi:408",
+      "latitude": 22.36718470183371,
+      "longitude": 114.0612272269328,
+      "mode": "taxi",
+      "name": "碧堤半島 Bellagio"
+    },
+    {
+      "id": "taxi:409",
+      "latitude": 22.37858898652239,
+      "longitude": 114.1311787981183,
+      "mode": "taxi",
+      "name": "象山邨西路近秀山樓 Cheung Shan Estate Road West near Sau Shan House"
+    },
+    {
+      "id": "taxi:41",
+      "latitude": 22.26631451749169,
+      "longitude": 114.25140160330844,
+      "mode": "taxi",
+      "name": "小西灣 （藍灣半島） 公共運輸交匯處 Siu Sai Wan (Island Resort) Public Transport Terminus"
+    },
+    {
+      "id": "taxi:410",
+      "latitude": 22.36915629143635,
+      "longitude": 114.116462407146,
+      "mode": "taxi",
+      "name": "眾安街近河貝街 Chung On Street near Hoi Pui Street"
+    },
+    {
+      "id": "taxi:411",
+      "latitude": 22.36876557344212,
+      "longitude": 114.11032624572609,
+      "mode": "taxi",
+      "name": "海貴路 Hoi Kwai Road"
+    },
+    {
+      "id": "taxi:412",
+      "latitude": 22.3699313255391,
+      "longitude": 114.11233555089314,
+      "mode": "taxi",
+      "name": "海盛路 Hoi Shing Road"
+    },
+    {
+      "id": "taxi:413",
+      "latitude": 22.316023095804216,
+      "longitude": 114.0448085038943,
+      "mode": "taxi",
+      "name": "香港迪士尼樂園 Hong Kong Disneyland"
+    },
+    {
+      "id": "taxi:414",
+      "latitude": 22.316140406306104,
+      "longitude": 114.04470163060496,
+      "mode": "taxi",
+      "name": "香港迪士尼樂園 Hong Kong Disneyland"
+    },
+    {
+      "id": "taxi:415",
+      "latitude": 22.315932592345085,
+      "longitude": 114.04456594625138,
+      "mode": "taxi",
+      "name": "香港迪士尼樂園 Hong Kong Disneyland"
+    },
+    {
+      "id": "taxi:416",
+      "latitude": 22.377732471305663,
+      "longitude": 114.13638364130868,
+      "mode": "taxi",
+      "name": "梨木樹邨近和宜合道 Lei Muk Shue Estate near Wo Yi Hop Road"
+    },
+    {
+      "id": "taxi:417",
+      "latitude": 22.37652366174039,
+      "longitude": 114.112458742453,
+      "mode": "taxi",
+      "name": "美環街近愉景新城巴士總站 Mei Wan Street near Discovery Park Bus Terminus"
+    },
+    {
+      "id": "taxi:418",
+      "latitude": 22.375897921638668,
+      "longitude": 114.10614761031368,
+      "mode": "taxi",
+      "name": "安育路近翠豐臺 On Yuk Road Near Summit Terrace"
+    },
+    {
+      "id": "taxi:419",
+      "latitude": 22.333384361499615,
+      "longitude": 114.0291057945388,
+      "mode": "taxi",
+      "name": "欣澳站公共運輸交匯處 Sunny Bay Station PTI"
+    },
+    {
+      "id": "taxi:42",
+      "latitude": 22.263742256636824,
+      "longitude": 114.25212110794097,
+      "mode": "taxi",
+      "name": "小西灣道近富景花園 Siu Sai Wan Road (near Fullview Garden)"
+    },
+    {
+      "id": "taxi:420",
+      "latitude": 22.333474764275373,
+      "longitude": 114.02921247543556,
+      "mode": "taxi",
+      "name": "欣澳站公共運輸交匯處 Sunny Bay Station PTI"
+    },
+    {
+      "id": "taxi:421",
+      "latitude": 22.366887472462285,
+      "longitude": 114.11093882062772,
+      "mode": "taxi",
+      "name": "大河道近荃灣碼頭及荃灣西站 Tai Ho Road near Tsuen Wan Ferry Pier and Tsuen Wan West Station"
+    },
+    {
+      "id": "taxi:422",
+      "latitude": 22.37716122584314,
+      "longitude": 114.10396223045085,
+      "mode": "taxi",
+      "name": "荃景圍近荃威花園巴士總站 Tsuen King Circuit near Allway Gardens Bus Terminus"
+    },
+    {
+      "id": "taxi:423",
+      "latitude": 22.376511475476914,
+      "longitude": 114.10496269036166,
+      "mode": "taxi",
+      "name": "荃景圍近荃灣港安醫院 Tsuen King Circuit near Hong Kong Adventist Hospital - Tsuen Wan"
+    },
+    {
+      "id": "taxi:424",
+      "latitude": 22.3726700278647,
+      "longitude": 114.11881062826492,
+      "mode": "taxi",
+      "name": "西樓角路政府多層停車場 Underneath Tsuen Wan Station Multi-storey Car Park, Sai Lau Kok Road"
+    },
+    {
+      "id": "taxi:425",
+      "latitude": 22.372624868249076,
+      "longitude": 114.11879122768008,
+      "mode": "taxi",
+      "name": "西樓角路政府多層停車場 Underneath Tsuen Wan Station Multi-storey Car Park, Sai Lau Kok Road"
+    },
+    {
+      "id": "taxi:426",
+      "latitude": 22.369697297615417,
+      "longitude": 114.11428725761289,
+      "mode": "taxi",
+      "name": "禾笛街 Wo Tik Street"
+    },
+    {
+      "id": "taxi:427",
+      "latitude": 22.37432103723336,
+      "longitude": 113.95838546289204,
+      "mode": "taxi",
+      "name": "蝴蝶灣停車場 Butterfly Beach Car Park"
+    },
+    {
+      "id": "taxi:428",
+      "latitude": 22.374366438490306,
+      "longitude": 113.95856987680334,
+      "mode": "taxi",
+      "name": "蝴蝶灣停車場 Butterfly Beach Car Park"
+    },
+    {
+      "id": "taxi:429",
+      "latitude": 22.358732676897688,
+      "longitude": 114.01908886113426,
+      "mode": "taxi",
+      "name": "青山公路 - 大欖段近屯門公路巴士轉乘站（往屯門方向） Castle Peak Road - Tai Lam near Tuen Mun Rod Bus-Bus Interchange (Tuen Mun bound)"
+    },
+    {
+      "id": "taxi:43",
+      "latitude": 22.266341034582464,
+      "longitude": 114.24866944964867,
+      "mode": "taxi",
+      "name": "小西灣道 （小西灣運動場對面） Siu Sai Wan Road (opposite Siu Sai Wan Sports Ground)"
+    },
+    {
+      "id": "taxi:430",
+      "latitude": 22.41315601748981,
+      "longitude": 113.98273211136984,
+      "mode": "taxi",
+      "name": "富泰公共運輸交匯處 Fu Tai PTI"
+    },
+    {
+      "id": "taxi:431",
+      "latitude": 22.41317376318964,
+      "longitude": 113.98246985110912,
+      "mode": "taxi",
+      "name": "富泰公共運輸交匯處 Fu Tai PTI"
+    },
+    {
+      "id": "taxi:432",
+      "latitude": 22.381780095557307,
+      "longitude": 113.9721041020197,
+      "mode": "taxi",
+      "name": "恆貴街東行近南浪海灣 Hang Kwai Street eastbound near Nerine Cove"
+    },
+    {
+      "id": "taxi:433",
+      "latitude": 22.413870528964512,
+      "longitude": 113.96909480311344,
+      "mode": "taxi",
+      "name": "興貴街 Hing Kwai Street"
+    },
+    {
+      "id": "taxi:434",
+      "latitude": 22.406684753056915,
+      "longitude": 113.96404554872224,
+      "mode": "taxi",
+      "name": "良景邨巴士總站 Leung King Bus Terminus"
+    },
+    {
+      "id": "taxi:435",
+      "latitude": 22.407296286597024,
+      "longitude": 113.96903659299416,
+      "mode": "taxi",
+      "name": "良運街 Leung Wan St"
+    },
+    {
+      "id": "taxi:436",
+      "latitude": 22.38466183444173,
+      "longitude": 113.96586578067692,
+      "mode": "taxi",
+      "name": "龍門居公共運輸交匯處 Lung Mun Oasis Public Transport Interchange"
+    },
+    {
+      "id": "taxi:437",
+      "latitude": 22.38486031453088,
+      "longitude": 113.96571982454938,
+      "mode": "taxi",
+      "name": "龍門居公共運輸交匯處 Lung Mun Oasis Public Transport Interchange"
+    },
+    {
+      "id": "taxi:438",
+      "latitude": 22.386616142632988,
+      "longitude": 113.97588415214028,
+      "mode": "taxi",
+      "name": "安定邨通路西行近定德樓 On Ting Estate access road westbound near Ting Tak House"
+    },
+    {
+      "id": "taxi:439",
+      "latitude": 22.410345938328984,
+      "longitude": 113.96699249034737,
+      "mode": "taxi",
+      "name": "寶田公共運輸交匯處 Po Tin PTI"
+    },
+    {
+      "id": "taxi:44",
+      "latitude": 22.283863190627997,
+      "longitude": 114.22079730153996,
+      "mode": "taxi",
+      "name": "太祥街介乎筲箕灣道與康祥街 Tai Cheong Street between Shau Kei Wan Road and Hong Cheung Street"
+    },
+    {
+      "id": "taxi:440",
+      "latitude": 22.410201527067247,
+      "longitude": 113.96705098051854,
+      "mode": "taxi",
+      "name": "寶田公共運輸交匯處 Po Tin PTI"
+    },
+    {
+      "id": "taxi:441",
+      "latitude": 22.39662805557123,
+      "longitude": 113.97357790524752,
+      "mode": "taxi",
+      "name": "連接建豐街及屯門港鐵站的斜路 Ramp linking Kin Fung Circuit and Tuen Mun MTR Station"
+    },
+    {
+      "id": "taxi:442",
+      "latitude": 22.396952870876643,
+      "longitude": 113.9733540732032,
+      "mode": "taxi",
+      "name": "連接建豐街及屯門港鐵站的斜路 Ramp linking Kin Fung Circuit and Tuen Mun MTR Station"
+    },
+    {
+      "id": "taxi:443",
+      "latitude": 22.382265619662956,
+      "longitude": 113.97763825110586,
+      "mode": "taxi",
+      "name": "三聖邨巴士總站 Sam Shing Bus Terminus"
+    },
+    {
+      "id": "taxi:444",
+      "latitude": 22.397768901813524,
+      "longitude": 113.97598466311612,
+      "mode": "taxi",
+      "name": "新青街南行近新墟街市 San Tsing Street southbound near San Hui Market"
+    },
+    {
+      "id": "taxi:445",
+      "latitude": 22.38511731468147,
+      "longitude": 113.97607080410008,
+      "mode": "taxi",
+      "name": "兆興里南行近兆麟苑 Siu Hing Lane southbound near Siu Lun Court"
+    },
+    {
+      "id": "taxi:446",
+      "latitude": 22.412998488293713,
+      "longitude": 113.979420396018,
+      "mode": "taxi",
+      "name": "兆康港鐵站北面公共運輸交匯處 Siu Hong MTR Station North PTI"
+    },
+    {
+      "id": "taxi:447",
+      "latitude": 22.413639886385308,
+      "longitude": 113.97961373891432,
+      "mode": "taxi",
+      "name": "兆康港鐵站北面公共運輸交匯處 Siu Hong MTR Station North PTI"
+    },
+    {
+      "id": "taxi:448",
+      "latitude": 22.410856930487157,
+      "longitude": 113.97832593569228,
+      "mode": "taxi",
+      "name": "兆康港鐵站南面公共運輸交匯處 Siu Hong MTR Station South PTI"
+    },
+    {
+      "id": "taxi:449",
+      "latitude": 22.410061977432772,
+      "longitude": 113.97810368418628,
+      "mode": "taxi",
+      "name": "兆康港鐵站南面公共運輸交匯處 Siu Hong MTR Station South PTI"
+    },
+    {
+      "id": "taxi:45",
+      "latitude": 22.286110887304545,
+      "longitude": 114.2174356836622,
+      "mode": "taxi",
+      "name": "太古城道太古城中心二期外 Tai Koo Shing Road (outside City Plaza II)"
+    },
+    {
+      "id": "taxi:450",
+      "latitude": 22.40286398376658,
+      "longitude": 113.97032512805808,
+      "mode": "taxi",
+      "name": "大興邨大興街的東面路旁行車線近大興邨商場 Tai Hing Estate, Tai Hing Street, eastern kerbside by Tai Hing Commercial Complex"
+    },
+    {
+      "id": "taxi:451",
+      "latitude": 22.402709894987815,
+      "longitude": 113.96987861762793,
+      "mode": "taxi",
+      "name": "大興邨大興街的西面路旁行車線近興盛樓 Tai Hing Estate, Tai Hing Street, western kerbside outside Hing Shing House"
+    },
+    {
+      "id": "taxi:452",
+      "latitude": 22.405142421597606,
+      "longitude": 113.96547554094532,
+      "mode": "taxi",
+      "name": "田景路兆畦苑 Tin King Road outside Siu Kwai Court"
+    },
+    {
+      "id": "taxi:453",
+      "latitude": 22.40509740905687,
+      "longitude": 113.96558243948732,
+      "mode": "taxi",
+      "name": "田景路兆畦苑 Tin King Road outside Siu Kwai Court"
+    },
+    {
+      "id": "taxi:454",
+      "latitude": 22.37372314190431,
+      "longitude": 113.96374613980068,
+      "mode": "taxi",
+      "name": "蝶景路近湖碧樓 Tip King Road southbound near Wu Pik House"
+    },
+    {
+      "id": "taxi:455",
+      "latitude": 22.403397272319875,
+      "longitude": 113.97791892617762,
+      "mode": "taxi",
+      "name": "井財街 Tseng Choi Street"
+    },
+    {
+      "id": "taxi:456",
+      "latitude": 22.38754280822611,
+      "longitude": 113.9804079827206,
+      "mode": "taxi",
+      "name": "青匯街東行仁愛街市對面 Tsing Wui Street eastbound opposite to Yan Oi Market"
+    },
+    {
+      "id": "taxi:457",
+      "latitude": 22.39259417429826,
+      "longitude": 113.97576874265918,
+      "mode": "taxi",
+      "name": "屯合街西行近屯門時代廣場 Tuen Hop Street westbound near Tuen Mun Trend Plaza"
+    },
+    {
+      "id": "taxi:458",
+      "latitude": 22.39142415515609,
+      "longitude": 113.97896531628038,
+      "mode": "taxi",
+      "name": "屯利街東行近華都花園 Tuen Lee Street eastbound near Waldorf Garden"
+    },
+    {
+      "id": "taxi:459",
+      "latitude": 22.39137453082955,
+      "longitude": 113.97534321592116,
+      "mode": "taxi",
+      "name": "屯門市中心巴士總站 Tuen Mun Central Bus Terminus"
+    },
+    {
+      "id": "taxi:46",
+      "latitude": 22.291590189933924,
+      "longitude": 114.19525769761267,
+      "mode": "taxi",
+      "name": "保良局余李慕芬紀念學校外的和富道 Wharf Road outside Po Leung Kuk Yu Lee Mo Fan Memorial School"
+    },
+    {
+      "id": "taxi:460",
+      "latitude": 22.372553745159745,
+      "longitude": 113.96724337648034,
+      "mode": "taxi",
+      "name": "屯門碼頭公共運輸交匯處 Tuen Mun Pier Head Public Transport Interchange"
+    },
+    {
+      "id": "taxi:461",
+      "latitude": 22.37256290134799,
+      "longitude": 113.967340458805,
+      "mode": "taxi",
+      "name": "屯門碼頭公共運輸交匯處 Tuen Mun Pier Head Public Transport Interchange"
+    },
+    {
+      "id": "taxi:462",
+      "latitude": 22.395246762403577,
+      "longitude": 113.97387124849396,
+      "mode": "taxi",
+      "name": "屯門站公共運輸交匯處 （室內） Tuen Mun Station PTI (Indoor)"
+    },
+    {
+      "id": "taxi:463",
+      "latitude": 22.395273719652167,
+      "longitude": 113.97376438636076,
+      "mode": "taxi",
+      "name": "屯門站公共運輸交匯處 （室內） Tuen Mun Station PTI (Indoor)"
+    },
+    {
+      "id": "taxi:464",
+      "latitude": 22.39254286038578,
+      "longitude": 113.97808974401548,
+      "mode": "taxi",
+      "name": "屯盛街東行近屯門市廣場 Tuen Shing Street eastbound near Tuen Mun Town Plaza"
+    },
+    {
+      "id": "taxi:465",
+      "latitude": 22.3924053182268,
+      "longitude": 113.97640022814424,
+      "mode": "taxi",
+      "name": "屯順街的東面路旁行車線 Tuen Shun Street eastern kerbside"
+    },
+    {
+      "id": "taxi:466",
+      "latitude": 22.380848767726437,
+      "longitude": 113.96418195896004,
+      "mode": "taxi",
+      "name": "屯青里西行新屯門中心對面 Tuen Tsing Lane westbound opposite to Sun Tuen Mun Centre"
+    },
+    {
+      "id": "taxi:467",
+      "latitude": 22.37677117653172,
+      "longitude": 113.96739241992633,
+      "mode": "taxi",
+      "name": "湖康街南行屯門湖康診所對面 Wu Hong Street southbound opposite to Tuen Mun Wu Hong Clinic"
+    },
+    {
+      "id": "taxi:468",
+      "latitude": 22.39561885689284,
+      "longitude": 113.97534681182832,
+      "mode": "taxi",
+      "name": "仁政街介乎德政圍與啟發里的南面路旁行車線 Yan Ching Street, southern kerbside between Tak Ching Circuit and Kai Fat Path"
+    },
+    {
+      "id": "taxi:469",
+      "latitude": 22.45210559576073,
+      "longitude": 114.00575344468456,
+      "mode": "taxi",
+      "name": "往天祐苑（近祐泰閣）的通路 Access road to Tin Yau Court near Yau Tai House"
+    },
+    {
+      "id": "taxi:47",
+      "latitude": 22.28114455914287,
+      "longitude": 114.21894020546902,
+      "mode": "taxi",
+      "name": "耀興道近興東邨 Yiu Hing Road (near Hing Tung Estate)"
+    },
+    {
+      "id": "taxi:470",
+      "latitude": 22.46753371633985,
+      "longitude": 113.98429920509528,
+      "mode": "taxi",
+      "name": "停車場近流浮山回旋處 Carpark near Lau Fau Shan roundabout"
+    },
+    {
+      "id": "taxi:471",
+      "latitude": 22.444810045980297,
+      "longitude": 114.02885519129156,
+      "mode": "taxi",
+      "name": "福康街介乎青山公路與壽富街的東面路旁行車線 Fook Hong Street (eastern kerbside lane) between Castle Peak Road and Sau Fu Street"
+    },
+    {
+      "id": "taxi:472",
+      "latitude": 22.443745900592916,
+      "longitude": 114.02785470876036,
+      "mode": "taxi",
+      "name": "康景街的東面路旁行車線 Hong King Street (eastern kerbside lane)"
+    },
+    {
+      "id": "taxi:473",
+      "latitude": 22.44967154338217,
+      "longitude": 114.03210326177177,
+      "mode": "taxi",
+      "name": "康業街近采葉庭 Hong Yip Street near The Parcville"
+    },
+    {
+      "id": "taxi:474",
+      "latitude": 22.443222290670036,
+      "longitude": 114.02991601279976,
+      "mode": "taxi",
+      "name": "合財街介乎元朗新街及牡丹街 Hop Choi Street between Yuen Long New Street and Mau Tan Street"
+    },
+    {
+      "id": "taxi:475",
+      "latitude": 22.458101468341184,
+      "longitude": 114.00164898438372,
+      "mode": "taxi",
+      "name": "嘉恩街 Ka Yan Street"
+    },
+    {
+      "id": "taxi:476",
+      "latitude": 22.457996959030663,
+      "longitude": 114.00178176222876,
+      "mode": "taxi",
+      "name": "嘉恩街 Ka Yan Street"
+    },
+    {
+      "id": "taxi:477",
+      "latitude": 22.434389491521877,
+      "longitude": 114.06514985180722,
+      "mode": "taxi",
+      "name": "錦上路港鐵站公共運輸交匯處 Kam Sheung Road MTR Station PTI"
+    },
+    {
+      "id": "taxi:478",
+      "latitude": 22.43469130360887,
+      "longitude": 114.06520974936386,
+      "mode": "taxi",
+      "name": "錦上路港鐵站公共運輸交匯處 Kam Sheung Road MTR Station PTI"
+    },
+    {
+      "id": "taxi:479",
+      "latitude": 22.441464681972363,
+      "longitude": 114.03041646587585,
+      "mode": "taxi",
+      "name": "建德街的西面路旁行車線近合益街 Kin Tak Street (western kerbside lane) near Hop Yick Road"
+    },
+    {
+      "id": "taxi:48",
+      "latitude": 22.27687710024382,
+      "longitude": 114.22398159247372,
+      "mode": "taxi",
+      "name": "耀興道耀東邨巴士總站對面 Yiu Hing Road (opposite Yiu Tung Estate Bus Terminus)"
+    },
+    {
+      "id": "taxi:480",
+      "latitude": 22.50282630686677,
+      "longitude": 114.08231978190616,
+      "mode": "taxi",
+      "name": "落馬洲（新田）公共運輸交匯處 Lok Ma Chau (San Tin) Public Transport Interchange"
+    },
+    {
+      "id": "taxi:481",
+      "latitude": 22.502784083654408,
+      "longitude": 114.08243244068224,
+      "mode": "taxi",
+      "name": "落馬洲（新田）公共運輸交匯處 Lok Ma Chau (San Tin) Public Transport Interchange"
+    },
+    {
+      "id": "taxi:482",
+      "latitude": 22.50826759716345,
+      "longitude": 114.07487250584025,
+      "mode": "taxi",
+      "name": "落馬洲管制站 Lok Ma Chau Control Point"
+    },
+    {
+      "id": "taxi:483",
+      "latitude": 22.508114277469677,
+      "longitude": 114.07518362873589,
+      "mode": "taxi",
+      "name": "落馬洲管制站 Lok Ma Chau Control Point"
+    },
+    {
+      "id": "taxi:484",
+      "latitude": 22.51584907456036,
+      "longitude": 114.0669835873878,
+      "mode": "taxi",
+      "name": "落馬洲支線管制站 Lok Ma Chau Spur Line Control Point PTI"
+    },
+    {
+      "id": "taxi:485",
+      "latitude": 22.515797830433858,
+      "longitude": 114.06698825442656,
+      "mode": "taxi",
+      "name": "落馬洲支線管制站 Lok Ma Chau Spur Line Control Point PTI"
+    },
+    {
+      "id": "taxi:486",
+      "latitude": 22.44459264474414,
+      "longitude": 114.03468068552338,
+      "mode": "taxi",
+      "name": "朗樂路 Long Lok Road adjacent to Yuen Long LRT Interchange (the first lay-by)"
+    },
+    {
+      "id": "taxi:487",
+      "latitude": 22.450436040592173,
+      "longitude": 114.02303156507904,
+      "mode": "taxi",
+      "name": "朗屏邨巴士總站 Long Ping Estate adjacent to Long Ping Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:488",
+      "latitude": 22.447603215650098,
+      "longitude": 114.0251808141991,
+      "mode": "taxi",
+      "name": "朗屏港鐵站南面公共運輸交匯處 Long Ping MTR Station South PTI"
+    },
+    {
+      "id": "taxi:489",
+      "latitude": 22.421432218892413,
+      "longitude": 114.06371381085415,
+      "mode": "taxi",
+      "name": "八鄉路停車灣 Pat Heung Road Layby"
+    },
+    {
+      "id": "taxi:49",
+      "latitude": 22.244200559203215,
+      "longitude": 114.15087414897458,
+      "mode": "taxi",
+      "name": "鴨脷洲邨巴士總站外 Ap Lei Chau Estate outside Bus Terminus"
+    },
+    {
+      "id": "taxi:490",
+      "latitude": 22.42712991900552,
+      "longitude": 114.10842281229506,
+      "mode": "taxi",
+      "name": "荃錦公路雷公田村外 Route Twisk outside Lui Kung Tin Tsuen"
+    },
+    {
+      "id": "taxi:491",
+      "latitude": 22.442381638895657,
+      "longitude": 114.02667764404912,
+      "mode": "taxi",
+      "name": "西裕街的西面路旁行車線近教育路 Sai Yu Street (western kerbside lane) near Kau Yuk Road"
+    },
+    {
+      "id": "taxi:492",
+      "latitude": 22.501517631766973,
+      "longitude": 113.94502359225176,
+      "mode": "taxi",
+      "name": "深圳灣口岸公共運輸交匯處 Shenzhen Bay Port PTI"
+    },
+    {
+      "id": "taxi:493",
+      "latitude": 22.501517560540215,
+      "longitude": 113.94497409569512,
+      "mode": "taxi",
+      "name": "深圳灣口岸公共運輸交匯處 Shenzhen Bay Port PTI"
+    },
+    {
+      "id": "taxi:494",
+      "latitude": 22.446371013779892,
+      "longitude": 114.0213369665538,
+      "mode": "taxi",
+      "name": "媽廟路永發大樓外 The lay-by off Ma Miu Road outside Wing Fat Building"
+    },
+    {
+      "id": "taxi:495",
+      "latitude": 22.455383770345243,
+      "longitude": 113.99848720821213,
+      "mode": "taxi",
+      "name": "天瑞邨巴士總站外最北面的停車灣位 the northermost layby outside Tin Shui Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:496",
+      "latitude": 22.46280519111683,
+      "longitude": 113.99839498153726,
+      "mode": "taxi",
+      "name": "天富苑近巴士站 Tin Fu Court near bus terminus"
+    },
+    {
+      "id": "taxi:497",
+      "latitude": 22.46280938140244,
+      "longitude": 113.99873019386536,
+      "mode": "taxi",
+      "name": "天富苑近巴士站 Tin Fu Court near bus terminus"
+    },
+    {
+      "id": "taxi:498",
+      "latitude": 22.44997355033535,
+      "longitude": 114.0061033813582,
+      "mode": "taxi",
+      "name": "天福路近天水圍港鐵站 Tin Fuk Rd near Tin Shui Wai MTR Station"
+    },
+    {
+      "id": "taxi:499",
+      "latitude": 22.4693421846372,
+      "longitude": 113.99941436646024,
+      "mode": "taxi",
+      "name": "天恆邨巴士總站 Tin Heng Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:5",
+      "latitude": 22.286094479881022,
+      "longitude": 114.16158136784088,
+      "mode": "taxi",
+      "name": "介乎中環七號及八號碼頭之間 （新天星碼頭） Between Central Ferry Piers Nos. 7 and 8 \n(new Star Ferry Piers)"
+    },
+    {
+      "id": "taxi:50",
+      "latitude": 22.24117316870905,
+      "longitude": 114.15907242632493,
+      "mode": "taxi",
+      "name": "鴨脷洲海旁道（南灣外） Ap Lei Chau Praya Road outside Larvotto"
+    },
+    {
+      "id": "taxi:500",
+      "latitude": 22.469433799800015,
+      "longitude": 113.99929290224712,
+      "mode": "taxi",
+      "name": "天恆邨巴士總站 Tin Heng Estate Bus Terminus"
+    },
+    {
+      "id": "taxi:501",
+      "latitude": 22.449552785013495,
+      "longitude": 114.0017270111274,
+      "mode": "taxi",
+      "name": "天美街 Tin Mei Street"
+    },
+    {
+      "id": "taxi:502",
+      "latitude": 22.44963808461696,
+      "longitude": 114.00167548265637,
+      "mode": "taxi",
+      "name": "天美街 Tin Mei Street"
+    },
+    {
+      "id": "taxi:503",
+      "latitude": 22.45548000143975,
+      "longitude": 114.00740650571343,
+      "mode": "taxi",
+      "name": "天柏路天水圍游泳池外 Tin Pak Road outside Tin Shui Wai Swimming Pool"
+    },
+    {
+      "id": "taxi:504",
+      "latitude": 22.455491364379036,
+      "longitude": 113.99855775968877,
+      "mode": "taxi",
+      "name": "天瑞邨近天瑞邨商場 Tin Shui Estate near Tin Shui Estate Commercial Complex"
+    },
+    {
+      "id": "taxi:505",
+      "latitude": 22.460407592924863,
+      "longitude": 113.99747584436784,
+      "mode": "taxi",
+      "name": "天瑞路天頌苑外 Tin Shui Road outside Tin Chung Court"
+    },
+    {
+      "id": "taxi:506",
+      "latitude": 22.46024642342932,
+      "longitude": 113.99756988611644,
+      "mode": "taxi",
+      "name": "天瑞路天頌苑外 Tin Shui Road outside Tin Chung Court"
+    },
+    {
+      "id": "taxi:507",
+      "latitude": 22.45948465577635,
+      "longitude": 113.99681674606984,
+      "mode": "taxi",
+      "name": "天壇街近天瑞路 Tin Tan Street near Tin Shui Road, Tin Shui Wai"
+    },
+    {
+      "id": "taxi:508",
+      "latitude": 22.45345271101674,
+      "longitude": 114.0072705756648,
+      "mode": "taxi",
+      "name": "天慈邨 Tin Tsz Estate"
+    },
+    {
+      "id": "taxi:509",
+      "latitude": 22.462703775100376,
+      "longitude": 113.99640978711128,
+      "mode": "taxi",
+      "name": "天恩邨公共運輸交匯處 Tin Yan Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:51",
+      "latitude": 22.23666684175417,
+      "longitude": 114.19760774778976,
+      "mode": "taxi",
+      "name": "海灘道公共停車場對面 Beach Road (opposite public car park)"
+    },
+    {
+      "id": "taxi:510",
+      "latitude": 22.4626548359592,
+      "longitude": 113.99644713029976,
+      "mode": "taxi",
+      "name": "天恩邨公共運輸交匯處 Tin Yan Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:511",
+      "latitude": 22.45820013789269,
+      "longitude": 114.00374386801968,
+      "mode": "taxi",
+      "name": "天恩路近嘉湖銀座 Tin Yan Road near Kingswood Ginza"
+    },
+    {
+      "id": "taxi:512",
+      "latitude": 22.450678326686234,
+      "longitude": 114.00315551681156,
+      "mode": "taxi",
+      "name": "天耀邨近天耀邨商場 Tin Yiu Estate near Tin Yiu Estate Commercial Complex"
+    },
+    {
+      "id": "taxi:513",
+      "latitude": 22.450500440346325,
+      "longitude": 114.0032598446854,
+      "mode": "taxi",
+      "name": "天耀邨近天耀邨商場 Tin Yiu Estate near Tin Yiu Estate Commercial Complex"
+    },
+    {
+      "id": "taxi:514",
+      "latitude": 22.441946260647622,
+      "longitude": 114.0443898294164,
+      "mode": "taxi",
+      "name": "友全街近善勇樓 Yau Chuen Street near Shin Yung House"
+    },
+    {
+      "id": "taxi:515",
+      "latitude": 22.44365063714652,
+      "longitude": 114.02808822240172,
+      "mode": "taxi",
+      "name": "裕景坊 Yu King Square"
+    },
+    {
+      "id": "taxi:516",
+      "latitude": 22.44612476184938,
+      "longitude": 114.0354674559242,
+      "mode": "taxi",
+      "name": "元朗港鐵站北面公共運輸交匯處 Yuen Long MTR Station (North) PTI"
+    },
+    {
+      "id": "taxi:517",
+      "latitude": 22.445445628173964,
+      "longitude": 114.03046225005578,
+      "mode": "taxi",
+      "name": "泰祥街 Yuen Long Tai Cheung Street"
+    },
+    {
+      "id": "taxi:518",
+      "latitude": 22.442633525022092,
+      "longitude": 114.03671240985064,
+      "mode": "taxi",
+      "name": "元龍街近YOHO Town 第一期 Yuen Lung Street near YOHO Town Phase I"
+    },
+    {
+      "id": "taxi:52",
+      "latitude": 22.26190835681309,
+      "longitude": 114.13028994923552,
+      "mode": "taxi",
+      "name": "數碼港公共運輸交匯處 Cybeport PTI"
+    },
+    {
+      "id": "taxi:53",
+      "latitude": 22.247779222350538,
+      "longitude": 114.1673168065716,
+      "mode": "taxi",
+      "name": "香葉道（近黃竹坑公共交通運輸設施） Heung Yip Road (near Wong Chuk Hang PTF)"
+    },
+    {
+      "id": "taxi:54",
+      "latitude": 22.247033689094216,
+      "longitude": 114.15873566552186,
+      "mode": "taxi",
+      "name": "觀海徑 Kwun Hoi Path"
+    },
+    {
+      "id": "taxi:55",
+      "latitude": 22.239245693570624,
+      "longitude": 114.15243268993484,
+      "mode": "taxi",
+      "name": "新海怡廣場外的利榮街 Lee Wing Street outside Horizon Plaza"
+    },
+    {
+      "id": "taxi:56",
+      "latitude": 22.241282170814063,
+      "longitude": 114.1561102147829,
+      "mode": "taxi",
+      "name": "利東邨道利東商場外 Lei Tung Estate Road outside Lei Tung Commercial Centre"
+    },
+    {
+      "id": "taxi:57",
+      "latitude": 22.22024931330922,
+      "longitude": 114.209420528583,
+      "mode": "taxi",
+      "name": "馬坑邨公共運輸交匯處 Ma Hang Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:58",
+      "latitude": 22.24803293215719,
+      "longitude": 114.1539284955536,
+      "mode": "taxi",
+      "name": "南寧街 （南面） Nam Ning Street (Southern Section)"
+    },
+    {
+      "id": "taxi:59",
+      "latitude": 22.248298419967387,
+      "longitude": 114.17501665981892,
+      "mode": "taxi",
+      "name": "海洋公園正門 Ocean Park (Main entrance)"
+    },
+    {
+      "id": "taxi:6",
+      "latitude": 22.281833862851855,
+      "longitude": 114.12616451968232,
+      "mode": "taxi",
+      "name": "加多近街 Cadogan Street"
+    },
+    {
+      "id": "taxi:60",
+      "latitude": 22.238611769022363,
+      "longitude": 114.19466101579192,
+      "mode": "taxi",
+      "name": "淺水灣道 （淺水灣花園大廈對面） Repulse Bay Road (opposite to the Repulse Bay Apartments)"
+    },
+    {
+      "id": "taxi:61",
+      "latitude": 22.250070956263222,
+      "longitude": 114.15732241444938,
+      "mode": "taxi",
+      "name": "石排灣邨公共運輸交匯處 Shek Pai Wan Estate Public Transport Interchange"
+    },
+    {
+      "id": "taxi:62",
+      "latitude": 22.24325948692143,
+      "longitude": 114.16403362325372,
+      "mode": "taxi",
+      "name": "深灣道公共運輸交匯處 Shum Wan Road PTI"
+    },
+    {
+      "id": "taxi:63",
+      "latitude": 22.219702394368067,
+      "longitude": 114.21273082886162,
+      "mode": "taxi",
+      "name": "赤柱村道 Stanley Village Road"
+    },
+    {
+      "id": "taxi:64",
+      "latitude": 22.22809546921502,
+      "longitude": 114.21746340773518,
+      "mode": "taxi",
+      "name": "大潭道 （曼克頓花園外） Tai Tam Road (outside the Manhattan)"
+    },
+    {
+      "id": "taxi:65",
+      "latitude": 22.24985663136752,
+      "longitude": 114.13973654404462,
+      "mode": "taxi",
+      "name": "華貴邨 Wah Kwai Estate"
+    },
+    {
+      "id": "taxi:66",
+      "latitude": 22.280649717193604,
+      "longitude": 114.17541885285748,
+      "mode": "taxi",
+      "name": "港灣道 （鷹君中心商場/海港中心商場對面） Harbour Road (opposite to Great Eagle Centre/Harbour Centre)"
+    },
+    {
+      "id": "taxi:67",
+      "latitude": 22.273443234900316,
+      "longitude": 114.17338133801076,
+      "mode": "taxi",
+      "name": "堅尼地道 Kennedy Road"
+    },
+    {
+      "id": "taxi:68",
+      "latitude": 22.278798229071036,
+      "longitude": 114.18515114547874,
+      "mode": "taxi",
+      "name": "恩平道近蘭芳道 Yun Ping Road near Lan Fong Road"
+    },
+    {
+      "id": "taxi:69",
+      "latitude": 22.28314149041018,
+      "longitude": 114.19177886857982,
+      "mode": "taxi",
+      "name": "電氣道近留仙街 Electric Road (near Lau Sin Street)"
+    },
+    {
+      "id": "taxi:7",
+      "latitude": 22.287683356927065,
+      "longitude": 114.15684575220364,
+      "mode": "taxi",
+      "name": "中環二號碼頭 Central Ferry Pier No. 2"
+    },
+    {
+      "id": "taxi:70",
+      "latitude": 22.281254763423735,
+      "longitude": 114.17480753675146,
+      "mode": "taxi",
+      "name": "會展站公共運輸交匯處 Exhibition Centre Station Public Transport Interchange"
+    },
+    {
+      "id": "taxi:71",
+      "latitude": 22.283810414935676,
+      "longitude": 114.1736624858133,
+      "mode": "taxi",
+      "name": "博覽道東行（香港會議展覽中心二期下） Expo Drive eastbound underneath HKCEC Phase II"
+    },
+    {
+      "id": "taxi:72",
+      "latitude": 22.279249961248052,
+      "longitude": 114.1788926109564,
+      "mode": "taxi",
+      "name": "駱克道353號（介乎杜老誌道與馬師道交界） House No.353 Lockhart Road (between Tonnochy Road and Marsh Road)"
+    },
+    {
+      "id": "taxi:73",
+      "latitude": 22.28086637535093,
+      "longitude": 114.18202680294604,
+      "mode": "taxi",
+      "name": "謝斐道伊利莎伯大廈對出 Jaffe Road outside Elizabeth House"
+    },
+    {
+      "id": "taxi:74",
+      "latitude": 22.28421615447353,
+      "longitude": 114.19157520854482,
+      "mode": "taxi",
+      "name": "琉璃街介乎興發街與電氣道 Lau Li Street (between Hing Fat Street and Electric Road)"
+    },
+    {
+      "id": "taxi:75",
+      "latitude": 22.28068571576247,
+      "longitude": 114.1833270377705,
+      "mode": "taxi",
+      "name": "駱克道介乎景隆街與波斯富街 Lockhart Road (between Cannon Street and Percival Street)"
+    },
+    {
+      "id": "taxi:76",
+      "latitude": 22.278256558537493,
+      "longitude": 114.17298339189314,
+      "mode": "taxi",
+      "name": "駱克道介乎盧押道與柯布連道 Lockhart Road (between Luard Road and O'brien Road)"
+    },
+    {
+      "id": "taxi:77",
+      "latitude": 22.282004111360894,
+      "longitude": 114.18503489459792,
+      "mode": "taxi",
+      "name": "百德新街介乎京士頓街與告士打道 Paterson Street (between Kingston Street and Gloucester Road)"
+    },
+    {
+      "id": "taxi:78",
+      "latitude": 22.280739799065696,
+      "longitude": 114.18548117254112,
+      "mode": "taxi",
+      "name": "百德新街介乎京士頓街與記利佐治街 Paterson Street between Kingston Street and Great George Street"
+    },
+    {
+      "id": "taxi:79",
+      "latitude": 22.278780289948937,
+      "longitude": 114.18226930490697,
+      "mode": "taxi",
+      "name": "羅素街 Russell Street"
+    },
+    {
+      "id": "taxi:8",
+      "latitude": 22.28175042942206,
+      "longitude": 114.15852527795435,
+      "mode": "taxi",
+      "name": "遮打道 （歷山大廈） Chater Road (outside Alexandra House)"
+    },
+    {
+      "id": "taxi:80",
+      "latitude": 22.278680952588587,
+      "longitude": 114.18227900421977,
+      "mode": "taxi",
+      "name": "羅素街 （時代廣場內） Russell Street (within Times Square)"
+    },
+    {
+      "id": "taxi:81",
+      "latitude": 22.278825534337862,
+      "longitude": 114.17680642393046,
+      "mode": "taxi",
+      "name": "史釗域道介乎謝斐道與駱克道 Stewart Road (between Jaffe Road and Lockhart Road)"
+    },
+    {
+      "id": "taxi:82",
+      "latitude": 22.275782183920697,
+      "longitude": 114.1796396876871,
+      "mode": "taxi",
+      "name": "崇德街 Sung Tak Street"
+    },
+    {
+      "id": "taxi:83",
+      "latitude": 22.27579023189879,
+      "longitude": 114.19491214216654,
+      "mode": "taxi",
+      "name": "大坑道香港真光中學外 （近虎豹別墅） Tai Hang Road outside The True Light Middle School of Hong Kong (near Villa Haw Par)"
+    },
+    {
+      "id": "taxi:84",
+      "latitude": 22.27707350043659,
+      "longitude": 114.17143093693124,
+      "mode": "taxi",
+      "name": "譚臣道近盧押道 Thomson Road (near Luard Road)"
+    },
+    {
+      "id": "taxi:85",
+      "latitude": 22.279213849639696,
+      "longitude": 114.177670008074,
+      "mode": "taxi",
+      "name": "杜老誌道介乎駱克道與謝斐道 Tonnochy Road (between Lockhart Road and Jaffe Road)"
+    },
+    {
+      "id": "taxi:86",
+      "latitude": 22.269632096687232,
+      "longitude": 114.18568424240074,
+      "mode": "taxi",
+      "name": "載德街友誼大廈外 Tsoi Tak St (os Friendship Court)"
+    },
+    {
+      "id": "taxi:87",
+      "latitude": 22.279511122697336,
+      "longitude": 114.19233156578728,
+      "mode": "taxi",
+      "name": "銅鑼灣道 （浣紗街以東） Tung Lo Wan Road (east of Wun Sha Street)"
+    },
+    {
+      "id": "taxi:88",
+      "latitude": 22.286076575212256,
+      "longitude": 114.19030422334733,
+      "mode": "taxi",
+      "name": "威非路道（近興發街） Whitfield Road (near Hing Fat Street)"
+    },
+    {
+      "id": "taxi:89",
+      "latitude": 22.31237195470465,
+      "longitude": 114.18871059636984,
+      "mode": "taxi",
+      "name": "庇利街 Bailey St."
+    },
+    {
+      "id": "taxi:9",
+      "latitude": 22.2816962662858,
+      "longitude": 114.15870964892162,
+      "mode": "taxi",
+      "name": "遮打道 （歷山大廈） Chater Road (outside Alexandra House)"
+    },
+    {
+      "id": "taxi:90",
+      "latitude": 22.311054935760207,
+      "longitude": 114.1780682809816,
+      "mode": "taxi",
+      "name": "治民街 Chi Man St."
+    },
+    {
+      "id": "taxi:91",
+      "latitude": 22.313127208141132,
+      "longitude": 114.17777984978696,
+      "mode": "taxi",
+      "name": "忠孝街 Chung Hau St."
+    },
+    {
+      "id": "taxi:92",
+      "latitude": 22.32776355263792,
+      "longitude": 114.18757843174346,
+      "mode": "taxi",
+      "name": "福佬村道近太子道西 Fuk Lo Tsun Road near Prince Edward Road West"
+    },
+    {
+      "id": "taxi:93",
+      "latitude": 22.301600946438224,
+      "longitude": 114.18881634127828,
+      "mode": "taxi",
+      "name": "紅磡（紅鸞道）公共運輸交匯處 Hung Hom (Hung Luen Road) Public Transport Interchange"
+    },
+    {
+      "id": "taxi:94",
+      "latitude": 22.306033277198186,
+      "longitude": 114.21345483127764,
+      "mode": "taxi",
+      "name": "啟德郵輪碼頭 Kai Tak Cruise Terminal"
+    },
+    {
+      "id": "taxi:95",
+      "latitude": 22.339591846725575,
+      "longitude": 114.18006879082824,
+      "mode": "taxi",
+      "name": "金城道 Kam Shing Rd."
+    },
+    {
+      "id": "taxi:96",
+      "latitude": 22.31830828894788,
+      "longitude": 114.19400614104792,
+      "mode": "taxi",
+      "name": "九龍城碼頭 Kowloon City Ferry Pier"
+    },
+    {
+      "id": "taxi:97",
+      "latitude": 22.31907604207029,
+      "longitude": 114.19305102623048,
+      "mode": "taxi",
+      "name": "新碼頭街近翔龍灣 San Ma Tau Street near Grand Waterfront"
+    },
+    {
+      "id": "taxi:98",
+      "latitude": 22.32766388949924,
+      "longitude": 114.18197330953473,
+      "mode": "taxi",
+      "name": "喇沙利道 La Salle Road"
+    },
+    {
+      "id": "taxi:99",
+      "latitude": 22.31999726751173,
+      "longitude": 114.18823786503836,
+      "mode": "taxi",
+      "name": "馬坑涌道 Ma Hang Chung Rd."
+    }
+  ]
+}
