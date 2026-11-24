@@ -163898,7 +163898,7 @@
       "name_en": "Sheraton Hong Kong Tung Chung Hotel"
     },
     {
-      "id": "tram:99310",
+      "id": "tram:T",
       "latitude": 22.277905,
       "longitude": 114.230212,
       "mode": "tram",
@@ -163907,7 +163907,7 @@
       "name_en": "Shau Kei Wan Terminus"
     },
     {
-      "id": "tram:99101",
+      "id": "tram:02W",
       "latitude": 22.276758,
       "longitude": 114.228902,
       "mode": "tram",
@@ -163916,7 +163916,7 @@
       "name_en": "Chai Wan Road (West bound)"
     },
     {
-      "id": "tram:99102",
+      "id": "tram:04W",
       "latitude": 22.279559,
       "longitude": 114.225788,
       "mode": "tram",
@@ -163925,7 +163925,7 @@
       "name_en": "Sun Sing Street (West bound)"
     },
     {
-      "id": "tram:99103",
+      "id": "tram:06W",
       "latitude": 22.280399,
       "longitude": 114.224372,
       "mode": "tram",
@@ -163934,7 +163934,7 @@
       "name_en": "Hoi Foo Street (West bound)"
     },
     {
-      "id": "tram:99104",
+      "id": "tram:08W",
       "latitude": 22.281176,
       "longitude": 114.222674,
       "mode": "tram",
@@ -163943,7 +163943,7 @@
       "name_en": "Holy Cross Patht (West bound)"
     },
     {
-      "id": "tram:99105",
+      "id": "tram:10W",
       "latitude": 22.283163,
       "longitude": 114.221045,
       "mode": "tram",
@@ -163952,7 +163952,7 @@
       "name_en": "Tai Hong Street (West bound)"
     },
     {
-      "id": "tram:99106",
+      "id": "tram:12W",
       "latitude": 22.284094,
       "longitude": 114.220317,
       "mode": "tram",
@@ -163961,7 +163961,7 @@
       "name_en": "Tai Koo Shing Road (West bound)"
     },
     {
-      "id": "tram:99107",
+      "id": "tram:14W",
       "latitude": 22.2846,
       "longitude": 114.216009,
       "mode": "tram",
@@ -163970,7 +163970,7 @@
       "name_en": "Kornhill (West bound)"
     },
     {
-      "id": "tram:99108",
+      "id": "tram:16W",
       "latitude": 22.284637,
       "longitude": 114.213787,
       "mode": "tram",
@@ -163979,7 +163979,7 @@
       "name_en": "Shipyard Lane (West bound)"
     },
     {
-      "id": "tram:99109",
+      "id": "tram:18W",
       "latitude": 22.284836,
       "longitude": 114.212079,
       "mode": "tram",
@@ -163988,7 +163988,7 @@
       "name_en": "Mount Parker Road (West bound)"
     },
     {
-      "id": "tram:99110",
+      "id": "tram:20W",
       "latitude": 22.288584,
       "longitude": 114.209819,
       "mode": "tram",
@@ -163997,7 +163997,7 @@
       "name_en": "Finnie Street (West bound)"
     },
     {
-      "id": "tram:99111",
+      "id": "tram:22W",
       "latitude": 22.290743,
       "longitude": 114.209082,
       "mode": "tram",
@@ -164006,7 +164006,7 @@
       "name_en": "Java Road (West bound)"
     },
     {
-      "id": "tram:99112",
+      "id": "tram:77E",
       "latitude": 22.291727,
       "longitude": 114.207432,
       "mode": "tram",
@@ -164015,7 +164015,7 @@
       "name_en": "Healthy Street East (West bound)"
     },
     {
-      "id": "tram:99113",
+      "id": "tram:26W",
       "latitude": 22.292062,
       "longitude": 114.205084,
       "mode": "tram",
@@ -164024,7 +164024,7 @@
       "name_en": "Healthy Street West (West bound)"
     },
     {
-      "id": "tram:99114",
+      "id": "tram:28W",
       "latitude": 22.291845,
       "longitude": 114.203667,
       "mode": "tram",
@@ -164033,7 +164033,7 @@
       "name_en": "Tin Chiu Street (West bound)"
     },
     {
-      "id": "tram:99115",
+      "id": "tram:30W",
       "latitude": 22.291241,
       "longitude": 114.200669,
       "mode": "tram",
@@ -164042,7 +164042,7 @@
       "name_en": "Shu Kuk Street (West bound)"
     },
     {
-      "id": "tram:99116",
+      "id": "tram:32W",
       "latitude": 22.290501,
       "longitude": 114.197078,
       "mode": "tram",
@@ -164051,7 +164051,7 @@
       "name_en": "North Point Road (West bound)"
     },
     {
-      "id": "tram:99117",
+      "id": "tram:34W",
       "latitude": 22.289147,
       "longitude": 114.194332,
       "mode": "tram",
@@ -164060,7 +164060,7 @@
       "name_en": "Fortress Hill (West bound)"
     },
     {
-      "id": "tram:99118",
+      "id": "tram:36W",
       "latitude": 22.286627,
       "longitude": 114.192924,
       "mode": "tram",
@@ -164069,7 +164069,7 @@
       "name_en": "Jupiter Street (West bound)"
     },
     {
-      "id": "tram:99119",
+      "id": "tram:38W",
       "latitude": 22.284478,
       "longitude": 114.192759,
       "mode": "tram",
@@ -164078,7 +164078,7 @@
       "name_en": "Lau Li Street (West bound)"
     },
     {
-      "id": "tram:99120",
+      "id": "tram:40W",
       "latitude": 22.282663,
       "longitude": 114.192186,
       "mode": "tram",
@@ -164087,7 +164087,7 @@
       "name_en": "Lau Sin Street (West bound)"
     },
     {
-      "id": "tram:99121",
+      "id": "tram:42W",
       "latitude": 22.280667,
       "longitude": 114.189605,
       "mode": "tram",
@@ -164096,7 +164096,7 @@
       "name_en": "Victoria Park (West bound)"
     },
     {
-      "id": "tram:99122",
+      "id": "tram:44W",
       "latitude": 22.279656,
       "longitude": 114.188091,
       "mode": "tram",
@@ -164105,7 +164105,7 @@
       "name_en": "Shelter Street (West bound)"
     },
     {
-      "id": "tram:99123",
+      "id": "tram:46W",
       "latitude": 22.279503,
       "longitude": 114.186587,
       "mode": "tram",
@@ -164114,7 +164114,7 @@
       "name_en": "Pennington Street (West bound)"
     },
     {
-      "id": "tram:99124",
+      "id": "tram:48W",
       "latitude": 22.279864,
       "longitude": 114.185452,
       "mode": "tram",
@@ -164123,7 +164123,7 @@
       "name_en": "Paterson Street (West bound)"
     },
     {
-      "id": "tram:99125",
+      "id": "tram:50W",
       "latitude": 22.279349,
       "longitude": 114.18125,
       "mode": "tram",
@@ -164132,7 +164132,7 @@
       "name_en": "Canal Road West (West bound)"
     },
     {
-      "id": "tram:99126",
+      "id": "tram:52W",
       "latitude": 22.278166,
       "longitude": 114.17767,
       "mode": "tram",
@@ -164141,7 +164141,7 @@
       "name_en": "Tonnochy Road (West bound)"
     },
     {
-      "id": "tram:99127",
+      "id": "tram:54W",
       "latitude": 22.277254,
       "longitude": 114.175914,
       "mode": "tram",
@@ -164150,7 +164150,7 @@
       "name_en": "Burrows Street (West bound)"
     },
     {
-      "id": "tram:99128",
+      "id": "tram:56W",
       "latitude": 22.276541,
       "longitude": 114.17341,
       "mode": "tram",
@@ -164159,7 +164159,7 @@
       "name_en": "O'Brien Road (West bound)"
     },
     {
-      "id": "tram:99129",
+      "id": "tram:58W",
       "latitude": 22.276396,
       "longitude": 114.172062,
       "mode": "tram",
@@ -164168,7 +164168,7 @@
       "name_en": "Swatow Street (West bound)"
     },
     {
-      "id": "tram:99130",
+      "id": "tram:60W",
       "latitude": 22.277119,
       "longitude": 114.17016,
       "mode": "tram",
@@ -164177,7 +164177,7 @@
       "name_en": "Gresson Street (West bound)"
     },
     {
-      "id": "tram:99132",
+      "id": "tram:62W",
       "latitude": 22.277769,
       "longitude": 114.16851,
       "mode": "tram",
@@ -164186,7 +164186,7 @@
       "name_en": "Arsenal Street (West bound)"
     },
     {
-      "id": "tram:99133",
+      "id": "tram:64W",
       "latitude": 22.278274,
       "longitude": 114.164542,
       "mode": "tram",
@@ -164195,7 +164195,7 @@
       "name_en": "Admiralty MTR Station (West bound)"
     },
     {
-      "id": "tram:99134",
+      "id": "tram:66W",
       "latitude": 22.279213,
       "longitude": 114.162873,
       "mode": "tram",
@@ -164204,7 +164204,7 @@
       "name_en": "Cotton Tree Drive (West bound)"
     },
     {
-      "id": "tram:99135",
+      "id": "tram:68W",
       "latitude": 22.280622,
       "longitude": 114.159651,
       "mode": "tram",
@@ -164213,7 +164213,7 @@
       "name_en": "Bank Street (West bound)"
     },
     {
-      "id": "tram:99136",
+      "id": "tram:70W",
       "latitude": 22.281759,
       "longitude": 114.157962,
       "mode": "tram",
@@ -164222,7 +164222,7 @@
       "name_en": "Pedder Street (West bound)"
     },
     {
-      "id": "tram:99137",
+      "id": "tram:72W",
       "latitude": 22.283493,
       "longitude": 114.156575,
       "mode": "tram",
@@ -164231,7 +164231,7 @@
       "name_en": "Pottinger Street (West bound)"
     },
     {
-      "id": "tram:99138",
+      "id": "tram:74W",
       "latitude": 22.285245,
       "longitude": 114.154944,
       "mode": "tram",
@@ -164240,7 +164240,7 @@
       "name_en": "Gilman Street (West bound)"
     },
     {
-      "id": "tram:99139",
+      "id": "tram:76W",
       "latitude": 22.286292,
       "longitude": 114.152964,
       "mode": "tram",
@@ -164267,7 +164267,7 @@
       "name_en": "Western Market Terminus"
     },
     {
-      "id": "tram:99213",
+      "id": "tram:21E",
       "latitude": 22.286626,
       "longitude": 114.151907,
       "mode": "tram",
@@ -164276,7 +164276,7 @@
       "name_en": "Hillier Street (East bound)"
     },
     {
-      "id": "tram:99214",
+      "id": "tram:23E",
       "latitude": 22.28548,
       "longitude": 114.154663,
       "mode": "tram",
@@ -164285,7 +164285,7 @@
       "name_en": "Gilman Street (East bound)"
     },
     {
-      "id": "tram:99215",
+      "id": "tram:25E",
       "latitude": 22.284703,
       "longitude": 114.155662,
       "mode": "tram",
@@ -164294,7 +164294,7 @@
       "name_en": "Jubilee Street (East bound)"
     },
     {
-      "id": "tram:99216",
+      "id": "tram:27E",
       "latitude": 22.28222,
       "longitude": 114.157633,
       "mode": "tram",
@@ -164303,7 +164303,7 @@
       "name_en": "Pedder Street (East bound)"
     },
     {
-      "id": "tram:99217",
+      "id": "tram:29E",
       "latitude": 22.281037,
       "longitude": 114.158613,
       "mode": "tram",
@@ -164312,7 +164312,7 @@
       "name_en": "Ice House Street (East bound)"
     },
     {
-      "id": "tram:99218",
+      "id": "tram:31E",
       "latitude": 22.280531,
       "longitude": 114.160253,
       "mode": "tram",
@@ -164321,7 +164321,7 @@
       "name_en": "Bank Street (East bound)"
     },
     {
-      "id": "tram:99219",
+      "id": "tram:33E",
       "latitude": 22.279728,
       "longitude": 114.161999,
       "mode": "tram",
@@ -164330,7 +164330,7 @@
       "name_en": "Murray Road (East bound)"
     },
     {
-      "id": "tram:99220",
+      "id": "tram:35E",
       "latitude": 22.27841,
       "longitude": 114.164386,
       "mode": "tram",
@@ -164339,7 +164339,7 @@
       "name_en": "Admiralty MTR Station (East bound)"
     },
     {
-      "id": "tram:99221",
+      "id": "tram:37E",
       "latitude": 22.277859,
       "longitude": 114.168171,
       "mode": "tram",
@@ -164348,7 +164348,7 @@
       "name_en": "Arsenal Street (East bound)"
     },
     {
-      "id": "tram:99131",
+      "id": "tram:39E",
       "latitude": 22.277254,
       "longitude": 114.170082,
       "mode": "tram",
@@ -164357,7 +164357,7 @@
       "name_en": "Fenwick Street (East bound)"
     },
     {
-      "id": "tram:99222",
+      "id": "tram:41E",
       "latitude": 22.276459,
       "longitude": 114.172003,
       "mode": "tram",
@@ -164366,7 +164366,7 @@
       "name_en": "Luard Road (East bound)"
     },
     {
-      "id": "tram:99223",
+      "id": "tram:43E",
       "latitude": 22.276586,
       "longitude": 114.173197,
       "mode": "tram",
@@ -164375,7 +164375,7 @@
       "name_en": "O'Brien Road (East bound)"
     },
     {
-      "id": "tram:99224",
+      "id": "tram:45E",
       "latitude": 22.277056,
       "longitude": 114.175419,
       "mode": "tram",
@@ -164384,7 +164384,7 @@
       "name_en": "Fleming Road (East bound)"
     },
     {
-      "id": "tram:99226",
+      "id": "tram:47E",
       "latitude": 22.278257,
       "longitude": 114.177748,
       "mode": "tram",
@@ -164393,7 +164393,7 @@
       "name_en": "Tonnochy Road (East bound)"
     },
     {
-      "id": "tram:99227",
+      "id": "tram:49E",
       "latitude": 22.279313,
       "longitude": 114.180969,
       "mode": "tram",
@@ -164402,7 +164402,7 @@
       "name_en": "Canal Road West (East bound)"
     },
     {
-      "id": "tram:99228",
+      "id": "tram:51E",
       "latitude": 22.280072,
       "longitude": 114.182997,
       "mode": "tram",
@@ -164411,7 +164411,7 @@
       "name_en": "Percival Street (East bound)"
     },
     {
-      "id": "tram:99230",
+      "id": "tram:53E",
       "latitude": 22.27971,
       "longitude": 114.186131,
       "mode": "tram",
@@ -164420,7 +164420,7 @@
       "name_en": "Paterson Street (East bound)"
     },
     {
-      "id": "tram:99231",
+      "id": "tram:55E",
       "latitude": 22.27962,
       "longitude": 114.187897,
       "mode": "tram",
@@ -164429,7 +164429,7 @@
       "name_en": "Shelter Street (East bound)"
     },
     {
-      "id": "tram:99232",
+      "id": "tram:57E",
       "latitude": 22.280577,
       "longitude": 114.189362,
       "mode": "tram",
@@ -164438,7 +164438,7 @@
       "name_en": "Victoria Park (East bound)"
     },
     {
-      "id": "tram:99233",
+      "id": "tram:59E",
       "latitude": 22.281823,
       "longitude": 114.191206,
       "mode": "tram",
@@ -164447,7 +164447,7 @@
       "name_en": "Hing Fat Street (East bound)"
     },
     {
-      "id": "tram:99234",
+      "id": "tram:61E",
       "latitude": 22.285137,
       "longitude": 114.192846,
       "mode": "tram",
@@ -164456,7 +164456,7 @@
       "name_en": "Wing Hing Street (East bound)"
     },
     {
-      "id": "tram:99235",
+      "id": "tram:63E",
       "latitude": 22.286429,
       "longitude": 114.192876,
       "mode": "tram",
@@ -164465,7 +164465,7 @@
       "name_en": "Jupiter Street (East bound)"
     },
     {
-      "id": "tram:99236",
+      "id": "tram:65E",
       "latitude": 22.28921,
       "longitude": 114.194293,
       "mode": "tram",
@@ -164474,7 +164474,7 @@
       "name_en": "Fortress Hill (East bound)"
     },
     {
-      "id": "tram:99237",
+      "id": "tram:69E",
       "latitude": 22.290564,
       "longitude": 114.197078,
       "mode": "tram",
@@ -164483,7 +164483,7 @@
       "name_en": "North Point Road (East bound)"
     },
     {
-      "id": "tram:99238",
+      "id": "tram:71E",
       "latitude": 22.291295,
       "longitude": 114.200649,
       "mode": "tram",
@@ -164492,7 +164492,7 @@
       "name_en": "Shu Kuk Street (East bound)"
     },
     {
-      "id": "tram:99239",
+      "id": "tram:73E",
       "latitude": 22.291909,
       "longitude": 114.203648,
       "mode": "tram",
@@ -164501,7 +164501,7 @@
       "name_en": "Tin Chiu Street (East bound)"
     },
     {
-      "id": "tram:99240",
+      "id": "tram:75E",
       "latitude": 22.292125,
       "longitude": 114.205181,
       "mode": "tram",
@@ -164510,16 +164510,7 @@
       "name_en": "Healthy Street West (East bound)"
     },
     {
-      "id": "tram:99241",
-      "latitude": 22.291736,
-      "longitude": 114.207578,
-      "mode": "tram",
-      "name": "健康東街 (東行方向) Healthy Street East (East bound)",
-      "name_tc": "健康東街 (東行方向)",
-      "name_en": "Healthy Street East (East bound)"
-    },
-    {
-      "id": "tram:99242",
+      "id": "tram:79E",
       "latitude": 22.29086,
       "longitude": 114.209072,
       "mode": "tram",
@@ -164528,7 +164519,7 @@
       "name_en": "Java Road (East bound)"
     },
     {
-      "id": "tram:99243",
+      "id": "tram:81E",
       "latitude": 22.288602,
       "longitude": 114.209887,
       "mode": "tram",
@@ -164537,7 +164528,7 @@
       "name_en": "Finnie Street (East bound)"
     },
     {
-      "id": "tram:99244",
+      "id": "tram:83E",
       "latitude": 22.285757,
       "longitude": 114.211128,
       "mode": "tram",
@@ -164546,7 +164537,7 @@
       "name_en": "Mount Parker Road (East bound)"
     },
     {
-      "id": "tram:99245",
+      "id": "tram:85E",
       "latitude": 22.2847,
       "longitude": 114.213835,
       "mode": "tram",
@@ -164555,7 +164546,7 @@
       "name_en": "Shipyard Lane (East bound)"
     },
     {
-      "id": "tram:99246",
+      "id": "tram:87E",
       "latitude": 22.284664,
       "longitude": 114.216048,
       "mode": "tram",
@@ -164564,7 +164555,7 @@
       "name_en": "Kornhill (East bound)"
     },
     {
-      "id": "tram:99247",
+      "id": "tram:89E",
       "latitude": 22.284048,
       "longitude": 114.220424,
       "mode": "tram",
@@ -164573,7 +164564,7 @@
       "name_en": "Tai Koo Shing Road (East bound)"
     },
     {
-      "id": "tram:99248",
+      "id": "tram:91E",
       "latitude": 22.283127,
       "longitude": 114.221151,
       "mode": "tram",
@@ -164582,16 +164573,7 @@
       "name_en": "Tai Hong Street (East bound)"
     },
     {
-      "id": "tram:99252",
-      "latitude": 22.282323,
-      "longitude": 114.221782,
-      "mode": "tram",
-      "name": "太安街 (東行方向) Tai Hong Street (East bound)",
-      "name_tc": "太安街 (東行方向)",
-      "name_en": "Tai Hong Street (East bound)"
-    },
-    {
-      "id": "tram:99249",
+      "id": "tram:95E",
       "latitude": 22.280435,
       "longitude": 114.224479,
       "mode": "tram",
@@ -164600,7 +164582,7 @@
       "name_en": "Hoi Foo Street (East bound)"
     },
     {
-      "id": "tram:99250",
+      "id": "tram:99E",
       "latitude": 22.278791,
       "longitude": 114.22636,
       "mode": "tram",
@@ -164609,7 +164591,7 @@
       "name_en": "Nam Hong Street (East bound)"
     },
     {
-      "id": "tram:99251",
+      "id": "tram:101E",
       "latitude": 22.276767,
       "longitude": 114.229309,
       "mode": "tram",
@@ -164618,7 +164600,7 @@
       "name_en": "Chai Wan Road (East bound)"
     },
     {
-      "id": "tram:99301",
+      "id": "tram:105",
       "latitude": 22.279349,
       "longitude": 114.182968,
       "mode": "tram",
@@ -164627,7 +164609,7 @@
       "name_en": "Foo Ming Street"
     },
     {
-      "id": "tram:99302",
+      "id": "tram:106",
       "latitude": 22.277001,
       "longitude": 114.182405,
       "mode": "tram",
@@ -164636,7 +164618,7 @@
       "name_en": "Leighton Road"
     },
     {
-      "id": "tram:99303",
+      "id": "tram:107",
       "latitude": 22.27394,
       "longitude": 114.183666,
       "mode": "tram",
@@ -164645,7 +164627,7 @@
       "name_en": "Broadwood Road"
     },
     {
-      "id": "tram:99307",
+      "id": "tram:108",
       "latitude": 22.271781,
       "longitude": 114.184714,
       "mode": "tram",
@@ -164654,16 +164636,7 @@
       "name_en": "Wong Nai Chung Road"
     },
     {
-      "id": "tram:99304",
-      "latitude": 22.269822,
-      "longitude": 114.184151,
-      "mode": "tram",
-      "name": "跑馬地總站 Happy Valley Terminus",
-      "name_tc": "跑馬地總站",
-      "name_en": "Happy Valley Terminus"
-    },
-    {
-      "id": "tram:99308",
+      "id": "tram:109",
       "latitude": 22.271583,
       "longitude": 114.180367,
       "mode": "tram",
@@ -164681,15 +164654,6 @@
       "name_en": "Queen's Road East"
     },
     {
-      "id": "tram:99309",
-      "latitude": 22.275909,
-      "longitude": 114.180591,
-      "mode": "tram",
-      "name": "禮頓道 Leighton Road",
-      "name_tc": "禮頓道",
-      "name_en": "Leighton Road"
-    },
-    {
       "id": "tram:99306",
       "latitude": 22.278509,
       "longitude": 114.17963,
@@ -164699,16 +164663,7 @@
       "name_en": "Hennessy Road"
     },
     {
-      "id": "tram:99201",
-      "latitude": 22.282999,
-      "longitude": 114.12631,
-      "mode": "tram",
-      "name": "堅尼地城總站 Kennnedy Town Terminus",
-      "name_tc": "堅尼地城總站",
-      "name_en": "Kennnedy Town Terminus"
-    },
-    {
-      "id": "tram:99202",
+      "id": "tram:01E",
       "latitude": 22.283406,
       "longitude": 114.128784,
       "mode": "tram",
@@ -164717,7 +164672,7 @@
       "name_en": "North Street (East bound)"
     },
     {
-      "id": "tram:99203",
+      "id": "tram:03E",
       "latitude": 22.28458,
       "longitude": 114.130559,
       "mode": "tram",
@@ -164726,7 +164681,7 @@
       "name_en": "Holland Street (East bound)"
     },
     {
-      "id": "tram:99204",
+      "id": "tram:05E",
       "latitude": 22.286586,
       "longitude": 114.132257,
       "mode": "tram",
@@ -164735,7 +164690,7 @@
       "name_en": "Queen's Road West (East bound)"
     },
     {
-      "id": "tram:99205",
+      "id": "tram:07E",
       "latitude": 22.287155,
       "longitude": 114.134256,
       "mode": "tram",
@@ -164744,7 +164699,7 @@
       "name_en": "Hill Road (East bound)"
     },
     {
-      "id": "tram:99206",
+      "id": "tram:09E",
       "latitude": 22.286822,
       "longitude": 114.136439,
       "mode": "tram",
@@ -164753,7 +164708,7 @@
       "name_en": "Whitty Street (East bound)"
     },
     {
-      "id": "tram:99207",
+      "id": "tram:11E",
       "latitude": 22.287427,
       "longitude": 114.138583,
       "mode": "tram",
@@ -164762,7 +164717,7 @@
       "name_en": "Water Street (East bound)"
     },
     {
-      "id": "tram:99208",
+      "id": "tram:13E",
       "latitude": 22.287988,
       "longitude": 114.14065,
       "mode": "tram",
@@ -164771,7 +164726,7 @@
       "name_en": "Western Street (East bound)"
     },
     {
-      "id": "tram:99209",
+      "id": "tram:15E",
       "latitude": 22.287907,
       "longitude": 114.143639,
       "mode": "tram",
@@ -164780,7 +164735,7 @@
       "name_en": "Eastern Street (East bound)"
     },
     {
-      "id": "tram:99210",
+      "id": "tram:17E",
       "latitude": 22.2877,
       "longitude": 114.147084,
       "mode": "tram",
@@ -164789,7 +164744,7 @@
       "name_en": "Queen Street (East bound)"
     },
     {
-      "id": "tram:99211",
+      "id": "tram:19E",
       "latitude": 22.287764,
       "longitude": 114.150111,
       "mode": "tram",
@@ -164798,7 +164753,7 @@
       "name_en": "Macau Ferry Terminal (East bound)"
     },
     {
-      "id": "tram:99141",
+      "id": "tram:78W",
       "latitude": 22.287746,
       "longitude": 114.149888,
       "mode": "tram",
@@ -164807,7 +164762,7 @@
       "name_en": "Macau Ferry Terminal (West bound)"
     },
     {
-      "id": "tram:99142",
+      "id": "tram:80W",
       "latitude": 22.288016,
       "longitude": 114.148792,
       "mode": "tram",
@@ -164816,7 +164771,7 @@
       "name_en": "Connaught Road West (West bound)"
     },
     {
-      "id": "tram:99143",
+      "id": "tram:82W",
       "latitude": 22.287718,
       "longitude": 114.146084,
       "mode": "tram",
@@ -164825,16 +164780,7 @@
       "name_en": "Sutherland Street (West bound)"
     },
     {
-      "id": "tram:99144",
-      "latitude": 22.287844,
-      "longitude": 114.144085,
-      "mode": "tram",
-      "name": "東邊街 (西行方向) Eastern Street (West bound)",
-      "name_tc": "東邊街 (西行方向)",
-      "name_en": "Eastern Street (West bound)"
-    },
-    {
-      "id": "tram:99145",
+      "id": "tram:86W",
       "latitude": 22.287934,
       "longitude": 114.141096,
       "mode": "tram",
@@ -164843,7 +164789,7 @@
       "name_en": "Western Street (West bound)"
     },
     {
-      "id": "tram:99146",
+      "id": "tram:88W",
       "latitude": 22.287482,
       "longitude": 114.13903,
       "mode": "tram",
@@ -164852,7 +164798,7 @@
       "name_en": "Water Street (West bound)"
     },
     {
-      "id": "tram:99147",
+      "id": "tram:90W",
       "latitude": 22.286867,
       "longitude": 114.136779,
       "mode": "tram",
@@ -164861,7 +164807,7 @@
       "name_en": "Whitty Street (West bound)"
     },
     {
-      "id": "tram:99148",
+      "id": "tram:92W",
       "latitude": 22.28702,
       "longitude": 114.134527,
       "mode": "tram",
@@ -164870,7 +164816,7 @@
       "name_en": "Hill Road (West bound)"
     },
     {
-      "id": "tram:99149",
+      "id": "tram:96W",
       "latitude": 22.286125,
       "longitude": 114.132111,
       "mode": "tram",
@@ -164879,7 +164825,7 @@
       "name_en": "Queen's Road West (West bound)"
     },
     {
-      "id": "tram:99150",
+      "id": "tram:98W",
       "latitude": 22.28431,
       "longitude": 114.130365,
       "mode": "tram",
@@ -164888,7 +164834,7 @@
       "name_en": "Kennnedy Town Praya (West bound)"
     },
     {
-      "id": "tram:99151",
+      "id": "tram:100W",
       "latitude": 22.283487,
       "longitude": 114.129347,
       "mode": "tram",
@@ -164897,7 +164843,7 @@
       "name_en": "Sands Street (West bound)"
     },
     {
-      "id": "tram:99152",
+      "id": "tram:102W",
       "latitude": 22.283171,
       "longitude": 114.127707,
       "mode": "tram",
@@ -164906,49 +164852,13 @@
       "name_en": "Smithfield (West bound)"
     },
     {
-      "id": "tram:99153",
+      "id": "tram:104W",
       "latitude": 22.283053,
       "longitude": 114.127037,
       "mode": "tram",
       "name": "爹核士街 (西行方向) Davis Street (West bound)",
       "name_tc": "爹核士街 (西行方向)",
       "name_en": "Davis Street (West bound)"
-    },
-    {
-      "id": "tram:99313",
-      "latitude": 22.287092,
-      "longitude": 114.13508,
-      "mode": "tram",
-      "name": "石塘咀總站 Shek Tong Tsui Terminus",
-      "name_tc": "石塘咀總站",
-      "name_en": "Shek Tong Tsui Terminus"
-    },
-    {
-      "id": "tram:99225",
-      "latitude": 22.279277,
-      "longitude": 114.187024,
-      "mode": "tram",
-      "name": "銅鑼灣總站 Causeway Bay Terminus",
-      "name_tc": "銅鑼灣總站",
-      "name_en": "Causeway Bay Terminus"
-    },
-    {
-      "id": "tram:99312",
-      "latitude": 22.291169,
-      "longitude": 114.198767,
-      "mode": "tram",
-      "name": "北角總站 North Point Terminus",
-      "name_tc": "北角總站",
-      "name_en": "North Point Terminus"
-    },
-    {
-      "id": "tram:99311",
-      "latitude": 22.291106,
-      "longitude": 114.196719,
-      "mode": "tram",
-      "name": "北角道 (東行方向) North Point Road (East bound)",
-      "name_tc": "北角道 (東行方向)",
-      "name_en": "North Point Road (East bound)"
     }
   ]
 }

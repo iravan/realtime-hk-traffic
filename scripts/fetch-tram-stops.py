@@ -8,6 +8,9 @@ Usage:
 import json
 import ssl
 import urllib.request
+import csv
+import io
+import re
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -33,6 +36,48 @@ def fetch_zip(target: Path) -> Path:
     return target
 
 
+
+def load_code_map() -> dict[tuple[str, str], str]:
+    csv_url = "https://static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv"
+    text = urllib.request.urlopen(csv_url, timeout=60, context=context()).read().decode("utf-8-sig")
+    rows = list(csv.DictReader(io.StringIO(text)))
+
+    def norm(value: str) -> str:
+        return re.sub(r"\s*\([^)]*\)", "", value).strip().lower()
+
+    def direction(value: str) -> str:
+        value = value.lower()
+        if "east" in value:
+            return "E"
+        if "west" in value:
+            return "W"
+        return ""
+
+    mapping: dict[tuple[str, str], str] = {}
+    for row in rows:
+        code = row["Stops Code"].strip()
+        letter = "E" if code.endswith("E") else "W" if code.endswith("W") else ""
+        mapping.setdefault((norm(row["Stops Name"]), letter), code)
+    # A few KML spellings differ from the CSV.
+    aliases = {
+        "holy cross patht": "holy cross path",
+        "kennnedy town praya": "kennedy town praya",
+        "kennnedy town terminus": "kennedy town terminus",
+    }
+    for (name, letter), code in list(mapping.items()):
+        for wrong, right in aliases.items():
+            if name == right:
+                mapping.setdefault((wrong, letter), code)
+    return mapping
+
+
+CODE_MAP = load_code_map()
+
+
+def resolve_code(name: str) -> str | None:
+    letter = "E" if "east" in name.lower() else "W" if "west" in name.lower() else ""
+    return CODE_MAP.get((re.sub(r"\s*\([^)]*\)", "", name).strip().lower(), letter))
+
 def extract_stops(zip_path: Path) -> dict[str, dict]:
     by_stop: dict[str, dict] = {}
     with zipfile.ZipFile(zip_path) as archive:
@@ -52,11 +97,12 @@ def extract_stops(zip_path: Path) -> dict[str, dict]:
                 if coords is None or not coords.text:
                     continue
                 lon, lat = [float(part) for part in coords.text.strip().split(",")[:2]]
-                our_id = f"tram:{stop_id}"
-                if our_id in by_stop:
-                    continue
                 name_tc = data("stopNameC") or data("stopNameS")
                 name_en = data("stopNameE")
+                code = resolve_code(name_en)
+                our_id = f"tram:{code}" if code else f"tram:{stop_id}"
+                if our_id in by_stop:
+                    continue
                 by_stop[our_id] = {
                     "id": our_id,
                     "latitude": lat,
