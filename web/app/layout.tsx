@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { I18nProvider } from "./i18n";
 import "./globals.css";
 
@@ -115,6 +117,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-Hant">
       <body>
+        <Analytics />
+        <SpeedInsights />
         <meta {...{ itemprop: "name" }} content={title} />
         <meta {...{ itemprop: "description" }} content={description} />
         <meta {...{ itemprop: "image" }} content={image.url} />
