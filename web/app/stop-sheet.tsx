@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
 import { ferryDestinationColor } from "./ferry-destination-color";
-import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isLantauBus, isLightRail, isStarFerry, lantauBusIconUrl, lightRailIconUrl, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
+import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl, isCitybus, isLantauBus, isLightRail, isStarFerry, lantauBusIconUrl, lightRailIconUrl, modeColor, stopIconUrl, type Mode, type TaxiKind } from "./stop-icon";
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
@@ -318,6 +318,14 @@ export function StopSheet({
       </>
     ) : mode === "ferry" ? (
       <FerryTimetable destinations={destinations ?? []} timetable={ferryTimetable ?? []} locale={locale} t={t} />
+    ) : mode === "tram" && routes && routes.length > 0 ? (
+      <div className="tram-routes">
+        {routes.map((route) => (
+          <span key={route} className="station-chip" style={{ background: modeColor.tram, color: "#fff" }}>
+            {localizeBilingualName(route, locale)}
+          </span>
+        ))}
+      </div>
     ) : apiBase && serviceHours ? (
       <>
         <p className="muted">{t.sheet.hours}</p>

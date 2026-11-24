@@ -367,7 +367,7 @@ button { cursor: pointer; }
 .ferry-op-icon { width: 16px; height: 16px; vertical-align: middle; margin-right: 0.3rem; }
 .ferry-arrival-head { display: flex; align-items: center; gap: 0.3rem; }
 .ferry-arrival-head strong { display: inline; }
-.ferry-destinations { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.5rem; }
+.ferry-destinations, .tram-routes { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 0.5rem; }
 .ferry-operator { margin: 0 0 0.75rem; }
 .ferry-operator:last-child { margin-bottom: 0; }
 .ferry-operator-name { margin: 0 0 0.35rem; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; }
