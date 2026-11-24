@@ -1018,7 +1018,7 @@ export default function Page() {
     routeMarkerRef.current = null;
     const map = mapRef.current;
     const routes = board?.mode === "minibus" || board?.mode === "bus" ? board.routes : undefined;
-    if (!map || !board || !routes || routes.length === 0) return;
+    if (!map || !board || !routes || routes.length === 0 || map.getZoom() < pinZoom) return;
     const marker = new Marker({ element: routeBoard(routes, board?.mode === "bus" ? "#e52029" : undefined), anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
       .addTo(map);
@@ -1027,7 +1027,7 @@ export default function Page() {
       marker.remove();
       if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
     };
-  }, [board]);
+  }, [board, zoomLevel]);
 
   // Every ferry pin in view carries a board of the places it reaches, read
   // from the pier's `destinations` in the stop catalogue. Boards only appear
