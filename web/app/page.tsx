@@ -1919,7 +1919,10 @@ function matchesQuery(stop: Stop, query: string): boolean {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
   if (stop.mode === "bus" || stop.mode === "minibus") {
-    return (stop.routes ?? []).some((route) => route.toLowerCase().startsWith(needle));
+    if ((stop.routes ?? []).some((route) => route.toLowerCase().startsWith(needle))) return true;
+    return [stop.name, stop.name_tc, stop.name_en].some((name) =>
+      name?.toLowerCase().includes(needle),
+    );
   }
   if (stop.mode === "ferry") {
     return (stop.destinations ?? []).some((destination) =>
