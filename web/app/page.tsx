@@ -66,7 +66,7 @@ import { localizeBilingualName, localizeStopName } from "./stop-name";
 import lineTerminalsJson from "./mtr-line-terminals.json";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const modes = ["mtr", "bus", "minibus", "ferry", "taxi"] as const;
+const modes = ["mtr", "bus", "minibus", "ferry", "taxi", "tram"] as const;
 
 // The category tabs use their own flat vehicle artwork, served from
 // `public/icons`. They are plain files, so they need no canvas at render time.
@@ -76,6 +76,7 @@ const categoryIcons: Record<Mode, string> = {
   minibus: `${basePath}/icons/minibus.svg`,
   ferry: `${basePath}/icons/ferry.svg`,
   taxi: `${basePath}/icons/taxi.svg`,
+  tram: `${basePath}/icons/tram.svg`,
 };
 
 // Terminal stations for the line tooltip. The GeoJSON groups both directions
@@ -109,6 +110,7 @@ const autoselectRadiusMeters: Record<Mode, number> = {
   minibus: 300,
   ferry: 500,
   taxi: 400,
+  tram: 300,
 };
 
 // A feature's `icon` is its mode sign. Out of service a stop drops to its
@@ -1101,7 +1103,7 @@ export default function Page() {
         .filter((stop) => stop.routes && stop.routes.length > 0)
         .map((stop) =>
           new Marker({
-            element: routeBoard(stop.routes!, active === "bus" ? "#e52029" : "#2f7d4f"),
+            element: routeBoard(stop.routes!, "#2f7d4f"),
             anchor: "left",
             offset: [8, 0],
           })
@@ -1223,7 +1225,9 @@ export default function Page() {
             ? "stops-ferry-timetable"
             : mode === "mtr"
               ? "stops-mtr-lrt2"
-              : `stops-${mode}`;
+              : mode === "tram"
+                ? "stops-tram"
+                : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
       if (!response.ok) throw new Error(`stops-${mode}`);

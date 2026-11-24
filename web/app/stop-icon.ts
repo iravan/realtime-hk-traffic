@@ -1,6 +1,6 @@
 import { TAXI_COLORS } from "./taxi-colors";
 
-export type Mode = "mtr" | "bus" | "minibus" | "ferry" | "taxi";
+export type Mode = "mtr" | "bus" | "minibus" | "ferry" | "taxi" | "tram";
 
 export const modeColor: Record<Mode, string> = {
   mtr: "#11254a",
@@ -8,6 +8,7 @@ export const modeColor: Record<Mode, string> = {
   minibus: "#2f7d4f",
   ferry: "#047857",
   taxi: TAXI_COLORS.urban.primary,
+  tram: "#FACC15",
 };
 
 // Out-of-hours stops are drawn as a muted dot: the map still shows where the
@@ -74,7 +75,7 @@ export function loadVehicleImages(basePath: string): Promise<void> {
 }
 
 async function loadVehicleImagesOnce(basePath: string): Promise<void> {
-  const all: Mode[] = ["mtr", "bus", "minibus", "ferry", "taxi"];
+  const all: Mode[] = ["mtr", "bus", "minibus", "ferry", "taxi", "tram"];
   await Promise.all(
     all.map(async (mode) => {
       try {
