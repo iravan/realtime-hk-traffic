@@ -2,78 +2,78 @@
   "stops": [
     {
       "id": "mtr:ADM",
-      "latitude": 22.2794,
-      "longitude": 114.1646,
+      "latitude": 22.2786283,
+      "longitude": 114.1655238,
       "mode": "mtr",
       "name": "金鐘 Admiralty"
     },
     {
       "id": "mtr:AIR",
-      "latitude": 22.316,
-      "longitude": 113.9365,
+      "latitude": 22.3159212,
+      "longitude": 113.9365512,
       "mode": "mtr",
       "name": "機場 Airport"
     },
     {
       "id": "mtr:AUS",
-      "latitude": 22.3042,
-      "longitude": 114.1666,
+      "latitude": 22.3042356,
+      "longitude": 114.1666014,
       "mode": "mtr",
       "name": "柯士甸 Austin"
     },
     {
       "id": "mtr:AWE",
-      "latitude": 22.3216,
-      "longitude": 113.9416,
+      "latitude": 22.3219881,
+      "longitude": 113.9422214,
       "mode": "mtr",
       "name": "博覽館 AsiaWorld-Expo"
     },
     {
       "id": "mtr:CAB",
-      "latitude": 22.2804,
-      "longitude": 114.185,
+      "latitude": 22.2793889,
+      "longitude": 114.1837397,
       "mode": "mtr",
       "name": "銅鑼灣 Causeway Bay"
     },
     {
       "id": "mtr:CEN",
-      "latitude": 22.282,
-      "longitude": 114.1577,
+      "latitude": 22.2818971,
+      "longitude": 114.1591979,
       "mode": "mtr",
       "name": "中環 Central"
     },
     {
       "id": "mtr:CHH",
-      "latitude": 22.3348,
-      "longitude": 114.209,
+      "latitude": 22.3349933,
+      "longitude": 114.208818,
       "mode": "mtr",
       "name": "彩虹 Choi Hung"
     },
     {
       "id": "mtr:CHW",
-      "latitude": 22.2646,
-      "longitude": 114.2374,
+      "latitude": 22.2644535,
+      "longitude": 114.237044,
       "mode": "mtr",
       "name": "柴灣 Chai Wan"
     },
     {
       "id": "mtr:CIO",
-      "latitude": 22.3828,
-      "longitude": 114.2035,
+      "latitude": 22.3828819,
+      "longitude": 114.2035503,
       "mode": "mtr",
       "name": "第一城 City One"
     },
     {
       "id": "mtr:CKT",
-      "latitude": 22.3748,
-      "longitude": 114.1861,
+      "latitude": 22.3747667,
+      "longitude": 114.1861755,
       "mode": "mtr",
       "name": "車公廟 Che Kung Temple"
     },
     {
       "id": "mtr:CSW",
-      "latitude": 22.3355,
-      "longitude": 114.1564,
+      "latitude": 22.3355066,
+      "longitude": 114.1561596,
       "mode": "mtr",
       "name": "長沙灣 Cheung Sha Wan"
     },
@@ -86,22 +86,22 @@
     },
     {
       "id": "mtr:DIS",
-      "latitude": 22.3155,
-      "longitude": 114.0451,
+      "latitude": 22.315392,
+      "longitude": 114.0451412,
       "mode": "mtr",
       "name": "迪士尼 Disneyland Resort"
     },
     {
       "id": "mtr:ETS",
-      "latitude": 22.2947,
-      "longitude": 114.1755,
+      "latitude": 22.295561,
+      "longitude": 114.1750721,
       "mode": "mtr",
       "name": "尖東 East Tsim Sha Tsui"
     },
     {
       "id": "mtr:EXC",
-      "latitude": 22.2816,
-      "longitude": 114.1756,
+      "latitude": 22.2816132,
+      "longitude": 114.1756895,
       "mode": "mtr",
       "name": "會展 Exhibition Centre"
     },
@@ -114,29 +114,29 @@
     },
     {
       "id": "mtr:FOH",
-      "latitude": 22.288,
-      "longitude": 114.1936,
+      "latitude": 22.2875631,
+      "longitude": 114.1933149,
       "mode": "mtr",
       "name": "炮台山 Fortress Hill"
     },
     {
       "id": "mtr:FOT",
-      "latitude": 22.3953,
-      "longitude": 114.1982,
+      "latitude": 22.3952872,
+      "longitude": 114.1981079,
       "mode": "mtr",
       "name": "火炭 Fo Tan"
     },
     {
       "id": "mtr:HAH",
-      "latitude": 22.3155,
-      "longitude": 114.2644,
+      "latitude": 22.3145874,
+      "longitude": 114.2646777,
       "mode": "mtr",
       "name": "坑口 Hang Hau"
     },
     {
       "id": "mtr:HEO",
-      "latitude": 22.4174,
-      "longitude": 114.2258,
+      "latitude": 22.4175056,
+      "longitude": 114.2257529,
       "mode": "mtr",
       "name": "恆安 Heng On"
     },
@@ -156,8 +156,8 @@
     },
     {
       "id": "mtr:HKU",
-      "latitude": 22.284,
-      "longitude": 114.1351,
+      "latitude": 22.2839758,
+      "longitude": 114.1355067,
       "mode": "mtr",
       "name": "香港大學 HKU"
     },
@@ -170,57 +170,57 @@
     },
     {
       "id": "mtr:HOM",
-      "latitude": 22.3093,
-      "longitude": 114.1828,
+      "latitude": 22.309515,
+      "longitude": 114.1826239,
       "mode": "mtr",
       "name": "何文田 Ho Man Tin"
     },
     {
       "id": "mtr:HUH",
-      "latitude": 22.3032,
-      "longitude": 114.1816,
+      "latitude": 22.3029008,
+      "longitude": 114.182248,
       "mode": "mtr",
       "name": "紅磡 Hung Hom"
     },
     {
       "id": "mtr:JOR",
-      "latitude": 22.3049,
-      "longitude": 114.1716,
+      "latitude": 22.3046653,
+      "longitude": 114.1717464,
       "mode": "mtr",
       "name": "佐敦 Jordan"
     },
     {
       "id": "mtr:KAT",
-      "latitude": 22.3304,
-      "longitude": 114.1994,
+      "latitude": 22.3304987,
+      "longitude": 114.1993672,
       "mode": "mtr",
       "name": "啟德 Kai Tak"
     },
     {
       "id": "mtr:KET",
-      "latitude": 22.2813,
-      "longitude": 114.1288,
+      "latitude": 22.2814963,
+      "longitude": 114.1284678,
       "mode": "mtr",
       "name": "堅尼地城 Kennedy Town"
     },
     {
       "id": "mtr:KOB",
-      "latitude": 22.3235,
-      "longitude": 114.214,
+      "latitude": 22.3234673,
+      "longitude": 114.2140876,
       "mode": "mtr",
       "name": "九龍灣 Kowloon Bay"
     },
     {
       "id": "mtr:KOT",
-      "latitude": 22.3369,
-      "longitude": 114.1762,
+      "latitude": 22.3368742,
+      "longitude": 114.1767367,
       "mode": "mtr",
       "name": "九龍塘 Kowloon Tong"
     },
     {
       "id": "mtr:KOW",
-      "latitude": 22.3046,
-      "longitude": 114.1616,
+      "latitude": 22.3049255,
+      "longitude": 114.1616003,
       "mode": "mtr",
       "name": "九龍 Kowloon"
     },
@@ -240,15 +240,15 @@
     },
     {
       "id": "mtr:KWH",
-      "latitude": 22.363,
-      "longitude": 114.1312,
+      "latitude": 22.3631697,
+      "longitude": 114.1311989,
       "mode": "mtr",
       "name": "葵興 Kwai Hing"
     },
     {
       "id": "mtr:KWT",
-      "latitude": 22.3122,
-      "longitude": 114.2264,
+      "latitude": 22.3121269,
+      "longitude": 114.2265106,
       "mode": "mtr",
       "name": "觀塘 Kwun Tong"
     },
@@ -261,8 +261,8 @@
     },
     {
       "id": "mtr:LAT",
-      "latitude": 22.3067,
-      "longitude": 114.2328,
+      "latitude": 22.3068856,
+      "longitude": 114.2330793,
       "mode": "mtr",
       "name": "藍田 Lam Tin"
     },
@@ -275,120 +275,120 @@
     },
     {
       "id": "mtr:LET",
-      "latitude": 22.2421,
-      "longitude": 114.1562,
+      "latitude": 22.242195,
+      "longitude": 114.1558285,
       "mode": "mtr",
       "name": "利東 Lei Tung"
     },
     {
       "id": "mtr:LHP",
-      "latitude": 22.2956,
-      "longitude": 114.2688,
+      "latitude": 22.2955588,
+      "longitude": 114.2687519,
       "mode": "mtr",
       "name": "康城 LOHAS Park"
     },
     {
       "id": "mtr:LMC",
-      "latitude": 22.5144,
-      "longitude": 114.0656,
+      "latitude": 22.514457,
+      "longitude": 114.0656816,
       "mode": "mtr",
       "name": "落馬洲 Lok Ma Chau"
     },
     {
       "id": "mtr:LOF",
-      "latitude": 22.338,
-      "longitude": 114.187,
+      "latitude": 22.3380228,
+      "longitude": 114.187233,
       "mode": "mtr",
       "name": "樂富 Lok Fu"
     },
     {
       "id": "mtr:LOP",
-      "latitude": 22.4477,
-      "longitude": 114.0253,
+      "latitude": 22.4476723,
+      "longitude": 114.0254488,
       "mode": "mtr",
       "name": "朗屏 Long Ping"
     },
     {
       "id": "mtr:LOW",
-      "latitude": 22.5282,
-      "longitude": 114.1133,
+      "latitude": 22.5281768,
+      "longitude": 114.1133387,
       "mode": "mtr",
       "name": "羅湖 Lo Wu"
     },
     {
       "id": "mtr:MEF",
-      "latitude": 22.3378,
-      "longitude": 114.1379,
+      "latitude": 22.3379273,
+      "longitude": 114.1391803,
       "mode": "mtr",
       "name": "美孚 Mei Foo"
     },
     {
       "id": "mtr:MKK",
-      "latitude": 22.3222,
-      "longitude": 114.1728,
+      "latitude": 22.3221908,
+      "longitude": 114.1727088,
       "mode": "mtr",
       "name": "旺角東 Mong Kok East"
     },
     {
       "id": "mtr:MOK",
-      "latitude": 22.3193,
-      "longitude": 114.1694,
+      "latitude": 22.3193081,
+      "longitude": 114.1693742,
       "mode": "mtr",
       "name": "旺角 Mong Kok"
     },
     {
       "id": "mtr:MOS",
-      "latitude": 22.4247,
-      "longitude": 114.2316,
+      "latitude": 22.4248197,
+      "longitude": 114.2316139,
       "mode": "mtr",
       "name": "馬鞍山 Ma On Shan"
     },
     {
       "id": "mtr:NAC",
-      "latitude": 22.3267,
-      "longitude": 114.1536,
+      "latitude": 22.3264283,
+      "longitude": 114.153751,
       "mode": "mtr",
       "name": "南昌 Nam Cheong"
     },
     {
       "id": "mtr:NOP",
-      "latitude": 22.2913,
-      "longitude": 114.2006,
+      "latitude": 22.2909093,
+      "longitude": 114.2007532,
       "mode": "mtr",
       "name": "北角 North Point"
     },
     {
       "id": "mtr:NTK",
-      "latitude": 22.3154,
-      "longitude": 114.2191,
+      "latitude": 22.3154494,
+      "longitude": 114.2189603,
       "mode": "mtr",
       "name": "牛頭角 Ngau Tau Kok"
     },
     {
       "id": "mtr:OCP",
-      "latitude": 22.2486,
-      "longitude": 114.1744,
+      "latitude": 22.2485823,
+      "longitude": 114.1743684,
       "mode": "mtr",
       "name": "海洋公園 Ocean Park"
     },
     {
       "id": "mtr:OLY",
-      "latitude": 22.3178,
-      "longitude": 114.1603,
+      "latitude": 22.3176972,
+      "longitude": 114.1602806,
       "mode": "mtr",
       "name": "奧運 Olympic"
     },
     {
       "id": "mtr:POA",
-      "latitude": 22.3226,
-      "longitude": 114.2578,
+      "latitude": 22.3224913,
+      "longitude": 114.2579029,
       "mode": "mtr",
       "name": "寶琳 Po Lam"
     },
     {
       "id": "mtr:PRE",
-      "latitude": 22.3247,
-      "longitude": 114.1682,
+      "latitude": 22.3244547,
+      "longitude": 114.1683017,
       "mode": "mtr",
       "name": "太子 Prince Edward"
     },
@@ -401,15 +401,15 @@
     },
     {
       "id": "mtr:RAC",
-      "latitude": 22.4005,
-      "longitude": 114.2029,
+      "latitude": 22.4004756,
+      "longitude": 114.2028994,
       "mode": "mtr",
       "name": "馬場 Racecourse"
     },
     {
       "id": "mtr:SHM",
-      "latitude": 22.3877,
-      "longitude": 114.2083,
+      "latitude": 22.387656,
+      "longitude": 114.2083191,
       "mode": "mtr",
       "name": "石門 Shek Mun"
     },
@@ -422,43 +422,43 @@
     },
     {
       "id": "mtr:SHT",
-      "latitude": 22.3822,
-      "longitude": 114.1878,
+      "latitude": 22.382999,
+      "longitude": 114.187739,
       "mode": "mtr",
       "name": "沙田 Sha Tin"
     },
     {
       "id": "mtr:SHW",
-      "latitude": 22.2865601,
-      "longitude": 114.1518714,
+      "latitude": 22.2868403,
+      "longitude": 114.1521609,
       "mode": "mtr",
       "name": "上環 Sheung Wan"
     },
     {
       "id": "mtr:SIH",
-      "latitude": 22.412,
-      "longitude": 113.9786,
+      "latitude": 22.4118631,
+      "longitude": 113.9788242,
       "mode": "mtr",
       "name": "兆康 Siu Hong"
     },
     {
       "id": "mtr:SKM",
-      "latitude": 22.3318,
-      "longitude": 114.1688,
+      "latitude": 22.3320216,
+      "longitude": 114.1688518,
       "mode": "mtr",
       "name": "石硤尾 Shek Kip Mei"
     },
     {
       "id": "mtr:SKW",
-      "latitude": 22.279,
-      "longitude": 114.2288,
+      "latitude": 22.2791539,
+      "longitude": 114.2288977,
       "mode": "mtr",
       "name": "筲箕灣 Shau Kei Wan"
     },
     {
       "id": "mtr:SOH",
-      "latitude": 22.2426,
-      "longitude": 114.1488,
+      "latitude": 22.2428421,
+      "longitude": 114.1487545,
       "mode": "mtr",
       "name": "海怡半島 South Horizons"
     },
@@ -471,8 +471,8 @@
     },
     {
       "id": "mtr:STW",
-      "latitude": 22.3771,
-      "longitude": 114.195,
+      "latitude": 22.3770272,
+      "longitude": 114.1949872,
       "mode": "mtr",
       "name": "沙田圍 Sha Tin Wai"
     },
@@ -485,92 +485,92 @@
     },
     {
       "id": "mtr:SUW",
-      "latitude": 22.3258,
-      "longitude": 114.1914,
+      "latitude": 22.3258962,
+      "longitude": 114.1913268,
       "mode": "mtr",
       "name": "宋皇臺 Sung Wong Toi"
     },
     {
       "id": "mtr:SWH",
-      "latitude": 22.2848,
-      "longitude": 114.222,
+      "latitude": 22.2816305,
+      "longitude": 114.2222887,
       "mode": "mtr",
       "name": "西灣河 Sai Wan Ho"
     },
     {
       "id": "mtr:SYP",
-      "latitude": 22.2856,
-      "longitude": 114.1425,
+      "latitude": 22.2854347,
+      "longitude": 114.1426424,
       "mode": "mtr",
       "name": "西營盤 Sai Ying Pun"
     },
     {
       "id": "mtr:TAK",
-      "latitude": 22.2846,
-      "longitude": 114.2164,
+      "latitude": 22.2846366,
+      "longitude": 114.2163223,
       "mode": "mtr",
       "name": "太古 Tai Koo"
     },
     {
       "id": "mtr:TAP",
-      "latitude": 22.4447,
-      "longitude": 114.1706,
+      "latitude": 22.4446507,
+      "longitude": 114.1706348,
       "mode": "mtr",
       "name": "大埔墟 Tai Po Market"
     },
     {
       "id": "mtr:TAW",
-      "latitude": 22.3728,
-      "longitude": 114.1787,
+      "latitude": 22.3730495,
+      "longitude": 114.1784478,
       "mode": "mtr",
       "name": "大圍 Tai Wai"
     },
     {
       "id": "mtr:TIH",
-      "latitude": 22.2824,
-      "longitude": 114.1917,
+      "latitude": 22.2822764,
+      "longitude": 114.1917038,
       "mode": "mtr",
       "name": "天后 Tin Hau"
     },
     {
       "id": "mtr:TIK",
-      "latitude": 22.304,
-      "longitude": 114.2526,
+      "latitude": 22.3040753,
+      "longitude": 114.2523705,
       "mode": "mtr",
       "name": "調景嶺 Tiu Keng Leng"
     },
     {
       "id": "mtr:TIS",
-      "latitude": 22.4481,
-      "longitude": 114.0046,
+      "latitude": 22.4477032,
+      "longitude": 114.0042584,
       "mode": "mtr",
       "name": "天水圍 Tin Shui Wai"
     },
     {
       "id": "mtr:TKO",
-      "latitude": 22.3074,
-      "longitude": 114.2601,
+      "latitude": 22.307362,
+      "longitude": 114.2599197,
       "mode": "mtr",
       "name": "將軍澳 Tseung Kwan O"
     },
     {
       "id": "mtr:TKW",
-      "latitude": 22.317,
-      "longitude": 114.1877,
+      "latitude": 22.3166248,
+      "longitude": 114.1875409,
       "mode": "mtr",
       "name": "土瓜灣 To Kwa Wan"
     },
     {
       "id": "mtr:TSH",
-      "latitude": 22.4088,
-      "longitude": 114.223,
+      "latitude": 22.4085978,
+      "longitude": 114.222803,
       "mode": "mtr",
       "name": "大水坑 Tai Shui Hang"
     },
     {
       "id": "mtr:TST",
-      "latitude": 22.2976,
-      "longitude": 114.1722,
+      "latitude": 22.2972598,
+      "longitude": 114.1724034,
       "mode": "mtr",
       "name": "尖沙咀 Tsim Sha Tsui"
     },
@@ -583,29 +583,29 @@
     },
     {
       "id": "mtr:TSY",
-      "latitude": 22.3586,
-      "longitude": 114.1077,
+      "latitude": 22.3584969,
+      "longitude": 114.1067535,
       "mode": "mtr",
       "name": "青衣 Tsing Yi"
     },
     {
       "id": "mtr:TUC",
-      "latitude": 22.2893,
-      "longitude": 113.9414,
+      "latitude": 22.2892449,
+      "longitude": 113.9413739,
       "mode": "mtr",
       "name": "東涌 Tung Chung"
     },
     {
       "id": "mtr:TUM",
-      "latitude": 22.3952,
-      "longitude": 113.9731,
+      "latitude": 22.3949474,
+      "longitude": 113.9731117,
       "mode": "mtr",
       "name": "屯門 Tuen Mun"
     },
     {
       "id": "mtr:TWH",
-      "latitude": 22.3708,
-      "longitude": 114.125,
+      "latitude": 22.3708174,
+      "longitude": 114.1250055,
       "mode": "mtr",
       "name": "大窩口 Tai Wo Hau"
     },
@@ -618,15 +618,15 @@
     },
     {
       "id": "mtr:TWW",
-      "latitude": 22.3686,
-      "longitude": 114.1098,
+      "latitude": 22.3683487,
+      "longitude": 114.1099281,
       "mode": "mtr",
       "name": "荃灣西 Tsuen Wan West"
     },
     {
       "id": "mtr:UNI",
-      "latitude": 22.4136,
-      "longitude": 114.2101,
+      "latitude": 22.4135688,
+      "longitude": 114.2101033,
       "mode": "mtr",
       "name": "大學 University"
     },
@@ -639,29 +639,29 @@
     },
     {
       "id": "mtr:WCH",
-      "latitude": 22.2479,
-      "longitude": 114.168,
+      "latitude": 22.2478643,
+      "longitude": 114.1675119,
       "mode": "mtr",
       "name": "黃竹坑 Wong Chuk Hang"
     },
     {
       "id": "mtr:WHA",
-      "latitude": 22.305,
-      "longitude": 114.1896,
+      "latitude": 22.3049506,
+      "longitude": 114.1895364,
       "mode": "mtr",
       "name": "黃埔 Whampoa"
     },
     {
       "id": "mtr:WKS",
-      "latitude": 22.4291,
-      "longitude": 114.2438,
+      "latitude": 22.4291305,
+      "longitude": 114.2438983,
       "mode": "mtr",
       "name": "烏溪沙 Wu Kai Sha"
     },
     {
       "id": "mtr:WTS",
-      "latitude": 22.3417,
-      "longitude": 114.1935,
+      "latitude": 22.341572,
+      "longitude": 114.1940089,
       "mode": "mtr",
       "name": "黃大仙 Wong Tai Sin"
     },
@@ -674,15 +674,15 @@
     },
     {
       "id": "mtr:YMT",
-      "latitude": 22.3134,
-      "longitude": 114.1707,
+      "latitude": 22.3128042,
+      "longitude": 114.1705813,
       "mode": "mtr",
       "name": "油麻地 Yau Ma Tei"
     },
     {
       "id": "mtr:YUL",
-      "latitude": 22.4461,
-      "longitude": 114.0352,
+      "latitude": 22.4462228,
+      "longitude": 114.0352862,
       "mode": "mtr",
       "name": "元朗 Yuen Long"
     },

@@ -206,7 +206,9 @@ draw station pins and query the next-train feed. `catalog::mtr_stops()` reads it
 to build `mtr:` stops, and `catalog::mtr_label()` uses the names to label train
 destinations. `scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
 `stops.json` and writes `web/app/mtr-line-terminals.json` from this file and the
-CSV.
+CSV. Station coordinates are maintained in this file; refresh them from
+OpenStreetMap with `scripts/fetch-mtr-geolocation.py` (Overpass query for
+`railway=station` tagged `operator~"MTR|港鐵"`).
 
 Line colours and the human-readable station lists are in [MTR.md](MTR.md).
 
