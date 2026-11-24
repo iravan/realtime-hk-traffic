@@ -511,6 +511,7 @@ async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
         "bus" => bus_arrivals(app, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
         "ferry" => ferry_arrivals(&app.http, stop).await,
+        "tram" => tram_arrivals(&app.http, stop).await,
         _ => None,
     }
 }
@@ -1128,6 +1129,49 @@ async fn ferry_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot>
     let mut rows = Vec::new();
     for part in fetched.into_iter().flatten() {
         rows.extend(part);
+    }
+    rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
+    rows.truncate(16);
+    Some(Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live: true,
+        status: None,
+        note: None,
+        rows,
+    })
+}
+
+async fn tram_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
+    let code = stop.id.strip_prefix("tram:")?;
+    let url = format!("https://www.hktramways.com/nextTram/geteat.php?stop_code={code}");
+    let response = http.get(url).send().await.ok()?;
+    if !response.status().is_success() {
+        return None;
+    }
+    let body = response.text().await.ok()?;
+    let mut rows = Vec::new();
+    for chunk in body.split("<tram").skip(1) {
+        let Some(end) = chunk.find("/>") else { continue };
+        let attrs = &chunk[..end];
+        let get_attr = |name: &str| -> Option<String> {
+            let needle = format!("{name}=\"");
+            let start = attrs.find(&needle)? + needle.len();
+            let rest = &attrs[start..];
+            let finish = rest.find('"')?;
+            Some(rest[..finish].to_string())
+        };
+        let minutes = get_attr("arrive_in_minute")
+            .or_else(|| get_attr("eat"))
+            .and_then(|value| value.parse::<i64>().ok());
+        let destination = get_attr("dest_en").unwrap_or_default();
+        rows.push(Row {
+            route: "Tram".to_string(),
+            destination,
+            minutes,
+            time: None,
+            not_departed: false,
+            operator: Some("tram".to_string()),
+        });
     }
     rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
     rows.truncate(16);

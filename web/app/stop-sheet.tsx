@@ -227,7 +227,7 @@ export function StopSheet({
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!apiBase || mode === "taxi" || mode === "tram") return;
+    if (!apiBase || mode === "taxi") return;
     let cancelled = false;
     setSnapshot(null);
     setState("loading");
@@ -265,7 +265,7 @@ export function StopSheet({
   }, [id, mode]);
 
   useEffect(() => {
-    if (!apiBase || mode === "taxi" || mode === "tram") return;
+    if (!apiBase || mode === "taxi") return;
     const poll = () => {
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
         .then((response) => {
@@ -316,8 +316,6 @@ export function StopSheet({
         <p className="muted">{t.sheet.hours}</p>
         <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
       </>
-    ) : mode === "tram" ? (
-      <p className="muted">{t.sheet.noArrivals}</p>
     ) : mode === "ferry" ? (
       <FerryTimetable destinations={destinations ?? []} timetable={ferryTimetable ?? []} locale={locale} t={t} />
     ) : apiBase && serviceHours ? (
