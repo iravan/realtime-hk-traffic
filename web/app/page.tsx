@@ -248,6 +248,7 @@ export default function Page() {
   const [board, setBoard] = useState<Stop | null>(null);
   const [zoomLevel, setZoomLevel] = useState(0);
   const [raining, setRaining] = useState(false);
+  const [temperature, setTemperature] = useState<number | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
   // Set only when a manual locate fails: the platform decides which device steps
   // show, and the reason decides the intro.
@@ -1134,6 +1135,7 @@ export default function Page() {
           if (!cancelled) {
             const force = new URLSearchParams(window.location.search).get("rain");
             setRaining(force === "1" ? true : cached.raining);
+            setTemperature(cached.temperature ?? null);
           }
           return;
         }
@@ -1143,11 +1145,14 @@ export default function Page() {
         .then((body) => {
           if (cancelled || !body) return;
           const rain = Boolean(body?.raining);
-          try {
-            localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain }));
-          } catch {}
           const force = new URLSearchParams(window.location.search).get("rain");
-          setRaining(force === "1" ? true : rain);
+          if (!cancelled) {
+            setRaining(force === "1" ? true : rain);
+            setTemperature(body?.temperature ?? null);
+          }
+          try {
+            localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain, temperature: body?.temperature ?? null }));
+          } catch {}
         })
         .catch(() => {
           if (!cancelled) setTimeout(load, 2000);
@@ -1529,6 +1534,7 @@ export default function Page() {
             <h1>{t.brand}</h1>
             <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
               {raining ? "🌧️" : "☀️"}
+              {temperature != null ? ` ${Math.round(temperature)}°C` : ""}
             </span>
             <button
               type="button"
