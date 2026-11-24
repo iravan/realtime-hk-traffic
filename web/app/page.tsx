@@ -458,7 +458,7 @@ export default function Page() {
         filter: ["has", "point_count"],
         maxzoom: pinZoom,
         paint: {
-          "circle-color": modeColor.bus,
+          "circle-color": modeColor[activeRef.current],
           "circle-radius": ["step", ["get", "point_count"], 18, 10, 22, 50, 28, 200, 34],
           "circle-stroke-width": 2,
           "circle-stroke-color": "#fbf7f0",
@@ -486,7 +486,7 @@ export default function Page() {
         filter: ["!", ["has", "point_count"]],
         maxzoom: pinZoom,
         paint: {
-          "circle-color": modeColor.bus,
+          "circle-color": modeColor[activeRef.current],
           "circle-radius": 16,
           "circle-stroke-width": 2,
           "circle-stroke-color": "#fbf7f0",
@@ -1501,6 +1501,13 @@ export default function Page() {
   useEffect(() => {
     locate(false);
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map?.getLayer("clusters")) return;
+    map.setPaintProperty("clusters", "circle-color", modeColor[active]);
+    map.setPaintProperty("stop-singles", "circle-color", modeColor[active]);
+  }, [active]);
 
   useEffect(() => {
     clearLineRef.current();

@@ -17,6 +17,8 @@
   --ferry: #047857;
   /* Urban taxi red, sampled from an urban taxi. */
   --taxi: #c8102e;
+  /* Heritage tram green, from the tram icon roof. */
+  --tram: #065f46;
   /* Warning, kept apart from the mode colours. */
   --alert: #b3261e;
 }
@@ -203,6 +205,7 @@ button { cursor: pointer; }
 .filters button[data-mode="minibus"].on { background: var(--minibus); }
 .filters button[data-mode="ferry"].on { background: var(--ferry); }
 .filters button[data-mode="taxi"].on { background: var(--taxi); }
+.filters button[data-mode="tram"].on { background: var(--tram); }
 
 /* The tab bar and the notice that hangs beneath it. It takes the room
    between the title and the right edge, and wraps rather than sliding under

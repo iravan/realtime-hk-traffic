@@ -8,7 +8,7 @@ export const modeColor: Record<Mode, string> = {
   minibus: "#2f7d4f",
   ferry: "#047857",
   taxi: TAXI_COLORS.urban.primary,
-  tram: "#FACC15",
+  tram: "#065F46",
 };
 
 // Out-of-hours stops are drawn as a muted dot: the map still shows where the

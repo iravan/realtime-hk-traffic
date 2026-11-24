@@ -1149,30 +1149,7 @@ async fn tram_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> 
         return None;
     }
     let body = response.text().await.ok()?;
-    let mut rows = Vec::new();
-    for chunk in body.split("<tram").skip(1) {
-        let Some(end) = chunk.find("/>") else { continue };
-        let attrs = &chunk[..end];
-        let get_attr = |name: &str| -> Option<String> {
-            let needle = format!("{name}=\"");
-            let start = attrs.find(&needle)? + needle.len();
-            let rest = &attrs[start..];
-            let finish = rest.find('"')?;
-            Some(rest[..finish].to_string())
-        };
-        let minutes = get_attr("arrive_in_minute")
-            .or_else(|| get_attr("eat"))
-            .and_then(|value| value.parse::<i64>().ok());
-        let destination = get_attr("dest_en").unwrap_or_default();
-        rows.push(Row {
-            route: "Tram".to_string(),
-            destination,
-            minutes,
-            time: None,
-            not_departed: false,
-            operator: Some("tram".to_string()),
-        });
-    }
+    let mut rows = parse_tram_eta(&body);
     rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
     rows.truncate(16);
     Some(Snapshot {
@@ -1182,6 +1159,59 @@ async fn tram_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> 
         note: None,
         rows,
     })
+}
+
+// The Tramways endpoint is undocumented. Each upcoming tram is a `<tram/>`
+// element whose attributes carry the minutes and the destination.
+fn parse_tram_eta(body: &str) -> Vec<Row> {
+    let mut rows = Vec::new();
+    for chunk in body.split("<tram").skip(1) {
+        let Some(end) = chunk.find("/>") else { continue };
+        let attrs = format!(" {}", &chunk[..end]);
+        let attr = |name: &str| -> Option<&str> {
+            let needle = format!(" {name}=\"");
+            let start = attrs.find(&needle)? + needle.len();
+            let rest = &attrs[start..];
+            Some(&rest[..rest.find('"')?])
+        };
+        let minutes = attr("arrive_in_minute")
+            .or_else(|| attr("eat"))
+            .and_then(|value| value.parse::<i64>().ok());
+        let destination = match (attr("dest_tc"), attr("dest_en")) {
+            (Some(tc), Some(en)) if !tc.is_empty() => format!("{tc} {en}"),
+            (_, Some(en)) => en.to_string(),
+            _ => String::new(),
+        };
+        rows.push(Row {
+            route: "Tram".to_string(),
+            destination,
+            minutes,
+            time: None,
+            not_departed: false,
+            operator: Some("tram".to_string()),
+        });
+    }
+    rows
+}
+
+#[cfg(test)]
+mod tram_tests {
+    use super::*;
+
+    #[test]
+    fn parses_upcoming_trams() {
+        let body = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root>\n  <tram\n    seq=\"1\"\n    eat=\"3\"\n    arrive_in_minute=\"3\"\n    tram_id=\"128\"\n    dest_stop_code=\"01E\"\n    dest_tc=\"筲箕灣\"\n    dest_sc=\"筲箕湾\"\n    dest_en=\"Shau Kei Wan\"\n    is_arrived=\"0\"\n  />\n</root>";
+        let rows = parse_tram_eta(body);
+        assert_eq!(rows.len(), 1);
+        assert_eq!(rows[0].minutes, Some(3));
+        assert_eq!(rows[0].destination, "筲箕灣 Shau Kei Wan");
+        assert_eq!(rows[0].route, "Tram");
+    }
+
+    #[test]
+    fn empty_root_has_no_rows() {
+        assert!(parse_tram_eta("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<root/>").is_empty());
+    }
 }
 
 fn empty_snapshot() -> Snapshot {

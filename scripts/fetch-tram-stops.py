@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""Fetch Hong Kong Tramway stops from the TD KML feed and merge them in.
+"""Fetch Hong Kong Tramways stops and merge them into the stop catalogues.
+
+The KML feed gives each stop's coordinates and names. The Tramways CSV gives
+the 3-character stop code the arrivals endpoint expects (for example 01E or
+08W). A KML stop is matched to the CSV by its English name and direction.
+Stops with no match keep the KML stop id.
 
 Usage:
   python3 scripts/fetch-tram-stops.py
 """
 
-import json
-import ssl
-import urllib.request
 import csv
 import io
+import json
 import re
+import ssl
+import urllib.request
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -18,8 +23,16 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 STOPS = ROOT / "server" / "data" / "stops.json"
 WEB_STOPS = ROOT / "web" / "public" / "stops-tram.json"
-URL = "https://static.data.gov.hk/td/routes-fares-kml/KML_TRAM.zip"
+KML_URL = "https://static.data.gov.hk/td/routes-fares-kml/KML_TRAM.zip"
+CSV_URL = "https://static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv"
 NS = {"k": "http://www.opengis.net/kml/2.2"}
+
+# KML spellings that differ from the CSV.
+ALIASES = {
+    "holy cross patht": "holy cross path",
+    "kennnedy town praya": "kennedy town praya",
+    "kennnedy town terminus": "kennedy town terminus",
+}
 
 
 def context():
@@ -29,78 +42,60 @@ def context():
     return ssl.create_default_context()
 
 
-def fetch_zip(target: Path) -> Path:
-    target.parent.mkdir(parents=True, exist_ok=True)
-    with urllib.request.urlopen(URL, timeout=120, context=context()) as response:
-        target.write_bytes(response.read())
-    return target
+def download(url: str) -> bytes:
+    with urllib.request.urlopen(url, timeout=120, context=context()) as response:
+        return response.read()
 
 
+def plain_name(value: str) -> str:
+    return re.sub(r"\s*\([^)]*\)", "", value).strip().lower()
 
-def load_code_map() -> dict[tuple[str, str], str]:
-    csv_url = "https://static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv"
-    text = urllib.request.urlopen(csv_url, timeout=60, context=context()).read().decode("utf-8-sig")
-    rows = list(csv.DictReader(io.StringIO(text)))
 
-    def norm(value: str) -> str:
-        return re.sub(r"\s*\([^)]*\)", "", value).strip().lower()
+def direction_of(value: str) -> str:
+    value = value.lower()
+    if "east" in value:
+        return "E"
+    if "west" in value:
+        return "W"
+    return ""
 
-    def direction(value: str) -> str:
-        value = value.lower()
-        if "east" in value:
-            return "E"
-        if "west" in value:
-            return "W"
-        return ""
 
+def code_map(csv_bytes: bytes) -> dict[tuple[str, str], str]:
+    rows = csv.DictReader(io.StringIO(csv_bytes.decode("utf-8-sig")))
     mapping: dict[tuple[str, str], str] = {}
     for row in rows:
         code = row["Stops Code"].strip()
         letter = "E" if code.endswith("E") else "W" if code.endswith("W") else ""
-        mapping.setdefault((norm(row["Stops Name"]), letter), code)
-    # A few KML spellings differ from the CSV.
-    aliases = {
-        "holy cross patht": "holy cross path",
-        "kennnedy town praya": "kennedy town praya",
-        "kennnedy town terminus": "kennedy town terminus",
-    }
+        mapping.setdefault((plain_name(row["Stops Name"]), letter), code)
     for (name, letter), code in list(mapping.items()):
-        for wrong, right in aliases.items():
+        for wrong, right in ALIASES.items():
             if name == right:
                 mapping.setdefault((wrong, letter), code)
     return mapping
 
 
-CODE_MAP = load_code_map()
-
-
-def resolve_code(name: str) -> str | None:
-    letter = "E" if "east" in name.lower() else "W" if "west" in name.lower() else ""
-    return CODE_MAP.get((re.sub(r"\s*\([^)]*\)", "", name).strip().lower(), letter))
-
-def extract_stops(zip_path: Path) -> dict[str, dict]:
+def extract_stops(archive_bytes: bytes, codes: dict[tuple[str, str], str]) -> dict[str, dict]:
     by_stop: dict[str, dict] = {}
-    with zipfile.ZipFile(zip_path) as archive:
+    with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
         for name in archive.namelist():
             if not name.endswith(".kml"):
                 continue
             root = ET.fromstring(archive.read(name))
             for placemark in root.findall(".//k:Placemark", NS):
+
                 def data(key: str) -> str:
                     node = placemark.find(f".//k:Data[@name='{key}']/k:value", NS)
                     return (node.text or "").strip() if node is not None else ""
 
                 stop_id = data("stopId")
-                if not stop_id:
-                    continue
                 coords = placemark.find(".//k:coordinates", NS)
-                if coords is None or not coords.text:
+                if not stop_id or coords is None or not coords.text:
                     continue
                 lon, lat = [float(part) for part in coords.text.strip().split(",")[:2]]
                 name_tc = data("stopNameC") or data("stopNameS")
                 name_en = data("stopNameE")
-                code = resolve_code(name_en)
-                our_id = f"tram:{code}" if code else f"tram:{stop_id}"
+                code = codes.get((plain_name(name_en), direction_of(name_en)))
+                our_id = f"tram:{code or stop_id}"
                 if our_id in by_stop:
                     continue
                 by_stop[our_id] = {
@@ -116,9 +111,8 @@ def extract_stops(zip_path: Path) -> dict[str, dict]:
 
 
 def main() -> None:
-    zip_path = Path("/tmp/tram.zip")
-    fetch_zip(zip_path)
-    by_stop = extract_stops(zip_path)
+    codes = code_map(download(CSV_URL))
+    by_stop = extract_stops(download(KML_URL), codes)
 
     document = json.loads(STOPS.read_text(encoding="utf-8"))
     stops = document["stops"] if isinstance(document, dict) else document

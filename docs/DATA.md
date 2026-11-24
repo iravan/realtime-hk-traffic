@@ -30,6 +30,8 @@ portal. Add new sources here when the service starts using them.
 | Green minibus | data.gov.hk | `https://data.etagmb.gov.hk/...` | Stops, routes and live arrivals |
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Tram route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_TRAM.zip` | Tram route names, origins, destinations, fares and stop sequences in TC/SC/EN |
+| Tram stop codes | Hong Kong Tramways / data.gov.hk | `https://static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv` | 3-character stop codes (for example `01E`, `08W`) matched to the KML stops |
+| Tram ETA | Hong Kong Tramways (unofficial) | `https://www.hktramways.com/nextTram/geteat.php?stop_code={stop_code}` | Live tram arrivals. Undocumented XML; not covered by a data.gov.hk SLA |
 | Green minibus route numbers | data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml` | Route id to route number labels |
 | Ferry pier names | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml` | Pier names in TC/SC/EN, joined to coordinates by stop id |
 | Ferry pier coordinates | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query` | Pier coordinates |
@@ -75,6 +77,8 @@ are script-generated, web-only, or documented for future work.
 | Ferry pier names and coordinates | No | Yes | No | Bundled. The script joins `RSTOP_FERRY.xml` to the CSDI pier layer |
 | HKKF ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
 | Sun Ferry ETA | Yes | No | No | Live arrival or departure for the piers in `ferry-departures.json` |
+| Tram ETA (hktramways `geteat.php`) | Yes | No | No | Live tram arrivals; unofficial endpoint, parsed from XML |
+| Tram KML and stop-code CSV | No | Yes | No | `scripts/fetch-tram-stops.py` builds `stops-tram.json` and the server stop list |
 | Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
 | HK Observatory current weather (`rhrread`) | Yes | No | Yes | Rain overlay and weather icon; Redis `weather:current:v6`, TTL 600s |
@@ -120,6 +124,7 @@ map stop is opened, not on a timer.
 | Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
 | GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
 | HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| Tram ETA | Fetched on click if the snapshot is missing; no publisher schedule | Redis snapshot, TTL 60s |
 | HK Observatory current weather | Publisher on its own schedule; fetched on page load | Redis `weather:current:v6`, TTL 600s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
 | New Lantao Bus ETA | data.gov.hk v2 | Live NLB arrivals by route and stop |
@@ -935,6 +940,42 @@ https://rt.data.gov.hk/v1/transport/mtr/lrt/getSchedule?station_id={stop id}&wit
 holds `route_list` rows with `route_no`, `dest_en`, `dest_ch`, `time_en`,
 `time_ch`, `train_length`, and `stop`. The feed has no vehicle coordinates.
 
+## Tram
+
+Hong Kong Tramways (ding ding) runs on Hong Kong Island. It appears on the
+Tram tab as 107 stops. Coordinates and names come from `KML_TRAM.zip`
+(`static.data.gov.hk/td/routes-fares-kml/`), which has one placemark per stop
+per route direction. The stops are written into `web/public/stops-tram.json`
+and `server/data/stops.json` as `tram:{stop code}` (for example `tram:01E`),
+by running `python3 scripts/fetch-tram-stops.py`.
+
+The stop code comes from the Tramways stop CSV
+(`static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv`).
+A KML stop is matched to the CSV by its English name and direction. The KML
+spells some names differently from the CSV, so a few aliases are listed in the
+script. A stop with no match keeps its KML id (`tram:{stopId}`), such as
+`tram:99140`.
+
+Arrivals come from the Tramways endpoint that powers its website and app:
+
+```text
+https://www.hktramways.com/nextTram/geteat.php?stop_code={stop_code}
+```
+
+The response is XML. Each upcoming tram is a `<tram/>` element with
+`arrive_in_minute`, `dest_tc`, and `dest_en`. The server reads these and caches
+the result for 60 seconds. The endpoint is unofficial and has no SLA, and it
+sends no CORS headers, so the browser never calls it.
+
+Known gaps:
+
+- The CSV gives the code `T` to every terminus. Only Shau Kei Wan Terminus gets
+  `tram:T`. The other terminus stops keep their KML ids, which the endpoint may
+  not answer.
+- The endpoint returns `<root/>` when no tram is due, which is also what it
+  returns outside service hours.
+- Service hours are not shown for tram stops yet.
+
 ## Station facilities
 
 `web/public/facilities.json` holds one record per MTR station that has at least
@@ -1107,6 +1148,7 @@ we like; it means the spec does not state one.
 | GMB stop ETA | Live ETA on `/eta/stop/{stop_id}` | No numeric cap published for that endpoint. The catalogue crawl is throttled by the publisher |
 | HKKF ferry ETA | About every minute | The API spec returns HTTP 429 and does not publish a threshold |
 | Sun Ferry ETA | About every minute | No numeric cap on the dataset page |
+| Tram ETA | Not published; the endpoint is unofficial | None published. One upstream call per stop per 60 s, from the Redis cache |
 | MTR Bus and Feeder Bus | Every 10 seconds. `appRefreshTimeInSecond` is the suggested refresh. Not called by this service | The API spec returns HTTP 429 Too Many Requests and does not publish a count |
 
 A click inside the 90-second Redis TTL does not add an upstream request.

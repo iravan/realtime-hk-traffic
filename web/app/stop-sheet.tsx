@@ -525,7 +525,7 @@ export function StopSheet({
                           <FerryDestination name={row.destination} locale={locale} />
                         ) : (
                           <span>
-                            {mode === "bus" || mode === "minibus"
+                            {mode === "bus" || mode === "minibus" || mode === "tram"
                               ? localizeBilingualName(row.destination, locale)
                               : row.destination}
                           </span>
