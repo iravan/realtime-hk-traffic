@@ -322,24 +322,24 @@ export default function Page() {
       await loadVehicleImages(basePath);
       await loadTaxiKindImages(basePath);
       for (const mode of modes) {
-        map.addImage(mode, stopIconImage(mode), { pixelRatio: stopIconPixelRatio });
-        map.addImage(`${mode}-dot`, stopDotImage(mode), { pixelRatio: stopIconPixelRatio });
-        map.addImage(`${mode}-dot-off`, stopDotImage(mode, true), {
+        if (!map.hasImage(mode)) map.addImage(mode, stopIconImage(mode), { pixelRatio: stopIconPixelRatio });
+        if (!map.hasImage(`${mode}-dot`)) map.addImage(`${mode}-dot`, stopDotImage(mode), { pixelRatio: stopIconPixelRatio });
+        if (!map.hasImage(`${mode}-dot-off`)) map.addImage(`${mode}-dot-off`, stopDotImage(mode, true), {
           pixelRatio: stopIconPixelRatio,
         });
       }
-      map.addImage("ferry-boat", ferryBoatIconImage(), { pixelRatio: stopIconPixelRatio });
-      map.addImage("ferry-boat-dot", stopDotImage("ferry", false, "#0c6e8a"), {
+      if (!map.hasImage("ferry-boat")) map.addImage("ferry-boat", ferryBoatIconImage(), { pixelRatio: stopIconPixelRatio });
+      if (!map.hasImage("ferry-boat-dot")) map.addImage("ferry-boat-dot", stopDotImage("ferry", false, "#0c6e8a"), {
         pixelRatio: stopIconPixelRatio,
       });
-      map.addImage("citybus", citybusIconImage(), { pixelRatio: stopIconPixelRatio });
-      map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
+      if (!map.hasImage("citybus")) map.addImage("citybus", citybusIconImage(), { pixelRatio: stopIconPixelRatio });
+      if (!map.hasImage("citybus-dot")) map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
         pixelRatio: stopIconPixelRatio,
       });
-       map.addImage("light-rail", lightRailIconImage(), { pixelRatio: stopIconPixelRatio });
+       if (!map.hasImage("light-rail")) map.addImage("light-rail", lightRailIconImage(), { pixelRatio: stopIconPixelRatio });
       for (const kind of taxiKinds) {
-        map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
-        map.addImage(`taxi-${kind}-dot`, taxiDotImage(kind), {
+        if (!map.hasImage(`taxi-${kind}`)) map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
+        if (!map.hasImage(`taxi-${kind}-dot`)) map.addImage(`taxi-${kind}-dot`, taxiDotImage(kind), {
           pixelRatio: stopIconPixelRatio,
         });
       }
