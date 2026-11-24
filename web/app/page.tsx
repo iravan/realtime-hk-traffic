@@ -664,7 +664,7 @@ export default function Page() {
         // "(Admiralty → South Horizons)" so only the line name remains.
         const stripParens = (value: string) => value.replace(/\s*\([^)]*\)/g, "").trim();
         if (localeRef.current === "en") {
-          name.textContent = stripParens(enName);
+          name.textContent = stripParens(enName).replace(/^MTR\s+/, "");
         } else {
           const zh = stripParens(rawName)
             .replace(/[A-Za-z][A-Za-z0-9 .,:()\-/\u2192]*/g, "")
