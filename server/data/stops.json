@@ -160908,6 +160908,2994 @@
           ]
         }
       ]
+    },
+    {
+      "id": "bus:nlb:221",
+      "latitude": 22.25253,
+      "longitude": 113.862753,
+      "mode": "bus",
+      "name": "大澳 Tai O",
+      "name_tc": "大澳",
+      "name_en": "Tai O"
+    },
+    {
+      "id": "bus:nlb:222",
+      "latitude": 22.252521,
+      "longitude": 113.865005,
+      "mode": "bus",
+      "name": "龍田邨 Lung Tin Estate",
+      "name_tc": "龍田邨",
+      "name_en": "Lung Tin Estate"
+    },
+    {
+      "id": "bus:nlb:224",
+      "latitude": 22.250832,
+      "longitude": 113.869306,
+      "mode": "bus",
+      "name": "坑尾 Hang Mei",
+      "name_tc": "坑尾",
+      "name_en": "Hang Mei"
+    },
+    {
+      "id": "bus:nlb:225",
+      "latitude": 22.244287,
+      "longitude": 113.875107,
+      "mode": "bus",
+      "name": "靈隱寺 Ling Yan Monastery",
+      "name_tc": "靈隱寺",
+      "name_en": "Ling Yan Monastery"
+    },
+    {
+      "id": "bus:nlb:226",
+      "latitude": 22.2439,
+      "longitude": 113.877006,
+      "mode": "bus",
+      "name": "新鳳村 Sun Fung Tsuen",
+      "name_tc": "新鳳村",
+      "name_en": "Sun Fung Tsuen"
+    },
+    {
+      "id": "bus:nlb:227",
+      "latitude": 22.242182,
+      "longitude": 113.879051,
+      "mode": "bus",
+      "name": "羌山管理站 Keung Shan Management Centre",
+      "name_tc": "羌山管理站",
+      "name_en": "Keung Shan Management Centre"
+    },
+    {
+      "id": "bus:nlb:228",
+      "latitude": 22.24137,
+      "longitude": 113.881392,
+      "mode": "bus",
+      "name": "龍仔 Lung Chai",
+      "name_tc": "龍仔",
+      "name_en": "Lung Chai"
+    },
+    {
+      "id": "bus:nlb:229",
+      "latitude": 22.244001,
+      "longitude": 113.883995,
+      "mode": "bus",
+      "name": "成輝果園 Shing Fai Orchard",
+      "name_tc": "成輝果園",
+      "name_en": "Shing Fai Orchard"
+    },
+    {
+      "id": "bus:nlb:230",
+      "latitude": 22.246711,
+      "longitude": 113.885968,
+      "mode": "bus",
+      "name": "三緣精舍 Sam Yuen Ching Shea",
+      "name_tc": "三緣精舍",
+      "name_en": "Sam Yuen Ching Shea"
+    },
+    {
+      "id": "bus:nlb:232",
+      "latitude": 22.246221,
+      "longitude": 113.888872,
+      "mode": "bus",
+      "name": "法華苑 Fat Hwa Yuen",
+      "name_tc": "法華苑",
+      "name_en": "Fat Hwa Yuen"
+    },
+    {
+      "id": "bus:nlb:233",
+      "latitude": 22.244592,
+      "longitude": 113.891879,
+      "mode": "bus",
+      "name": "深屈道 Sham Wat Road",
+      "name_tc": "深屈道",
+      "name_en": "Sham Wat Road"
+    },
+    {
+      "id": "bus:nlb:234",
+      "latitude": 22.239179,
+      "longitude": 113.893975,
+      "mode": "bus",
+      "name": "石壁坳引水道通道 Shek Pik Au W.W.O. Access Road",
+      "name_tc": "石壁坳引水道通道",
+      "name_en": "Shek Pik Au W.W.O. Access Road"
+    },
+    {
+      "id": "bus:nlb:235",
+      "latitude": 22.228503,
+      "longitude": 113.891105,
+      "mode": "bus",
+      "name": "沙咀 Sha Tsui",
+      "name_tc": "沙咀",
+      "name_en": "Sha Tsui"
+    },
+    {
+      "id": "bus:nlb:40",
+      "latitude": 22.224969,
+      "longitude": 113.893487,
+      "mode": "bus",
+      "name": "沙咀懲教所 Sha Tsui Detention Centre",
+      "name_tc": "沙咀懲教所",
+      "name_en": "Sha Tsui Detention Centre"
+    },
+    {
+      "id": "bus:nlb:236",
+      "latitude": 22.226119,
+      "longitude": 113.898134,
+      "mode": "bus",
+      "name": "石壁警崗 Shek Pik Police Station",
+      "name_tc": "石壁警崗",
+      "name_en": "Shek Pik Police Station"
+    },
+    {
+      "id": "bus:nlb:237",
+      "latitude": 22.223703,
+      "longitude": 113.908325,
+      "mode": "bus",
+      "name": "水口直升機場 Shui Hau Helicopter Landing Field",
+      "name_tc": "水口直升機場",
+      "name_en": "Shui Hau Helicopter Landing Field"
+    },
+    {
+      "id": "bus:nlb:238",
+      "latitude": 22.222054,
+      "longitude": 113.910632,
+      "mode": "bus",
+      "name": "四眼馬 Four-Eye Ma",
+      "name_tc": "四眼馬",
+      "name_en": "Four-Eye Ma"
+    },
+    {
+      "id": "bus:nlb:239",
+      "latitude": 22.221101,
+      "longitude": 113.914173,
+      "mode": "bus",
+      "name": "水口村 Shui Hau Village",
+      "name_tc": "水口村",
+      "name_en": "Shui Hau Village"
+    },
+    {
+      "id": "bus:nlb:240",
+      "latitude": 22.221841,
+      "longitude": 113.915763,
+      "mode": "bus",
+      "name": "水口村(東) Shui Hau Village (East)",
+      "name_tc": "水口村(東)",
+      "name_en": "Shui Hau Village (East)"
+    },
+    {
+      "id": "bus:nlb:241",
+      "latitude": 22.22205,
+      "longitude": 113.919234,
+      "mode": "bus",
+      "name": "下橫壟 Lower Wan Lung",
+      "name_tc": "下橫壟",
+      "name_en": "Lower Wan Lung"
+    },
+    {
+      "id": "bus:nlb:242",
+      "latitude": 22.224358,
+      "longitude": 113.921077,
+      "mode": "bus",
+      "name": "上橫壟 Upper Wan Lung",
+      "name_tc": "上橫壟",
+      "name_en": "Upper Wan Lung"
+    },
+    {
+      "id": "bus:nlb:243",
+      "latitude": 22.225883,
+      "longitude": 113.92718,
+      "mode": "bus",
+      "name": "南大嶼山海底電纜站 South Lantau Sea Cable Station",
+      "name_tc": "南大嶼山海底電纜站",
+      "name_en": "South Lantau Sea Cable Station"
+    },
+    {
+      "id": "bus:nlb:244",
+      "latitude": 22.226583,
+      "longitude": 113.930077,
+      "mode": "bus",
+      "name": "麻埔坪道口 Ma Po Ping Road Junction",
+      "name_tc": "麻埔坪道口",
+      "name_en": "Ma Po Ping Road Junction"
+    },
+    {
+      "id": "bus:nlb:245",
+      "latitude": 22.227763,
+      "longitude": 113.932397,
+      "mode": "bus",
+      "name": "塘福村 Tong Fuk Village",
+      "name_tc": "塘福村",
+      "name_en": "Tong Fuk Village"
+    },
+    {
+      "id": "bus:nlb:246",
+      "latitude": 22.228941,
+      "longitude": 113.935944,
+      "mode": "bus",
+      "name": "塘福海灘 Tong Fuk Beach",
+      "name_tc": "塘福海灘",
+      "name_en": "Tong Fuk Beach"
+    },
+    {
+      "id": "bus:nlb:247",
+      "latitude": 22.231329,
+      "longitude": 113.941766,
+      "mode": "bus",
+      "name": "上長沙泳灘 Upper Cheung Sha Beach",
+      "name_tc": "上長沙泳灘",
+      "name_en": "Upper Cheung Sha Beach"
+    },
+    {
+      "id": "bus:nlb:248",
+      "latitude": 22.233979,
+      "longitude": 113.947366,
+      "mode": "bus",
+      "name": "長沙大橋 Cheung Sha Bridge",
+      "name_tc": "長沙大橋",
+      "name_en": "Cheung Sha Bridge"
+    },
+    {
+      "id": "bus:nlb:249",
+      "latitude": 22.235062,
+      "longitude": 113.949298,
+      "mode": "bus",
+      "name": "蝶崗 Butterfly Crest",
+      "name_tc": "蝶崗",
+      "name_en": "Butterfly Crest"
+    },
+    {
+      "id": "bus:nlb:250",
+      "latitude": 22.236472,
+      "longitude": 113.951424,
+      "mode": "bus",
+      "name": "麗濱別墅 Leyburn Villas",
+      "name_tc": "麗濱別墅",
+      "name_en": "Leyburn Villas"
+    },
+    {
+      "id": "bus:nlb:251",
+      "latitude": 22.236803,
+      "longitude": 113.955434,
+      "mode": "bus",
+      "name": "長沙消防局 Cheung Sha Fire Station",
+      "name_tc": "長沙消防局",
+      "name_en": "Cheung Sha Fire Station"
+    },
+    {
+      "id": "bus:nlb:252",
+      "latitude": 22.234965,
+      "longitude": 113.95717,
+      "mode": "bus",
+      "name": "長沙下村 Cheung Sha Ha Tsuen",
+      "name_tc": "長沙下村",
+      "name_en": "Cheung Sha Ha Tsuen"
+    },
+    {
+      "id": "bus:nlb:253",
+      "latitude": 22.233964,
+      "longitude": 113.960174,
+      "mode": "bus",
+      "name": "長沙警署 Cheung Sha Police Headquarters",
+      "name_tc": "長沙警署",
+      "name_en": "Cheung Sha Police Headquarters"
+    },
+    {
+      "id": "bus:nlb:254",
+      "latitude": 22.23533,
+      "longitude": 113.961547,
+      "mode": "bus",
+      "name": "長沙上村 Cheung Sha Sheung Tsuen",
+      "name_tc": "長沙上村",
+      "name_en": "Cheung Sha Sheung Tsuen"
+    },
+    {
+      "id": "bus:nlb:255",
+      "latitude": 22.236727,
+      "longitude": 113.962424,
+      "mode": "bus",
+      "name": "散石灣迴旋處 San Shek Wan Roundabout",
+      "name_tc": "散石灣迴旋處",
+      "name_en": "San Shek Wan Roundabout"
+    },
+    {
+      "id": "bus:nlb:256",
+      "latitude": 22.237768,
+      "longitude": 113.963973,
+      "mode": "bus",
+      "name": "女青年會梁紹榮度假村 YWCA Sydney Leong Holiday Lodge",
+      "name_tc": "女青年會梁紹榮度假村",
+      "name_en": "YWCA Sydney Leong Holiday Lodge"
+    },
+    {
+      "id": "bus:nlb:257",
+      "latitude": 22.239024,
+      "longitude": 113.966526,
+      "mode": "bus",
+      "name": "散石灣村 San Shek Wan Village",
+      "name_tc": "散石灣村",
+      "name_en": "San Shek Wan Village"
+    },
+    {
+      "id": "bus:nlb:258",
+      "latitude": 22.241255,
+      "longitude": 113.968666,
+      "mode": "bus",
+      "name": "散石灣中蘆 San Shek Wan 3 1/4 Milestone",
+      "name_tc": "散石灣中蘆",
+      "name_en": "San Shek Wan 3 1/4 Milestone"
+    },
+    {
+      "id": "bus:nlb:259",
+      "latitude": 22.243375,
+      "longitude": 113.974832,
+      "mode": "bus",
+      "name": "羅屋村 Lo Uk Tsuen",
+      "name_tc": "羅屋村",
+      "name_en": "Lo Uk Tsuen"
+    },
+    {
+      "id": "bus:nlb:260",
+      "latitude": 22.243476,
+      "longitude": 113.977322,
+      "mode": "bus",
+      "name": "新圍村 Sun Wai Tsuen",
+      "name_tc": "新圍村",
+      "name_en": "Sun Wai Tsuen"
+    },
+    {
+      "id": "bus:nlb:261",
+      "latitude": 22.24444,
+      "longitude": 113.979,
+      "mode": "bus",
+      "name": "老圍村 Lo Wai Tsuen",
+      "name_tc": "老圍村",
+      "name_en": "Lo Wai Tsuen"
+    },
+    {
+      "id": "bus:nlb:262",
+      "latitude": 22.247501,
+      "longitude": 113.98077,
+      "mode": "bus",
+      "name": "貝澳油站 Pui O Petrol Station",
+      "name_tc": "貝澳油站",
+      "name_en": "Pui O Petrol Station"
+    },
+    {
+      "id": "bus:nlb:263",
+      "latitude": 22.25212,
+      "longitude": 113.984745,
+      "mode": "bus",
+      "name": "太古職員宿舍 Swire Staff Holiday House",
+      "name_tc": "太古職員宿舍",
+      "name_en": "Swire Staff Holiday House"
+    },
+    {
+      "id": "bus:nlb:264",
+      "latitude": 22.256067,
+      "longitude": 113.98747,
+      "mode": "bus",
+      "name": "南山營地 Nam Shan Camp Site",
+      "name_tc": "南山營地",
+      "name_en": "Nam Shan Camp Site"
+    },
+    {
+      "id": "bus:nlb:265",
+      "latitude": 22.257327,
+      "longitude": 113.989901,
+      "mode": "bus",
+      "name": "南山三屋村 Nam Shan Sam Uk Tsuen",
+      "name_tc": "南山三屋村",
+      "name_en": "Nam Shan Sam Uk Tsuen"
+    },
+    {
+      "id": "bus:nlb:56",
+      "latitude": 22.259327,
+      "longitude": 113.993993,
+      "mode": "bus",
+      "name": "禮智園墳場 Lai Chi Yuen Cemetery",
+      "name_tc": "禮智園墳場",
+      "name_en": "Lai Chi Yuen Cemetery"
+    },
+    {
+      "id": "bus:nlb:266",
+      "latitude": 22.260667,
+      "longitude": 113.996268,
+      "mode": "bus",
+      "name": "荔枝園 Lai Chi Yuen",
+      "name_tc": "荔枝園",
+      "name_en": "Lai Chi Yuen"
+    },
+    {
+      "id": "bus:nlb:57",
+      "latitude": 22.264093,
+      "longitude": 113.998906,
+      "mode": "bus",
+      "name": "梅窩警署 Mui Wo Police Station",
+      "name_tc": "梅窩警署",
+      "name_en": "Mui Wo Police Station"
+    },
+    {
+      "id": "bus:nlb:2",
+      "latitude": 22.266143,
+      "longitude": 114.000049,
+      "mode": "bus",
+      "name": "梅窩熟食市場 Mui Wo Cooked Food Market",
+      "name_tc": "梅窩熟食市場",
+      "name_en": "Mui Wo Cooked Food Market"
+    },
+    {
+      "id": "bus:nlb:3",
+      "latitude": 22.265406,
+      "longitude": 113.997074,
+      "mode": "bus",
+      "name": "銀灣邨 Ngan Wan Estate",
+      "name_tc": "銀灣邨",
+      "name_en": "Ngan Wan Estate"
+    },
+    {
+      "id": "bus:nlb:4",
+      "latitude": 22.266759,
+      "longitude": 113.996999,
+      "mode": "bus",
+      "name": "梅窩街市 Mui Wo Market",
+      "name_tc": "梅窩街市",
+      "name_en": "Mui Wo Market"
+    },
+    {
+      "id": "bus:nlb:5",
+      "latitude": 22.265537,
+      "longitude": 113.996965,
+      "mode": "bus",
+      "name": "銀景中心 Ngan King Centre",
+      "name_tc": "銀景中心",
+      "name_en": "Ngan King Centre"
+    },
+    {
+      "id": "bus:nlb:305",
+      "latitude": 22.264664,
+      "longitude": 114.001554,
+      "mode": "bus",
+      "name": "梅窩碼頭 Mui Wo Ferry Pier",
+      "name_tc": "梅窩碼頭",
+      "name_en": "Mui Wo Ferry Pier"
+    },
+    {
+      "id": "bus:nlb:1",
+      "latitude": 22.264664,
+      "longitude": 114.001554,
+      "mode": "bus",
+      "name": "梅窩碼頭 Mui Wo Ferry Pier",
+      "name_tc": "梅窩碼頭",
+      "name_en": "Mui Wo Ferry Pier"
+    },
+    {
+      "id": "bus:nlb:6",
+      "latitude": 22.262966,
+      "longitude": 113.997826,
+      "mode": "bus",
+      "name": "銀鑛灣濾水廠 Silver Mine Bay Water Treatment Works",
+      "name_tc": "銀鑛灣濾水廠",
+      "name_en": "Silver Mine Bay Water Treatment Works"
+    },
+    {
+      "id": "bus:nlb:7",
+      "latitude": 22.260758,
+      "longitude": 113.996477,
+      "mode": "bus",
+      "name": "荔枝園 Lai Chi Yuen",
+      "name_tc": "荔枝園",
+      "name_en": "Lai Chi Yuen"
+    },
+    {
+      "id": "bus:nlb:8",
+      "latitude": 22.257072,
+      "longitude": 113.990108,
+      "mode": "bus",
+      "name": "南山三屋村 Nam Shan Sam Uk Tsuen",
+      "name_tc": "南山三屋村",
+      "name_en": "Nam Shan Sam Uk Tsuen"
+    },
+    {
+      "id": "bus:nlb:9",
+      "latitude": 22.255451,
+      "longitude": 113.986811,
+      "mode": "bus",
+      "name": "南山營地 Nam Shan Camp Site",
+      "name_tc": "南山營地",
+      "name_en": "Nam Shan Camp Site"
+    },
+    {
+      "id": "bus:nlb:10",
+      "latitude": 22.251918,
+      "longitude": 113.984887,
+      "mode": "bus",
+      "name": "太古職員宿舍 Swire Staff Holiday House",
+      "name_tc": "太古職員宿舍",
+      "name_en": "Swire Staff Holiday House"
+    },
+    {
+      "id": "bus:nlb:11",
+      "latitude": 22.247311,
+      "longitude": 113.980985,
+      "mode": "bus",
+      "name": "貝澳油站 Pui O Petrol Station",
+      "name_tc": "貝澳油站",
+      "name_en": "Pui O Petrol Station"
+    },
+    {
+      "id": "bus:nlb:12",
+      "latitude": 22.244252,
+      "longitude": 113.979236,
+      "mode": "bus",
+      "name": "老圍村 Lo Wai Tsuen",
+      "name_tc": "老圍村",
+      "name_en": "Lo Wai Tsuen"
+    },
+    {
+      "id": "bus:nlb:13",
+      "latitude": 22.243476,
+      "longitude": 113.978178,
+      "mode": "bus",
+      "name": "新圍村 Sun Wai Tsuen",
+      "name_tc": "新圍村",
+      "name_en": "Sun Wai Tsuen"
+    },
+    {
+      "id": "bus:nlb:14",
+      "latitude": 22.243192,
+      "longitude": 113.974885,
+      "mode": "bus",
+      "name": "羅屋村 Lo Uk Tsuen",
+      "name_tc": "羅屋村",
+      "name_en": "Lo Uk Tsuen"
+    },
+    {
+      "id": "bus:nlb:15",
+      "latitude": 22.243041,
+      "longitude": 113.972545,
+      "mode": "bus",
+      "name": "牛坳園 Ngau Au Yuen",
+      "name_tc": "牛坳園",
+      "name_en": "Ngau Au Yuen"
+    },
+    {
+      "id": "bus:nlb:16",
+      "latitude": 22.241244,
+      "longitude": 113.969105,
+      "mode": "bus",
+      "name": "散石灣中蘆 San Shek Wan 3 1/4 Milestone",
+      "name_tc": "散石灣中蘆",
+      "name_en": "San Shek Wan 3 1/4 Milestone"
+    },
+    {
+      "id": "bus:nlb:17",
+      "latitude": 22.238928,
+      "longitude": 113.966772,
+      "mode": "bus",
+      "name": "散石灣村 San Shek Wan Village",
+      "name_tc": "散石灣村",
+      "name_en": "San Shek Wan Village"
+    },
+    {
+      "id": "bus:nlb:18",
+      "latitude": 22.237484,
+      "longitude": 113.964001,
+      "mode": "bus",
+      "name": "女青年會梁紹榮度假村 YWCA Sydney Leong Holiday Lodge",
+      "name_tc": "女青年會梁紹榮度假村",
+      "name_en": "YWCA Sydney Leong Holiday Lodge"
+    },
+    {
+      "id": "bus:nlb:83",
+      "latitude": 22.236544,
+      "longitude": 113.96255,
+      "mode": "bus",
+      "name": "散石灣迴旋處 San Shek Wan Roundabout",
+      "name_tc": "散石灣迴旋處",
+      "name_en": "San Shek Wan Roundabout"
+    },
+    {
+      "id": "bus:nlb:19",
+      "latitude": 22.235238,
+      "longitude": 113.961739,
+      "mode": "bus",
+      "name": "長沙上村 Cheung Sha Sheung Tsuen",
+      "name_tc": "長沙上村",
+      "name_en": "Cheung Sha Sheung Tsuen"
+    },
+    {
+      "id": "bus:nlb:20",
+      "latitude": 22.233772,
+      "longitude": 113.960211,
+      "mode": "bus",
+      "name": "長沙警署 Cheung Sha Police Headquarters",
+      "name_tc": "長沙警署",
+      "name_en": "Cheung Sha Police Headquarters"
+    },
+    {
+      "id": "bus:nlb:21",
+      "latitude": 22.234787,
+      "longitude": 113.957232,
+      "mode": "bus",
+      "name": "長沙下村 Cheung Sha Ha Tsuen",
+      "name_tc": "長沙下村",
+      "name_en": "Cheung Sha Ha Tsuen"
+    },
+    {
+      "id": "bus:nlb:22",
+      "latitude": 22.236632,
+      "longitude": 113.954349,
+      "mode": "bus",
+      "name": "長沙消防局 Cheung Sha Fire Station",
+      "name_tc": "長沙消防局",
+      "name_en": "Cheung Sha Fire Station"
+    },
+    {
+      "id": "bus:nlb:23",
+      "latitude": 22.236217,
+      "longitude": 113.951916,
+      "mode": "bus",
+      "name": "麗濱別墅 Leyburn Villas",
+      "name_tc": "麗濱別墅",
+      "name_en": "Leyburn Villas"
+    },
+    {
+      "id": "bus:nlb:24",
+      "latitude": 22.23454,
+      "longitude": 113.948841,
+      "mode": "bus",
+      "name": "蝶崗 Butterfly Crest",
+      "name_tc": "蝶崗",
+      "name_en": "Butterfly Crest"
+    },
+    {
+      "id": "bus:nlb:25",
+      "latitude": 22.233389,
+      "longitude": 113.946977,
+      "mode": "bus",
+      "name": "長沙大橋 Cheung Sha Bridge",
+      "name_tc": "長沙大橋",
+      "name_en": "Cheung Sha Bridge"
+    },
+    {
+      "id": "bus:nlb:26",
+      "latitude": 22.230877,
+      "longitude": 113.941525,
+      "mode": "bus",
+      "name": "上長沙泳灘 Upper Cheung Sha Beach",
+      "name_tc": "上長沙泳灘",
+      "name_en": "Upper Cheung Sha Beach"
+    },
+    {
+      "id": "bus:nlb:27",
+      "latitude": 22.228509,
+      "longitude": 113.935339,
+      "mode": "bus",
+      "name": "塘福海灘 Tong Fuk Beach",
+      "name_tc": "塘福海灘",
+      "name_en": "Tong Fuk Beach"
+    },
+    {
+      "id": "bus:nlb:28",
+      "latitude": 22.227565,
+      "longitude": 113.932706,
+      "mode": "bus",
+      "name": "塘福村 Tong Fuk Village",
+      "name_tc": "塘福村",
+      "name_en": "Tong Fuk Village"
+    },
+    {
+      "id": "bus:nlb:32",
+      "latitude": 22.228764,
+      "longitude": 113.926084,
+      "mode": "bus",
+      "name": "塘福懲教所 Tong Fuk Correctional Institution",
+      "name_tc": "塘福懲教所",
+      "name_en": "Tong Fuk Correctional Institution"
+    },
+    {
+      "id": "bus:nlb:30",
+      "latitude": 22.229926,
+      "longitude": 113.92805,
+      "mode": "bus",
+      "name": "麻埔坪村 Ma Po Ping Village",
+      "name_tc": "麻埔坪村",
+      "name_en": "Ma Po Ping Village"
+    },
+    {
+      "id": "bus:nlb:31",
+      "latitude": 22.226018,
+      "longitude": 113.929495,
+      "mode": "bus",
+      "name": "麻埔坪道口 Ma Po Ping Road Junction",
+      "name_tc": "麻埔坪道口",
+      "name_en": "Ma Po Ping Road Junction"
+    },
+    {
+      "id": "bus:nlb:178",
+      "latitude": 22.225272,
+      "longitude": 113.928661,
+      "mode": "bus",
+      "name": "南大嶼山海底電纜站 South Lantau Sea Cable Station",
+      "name_tc": "南大嶼山海底電纜站",
+      "name_en": "South Lantau Sea Cable Station"
+    },
+    {
+      "id": "bus:nlb:33",
+      "latitude": 22.223348,
+      "longitude": 113.920624,
+      "mode": "bus",
+      "name": "上橫壟 Upper Wan Lung",
+      "name_tc": "上橫壟",
+      "name_en": "Upper Wan Lung"
+    },
+    {
+      "id": "bus:nlb:34",
+      "latitude": 22.222305,
+      "longitude": 113.919741,
+      "mode": "bus",
+      "name": "下橫壟 Lower Wan Lung",
+      "name_tc": "下橫壟",
+      "name_en": "Lower Wan Lung"
+    },
+    {
+      "id": "bus:nlb:35",
+      "latitude": 22.221565,
+      "longitude": 113.916059,
+      "mode": "bus",
+      "name": "水口村(東) Shui Hau Village (East)",
+      "name_tc": "水口村(東)",
+      "name_en": "Shui Hau Village (East)"
+    },
+    {
+      "id": "bus:nlb:36",
+      "latitude": 22.22098931,
+      "longitude": 113.914318,
+      "mode": "bus",
+      "name": "水口村 Shui Hau Village",
+      "name_tc": "水口村",
+      "name_en": "Shui Hau Village"
+    },
+    {
+      "id": "bus:nlb:37",
+      "latitude": 22.221913,
+      "longitude": 113.91037,
+      "mode": "bus",
+      "name": "四眼馬 Four-Eye Ma",
+      "name_tc": "四眼馬",
+      "name_en": "Four-Eye Ma"
+    },
+    {
+      "id": "bus:nlb:38",
+      "latitude": 22.223532,
+      "longitude": 113.908063,
+      "mode": "bus",
+      "name": "水口直升機場 Shui Hau Helicopter Landing Field",
+      "name_tc": "水口直升機場",
+      "name_en": "Shui Hau Helicopter Landing Field"
+    },
+    {
+      "id": "bus:nlb:39",
+      "latitude": 22.225862,
+      "longitude": 113.89772,
+      "mode": "bus",
+      "name": "石壁警崗 Shek Pik Police Station",
+      "name_tc": "石壁警崗",
+      "name_en": "Shek Pik Police Station"
+    },
+    {
+      "id": "bus:nlb:41",
+      "latitude": 22.228328,
+      "longitude": 113.8906,
+      "mode": "bus",
+      "name": "沙咀 Sha Tsui",
+      "name_tc": "沙咀",
+      "name_en": "Sha Tsui"
+    },
+    {
+      "id": "bus:nlb:42",
+      "latitude": 22.239451,
+      "longitude": 113.893697,
+      "mode": "bus",
+      "name": "石壁坳引水道通道 Shek Pik Au W.W.O. Access Road",
+      "name_tc": "石壁坳引水道通道",
+      "name_en": "Shek Pik Au W.W.O. Access Road"
+    },
+    {
+      "id": "bus:nlb:58",
+      "latitude": 22.245054,
+      "longitude": 113.891193,
+      "mode": "bus",
+      "name": "深屈道 Sham Wat Road",
+      "name_tc": "深屈道",
+      "name_en": "Sham Wat Road"
+    },
+    {
+      "id": "bus:nlb:44",
+      "latitude": 22.246122,
+      "longitude": 113.889042,
+      "mode": "bus",
+      "name": "法華苑 Fat Hwa Yuen",
+      "name_tc": "法華苑",
+      "name_en": "Fat Hwa Yuen"
+    },
+    {
+      "id": "bus:nlb:45",
+      "latitude": 22.246435,
+      "longitude": 113.886242,
+      "mode": "bus",
+      "name": "三緣精舍 Sam Yuen Ching Shea",
+      "name_tc": "三緣精舍",
+      "name_en": "Sam Yuen Ching Shea"
+    },
+    {
+      "id": "bus:nlb:46",
+      "latitude": 22.24382,
+      "longitude": 113.884209,
+      "mode": "bus",
+      "name": "成輝果園 Shing Fai Orchard",
+      "name_tc": "成輝果園",
+      "name_en": "Shing Fai Orchard"
+    },
+    {
+      "id": "bus:nlb:47",
+      "latitude": 22.242256,
+      "longitude": 113.882991,
+      "mode": "bus",
+      "name": "觀音寺 Kwun Yam Monastery",
+      "name_tc": "觀音寺",
+      "name_en": "Kwun Yam Monastery"
+    },
+    {
+      "id": "bus:nlb:48",
+      "latitude": 22.240816,
+      "longitude": 113.881022,
+      "mode": "bus",
+      "name": "龍仔 Lung Chai",
+      "name_tc": "龍仔",
+      "name_en": "Lung Chai"
+    },
+    {
+      "id": "bus:nlb:49",
+      "latitude": 22.242032,
+      "longitude": 113.878823,
+      "mode": "bus",
+      "name": "羌山管理站 Keung Shan Management Centre",
+      "name_tc": "羌山管理站",
+      "name_en": "Keung Shan Management Centre"
+    },
+    {
+      "id": "bus:nlb:84",
+      "latitude": 22.243571,
+      "longitude": 113.876972,
+      "mode": "bus",
+      "name": "新鳳村 Sun Fung Tsuen",
+      "name_tc": "新鳳村",
+      "name_en": "Sun Fung Tsuen"
+    },
+    {
+      "id": "bus:nlb:51",
+      "latitude": 22.244018,
+      "longitude": 113.875009,
+      "mode": "bus",
+      "name": "靈隱寺 Ling Yan Monastery",
+      "name_tc": "靈隱寺",
+      "name_en": "Ling Yan Monastery"
+    },
+    {
+      "id": "bus:nlb:52",
+      "latitude": 22.250656,
+      "longitude": 113.869062,
+      "mode": "bus",
+      "name": "坑尾 Hang Mei",
+      "name_tc": "坑尾",
+      "name_en": "Hang Mei"
+    },
+    {
+      "id": "bus:nlb:53",
+      "latitude": 22.252033,
+      "longitude": 113.866988,
+      "mode": "bus",
+      "name": "佛教筏可紀念中學 Buddhist Fat Ho Memorial College",
+      "name_tc": "佛教筏可紀念中學",
+      "name_en": "Buddhist Fat Ho Memorial College"
+    },
+    {
+      "id": "bus:nlb:54",
+      "latitude": 22.252326,
+      "longitude": 113.864976,
+      "mode": "bus",
+      "name": "龍田邨 Lung Tin Estate",
+      "name_tc": "龍田邨",
+      "name_en": "Lung Tin Estate"
+    },
+    {
+      "id": "bus:nlb:55",
+      "latitude": 22.25253,
+      "longitude": 113.862753,
+      "mode": "bus",
+      "name": "大澳 Tai O",
+      "name_tc": "大澳",
+      "name_en": "Tai O"
+    },
+    {
+      "id": "bus:nlb:127",
+      "latitude": 22.301416,
+      "longitude": 114.188092,
+      "mode": "bus",
+      "name": "紅磡 (紅鸞道) Hung Hom (Hung Luen Road)",
+      "name_tc": "紅磡 (紅鸞道)",
+      "name_en": "Hung Hom (Hung Luen Road)"
+    },
+    {
+      "id": "bus:nlb:128",
+      "latitude": 22.294798,
+      "longitude": 114.17438,
+      "mode": "bus",
+      "name": "尖東港鐵站 East Tsim Sha Tsui MTR Station",
+      "name_tc": "尖東港鐵站",
+      "name_en": "East Tsim Sha Tsui MTR Station"
+    },
+    {
+      "id": "bus:nlb:129",
+      "latitude": 22.298721,
+      "longitude": 114.171928,
+      "mode": "bus",
+      "name": "九龍公園 Kowloon Park",
+      "name_tc": "九龍公園",
+      "name_en": "Kowloon Park"
+    },
+    {
+      "id": "bus:nlb:183",
+      "latitude": 22.318018,
+      "longitude": 114.169515,
+      "mode": "bus",
+      "name": "奶路臣街 Nelson Street",
+      "name_tc": "奶路臣街",
+      "name_en": "Nelson Street"
+    },
+    {
+      "id": "bus:nlb:131",
+      "latitude": 22.325816,
+      "longitude": 114.167876,
+      "mode": "bus",
+      "name": "太子港鐵站 Prince Edward MTR Station",
+      "name_tc": "太子港鐵站",
+      "name_en": "Prince Edward MTR Station"
+    },
+    {
+      "id": "bus:nlb:132",
+      "latitude": 22.331299,
+      "longitude": 114.161369,
+      "mode": "bus",
+      "name": "欽州街 Yen Chow Street",
+      "name_tc": "欽州街",
+      "name_en": "Yen Chow Street"
+    },
+    {
+      "id": "bus:nlb:184",
+      "latitude": 22.333894,
+      "longitude": 114.158043,
+      "mode": "bus",
+      "name": "怡閣苑 Yee Kok Court",
+      "name_tc": "怡閣苑",
+      "name_en": "Yee Kok Court"
+    },
+    {
+      "id": "bus:nlb:317",
+      "latitude": 22.29058,
+      "longitude": 113.939352,
+      "mode": "bus",
+      "name": "東涌達東路巴士總站 Tung Chung Tat Tung Road Bus Terminus",
+      "name_tc": "東涌達東路巴士總站",
+      "name_en": "Tung Chung Tat Tung Road Bus Terminus"
+    },
+    {
+      "id": "bus:nlb:62",
+      "latitude": 22.255612,
+      "longitude": 113.902862,
+      "mode": "bus",
+      "name": "昂坪 Ngong Ping",
+      "name_tc": "昂坪",
+      "name_en": "Ngong Ping"
+    },
+    {
+      "id": "bus:nlb:270",
+      "latitude": 22.255612,
+      "longitude": 113.902862,
+      "mode": "bus",
+      "name": "昂坪 Ngong Ping",
+      "name_tc": "昂坪",
+      "name_en": "Ngong Ping"
+    },
+    {
+      "id": "bus:nlb:271",
+      "latitude": 22.249313,
+      "longitude": 113.89284,
+      "mode": "bus",
+      "name": "山海亭 San Hoi Ting",
+      "name_tc": "山海亭",
+      "name_en": "San Hoi Ting"
+    },
+    {
+      "id": "bus:nlb:43",
+      "latitude": 22.245038,
+      "longitude": 113.892237,
+      "mode": "bus",
+      "name": "深屈道口 Sham Wat Road Junction",
+      "name_tc": "深屈道口",
+      "name_en": "Sham Wat Road Junction"
+    },
+    {
+      "id": "bus:nlb:269",
+      "latitude": 22.245207,
+      "longitude": 113.892089,
+      "mode": "bus",
+      "name": "深屈道口 Sham Wat Road Junction",
+      "name_tc": "深屈道口",
+      "name_en": "Sham Wat Road Junction"
+    },
+    {
+      "id": "bus:nlb:59",
+      "latitude": 22.249477,
+      "longitude": 113.893053,
+      "mode": "bus",
+      "name": "山海亭 San Hoi Ting",
+      "name_tc": "山海亭",
+      "name_en": "San Hoi Ting"
+    },
+    {
+      "id": "bus:nlb:179",
+      "latitude": 22.237918,
+      "longitude": 113.96292,
+      "mode": "bus",
+      "name": "東涌道 Tung Chung Road",
+      "name_tc": "東涌道",
+      "name_en": "Tung Chung Road"
+    },
+    {
+      "id": "bus:nlb:64",
+      "latitude": 22.239814,
+      "longitude": 113.957216,
+      "mode": "bus",
+      "name": "長沙引水道 Cheung Sha Catchwater",
+      "name_tc": "長沙引水道",
+      "name_en": "Cheung Sha Catchwater"
+    },
+    {
+      "id": "bus:nlb:65",
+      "latitude": 22.248054,
+      "longitude": 113.943139,
+      "mode": "bus",
+      "name": "伯公坳 Pak Kung Au",
+      "name_tc": "伯公坳",
+      "name_en": "Pak Kung Au"
+    },
+    {
+      "id": "bus:nlb:66",
+      "latitude": 22.264006,
+      "longitude": 113.937155,
+      "mode": "bus",
+      "name": "東涌坳管理站 Tung Chung Au Management Centre",
+      "name_tc": "東涌坳管理站",
+      "name_en": "Tung Chung Au Management Centre"
+    },
+    {
+      "id": "bus:nlb:67",
+      "latitude": 22.265466,
+      "longitude": 113.936463,
+      "mode": "bus",
+      "name": "十八區墳場 Cemetery Area No. 18",
+      "name_tc": "十八區墳場",
+      "name_en": "Cemetery Area No. 18"
+    },
+    {
+      "id": "bus:nlb:68",
+      "latitude": 22.269918,
+      "longitude": 113.934243,
+      "mode": "bus",
+      "name": "石門甲道 Shek Mun Kap Road",
+      "name_tc": "石門甲道",
+      "name_en": "Shek Mun Kap Road"
+    },
+    {
+      "id": "bus:nlb:69",
+      "latitude": 22.275975,
+      "longitude": 113.933377,
+      "mode": "bus",
+      "name": "龍井頭 Lung Tseng Tau",
+      "name_tc": "龍井頭",
+      "name_en": "Lung Tseng Tau"
+    },
+    {
+      "id": "bus:nlb:70",
+      "latitude": 22.277162,
+      "longitude": 113.933812,
+      "mode": "bus",
+      "name": "黃家圍 Wong Ka Wai",
+      "name_tc": "黃家圍",
+      "name_en": "Wong Ka Wai"
+    },
+    {
+      "id": "bus:nlb:71",
+      "latitude": 22.278731,
+      "longitude": 113.935475,
+      "mode": "bus",
+      "name": "下嶺皮 Ha Ling Pei",
+      "name_tc": "下嶺皮",
+      "name_en": "Ha Ling Pei"
+    },
+    {
+      "id": "bus:nlb:72",
+      "latitude": 22.278912,
+      "longitude": 113.936856,
+      "mode": "bus",
+      "name": "上嶺皮 Sheung Ling Pei",
+      "name_tc": "上嶺皮",
+      "name_en": "Sheung Ling Pei"
+    },
+    {
+      "id": "bus:nlb:73",
+      "latitude": 22.279138,
+      "longitude": 113.939299,
+      "mode": "bus",
+      "name": "東涌鄉事委員會 Tung Chung Rural Committee Office",
+      "name_tc": "東涌鄉事委員會",
+      "name_en": "Tung Chung Rural Committee Office"
+    },
+    {
+      "id": "bus:nlb:74",
+      "latitude": 22.279865,
+      "longitude": 113.940243,
+      "mode": "bus",
+      "name": "馬灣新村 Ma Wan Sun Tsuen",
+      "name_tc": "馬灣新村",
+      "name_en": "Ma Wan Sun Tsuen"
+    },
+    {
+      "id": "bus:nlb:77",
+      "latitude": 22.28603,
+      "longitude": 113.941057,
+      "mode": "bus",
+      "name": "東涌消防局 Tung Chung Fire Station",
+      "name_tc": "東涌消防局",
+      "name_en": "Tung Chung Fire Station"
+    },
+    {
+      "id": "bus:nlb:78",
+      "latitude": 22.289301,
+      "longitude": 113.938733,
+      "mode": "bus",
+      "name": "東涌纜車站 Tung Chung Cable Car Terminal",
+      "name_tc": "東涌纜車站",
+      "name_en": "Tung Chung Cable Car Terminal"
+    },
+    {
+      "id": "bus:nlb:79",
+      "latitude": 22.289862,
+      "longitude": 113.939616,
+      "mode": "bus",
+      "name": "東涌站巴士總站 Tung Chung Station Bus Terminus",
+      "name_tc": "東涌站巴士總站",
+      "name_en": "Tung Chung Station Bus Terminus"
+    },
+    {
+      "id": "bus:nlb:185",
+      "latitude": 22.281295,
+      "longitude": 113.938822,
+      "mode": "bus",
+      "name": "北大嶼山醫院(北行), 逸東邨美逸樓 North Lantau Hospital (North Bound), Mei Yat House Yat Tung Estate",
+      "name_tc": "北大嶼山醫院(北行), 逸東邨美逸樓",
+      "name_en": "North Lantau Hospital (North Bound), Mei Yat House Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:76",
+      "latitude": 22.281861,
+      "longitude": 113.938803,
+      "mode": "bus",
+      "name": "北大嶼山醫院(南行) North Lantau Hospital (South Bound)",
+      "name_tc": "北大嶼山醫院(南行)",
+      "name_en": "North Lantau Hospital (South Bound)"
+    },
+    {
+      "id": "bus:nlb:278",
+      "latitude": 22.289862,
+      "longitude": 113.939616,
+      "mode": "bus",
+      "name": "東涌站巴士總站 Tung Chung Station Bus Terminus",
+      "name_tc": "東涌站巴士總站",
+      "name_en": "Tung Chung Station Bus Terminus"
+    },
+    {
+      "id": "bus:nlb:80",
+      "latitude": 22.28887,
+      "longitude": 113.942105,
+      "mode": "bus",
+      "name": "富東廣場 Fu Tung Plaza",
+      "name_tc": "富東廣場",
+      "name_en": "Fu Tung Plaza"
+    },
+    {
+      "id": "bus:nlb:81",
+      "latitude": 22.286077,
+      "longitude": 113.941603,
+      "mode": "bus",
+      "name": "裕東苑 Yu Tung Court",
+      "name_tc": "裕東苑",
+      "name_en": "Yu Tung Court"
+    },
+    {
+      "id": "bus:nlb:338",
+      "latitude": 22.280194,
+      "longitude": 113.940306,
+      "mode": "bus",
+      "name": "裕泰苑(松仁路) Yu Tai Court (Chung Yan Road)",
+      "name_tc": "裕泰苑(松仁路)",
+      "name_en": "Yu Tai Court (Chung Yan Road)"
+    },
+    {
+      "id": "bus:nlb:94",
+      "latitude": 22.278936,
+      "longitude": 113.938795,
+      "mode": "bus",
+      "name": "東涌鄉事委員會 Tung Chung Rural Committee Office",
+      "name_tc": "東涌鄉事委員會",
+      "name_en": "Tung Chung Rural Committee Office"
+    },
+    {
+      "id": "bus:nlb:279",
+      "latitude": 22.278792,
+      "longitude": 113.937148,
+      "mode": "bus",
+      "name": "上嶺皮 Sheung Ling Pei",
+      "name_tc": "上嶺皮",
+      "name_en": "Sheung Ling Pei"
+    },
+    {
+      "id": "bus:nlb:280",
+      "latitude": 22.278512,
+      "longitude": 113.935423,
+      "mode": "bus",
+      "name": "下嶺皮 Ha Ling Pei",
+      "name_tc": "下嶺皮",
+      "name_en": "Ha Ling Pei"
+    },
+    {
+      "id": "bus:nlb:282",
+      "latitude": 22.277038,
+      "longitude": 113.933975,
+      "mode": "bus",
+      "name": "黃家圍 Wong Ka Wai",
+      "name_tc": "黃家圍",
+      "name_en": "Wong Ka Wai"
+    },
+    {
+      "id": "bus:nlb:283",
+      "latitude": 22.275707,
+      "longitude": 113.933707,
+      "mode": "bus",
+      "name": "龍井頭 Lung Tseng Tau",
+      "name_tc": "龍井頭",
+      "name_en": "Lung Tseng Tau"
+    },
+    {
+      "id": "bus:nlb:284",
+      "latitude": 22.27047,
+      "longitude": 113.934465,
+      "mode": "bus",
+      "name": "石門甲道 Shek Mun Kap Road",
+      "name_tc": "石門甲道",
+      "name_en": "Shek Mun Kap Road"
+    },
+    {
+      "id": "bus:nlb:286",
+      "latitude": 22.265678,
+      "longitude": 113.93674,
+      "mode": "bus",
+      "name": "十八區墳場 Cemetery Area No. 18",
+      "name_tc": "十八區墳場",
+      "name_en": "Cemetery Area No. 18"
+    },
+    {
+      "id": "bus:nlb:287",
+      "latitude": 22.264104,
+      "longitude": 113.937552,
+      "mode": "bus",
+      "name": "東涌坳管理站 Tung Chung Au Management Centre",
+      "name_tc": "東涌坳管理站",
+      "name_en": "Tung Chung Au Management Centre"
+    },
+    {
+      "id": "bus:nlb:288",
+      "latitude": 22.248939,
+      "longitude": 113.942597,
+      "mode": "bus",
+      "name": "伯公坳 Pak Kung Au",
+      "name_tc": "伯公坳",
+      "name_en": "Pak Kung Au"
+    },
+    {
+      "id": "bus:nlb:273",
+      "latitude": 22.240007,
+      "longitude": 113.957339,
+      "mode": "bus",
+      "name": "長沙引水道 Cheung Sha Catchwater",
+      "name_tc": "長沙引水道",
+      "name_en": "Cheung Sha Catchwater"
+    },
+    {
+      "id": "bus:nlb:181",
+      "latitude": 22.227616,
+      "longitude": 113.932289,
+      "mode": "bus",
+      "name": "塘福 Tong Fuk",
+      "name_tc": "塘福",
+      "name_en": "Tong Fuk"
+    },
+    {
+      "id": "bus:nlb:60",
+      "latitude": 22.255461,
+      "longitude": 113.903981,
+      "mode": "bus",
+      "name": "昂坪市集 Ngong Ping Village",
+      "name_tc": "昂坪市集",
+      "name_en": "Ngong Ping Village"
+    },
+    {
+      "id": "bus:nlb:318",
+      "latitude": 22.29058,
+      "longitude": 113.939352,
+      "mode": "bus",
+      "name": "東涌達東路巴士總站 Tung Chung Tat Tung Road Bus Terminus",
+      "name_tc": "東涌達東路巴士總站",
+      "name_en": "Tung Chung Tat Tung Road Bus Terminus"
+    },
+    {
+      "id": "bus:nlb:93",
+      "latitude": 22.269057,
+      "longitude": 113.931185,
+      "mode": "bus",
+      "name": "石門甲 Shek Mun Kap",
+      "name_tc": "石門甲",
+      "name_en": "Shek Mun Kap"
+    },
+    {
+      "id": "bus:nlb:292",
+      "latitude": 22.269575,
+      "longitude": 113.931978,
+      "mode": "bus",
+      "name": "石門甲村 Shek Mun Kap Village",
+      "name_tc": "石門甲村",
+      "name_en": "Shek Mun Kap Village"
+    },
+    {
+      "id": "bus:nlb:91",
+      "latitude": 22.277704,
+      "longitude": 113.941996,
+      "mode": "bus",
+      "name": "赤立角新村 Chek Lap Kok New Village",
+      "name_tc": "赤立角新村",
+      "name_en": "Chek Lap Kok New Village"
+    },
+    {
+      "id": "bus:nlb:289",
+      "latitude": 22.282053,
+      "longitude": 113.935862,
+      "mode": "bus",
+      "name": "逸東邨 Yat Tung Estate",
+      "name_tc": "逸東邨",
+      "name_en": "Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:90",
+      "latitude": 22.280565,
+      "longitude": 113.941064,
+      "mode": "bus",
+      "name": "裕泰苑 Yu Tai Court",
+      "name_tc": "裕泰苑",
+      "name_en": "Yu Tai Court"
+    },
+    {
+      "id": "bus:nlb:92",
+      "latitude": 22.269404,
+      "longitude": 113.931996,
+      "mode": "bus",
+      "name": "石門甲村 Shek Mun Kap Village",
+      "name_tc": "石門甲村",
+      "name_en": "Shek Mun Kap Village"
+    },
+    {
+      "id": "bus:nlb:291",
+      "latitude": 22.269057,
+      "longitude": 113.931185,
+      "mode": "bus",
+      "name": "石門甲 Shek Mun Kap",
+      "name_tc": "石門甲",
+      "name_en": "Shek Mun Kap"
+    },
+    {
+      "id": "bus:nlb:89",
+      "latitude": 22.282053,
+      "longitude": 113.935862,
+      "mode": "bus",
+      "name": "逸東邨 Yat Tung Estate",
+      "name_tc": "逸東邨",
+      "name_en": "Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:328",
+      "latitude": 22.316356,
+      "longitude": 114.045732,
+      "mode": "bus",
+      "name": "迪士尼樂園 Disneyland",
+      "name_tc": "迪士尼樂園",
+      "name_en": "Disneyland"
+    },
+    {
+      "id": "bus:nlb:293",
+      "latitude": 22.315519,
+      "longitude": 113.997975,
+      "mode": "bus",
+      "name": "小蠔灣 Siu Ho Wan",
+      "name_tc": "小蠔灣",
+      "name_en": "Siu Ho Wan"
+    },
+    {
+      "id": "bus:nlb:96",
+      "latitude": 22.313595,
+      "longitude": 113.995734,
+      "mode": "bus",
+      "name": "小蠔灣濾水廠 Siu Ho Wan Water Treatment Works",
+      "name_tc": "小蠔灣濾水廠",
+      "name_en": "Siu Ho Wan Water Treatment Works"
+    },
+    {
+      "id": "bus:nlb:97",
+      "latitude": 22.310022,
+      "longitude": 113.990584,
+      "mode": "bus",
+      "name": "愉景灣隧道 Discovery Bay Tunnel",
+      "name_tc": "愉景灣隧道",
+      "name_en": "Discovery Bay Tunnel"
+    },
+    {
+      "id": "bus:nlb:294",
+      "latitude": 22.309283,
+      "longitude": 113.989254,
+      "mode": "bus",
+      "name": "政府維修廠 Government Maintenance Depot",
+      "name_tc": "政府維修廠",
+      "name_en": "Government Maintenance Depot"
+    },
+    {
+      "id": "bus:nlb:99",
+      "latitude": 22.297964,
+      "longitude": 113.96758,
+      "mode": "bus",
+      "name": "白芒 Pak Mong",
+      "name_tc": "白芒",
+      "name_en": "Pak Mong"
+    },
+    {
+      "id": "bus:nlb:100",
+      "latitude": 22.290136,
+      "longitude": 113.941474,
+      "mode": "bus",
+      "name": "東薈城 Citygate",
+      "name_tc": "東薈城",
+      "name_en": "Citygate"
+    },
+    {
+      "id": "bus:nlb:295",
+      "latitude": 22.297964,
+      "longitude": 113.96758,
+      "mode": "bus",
+      "name": "白芒 Pak Mong",
+      "name_tc": "白芒",
+      "name_en": "Pak Mong"
+    },
+    {
+      "id": "bus:nlb:98",
+      "latitude": 22.308935,
+      "longitude": 113.989451,
+      "mode": "bus",
+      "name": "政府維修廠 Government Maintenance Depot",
+      "name_tc": "政府維修廠",
+      "name_en": "Government Maintenance Depot"
+    },
+    {
+      "id": "bus:nlb:95",
+      "latitude": 22.315519,
+      "longitude": 113.997975,
+      "mode": "bus",
+      "name": "小蠔灣 Siu Ho Wan",
+      "name_tc": "小蠔灣",
+      "name_en": "Siu Ho Wan"
+    },
+    {
+      "id": "bus:nlb:327",
+      "latitude": 22.316356,
+      "longitude": 114.045732,
+      "mode": "bus",
+      "name": "迪士尼樂園 Disneyland",
+      "name_tc": "迪士尼樂園",
+      "name_en": "Disneyland"
+    },
+    {
+      "id": "bus:nlb:349",
+      "latitude": 22.297144,
+      "longitude": 113.952113,
+      "mode": "bus",
+      "name": "翔東邨 Cheung Tung Estate",
+      "name_tc": "翔東邨",
+      "name_en": "Cheung Tung Estate"
+    },
+    {
+      "id": "bus:nlb:343",
+      "latitude": 22.2979688,
+      "longitude": 113.95392066,
+      "mode": "bus",
+      "name": "翔東邨翔月樓 Cheung Yuet House, Cheung Tung Estate",
+      "name_tc": "翔東邨翔月樓",
+      "name_en": "Cheung Yuet House, Cheung Tung Estate"
+    },
+    {
+      "id": "bus:nlb:342",
+      "latitude": 22.29933639,
+      "longitude": 113.95193348,
+      "mode": "bus",
+      "name": "匯東街 Wui Tung Street",
+      "name_tc": "匯東街",
+      "name_en": "Wui Tung Street"
+    },
+    {
+      "id": "bus:nlb:329",
+      "latitude": 22.29655,
+      "longitude": 113.948465,
+      "mode": "bus",
+      "name": "裕雅苑 Yu Nga Court",
+      "name_tc": "裕雅苑",
+      "name_en": "Yu Nga Court"
+    },
+    {
+      "id": "bus:nlb:330",
+      "latitude": 22.295426,
+      "longitude": 113.946728,
+      "mode": "bus",
+      "name": "裕雅商場 Yu Nga Shopping Mall",
+      "name_tc": "裕雅商場",
+      "name_en": "Yu Nga Shopping Mall"
+    },
+    {
+      "id": "bus:nlb:339",
+      "latitude": 22.3327784,
+      "longitude": 114.02855728,
+      "mode": "bus",
+      "name": "欣澳站 Sunny Bay Station",
+      "name_tc": "欣澳站",
+      "name_en": "Sunny Bay Station"
+    },
+    {
+      "id": "bus:nlb:309",
+      "latitude": 22.278653,
+      "longitude": 113.933203,
+      "mode": "bus",
+      "name": "滿東邨 Mun Tung Estate",
+      "name_tc": "滿東邨",
+      "name_en": "Mun Tung Estate"
+    },
+    {
+      "id": "bus:nlb:306",
+      "latitude": 22.279744,
+      "longitude": 113.936995,
+      "mode": "bus",
+      "name": "逸東邨雍逸樓 Yung Yat House, Yat Tung Estate",
+      "name_tc": "逸東邨雍逸樓",
+      "name_en": "Yung Yat House, Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:297",
+      "latitude": 22.297104,
+      "longitude": 113.953342,
+      "mode": "bus",
+      "name": "迎東邨 Ying Tung Estate",
+      "name_tc": "迎東邨",
+      "name_en": "Ying Tung Estate"
+    },
+    {
+      "id": "bus:nlb:191",
+      "latitude": 22.295835,
+      "longitude": 113.952077,
+      "mode": "bus",
+      "name": "昇薈(南行) The Visionary (South Bound)",
+      "name_tc": "昇薈(南行)",
+      "name_en": "The Visionary (South Bound)"
+    },
+    {
+      "id": "bus:nlb:110",
+      "latitude": 22.293222,
+      "longitude": 113.94941,
+      "mode": "bus",
+      "name": "健東路 Kin Tung Road",
+      "name_tc": "健東路",
+      "name_en": "Kin Tung Road"
+    },
+    {
+      "id": "bus:nlb:298",
+      "latitude": 22.291932,
+      "longitude": 113.95049,
+      "mode": "bus",
+      "name": "映灣園二期 Caribbean Coast Phase 2",
+      "name_tc": "映灣園二期",
+      "name_en": "Caribbean Coast Phase 2"
+    },
+    {
+      "id": "bus:nlb:111",
+      "latitude": 22.290949,
+      "longitude": 113.948012,
+      "mode": "bus",
+      "name": "怡東路 Yi Tung Road",
+      "name_tc": "怡東路",
+      "name_en": "Yi Tung Road"
+    },
+    {
+      "id": "bus:nlb:112",
+      "latitude": 22.29085,
+      "longitude": 113.944611,
+      "mode": "bus",
+      "name": "怡文中學 E Wun Secondary School",
+      "name_tc": "怡文中學",
+      "name_en": "E Wun Secondary School"
+    },
+    {
+      "id": "bus:nlb:299",
+      "latitude": 22.293039,
+      "longitude": 113.943179,
+      "mode": "bus",
+      "name": "海堤灣畔 Seaview Crescent",
+      "name_tc": "海堤灣畔",
+      "name_en": "Seaview Crescent"
+    },
+    {
+      "id": "bus:nlb:310",
+      "latitude": 22.278922,
+      "longitude": 113.934556,
+      "mode": "bus",
+      "name": "滿東邨 Mun Tung Estate",
+      "name_tc": "滿東邨",
+      "name_en": "Mun Tung Estate"
+    },
+    {
+      "id": "bus:nlb:101",
+      "latitude": 22.276164,
+      "longitude": 113.931823,
+      "mode": "bus",
+      "name": "松逸街 Chung Yat Street",
+      "name_tc": "松逸街",
+      "name_en": "Chung Yat Street"
+    },
+    {
+      "id": "bus:nlb:102",
+      "latitude": 22.277201,
+      "longitude": 113.9317,
+      "mode": "bus",
+      "name": "松滿路 Chung Mun Road",
+      "name_tc": "松滿路",
+      "name_en": "Chung Mun Road"
+    },
+    {
+      "id": "bus:nlb:103",
+      "latitude": 22.279216,
+      "longitude": 113.934651,
+      "mode": "bus",
+      "name": "逸東邨福逸樓 Fuk Yat House, Yat Tung Estate",
+      "name_tc": "逸東邨福逸樓",
+      "name_en": "Fuk Yat House, Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:104",
+      "latitude": 22.279592,
+      "longitude": 113.936712,
+      "mode": "bus",
+      "name": "逸東邨雍逸樓 Yung Yat House, Yat Tung Estate",
+      "name_tc": "逸東邨雍逸樓",
+      "name_en": "Yung Yat House, Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:88",
+      "latitude": 22.282369,
+      "longitude": 113.936576,
+      "mode": "bus",
+      "name": "逸東邨居逸樓 Kui Yat House, Yat Tung Estate",
+      "name_tc": "逸東邨居逸樓",
+      "name_en": "Kui Yat House, Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:107",
+      "latitude": 22.292925,
+      "longitude": 113.943471,
+      "mode": "bus",
+      "name": "海堤灣畔 Seaview Crescent",
+      "name_tc": "海堤灣畔",
+      "name_en": "Seaview Crescent"
+    },
+    {
+      "id": "bus:nlb:108",
+      "latitude": 22.290942,
+      "longitude": 113.945931,
+      "mode": "bus",
+      "name": "藍天海岸 Coastal Skyline",
+      "name_tc": "藍天海岸",
+      "name_en": "Coastal Skyline"
+    },
+    {
+      "id": "bus:nlb:186",
+      "latitude": 22.291424,
+      "longitude": 113.948975,
+      "mode": "bus",
+      "name": "映灣園三期 Caribbean Coast Phase 3",
+      "name_tc": "映灣園三期",
+      "name_en": "Caribbean Coast Phase 3"
+    },
+    {
+      "id": "bus:nlb:109",
+      "latitude": 22.291882,
+      "longitude": 113.95001,
+      "mode": "bus",
+      "name": "映灣園二期 Caribbean Coast Phase 2",
+      "name_tc": "映灣園二期",
+      "name_en": "Caribbean Coast Phase 2"
+    },
+    {
+      "id": "bus:nlb:190",
+      "latitude": 22.295823,
+      "longitude": 113.951907,
+      "mode": "bus",
+      "name": "昇薈(北行) The Visionary(North Bound)",
+      "name_tc": "昇薈(北行)",
+      "name_en": "The Visionary(North Bound)"
+    },
+    {
+      "id": "bus:nlb:193",
+      "latitude": 22.297104,
+      "longitude": 113.953342,
+      "mode": "bus",
+      "name": "迎東邨 Ying Tung Estate",
+      "name_tc": "迎東邨",
+      "name_en": "Ying Tung Estate"
+    },
+    {
+      "id": "bus:nlb:321",
+      "latitude": 22.28885253,
+      "longitude": 113.93846231,
+      "mode": "bus",
+      "name": "東涌纜車站 Tung Chung Cable Car Terminal",
+      "name_tc": "東涌纜車站",
+      "name_en": "Tung Chung Cable Car Terminal"
+    },
+    {
+      "id": "bus:nlb:331",
+      "latitude": 22.296556,
+      "longitude": 113.948482,
+      "mode": "bus",
+      "name": "裕雅苑 Yu Nga Court",
+      "name_tc": "裕雅苑",
+      "name_en": "Yu Nga Court"
+    },
+    {
+      "id": "bus:nlb:341",
+      "latitude": 22.29936492,
+      "longitude": 113.95191068,
+      "mode": "bus",
+      "name": "匯東街 Wui Tung Street",
+      "name_tc": "匯東街",
+      "name_en": "Wui Tung Street"
+    },
+    {
+      "id": "bus:nlb:350",
+      "latitude": 22.297144,
+      "longitude": 113.952113,
+      "mode": "bus",
+      "name": "翔東邨 Cheung Tung Estate",
+      "name_tc": "翔東邨",
+      "name_en": "Cheung Tung Estate"
+    },
+    {
+      "id": "bus:nlb:106",
+      "latitude": 22.293846,
+      "longitude": 113.940449,
+      "mode": "bus",
+      "name": "東涌發展碼頭 Tung Chung Development Ferry Pier",
+      "name_tc": "東涌發展碼頭",
+      "name_en": "Tung Chung Development Ferry Pier"
+    },
+    {
+      "id": "bus:nlb:188",
+      "latitude": 22.282028,
+      "longitude": 113.939269,
+      "mode": "bus",
+      "name": "北大嶼山醫院(主座大樓) North Lantau Hospital(Main Block)",
+      "name_tc": "北大嶼山醫院(主座大樓)",
+      "name_en": "North Lantau Hospital(Main Block)"
+    },
+    {
+      "id": "bus:nlb:320",
+      "latitude": 22.281295,
+      "longitude": 113.938822,
+      "mode": "bus",
+      "name": "北大嶼山醫院(北行), 逸東邨美逸樓 North Lantau Hospital (North Bound), Mei Yat House Yat Tung Estate",
+      "name_tc": "北大嶼山醫院(北行), 逸東邨美逸樓",
+      "name_en": "North Lantau Hospital (North Bound), Mei Yat House Yat Tung Estate"
+    },
+    {
+      "id": "bus:nlb:322",
+      "latitude": 22.281861,
+      "longitude": 113.938803,
+      "mode": "bus",
+      "name": "北大嶼山醫院(南行) North Lantau Hospital (South Bound)",
+      "name_tc": "北大嶼山醫院(南行)",
+      "name_en": "North Lantau Hospital (South Bound)"
+    },
+    {
+      "id": "bus:nlb:332",
+      "latitude": 22.289862,
+      "longitude": 113.939616,
+      "mode": "bus",
+      "name": "東涌站巴士總站 Tung Chung Station Bus Terminus",
+      "name_tc": "東涌站巴士總站",
+      "name_en": "Tung Chung Station Bus Terminus"
+    },
+    {
+      "id": "bus:nlb:319",
+      "latitude": 22.293846,
+      "longitude": 113.940449,
+      "mode": "bus",
+      "name": "東涌發展碼頭 Tung Chung Development Ferry Pier",
+      "name_tc": "東涌發展碼頭",
+      "name_en": "Tung Chung Development Ferry Pier"
+    },
+    {
+      "id": "bus:nlb:194",
+      "latitude": 22.293495,
+      "longitude": 113.951816,
+      "mode": "bus",
+      "name": "映灣園一期 Caribbean Coast Phase 1",
+      "name_tc": "映灣園一期",
+      "name_en": "Caribbean Coast Phase 1"
+    },
+    {
+      "id": "bus:nlb:192",
+      "latitude": 22.29431,
+      "longitude": 113.949996,
+      "mode": "bus",
+      "name": "迎禧路 Ying Hei Road",
+      "name_tc": "迎禧路",
+      "name_en": "Ying Hei Road"
+    },
+    {
+      "id": "bus:nlb:340",
+      "latitude": 22.29381023,
+      "longitude": 113.94377257,
+      "mode": "bus",
+      "name": "東涌社區聯絡中心 Tung Chung Community Liaison Centre",
+      "name_tc": "東涌社區聯絡中心",
+      "name_en": "Tung Chung Community Liaison Centre"
+    },
+    {
+      "id": "bus:nlb:324",
+      "latitude": 22.294194,
+      "longitude": 113.947254,
+      "mode": "bus",
+      "name": "裕雅苑 Yu Nga Court",
+      "name_tc": "裕雅苑",
+      "name_en": "Yu Nga Court"
+    },
+    {
+      "id": "bus:nlb:303",
+      "latitude": 22.294398,
+      "longitude": 113.949071,
+      "mode": "bus",
+      "name": "東環 Century Link",
+      "name_tc": "東環",
+      "name_en": "Century Link"
+    },
+    {
+      "id": "bus:nlb:315",
+      "latitude": 22.293222,
+      "longitude": 113.94941,
+      "mode": "bus",
+      "name": "映灣園 Caribbean Coast",
+      "name_tc": "映灣園",
+      "name_en": "Caribbean Coast"
+    },
+    {
+      "id": "bus:nlb:105",
+      "latitude": 22.289613,
+      "longitude": 113.94021,
+      "mode": "bus",
+      "name": "東涌港鐵站 Tung Chung MTR Station",
+      "name_tc": "東涌港鐵站",
+      "name_en": "Tung Chung MTR Station"
+    },
+    {
+      "id": "bus:nlb:114",
+      "latitude": 22.293584,
+      "longitude": 113.932129,
+      "mode": "bus",
+      "name": "飛機燃料庫 Aviation Fuel Tank Farm",
+      "name_tc": "飛機燃料庫",
+      "name_en": "Aviation Fuel Tank Farm"
+    },
+    {
+      "id": "bus:nlb:115",
+      "latitude": 22.297546,
+      "longitude": 113.932814,
+      "mode": "bus",
+      "name": "國泰城 Cathay City",
+      "name_tc": "國泰城",
+      "name_en": "Cathay City"
+    },
+    {
+      "id": "bus:nlb:116",
+      "latitude": 22.310535,
+      "longitude": 113.937107,
+      "mode": "bus",
+      "name": "二號檢查閘 Gate House No. 2",
+      "name_tc": "二號檢查閘",
+      "name_en": "Gate House No. 2"
+    },
+    {
+      "id": "bus:nlb:117",
+      "latitude": 22.314569,
+      "longitude": 113.93661,
+      "mode": "bus",
+      "name": "機場(客運大樓) Airport (Passenger Terminal Building)",
+      "name_tc": "機場(客運大樓)",
+      "name_en": "Airport (Passenger Terminal Building)"
+    },
+    {
+      "id": "bus:nlb:335",
+      "latitude": 22.316811,
+      "longitude": 113.941627,
+      "mode": "bus",
+      "name": "航天城交通總匯 Skycity Transport Terminal",
+      "name_tc": "航天城交通總匯",
+      "name_en": "Skycity Transport Terminal"
+    },
+    {
+      "id": "bus:nlb:308",
+      "latitude": 22.317211,
+      "longitude": 113.950531,
+      "mode": "bus",
+      "name": "大橋香港口岸旅檢大樓 HZMB Hong Kong Port Passenger Clearance Building",
+      "name_tc": "大橋香港口岸旅檢大樓",
+      "name_en": "HZMB Hong Kong Port Passenger Clearance Building"
+    },
+    {
+      "id": "bus:nlb:313",
+      "latitude": 22.3164,
+      "longitude": 113.950856,
+      "mode": "bus",
+      "name": "大橋香港口岸 HZMB Hong Kong Port",
+      "name_tc": "大橋香港口岸",
+      "name_en": "HZMB Hong Kong Port"
+    },
+    {
+      "id": "bus:nlb:307",
+      "latitude": 22.3164,
+      "longitude": 113.950856,
+      "mode": "bus",
+      "name": "大橋香港口岸 HZMB Hong Kong Port",
+      "name_tc": "大橋香港口岸",
+      "name_en": "HZMB Hong Kong Port"
+    },
+    {
+      "id": "bus:nlb:118",
+      "latitude": 22.316236,
+      "longitude": 113.935948,
+      "mode": "bus",
+      "name": "暢達路 Cheong Tat Road",
+      "name_tc": "暢達路",
+      "name_en": "Cheong Tat Road"
+    },
+    {
+      "id": "bus:nlb:120",
+      "latitude": 22.31943,
+      "longitude": 113.933942,
+      "mode": "bus",
+      "name": "富豪機場酒店 Regal Airport Hotel",
+      "name_tc": "富豪機場酒店",
+      "name_en": "Regal Airport Hotel"
+    },
+    {
+      "id": "bus:nlb:274",
+      "latitude": 22.297555,
+      "longitude": 113.93336,
+      "mode": "bus",
+      "name": "國泰城 Cathay City",
+      "name_tc": "國泰城",
+      "name_en": "Cathay City"
+    },
+    {
+      "id": "bus:nlb:277",
+      "latitude": 22.293075,
+      "longitude": 113.932229,
+      "mode": "bus",
+      "name": "飛機燃料庫 Aviation Fuel Tank Farm",
+      "name_tc": "飛機燃料庫",
+      "name_en": "Aviation Fuel Tank Farm"
+    },
+    {
+      "id": "bus:nlb:152",
+      "latitude": 22.497433,
+      "longitude": 113.950509,
+      "mode": "bus",
+      "name": "深圳灣口岸 Shenzhen Bay Port",
+      "name_tc": "深圳灣口岸",
+      "name_en": "Shenzhen Bay Port"
+    },
+    {
+      "id": "bus:nlb:196",
+      "latitude": 22.418444,
+      "longitude": 113.982146,
+      "mode": "bus",
+      "name": "藍地輕鐵站 Lam Tei LTR Station",
+      "name_tc": "藍地輕鐵站",
+      "name_en": "Lam Tei LTR Station"
+    },
+    {
+      "id": "bus:nlb:153",
+      "latitude": 22.422452,
+      "longitude": 113.985305,
+      "mode": "bus",
+      "name": "青磚圍 Tsing Chuen Wai",
+      "name_tc": "青磚圍",
+      "name_en": "Tsing Chuen Wai"
+    },
+    {
+      "id": "bus:nlb:154",
+      "latitude": 22.423648,
+      "longitude": 113.986313,
+      "mode": "bus",
+      "name": "泥圍輕鐵站 Nai Wai LTR Station",
+      "name_tc": "泥圍輕鐵站",
+      "name_en": "Nai Wai LTR Station"
+    },
+    {
+      "id": "bus:nlb:147",
+      "latitude": 22.427168,
+      "longitude": 113.989728,
+      "mode": "bus",
+      "name": "亦園村 Yick Yuen Tsuen",
+      "name_tc": "亦園村",
+      "name_en": "Yick Yuen Tsuen"
+    },
+    {
+      "id": "bus:nlb:146",
+      "latitude": 22.429673,
+      "longitude": 113.992235,
+      "mode": "bus",
+      "name": "鍾屋村輕鐵站 Chung Uk Tsuen LTR Station",
+      "name_tc": "鍾屋村輕鐵站",
+      "name_en": "Chung Uk Tsuen LTR Station"
+    },
+    {
+      "id": "bus:nlb:145",
+      "latitude": 22.433858,
+      "longitude": 113.99775,
+      "mode": "bus",
+      "name": "洪水橋輕鐵站 Hung Shui Kiu LTR Station",
+      "name_tc": "洪水橋輕鐵站",
+      "name_en": "Hung Shui Kiu LTR Station"
+    },
+    {
+      "id": "bus:nlb:144",
+      "latitude": 22.436451,
+      "longitude": 114.001459,
+      "mode": "bus",
+      "name": "大道村 Tai Tao Tsuen",
+      "name_tc": "大道村",
+      "name_en": "Tai Tao Tsuen"
+    },
+    {
+      "id": "bus:nlb:143",
+      "latitude": 22.438514,
+      "longitude": 114.004654,
+      "mode": "bus",
+      "name": "灰沙圍 Fui Sha Wai",
+      "name_tc": "灰沙圍",
+      "name_en": "Fui Sha Wai"
+    },
+    {
+      "id": "bus:nlb:155",
+      "latitude": 22.44021,
+      "longitude": 114.007312,
+      "mode": "bus",
+      "name": "塘坊村輕鐵站 Tong Fong Tsuen LRT Station",
+      "name_tc": "塘坊村輕鐵站",
+      "name_en": "Tong Fong Tsuen LRT Station"
+    },
+    {
+      "id": "bus:nlb:156",
+      "latitude": 22.443216,
+      "longitude": 114.01293,
+      "mode": "bus",
+      "name": "屏山輕鐵站 Ping Shan LRT Station",
+      "name_tc": "屏山輕鐵站",
+      "name_en": "Ping Shan LRT Station"
+    },
+    {
+      "id": "bus:nlb:157",
+      "latitude": 22.444259,
+      "longitude": 114.018189,
+      "mode": "bus",
+      "name": "朗庭園 Villa By The Park",
+      "name_tc": "朗庭園",
+      "name_en": "Villa By The Park"
+    },
+    {
+      "id": "bus:nlb:158",
+      "latitude": 22.444654,
+      "longitude": 114.025802,
+      "mode": "bus",
+      "name": "喜利徑 Hi Lee Path",
+      "name_tc": "喜利徑",
+      "name_en": "Hi Lee Path"
+    },
+    {
+      "id": "bus:nlb:159",
+      "latitude": 22.444629,
+      "longitude": 114.028225,
+      "mode": "bus",
+      "name": "同樂街 Tung Lok Street",
+      "name_tc": "同樂街",
+      "name_en": "Tung Lok Street"
+    },
+    {
+      "id": "bus:nlb:160",
+      "latitude": 22.444578,
+      "longitude": 114.03023,
+      "mode": "bus",
+      "name": "谷亭街 Kuk Ting Street",
+      "name_tc": "谷亭街",
+      "name_en": "Kuk Ting Street"
+    },
+    {
+      "id": "bus:nlb:134",
+      "latitude": 22.446153,
+      "longitude": 114.033888,
+      "mode": "bus",
+      "name": "元朗港鐵站 Yuen Long MTR Station",
+      "name_tc": "元朗港鐵站",
+      "name_en": "Yuen Long MTR Station"
+    },
+    {
+      "id": "bus:nlb:161",
+      "latitude": 22.446189,
+      "longitude": 114.034816,
+      "mode": "bus",
+      "name": "元朗港鐵站 Yuen Long MTR Station",
+      "name_tc": "元朗港鐵站",
+      "name_en": "Yuen Long MTR Station"
+    },
+    {
+      "id": "bus:nlb:135",
+      "latitude": 22.444308,
+      "longitude": 114.031252,
+      "mode": "bus",
+      "name": "又新街 Yau San Street",
+      "name_tc": "又新街",
+      "name_en": "Yau San Street"
+    },
+    {
+      "id": "bus:nlb:136",
+      "latitude": 22.444355,
+      "longitude": 114.028255,
+      "mode": "bus",
+      "name": "大棠路 Tai Tong Road",
+      "name_tc": "大棠路",
+      "name_en": "Tai Tong Road"
+    },
+    {
+      "id": "bus:nlb:137",
+      "latitude": 22.444383,
+      "longitude": 114.024085,
+      "mode": "bus",
+      "name": "元朗警署 Yuen Long Police Station",
+      "name_tc": "元朗警署",
+      "name_en": "Yuen Long Police Station"
+    },
+    {
+      "id": "bus:nlb:138",
+      "latitude": 22.444407,
+      "longitude": 114.020781,
+      "mode": "bus",
+      "name": "水邊村 Shui Pin Tsuen",
+      "name_tc": "水邊村",
+      "name_en": "Shui Pin Tsuen"
+    },
+    {
+      "id": "bus:nlb:139",
+      "latitude": 22.444117,
+      "longitude": 114.019013,
+      "mode": "bus",
+      "name": "元朗公園 Yuen Long Park",
+      "name_tc": "元朗公園",
+      "name_en": "Yuen Long Park"
+    },
+    {
+      "id": "bus:nlb:140",
+      "latitude": 22.443386,
+      "longitude": 114.014799,
+      "mode": "bus",
+      "name": "朗邊 Long Bin",
+      "name_tc": "朗邊",
+      "name_en": "Long Bin"
+    },
+    {
+      "id": "bus:nlb:141",
+      "latitude": 22.441674,
+      "longitude": 114.010378,
+      "mode": "bus",
+      "name": "屏山 Ping Shan",
+      "name_tc": "屏山",
+      "name_en": "Ping Shan"
+    },
+    {
+      "id": "bus:nlb:142",
+      "latitude": 22.440019,
+      "longitude": 114.007636,
+      "mode": "bus",
+      "name": "新起村 San Hei Tsuen",
+      "name_tc": "新起村",
+      "name_en": "San Hei Tsuen"
+    },
+    {
+      "id": "bus:nlb:197",
+      "latitude": 22.438669,
+      "longitude": 114.005404,
+      "mode": "bus",
+      "name": "灰沙圍 Fui Sha Wai",
+      "name_tc": "灰沙圍",
+      "name_en": "Fui Sha Wai"
+    },
+    {
+      "id": "bus:nlb:199",
+      "latitude": 22.436533,
+      "longitude": 114.002115,
+      "mode": "bus",
+      "name": "大道村 Tai Tao Tsuen",
+      "name_tc": "大道村",
+      "name_en": "Tai Tao Tsuen"
+    },
+    {
+      "id": "bus:nlb:302",
+      "latitude": 22.4353,
+      "longitude": 114.000314,
+      "mode": "bus",
+      "name": "尚城 Uptown",
+      "name_tc": "尚城",
+      "name_en": "Uptown"
+    },
+    {
+      "id": "bus:nlb:200",
+      "latitude": 22.433518,
+      "longitude": 113.997815,
+      "mode": "bus",
+      "name": "洪水橋輕鐵站 Hung Shui Kiu LTR Station",
+      "name_tc": "洪水橋輕鐵站",
+      "name_en": "Hung Shui Kiu LTR Station"
+    },
+    {
+      "id": "bus:nlb:201",
+      "latitude": 22.429587,
+      "longitude": 113.992587,
+      "mode": "bus",
+      "name": "鍾屋村輕鐵站 Chung Uk Tsuen LTR Station",
+      "name_tc": "鍾屋村輕鐵站",
+      "name_en": "Chung Uk Tsuen LTR Station"
+    },
+    {
+      "id": "bus:nlb:195",
+      "latitude": 22.427396,
+      "longitude": 113.990366,
+      "mode": "bus",
+      "name": "亦園村 Yick Yuen Tsuen",
+      "name_tc": "亦園村",
+      "name_en": "Yick Yuen Tsuen"
+    },
+    {
+      "id": "bus:nlb:148",
+      "latitude": 22.423623,
+      "longitude": 113.986796,
+      "mode": "bus",
+      "name": "泥圍 Nai Wai",
+      "name_tc": "泥圍",
+      "name_en": "Nai Wai"
+    },
+    {
+      "id": "bus:nlb:149",
+      "latitude": 22.42236,
+      "longitude": 113.98564,
+      "mode": "bus",
+      "name": "福亨村 Fuk Hang Tsuen",
+      "name_tc": "福亨村",
+      "name_en": "Fuk Hang Tsuen"
+    },
+    {
+      "id": "bus:nlb:150",
+      "latitude": 22.420439,
+      "longitude": 113.983878,
+      "mode": "bus",
+      "name": "妙法寺 Miu Fat Buddhist Monastery",
+      "name_tc": "妙法寺",
+      "name_en": "Miu Fat Buddhist Monastery"
+    },
+    {
+      "id": "bus:nlb:151",
+      "latitude": 22.418328,
+      "longitude": 113.982385,
+      "mode": "bus",
+      "name": "藍地輕鐵站 Lam Tei LTR Station",
+      "name_tc": "藍地輕鐵站",
+      "name_en": "Lam Tei LTR Station"
+    },
+    {
+      "id": "bus:nlb:203",
+      "latitude": 22.453536,
+      "longitude": 114.007111,
+      "mode": "bus",
+      "name": "天水圍 (天慈邨) Tin Shui Wai (Tin Tsz Estate)",
+      "name_tc": "天水圍 (天慈邨)",
+      "name_en": "Tin Shui Wai (Tin Tsz Estate)"
+    },
+    {
+      "id": "bus:nlb:163",
+      "latitude": 22.458605,
+      "longitude": 114.00326,
+      "mode": "bus",
+      "name": "嘉湖海逸酒店 Harbour Plaza Resort City",
+      "name_tc": "嘉湖海逸酒店",
+      "name_en": "Harbour Plaza Resort City"
+    },
+    {
+      "id": "bus:nlb:164",
+      "latitude": 22.458498,
+      "longitude": 114.001994,
+      "mode": "bus",
+      "name": "天水圍市中心 Tin Shui Wai Town Centre",
+      "name_tc": "天水圍市中心",
+      "name_en": "Tin Shui Wai Town Centre"
+    },
+    {
+      "id": "bus:nlb:165",
+      "latitude": 22.459595,
+      "longitude": 113.999984,
+      "mode": "bus",
+      "name": "嘉湖山莊翠湖居 Chestwood Court, Kingswood Villas",
+      "name_tc": "嘉湖山莊翠湖居",
+      "name_en": "Chestwood Court, Kingswood Villas"
+    },
+    {
+      "id": "bus:nlb:205",
+      "latitude": 22.456597,
+      "longitude": 113.999434,
+      "mode": "bus",
+      "name": "天瑞邨 Tin Shui Estate",
+      "name_tc": "天瑞邨",
+      "name_en": "Tin Shui Estate"
+    },
+    {
+      "id": "bus:nlb:206",
+      "latitude": 22.454555,
+      "longitude": 114.003055,
+      "mode": "bus",
+      "name": "天水圍公園 Tin Shui Wai Park",
+      "name_tc": "天水圍公園",
+      "name_en": "Tin Shui Wai Park"
+    },
+    {
+      "id": "bus:nlb:168",
+      "latitude": 22.452221,
+      "longitude": 114.002165,
+      "mode": "bus",
+      "name": "天耀邨耀盛樓 Yiu Shing House, Tin Yiu Estate",
+      "name_tc": "天耀邨耀盛樓",
+      "name_en": "Yiu Shing House, Tin Yiu Estate"
+    },
+    {
+      "id": "bus:nlb:169",
+      "latitude": 22.44955,
+      "longitude": 114.003174,
+      "mode": "bus",
+      "name": "天耀邨耀民樓 Yiu Man House, Tin Yiu Estate",
+      "name_tc": "天耀邨耀民樓",
+      "name_en": "Yiu Man House, Tin Yiu Estate"
+    },
+    {
+      "id": "bus:nlb:207",
+      "latitude": 22.446697,
+      "longitude": 114.003,
+      "mode": "bus",
+      "name": "天盛苑 Tin Shing Court",
+      "name_tc": "天盛苑",
+      "name_en": "Tin Shing Court"
+    },
+    {
+      "id": "bus:nlb:170",
+      "latitude": 22.446988,
+      "longitude": 114.002794,
+      "mode": "bus",
+      "name": "天盛苑 Tin Shing Court",
+      "name_tc": "天盛苑",
+      "name_en": "Tin Shing Court"
+    },
+    {
+      "id": "bus:nlb:171",
+      "latitude": 22.450171,
+      "longitude": 114.002504,
+      "mode": "bus",
+      "name": "天水圍警署 Tin Shui Wai Police Station",
+      "name_tc": "天水圍警署",
+      "name_en": "Tin Shui Wai Police Station"
+    },
+    {
+      "id": "bus:nlb:172",
+      "latitude": 22.45255,
+      "longitude": 114.002169,
+      "mode": "bus",
+      "name": "嘉湖山莊賞湖居 Sherwood Court, Kingswood Villas",
+      "name_tc": "嘉湖山莊賞湖居",
+      "name_en": "Sherwood Court, Kingswood Villas"
+    },
+    {
+      "id": "bus:nlb:167",
+      "latitude": 22.454557,
+      "longitude": 114.002543,
+      "mode": "bus",
+      "name": "天水圍公園 Tin Shui Wai Park",
+      "name_tc": "天水圍公園",
+      "name_en": "Tin Shui Wai Park"
+    },
+    {
+      "id": "bus:nlb:166",
+      "latitude": 22.456994,
+      "longitude": 113.998857,
+      "mode": "bus",
+      "name": "天瑞邨 Tin Shui Estate",
+      "name_tc": "天瑞邨",
+      "name_en": "Tin Shui Estate"
+    },
+    {
+      "id": "bus:nlb:173",
+      "latitude": 22.459864,
+      "longitude": 114.000079,
+      "mode": "bus",
+      "name": "天頌苑 Tin Chung Court",
+      "name_tc": "天頌苑",
+      "name_en": "Tin Chung Court"
+    },
+    {
+      "id": "bus:nlb:174",
+      "latitude": 22.458934,
+      "longitude": 114.003592,
+      "mode": "bus",
+      "name": "嘉湖山莊麗湖居 Lynwood Court, Kingswood Villas",
+      "name_tc": "嘉湖山莊麗湖居",
+      "name_en": "Lynwood Court, Kingswood Villas"
+    },
+    {
+      "id": "bus:nlb:175",
+      "latitude": 22.457364,
+      "longitude": 114.005797,
+      "mode": "bus",
+      "name": "嘉湖山莊景湖居 Kenswood Court, Kingswood Villas",
+      "name_tc": "嘉湖山莊景湖居",
+      "name_en": "Kenswood Court, Kingswood Villas"
+    },
+    {
+      "id": "bus:nlb:162",
+      "latitude": 22.453536,
+      "longitude": 114.007111,
+      "mode": "bus",
+      "name": "天水圍 (天慈邨) Tin Shui Wai (Tin Tsz Estate)",
+      "name_tc": "天水圍 (天慈邨)",
+      "name_en": "Tin Shui Wai (Tin Tsz Estate)"
+    },
+    {
+      "id": "bus:nlb:176",
+      "latitude": 22.45053,
+      "longitude": 114.003029,
+      "mode": "bus",
+      "name": "天水圍 (天耀邨) Tin Shui Wai (Tin Yiu Estate)",
+      "name_tc": "天水圍 (天耀邨)",
+      "name_en": "Tin Shui Wai (Tin Yiu Estate)"
+    },
+    {
+      "id": "bus:nlb:316",
+      "latitude": 22.289613,
+      "longitude": 113.94021,
+      "mode": "bus",
+      "name": "東涌港鐵站 Tung Chung MTR Station",
+      "name_tc": "東涌港鐵站",
+      "name_en": "Tung Chung MTR Station"
+    },
+    {
+      "id": "bus:nlb:372",
+      "latitude": 22.522567,
+      "longitude": 114.068583,
+      "mode": "bus",
+      "name": "皇崗口岸 Huanggang Port",
+      "name_tc": "皇崗口岸",
+      "name_en": "Huanggang Port"
+    },
+    {
+      "id": "bus:nlb:370",
+      "latitude": 22.50304074,
+      "longitude": 114.08236259,
+      "mode": "bus",
+      "name": "新田運輸交匯處 San Tin Public Transport Interchange",
+      "name_tc": "新田運輸交匯處",
+      "name_en": "San Tin Public Transport Interchange"
+    },
+    {
+      "id": "bus:nlb:373",
+      "latitude": 22.44638388,
+      "longitude": 114.1730287,
+      "mode": "bus",
+      "name": "廣福邨 Kwong Fuk Estate",
+      "name_tc": "廣福邨",
+      "name_en": "Kwong Fuk Estate"
+    },
+    {
+      "id": "bus:nlb:374",
+      "latitude": 22.4477083,
+      "longitude": 114.17186782,
+      "mode": "bus",
+      "name": "廣福球場 Kwong Fuk Playground",
+      "name_tc": "廣福球場",
+      "name_en": "Kwong Fuk Playground"
+    },
+    {
+      "id": "bus:nlb:375",
+      "latitude": 22.44972808,
+      "longitude": 114.17171048,
+      "mode": "bus",
+      "name": "林村河 Lam Tsuen River",
+      "name_tc": "林村河",
+      "name_en": "Lam Tsuen River"
+    },
+    {
+      "id": "bus:nlb:376",
+      "latitude": 22.43477732,
+      "longitude": 114.2014816,
+      "mode": "bus",
+      "name": "白石角變電站 Pak Shek Kok Substation",
+      "name_tc": "白石角變電站",
+      "name_en": "Pak Shek Kok Substation"
+    },
+    {
+      "id": "bus:nlb:377",
+      "latitude": 22.43182247,
+      "longitude": 114.20141646,
+      "mode": "bus",
+      "name": "天賦海灣 Providence Bay",
+      "name_tc": "天賦海灣",
+      "name_en": "Providence Bay"
+    },
+    {
+      "id": "bus:nlb:378",
+      "latitude": 22.42960512,
+      "longitude": 114.20366736,
+      "mode": "bus",
+      "name": "雲匯 St Martin",
+      "name_tc": "雲匯",
+      "name_en": "St Martin"
+    },
+    {
+      "id": "bus:nlb:379",
+      "latitude": 22.42871495,
+      "longitude": 114.20512672,
+      "mode": "bus",
+      "name": "創新路 Chong San Road",
+      "name_tc": "創新路",
+      "name_en": "Chong San Road"
+    },
+    {
+      "id": "bus:nlb:380",
+      "latitude": 22.42626316,
+      "longitude": 114.20886416,
+      "mode": "bus",
+      "name": "科研路 Fo Yin Road",
+      "name_tc": "科研路",
+      "name_en": "Fo Yin Road"
+    },
+    {
+      "id": "bus:nlb:381",
+      "latitude": 22.42444377,
+      "longitude": 114.21153189,
+      "mode": "bus",
+      "name": "科學園第一期 Science Park Phase 1",
+      "name_tc": "科學園第一期",
+      "name_en": "Science Park Phase 1"
+    },
+    {
+      "id": "bus:nlb:382",
+      "latitude": 22.4227608,
+      "longitude": 114.21416952,
+      "mode": "bus",
+      "name": "香港生物科技研究院 Hong Kong Institute of Biotechnology",
+      "name_tc": "香港生物科技研究院",
+      "name_en": "Hong Kong Institute of Biotechnology"
+    },
+    {
+      "id": "bus:nlb:383",
+      "latitude": 22.41868961,
+      "longitude": 114.21426129,
+      "mode": "bus",
+      "name": "水上活動中心 Water Sports Centre",
+      "name_tc": "水上活動中心",
+      "name_en": "Water Sports Centre"
+    },
+    {
+      "id": "bus:nlb:384",
+      "latitude": 22.41614549,
+      "longitude": 114.2139128,
+      "mode": "bus",
+      "name": "馬料水公眾碼頭 Ma Liu Shui Public Pier",
+      "name_tc": "馬料水公眾碼頭",
+      "name_en": "Ma Liu Shui Public Pier"
+    },
+    {
+      "id": "bus:nlb:385",
+      "latitude": 22.41186791,
+      "longitude": 114.22410685,
+      "mode": "bus",
+      "name": "錦駿苑 Kam Chun Court",
+      "name_tc": "錦駿苑",
+      "name_en": "Kam Chun Court"
+    },
+    {
+      "id": "bus:nlb:386",
+      "latitude": 22.41797667,
+      "longitude": 114.23047448,
+      "mode": "bus",
+      "name": "恆安邨 Heng On Estate",
+      "name_tc": "恆安邨",
+      "name_en": "Heng On Estate"
+    },
+    {
+      "id": "bus:nlb:387",
+      "latitude": 22.42178644,
+      "longitude": 114.22854914,
+      "mode": "bus",
+      "name": "馬鞍山運動場 Ma On Shan Sports Ground",
+      "name_tc": "馬鞍山運動場",
+      "name_en": "Ma On Shan Sports Ground"
+    },
+    {
+      "id": "bus:nlb:388",
+      "latitude": 22.42358238,
+      "longitude": 114.22826077,
+      "mode": "bus",
+      "name": "福安花園 Fok On Garden",
+      "name_tc": "福安花園",
+      "name_en": "Fok On Garden"
+    },
+    {
+      "id": "bus:nlb:389",
+      "latitude": 22.42503594,
+      "longitude": 114.23150585,
+      "mode": "bus",
+      "name": "海柏花園 Bayshore Towers",
+      "name_tc": "海柏花園",
+      "name_en": "Bayshore Towers"
+    },
+    {
+      "id": "bus:nlb:390",
+      "latitude": 22.42591696,
+      "longitude": 114.23638938,
+      "mode": "bus",
+      "name": "雅典居 Villa Athena",
+      "name_tc": "雅典居",
+      "name_en": "Villa Athena"
+    },
+    {
+      "id": "bus:nlb:391",
+      "latitude": 22.42760012,
+      "longitude": 114.24030327,
+      "mode": "bus",
+      "name": "利安邨 Lee On Estate",
+      "name_tc": "利安邨",
+      "name_en": "Lee On Estate"
+    },
+    {
+      "id": "bus:nlb:392",
+      "latitude": 22.42829529,
+      "longitude": 114.24313286,
+      "mode": "bus",
+      "name": "烏溪沙站 Wu Kai Sha Station",
+      "name_tc": "烏溪沙站",
+      "name_en": "Wu Kai Sha Station"
+    },
+    {
+      "id": "bus:nlb:351",
+      "latitude": 22.42828254,
+      "longitude": 114.24313291,
+      "mode": "bus",
+      "name": "烏溪沙站 Wu Kai Sha Station",
+      "name_tc": "烏溪沙站",
+      "name_en": "Wu Kai Sha Station"
+    },
+    {
+      "id": "bus:nlb:352",
+      "latitude": 22.42737674,
+      "longitude": 114.24057336,
+      "mode": "bus",
+      "name": "利安邨 Lee On Estate",
+      "name_tc": "利安邨",
+      "name_en": "Lee On Estate"
+    },
+    {
+      "id": "bus:nlb:353",
+      "latitude": 22.42555088,
+      "longitude": 114.23557936,
+      "mode": "bus",
+      "name": "富寶花園 Saddle Ridge Garden",
+      "name_tc": "富寶花園",
+      "name_en": "Saddle Ridge Garden"
+    },
+    {
+      "id": "bus:nlb:354",
+      "latitude": 22.42452957,
+      "longitude": 114.23161476,
+      "mode": "bus",
+      "name": "馬鞍山市中心 Ma On Shan Town Centre",
+      "name_tc": "馬鞍山市中心",
+      "name_en": "Ma On Shan Town Centre"
+    },
+    {
+      "id": "bus:nlb:355",
+      "latitude": 22.42304356,
+      "longitude": 114.22830905,
+      "mode": "bus",
+      "name": "福安花園 Fok On Garden",
+      "name_tc": "福安花園",
+      "name_en": "Fok On Garden"
+    },
+    {
+      "id": "bus:nlb:356",
+      "latitude": 22.420986,
+      "longitude": 114.22960321,
+      "mode": "bus",
+      "name": "耀安邨 Yiu On Estate",
+      "name_tc": "耀安邨",
+      "name_en": "Yiu On Estate"
+    },
+    {
+      "id": "bus:nlb:357",
+      "latitude": 22.41784861,
+      "longitude": 114.23111059,
+      "mode": "bus",
+      "name": "耀安邨耀謙樓 Yiu Him House, Yiu On Estate",
+      "name_tc": "耀安邨耀謙樓",
+      "name_en": "Yiu Him House, Yiu On Estate"
+    },
+    {
+      "id": "bus:nlb:358",
+      "latitude": 22.41334569,
+      "longitude": 114.22688,
+      "mode": "bus",
+      "name": "錦駿苑 Kam Chun Court",
+      "name_tc": "錦駿苑",
+      "name_en": "Kam Chun Court"
+    },
+    {
+      "id": "bus:nlb:359",
+      "latitude": 22.41594119,
+      "longitude": 114.21373468,
+      "mode": "bus",
+      "name": "馬料水公眾碼頭 Ma Liu Shui Public Pier",
+      "name_tc": "馬料水公眾碼頭",
+      "name_en": "Ma Liu Shui Public Pier"
+    },
+    {
+      "id": "bus:nlb:360",
+      "latitude": 22.41874512,
+      "longitude": 114.21403458,
+      "mode": "bus",
+      "name": "水上活動中心 Water Sports Centre",
+      "name_tc": "水上活動中心",
+      "name_en": "Water Sports Centre"
+    },
+    {
+      "id": "bus:nlb:361",
+      "latitude": 22.42304151,
+      "longitude": 114.2138654,
+      "mode": "bus",
+      "name": "香港生物科技研究院 Hong Kong Institute of Biotechnology",
+      "name_tc": "香港生物科技研究院",
+      "name_en": "Hong Kong Institute of Biotechnology"
+    },
+    {
+      "id": "bus:nlb:362",
+      "latitude": 22.42425175,
+      "longitude": 114.21138823,
+      "mode": "bus",
+      "name": "科學園第一期 Science Park Phase 1",
+      "name_tc": "科學園第一期",
+      "name_en": "Science Park Phase 1"
+    },
+    {
+      "id": "bus:nlb:363",
+      "latitude": 22.42661712,
+      "longitude": 114.20795718,
+      "mode": "bus",
+      "name": "科研路 Fo Yin Road",
+      "name_tc": "科研路",
+      "name_en": "Fo Yin Road"
+    },
+    {
+      "id": "bus:nlb:364",
+      "latitude": 22.42941848,
+      "longitude": 114.20351042,
+      "mode": "bus",
+      "name": "雲匯 St Martin",
+      "name_tc": "雲匯",
+      "name_en": "St Martin"
+    },
+    {
+      "id": "bus:nlb:365",
+      "latitude": 22.43146911,
+      "longitude": 114.20146355,
+      "mode": "bus",
+      "name": "白石角 Pak Shek Kok",
+      "name_tc": "白石角",
+      "name_en": "Pak Shek Kok"
+    },
+    {
+      "id": "bus:nlb:366",
+      "latitude": 22.43390206,
+      "longitude": 114.20081483,
+      "mode": "bus",
+      "name": "白石角變電站 Pak Shek Kok Substation",
+      "name_tc": "白石角變電站",
+      "name_en": "Pak Shek Kok Substation"
+    },
+    {
+      "id": "bus:nlb:367",
+      "latitude": 22.44991145,
+      "longitude": 114.17198978,
+      "mode": "bus",
+      "name": "廣福邨廣智樓 Kwong Chi House Kwong Fuk Estate",
+      "name_tc": "廣福邨廣智樓",
+      "name_en": "Kwong Chi House Kwong Fuk Estate"
+    },
+    {
+      "id": "bus:nlb:368",
+      "latitude": 22.44778807,
+      "longitude": 114.1720924,
+      "mode": "bus",
+      "name": "廣福球場 Kwong Fuk Playground",
+      "name_tc": "廣福球場",
+      "name_en": "Kwong Fuk Playground"
+    },
+    {
+      "id": "bus:nlb:369",
+      "latitude": 22.44652956,
+      "longitude": 114.17353082,
+      "mode": "bus",
+      "name": "廣福邨 Kwong Fuk Estate",
+      "name_tc": "廣福邨",
+      "name_en": "Kwong Fuk Estate"
+    },
+    {
+      "id": "bus:nlb:371",
+      "latitude": 22.522567,
+      "longitude": 114.068583,
+      "mode": "bus",
+      "name": "皇崗口岸 Huanggang Port",
+      "name_tc": "皇崗口岸",
+      "name_en": "Huanggang Port"
+    },
+    {
+      "id": "bus:nlb:187",
+      "latitude": 22.296319,
+      "longitude": 113.928469,
+      "mode": "bus",
+      "name": "駿運南路 Chun Wan Road South",
+      "name_tc": "駿運南路",
+      "name_en": "Chun Wan Road South"
+    },
+    {
+      "id": "bus:nlb:126",
+      "latitude": 22.295005,
+      "longitude": 113.92434,
+      "mode": "bus",
+      "name": "機場空運中心 Airport Freight Forwarding Centre",
+      "name_tc": "機場空運中心",
+      "name_en": "Airport Freight Forwarding Centre"
+    },
+    {
+      "id": "bus:nlb:122",
+      "latitude": 22.296065,
+      "longitude": 113.920806,
+      "mode": "bus",
+      "name": "亞洲空運中心 Asia Airfreight Terminal",
+      "name_tc": "亞洲空運中心",
+      "name_en": "Asia Airfreight Terminal"
+    },
+    {
+      "id": "bus:nlb:276",
+      "latitude": 22.29197,
+      "longitude": 113.928759,
+      "mode": "bus",
+      "name": "赤鱲角南路 Chek Lap Kok South Road",
+      "name_tc": "赤鱲角南路",
+      "name_en": "Chek Lap Kok South Road"
+    },
+    {
+      "id": "bus:nlb:121",
+      "latitude": 22.291883,
+      "longitude": 113.928251,
+      "mode": "bus",
+      "name": "赤鱲角南路 Chek Lap Kok South Road",
+      "name_tc": "赤鱲角南路",
+      "name_en": "Chek Lap Kok South Road"
+    },
+    {
+      "id": "bus:nlb:124",
+      "latitude": 22.295016,
+      "longitude": 113.923329,
+      "mode": "bus",
+      "name": "機場空運中心 Airport Freight Forwarding Centre",
+      "name_tc": "機場空運中心",
+      "name_en": "Airport Freight Forwarding Centre"
+    },
+    {
+      "id": "bus:nlb:125",
+      "latitude": 22.297124,
+      "longitude": 113.929784,
+      "mode": "bus",
+      "name": "香港空運貨站 HACTL",
+      "name_tc": "香港空運貨站",
+      "name_en": "HACTL"
+    },
+    {
+      "id": "bus:nlb:334",
+      "latitude": 22.295474,
+      "longitude": 113.946728,
+      "mode": "bus",
+      "name": "東涌世茂喜來登酒店 Sheraton Hong Kong Tung Chung Hotel",
+      "name_tc": "東涌世茂喜來登酒店",
+      "name_en": "Sheraton Hong Kong Tung Chung Hotel"
+    },
+    {
+      "id": "bus:nlb:333",
+      "latitude": 22.295428,
+      "longitude": 113.946732,
+      "mode": "bus",
+      "name": "東涌世茂喜來登酒店 Sheraton Hong Kong Tung Chung Hotel",
+      "name_tc": "東涌世茂喜來登酒店",
+      "name_en": "Sheraton Hong Kong Tung Chung Hotel"
     }
   ]
 }

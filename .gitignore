@@ -10,3 +10,4 @@ out
 .cache
 __pycache__/
 graphify-out
+.env*
