@@ -1123,7 +1123,10 @@ export default function Page() {
       try {
         const cached = JSON.parse(localStorage.getItem(key) || "null");
         if (cached && Date.now() - cached.savedAt < ttl) {
-          if (!cancelled) setRaining(cached.raining);
+          if (!cancelled) {
+            const force = new URLSearchParams(window.location.search).get("rain");
+            setRaining(force === "1" ? true : cached.raining);
+          }
           return;
         }
       } catch {}

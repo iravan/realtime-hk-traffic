@@ -599,8 +599,8 @@ button { cursor: pointer; }
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  z-index: 5;
-  background: linear-gradient(180deg, rgba(15,23,42,0.18), rgba(15,23,42,0.05));
+  z-index: 1000;
+  background: linear-gradient(180deg, rgba(15,23,42,0.35), rgba(15,23,42,0.12));
 }
 .weather-rain::before,
 .weather-rain::after {
