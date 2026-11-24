@@ -115,6 +115,7 @@ map stop is opened, not on a timer.
 | GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
+| New Lantao Bus ETA | data.gov.hk v2 | Live NLB arrivals by route and stop |
 | Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
 | Arrival polling | Client polls `/stops/{id}/arrivals` every 60s; a missing snapshot returns 202 and the client retries after 2s | Browser |
 
