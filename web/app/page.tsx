@@ -653,10 +653,11 @@ export default function Page() {
         const text = document.createElement("div");
         const name = document.createElement("div");
         name.className = "line-tooltip-name";
-        name.textContent =
+        const rawName =
           (typeof properties.name === "string" && properties.name) ||
           (typeof properties["name:en"] === "string" && properties["name:en"]) ||
           ref;
+        name.textContent = localizeBilingualName(rawName, localeRef.current);
         text.appendChild(name);
 
         if (terminals) {
