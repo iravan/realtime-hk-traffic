@@ -98,7 +98,7 @@ const apiBase =
       ? "http://127.0.0.1:8787"
       : "/api");
 
-const pinZoom = 16;
+const pinZoom = 19;
 
 // Locating only auto-selects a stop it is actually near. A station point sits in
 // the middle of a large paid area, so it gets a wider radius; street stops are
@@ -597,7 +597,7 @@ export default function Page() {
         closeButton: false,
         closeOnClick: false,
         offset: 14,
-        maxWidth: "300px",
+        maxWidth: "420px",
       });
 
       // The station name follows the pointer on desktop and a tap on a phone,
@@ -1030,7 +1030,10 @@ export default function Page() {
     routeMarkerRef.current = null;
     const map = mapRef.current;
     const routes = board?.mode === "minibus" || board?.mode === "bus" ? board.routes : undefined;
-    if (!map || !board || !routes || routes.length === 0 || map.getZoom() < pinZoom) return;
+    if (!map || !board || !routes || routes.length === 0) return;
+    // At street level every minibus stop already shows its board, so do not
+    // draw a second one for the tapped stop.
+    if (board.mode === "minibus" && map.getZoom() >= pinZoom) return;
     const marker = new Marker({ element: routeBoard(routes, board?.mode === "bus" ? "#e52029" : undefined), anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
       .addTo(map);
@@ -1065,6 +1068,40 @@ export default function Page() {
                 color: ferryDestinationColor(destination),
               })),
             ),
+            anchor: "left",
+            offset: [8, 0],
+          })
+            .setLngLat([stop.longitude, stop.latitude])
+            .addTo(map),
+        );
+    };
+    draw();
+    map.on("zoomend", draw);
+    return () => {
+      map.off("zoomend", draw);
+      clear();
+    };
+  }, [stops, active, locale]);
+
+  // Bus and minibus pins carry their route boards at street level, so every
+  // stop in view shows its routes without a tap. Zoomed out, the board is shown
+  // only for the stop the user taps, as before.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || active !== "minibus") return;
+    let markers: Marker[] = [];
+    const clear = () => {
+      markers.forEach((marker) => marker.remove());
+      markers = [];
+    };
+    const draw = () => {
+      clear();
+      if (map.getZoom() < pinZoom) return;
+      markers = stops
+        .filter((stop) => stop.routes && stop.routes.length > 0)
+        .map((stop) =>
+          new Marker({
+            element: routeBoard(stop.routes!, active === "bus" ? "#e52029" : "#2f7d4f"),
             anchor: "left",
             offset: [8, 0],
           })
@@ -1127,7 +1164,7 @@ export default function Page() {
 
   // Current weather from HK Observatory. Cached for 10 minutes with retry.
   useEffect(() => {
-    const key = "hk-traffic.weather7";
+    const key = "hk-traffic.weather8";
     const ttl = 10 * 60 * 1000;
     let cancelled = false;
     const load = () => {

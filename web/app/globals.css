@@ -480,6 +480,8 @@ button { cursor: pointer; }
 
 /* A board listing every route that serves the selected minibus stop, placed
    to the right of the marker. */
+.mtr-line-header { white-space: nowrap !important; overflow-wrap: normal; word-break: keep-all; }
+
 .route-board {
   display: flex;
   flex-wrap: wrap;
@@ -548,7 +550,7 @@ button { cursor: pointer; }
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  max-width: 17rem;
+  max-width: 24rem;
 }
 .line-swatch {
   flex: none;
@@ -558,7 +560,7 @@ button { cursor: pointer; }
   border-radius: 50%;
   border: 1px solid rgba(28, 25, 21, 0.25);
 }
-.line-tooltip-name { font-size: 0.88rem; font-weight: 700; line-height: 1.3; }
+.line-tooltip-name { font-size: 0.88rem; font-weight: 700; line-height: 1.3; overflow-wrap: normal; word-break: normal; white-space: nowrap; min-width: max-content; }
 .line-tooltip-terminals {
   display: flex;
   flex-wrap: wrap;

@@ -494,6 +494,7 @@ export function StopSheet({
                         {mode === "bus" || mode === "minibus" ? row.route : locale === "en"
                           ? MTR_LINE_NAME[row.route]?.en ?? row.route
                           : MTR_LINE_NAME[row.route]?.zh ?? row.route}
+                        {mode === "bus" ? ` · ${busOperator(id, locale)}` : ""}
                       </li>
                     ) : null}
                     <li key={`${row.route}-${index}`}>
@@ -634,6 +635,13 @@ function shareLink(id: string): string {
   url.searchParams.delete("stop");
   url.pathname = stopPath(id);
   return url.toString();
+}
+
+function busOperator(id: string, locale: Locale): string {
+  if (id.startsWith("bus:ctb:")) return locale === "en" ? "Citybus" : "城巴";
+  if (id.startsWith("bus:kmb:")) return locale === "en" ? "KMB" : "九巴";
+  if (id.startsWith("bus:nlb:")) return locale === "en" ? "NLB" : "新大嶼山巴士";
+  return "";
 }
 
 function operatorName(operator: string, locale: Locale): string {

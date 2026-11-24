@@ -417,7 +417,7 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
 async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let mut redis = app.redis.clone();
     if let Ok(Some(body)) = redis::cmd("GET")
-        .arg("weather:current:v5")
+        .arg("weather:current:v6")
         .query_async::<Option<String>>(&mut redis)
         .await
     {
@@ -439,25 +439,26 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let rain_icons = [62_i64, 63, 64, 65];
     let rain_by_icon = icons.iter().any(|v| rain_icons.contains(&v.as_i64().unwrap_or(0)));
     let raining = rain_by_value || rain_by_icon;
-    let temperature = parsed
+    let temperature_values: Vec<f64> = parsed
         .get("temperature")
         .and_then(|v| v.get("data"))
         .and_then(|v| v.as_array())
-        .and_then(|arr| arr.first())
-        .and_then(|d| d.get("value"))
-        .and_then(|v| v.as_f64())
-        .or_else(|| {
-            parsed
-                .get("temperature")
-                .and_then(|v| v.get("data"))
-                .and_then(|v| v.as_array())
-                .and_then(|arr| arr.iter().find_map(|d| d.get("value").and_then(|v| v.as_f64())))
-        });
+        .map(|arr| {
+            arr.iter()
+                .filter_map(|d| d.get("value").and_then(|v| v.as_f64()))
+                .collect()
+        })
+        .unwrap_or_default();
+    let temperature = if temperature_values.is_empty() {
+        None
+    } else {
+        Some(temperature_values.iter().sum::<f64>() / temperature_values.len() as f64)
+    };
     let icon = parsed.get("icon").and_then(|v| v.as_array()).and_then(|a| a.first()).and_then(|v| v.as_i64());
     let body = json!({"raining": raining, "temperature": temperature, "icon": icon}).to_string();
     let mut redis = app.redis.clone();
     let _: Result<(), _> = redis::cmd("SET")
-        .arg("weather:current:v5")
+        .arg("weather:current:v6")
         .arg(&body)
         .arg("EX")
         .arg(600)

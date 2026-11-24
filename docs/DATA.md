@@ -36,7 +36,7 @@ portal. Add new sources here when the service starts using them.
 | Sun Ferry ETA | Sun Ferry / data.gov.hk | `https://www.sunferry.com.hk/eta/?route={route_code}` | Arrival of the current trip, or the next departure when no arrival is published yet |
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
-| Current weather | HK Observatory | `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread` | Rain overlay on the map |
+| Current weather | HK Observatory | `https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en` | Rain overlay and weather icon on the map. API docs: https://www.hko.gov.hk/en/weatherAPI/doc/files/HKO_Open_Data_API_Documentation.pdf |
 
 The KML route and fare feeds (KML_BUS, KML_GMB) are documented in the publisher's
 dataspec: `https://static.data.gov.hk/td/routes-fares-kml/dataspec/ptroutefare_kml_dataspec.pdf`.
@@ -76,6 +76,7 @@ are script-generated, web-only, or documented for future work.
 | Sun Ferry ETA | Yes | No | No | Live arrival or departure for the piers in `ferry-departures.json` |
 | Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
+| HK Observatory current weather (`rhrread`) | Yes | No | Yes | Rain overlay and weather icon; Redis `weather:current:v6`, TTL 600s |
 | `service-hours.json` | No | No | Yes | Web-only stop styling |
 | `mtr-lines.geojson` | No | Generated | Yes | Web-only MTR line layer |
 
@@ -118,6 +119,7 @@ map stop is opened, not on a timer.
 | Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
 | GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
 | HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| HK Observatory current weather | Publisher on its own schedule; fetched on page load | Redis `weather:current:v6`, TTL 600s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
 | New Lantao Bus ETA | data.gov.hk v2 | Live NLB arrivals by route and stop |
 | Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
