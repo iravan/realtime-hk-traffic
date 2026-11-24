@@ -1127,7 +1127,7 @@ export default function Page() {
 
   // Current weather from HK Observatory. Cached for 10 minutes with retry.
   useEffect(() => {
-    const key = "hk-traffic.weather5";
+    const key = "hk-traffic.weather6";
     const ttl = 10 * 60 * 1000;
     let cancelled = false;
     const load = () => {
