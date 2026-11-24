@@ -433,19 +433,16 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
     if let Some(body) = read_snapshot(&app, &id).await {
         return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
     }
-    // A direct caller has no stream to wait on, so fetch once on its behalf
-    // instead of reporting a snapshot that was never asked for.
-    refresh(&app, &stop).await;
-    match read_snapshot(&app, &id).await {
-        Some(body) => {
-            (StatusCode::OK, [("content-type", "application/json")], body).into_response()
-        }
-        None => (
-            StatusCode::NOT_FOUND,
-            Json(json!({"error": "snapshot is gone"})),
-        )
-            .into_response(),
-    }
+    // Do not hold this request while fetching; kick off a background refresh
+    // and let the client retry shortly. This keeps the API free under load.
+    let app = app.clone();
+    let stop = stop.clone();
+    tokio::spawn(async move { refresh(&app, &stop).await });
+    (
+        StatusCode::ACCEPTED,
+        Json(json!({"error": "snapshot pending"})),
+    )
+        .into_response()
 }
 
 async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {

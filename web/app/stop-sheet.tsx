@@ -218,26 +218,34 @@ export function StopSheet({
     let cancelled = false;
     setSnapshot(null);
     setState("loading");
-    fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
-      .then((response) => {
-        if (cancelled) return null;
-        if (response.status === 404) {
-          // The server has no snapshot yet; the stream below asks for one.
-          setState("waiting");
-          return null;
-        }
-        if (!response.ok) {
-          setState("error");
-          return null;
-        }
-        return response.json() as Promise<Snapshot>;
-      })
-      .then((body) => {
-        if (!cancelled && body) setSnapshot(body);
-      })
-      .catch(() => {
-        if (!cancelled) setState("error");
-      });
+    const loadSnapshot = () => {
+      if (cancelled) return;
+      fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
+        .then((response) => {
+          if (cancelled) return null;
+          if (response.status === 202 || response.status === 404) {
+            // Server is preparing the snapshot; retry shortly.
+            setState("waiting");
+            setTimeout(loadSnapshot, 2000);
+            return null;
+          }
+          if (!response.ok) {
+            setState("error");
+            return null;
+          }
+          return response.json() as Promise<Snapshot>;
+        })
+        .then((body) => {
+          if (!cancelled && body) {
+            setSnapshot(body);
+            setState("loading");
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setState("error");
+        });
+    };
+    loadSnapshot();
     return () => {
       cancelled = true;
     };
@@ -247,7 +255,13 @@ export function StopSheet({
     if (!apiBase || mode === "taxi") return;
     const poll = () => {
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
-        .then((response) => (response.ok ? response.json() : null))
+        .then((response) => {
+          if (response.status === 202 || response.status === 404) {
+            setTimeout(poll, 2000);
+            return null;
+          }
+          return response.ok ? response.json() : null;
+        })
         .then((body) => {
           if (body) setSnapshot(body as Snapshot);
         })
