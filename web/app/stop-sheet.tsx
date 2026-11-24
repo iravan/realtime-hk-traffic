@@ -344,9 +344,13 @@ export function StopSheet({
               <div className="stop-copy">
                 <h2>{localizeStopName(name, mode, locale, nameTc, nameEn)}</h2>
                 {(mode === "bus" || mode === "minibus") && rows.length > 0 ? (
-                  <p className="muted" style={{ margin: "0.2rem 0 0" }}>
-                    {[...new Set(rows.map((r) => r.route).filter(Boolean))].join(", ")}
-                  </p>
+                  <div style={{ margin: "0.2rem 0 0", display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
+                    {[...new Set(rows.map((r) => r.route).filter(Boolean))].map((route) => (
+                      <span key={route} className="station-chip">
+                        {route}
+                      </span>
+                    ))}
+                  </div>
                 ) : null}
               </div>
               <div className="sheet-actions">
