@@ -1037,7 +1037,7 @@ expires on its own clock:
 
 | Key | File | What a stop record contains |
 | --- | --- | --- |
-| `stops-bus` | `stops-bus.json` | `id`, `latitude`, `longitude`, `mode`, `name`, `name_tc`, `name_en`, and `night` on overnight stops |
+| `stops-bus` | `stops-bus.json` | `id`, `latitude`, `longitude`, `mode`, `name`, `name_tc`, `name_en`, `routes`, and `night` on overnight stops |
 | `stops-minibus` | `stops-minibus.json` | The same fields, plus `routes`, and `night` when the route runs overnight |
 | `stops-ferry` | `stops-ferry.json` | `id`, `latitude`, `longitude`, `mode`, `name` only. No `routes` or `night` |
 | `stops-taxi` | `stops-taxi.json` | The same five fields. Taxi type is joined later from `taxi-stands.geojson` and is not stored here |
