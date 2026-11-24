@@ -207,7 +207,7 @@ def main() -> None:
     kept = [stop for stop in document["stops"] if stop.get("mode") != "ferry"]
     document["stops"] = kept + stops
     STOPS.write_text(
-        json.dumps(document, ensure_ascii=False, separators=(",", ":")) + "\n",
+        json.dumps(document, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 

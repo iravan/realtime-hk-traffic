@@ -91,7 +91,7 @@ def fetch(refresh: bool) -> dict:
         sys.exit(f"Overpass request failed: {error.reason}")
 
     cached.parent.mkdir(parents=True, exist_ok=True)
-    cached.write_text(json.dumps(body, ensure_ascii=False), encoding="utf-8")
+    cached.write_text(json.dumps(body, ensure_ascii=False, indent=2), encoding="utf-8")
     return body
 
 
@@ -187,7 +187,7 @@ def main() -> None:
     collection = build(fetch(args.refresh))
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(
-        json.dumps(collection, ensure_ascii=False, separators=(",", ":")),
+        json.dumps(collection, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
     line_count = sum(

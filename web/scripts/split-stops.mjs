@@ -16,7 +16,7 @@ for (const mode of modes) {
   const stops = source.stops.filter((stop) => stop.mode === mode);
   await writeFile(
     new URL(`../public/stops-${mode}.json`, import.meta.url),
-    JSON.stringify({ stops }) + "\n",
+    JSON.stringify({ stops }, null, 2) + "\n",
   );
   console.log(`stops-${mode}.json: ${stops.length}`);
 }

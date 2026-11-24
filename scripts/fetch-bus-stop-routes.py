@@ -67,7 +67,7 @@ def main() -> None:
             stop.pop("routes", None)
 
     STOPS.write_text(
-        json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     print(f"KMB/LWB and Citybus routes: {len(ctb_routes)} Citybus routes, {matched} stops matched")
 

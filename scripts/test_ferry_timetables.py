@@ -269,7 +269,7 @@ class Overrides(unittest.TestCase):
         import tempfile
 
         handle = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8")
-        json.dump(data, handle, ensure_ascii=False)
+        json.dump(data, handle, ensure_ascii=False, indent=2)
         handle.close()
         self.addCleanup(lambda: __import__("os").unlink(handle.name))
         return handle.name

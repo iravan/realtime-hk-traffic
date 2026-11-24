@@ -145,7 +145,7 @@ def sync_stops(stations: list[dict]) -> tuple[int, int, int]:
 
     document["stops"] = stops
     STOPS.write_text(
-        json.dumps(document, ensure_ascii=False, separators=(",", ":")) + "\n",
+        json.dumps(document, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     return added, updated, removed

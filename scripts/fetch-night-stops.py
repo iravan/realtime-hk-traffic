@@ -63,7 +63,7 @@ def cached(name: str):
 def store(name: str, body) -> None:
     path = CACHE / name
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(body, ensure_ascii=False))
+    path.write_text(json.dumps(body, ensure_ascii=False, indent=2))
 
 
 def fetch(name: str, url: str, budget: int | None):
@@ -225,7 +225,7 @@ def rewrite(path: Path, night: set[str]) -> tuple[int, int]:
         if stop["id"] in night:
             stop["night"] = True
             kept += 1
-    path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     return kept, flagged
 
 

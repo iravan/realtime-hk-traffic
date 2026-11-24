@@ -65,7 +65,7 @@ def cached(name: str):
 def store(name: str, body) -> None:
     path = CACHE / name
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(body, ensure_ascii=False))
+    path.write_text(json.dumps(body, ensure_ascii=False, indent=2))
 
 
 def fetch(name: str, url: str, budget: int | None):
@@ -216,7 +216,7 @@ def main() -> None:
         if codes:
             stop["routes"] = codes
             hits += 1
-    path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
     print(f"{path.name}: {hits} minibus stops carry route numbers")
 
 
