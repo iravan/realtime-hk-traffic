@@ -477,11 +477,22 @@ async fn events(
         let app = app.clone();
         tokio::spawn(async move { refresh(&app, &stop).await });
     }
-    let stream = stream::unfold(receiver, |mut receiver| async move {
-        let message = receiver.recv().await?;
+    // Close the stream before Vercel's 300s runtime limit so the client's
+    // EventSource reconnects cleanly instead of hitting a hard timeout.
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(240);
+    let stream = stream::unfold((receiver, deadline), |(mut receiver, deadline)| async move {
+        if std::time::Instant::now() >= deadline {
+            return None;
+        }
+        let message = tokio::time::timeout_at(
+            tokio::time::Instant::from_std(deadline),
+            receiver.recv(),
+        )
+        .await
+        .ok()??;
         Some((
             Ok(Event::default().event("arrivals").data(message)),
-            receiver,
+            (receiver, deadline),
         ))
     });
     Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(15))))
