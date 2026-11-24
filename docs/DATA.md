@@ -37,6 +37,9 @@ portal. Add new sources here when the service starts using them.
 | Taxi stands | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/csdi-webpage/file-api?dataset_id=td_rcd_1697081907714_17556&format=geojson&layer_name=Taxi_Stands` | Stand names, coordinates and taxi type |
 | MTR line geometry | OpenStreetMap | `https://overpass-api.de/api/interpreter` | The coloured MTR line layer |
 
+The KML route and fare feeds (KML_BUS, KML_GMB) are documented in the publisher's
+dataspec: `https://static.data.gov.hk/td/routes-fares-kml/dataspec/ptroutefare_kml_dataspec.pdf`.
+
 The service sends no API key. All feeds are public HTTP GET endpoints except the
 MTR Bus feed, which uses POST.
 
