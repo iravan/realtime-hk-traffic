@@ -1527,6 +1527,9 @@ export default function Page() {
         <div className="brand">
           <div className="brand-head">
             <h1>{t.brand}</h1>
+            <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
+              {raining ? "🌧️" : "☀️"}
+            </span>
             <button
               type="button"
               className="lang-toggle"
