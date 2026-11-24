@@ -39,6 +39,19 @@ const MTR_LINE_COLOR: Record<string, string> = {
   TWL: "#ed1d24",
 };
 
+const MTR_LINE_NAME: Record<string, { zh: string; en: string }> = {
+  AEL: { zh: "機場快綫", en: "Airport Express" },
+  DRL: { zh: "迪士尼綫", en: "Disneyland Resort Line" },
+  EAL: { zh: "東鐵綫", en: "East Rail Line" },
+  ISL: { zh: "港島綫", en: "Island Line" },
+  KTL: { zh: "觀塘綫", en: "Kwun Tong Line" },
+  SIL: { zh: "南港島綫", en: "South Island Line" },
+  TCL: { zh: "東涌綫", en: "Tung Chung Line" },
+  TKL: { zh: "將軍澳綫", en: "Tseung Kwan O Line" },
+  TML: { zh: "屯馬綫", en: "Tuen Ma Line" },
+  TWL: { zh: "荃灣綫", en: "Tsuen Wan Line" },
+};
+
 type Row = {
   route: string;
   destination: string;
@@ -258,6 +271,14 @@ export function StopSheet({
   }, []);
 
   const rows = snapshot ? soonestFirst(snapshot.rows) : [];
+  const sortedRows =
+    mode === "mtr"
+      ? [...rows].sort(
+          (a, b) =>
+            (a.route || "").localeCompare(b.route || "") ||
+            (a.minutes ?? 0) - (b.minutes ?? 0),
+        )
+      : rows;
   const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
   const station = mode === "mtr" ? mtrStationColor(id) : null;
@@ -410,7 +431,31 @@ export function StopSheet({
                 <p className="muted">{t.sheet.noArrivals}</p>
               ) : (
                 <ul>
-                  {rows.map((row, index) => (
+                  {sortedRows.map((row, index) => (
+                    <>
+                    {mode === "mtr" && (index === 0 || row.route !== sortedRows[index - 1]?.route) ? (
+                      <li
+                        key={`header-${row.route}`}
+                        className="mtr-line-header"
+                        style={{ listStyle: "none", fontWeight: 700, marginTop: "0.5rem" }}
+                      >
+                        <span
+                          style={{
+                            backgroundColor: MTR_LINE_COLOR[row.route] ?? "#11254a",
+                            display: "inline-block",
+                            width: "0.8em",
+                            height: "0.8em",
+                            borderRadius: "999px",
+                            marginRight: "0.4em",
+                            verticalAlign: "middle",
+                          }}
+                          aria-hidden="true"
+                        />
+                        {locale === "en"
+                          ? MTR_LINE_NAME[row.route]?.en ?? row.route
+                          : MTR_LINE_NAME[row.route]?.zh ?? row.route}
+                      </li>
+                    ) : null}
                     <li key={`${row.route}-${index}`}>
                       {mode === "ferry" ? (
                         <div className="ferry-arrival-head">
@@ -433,22 +478,7 @@ export function StopSheet({
                         </>
                       )}
                       {mode === "mtr" ? (
-                        <>
-                          <span
-                            className="mtr-line-dot"
-                            style={{
-                              backgroundColor: MTR_LINE_COLOR[row.route] ?? "#11254a",
-                              display: "inline-block",
-                              width: "0.7em",
-                              height: "0.7em",
-                              borderRadius: "999px",
-                              marginRight: "0.35em",
-                              verticalAlign: "middle",
-                            }}
-                            aria-hidden="true"
-                          />
-                          <StationChip name={row.destination} locale={locale} />
-                        </>
+                        <StationChip name={row.destination} locale={locale} />
                       ) : row.destination ? (
                         mode === "ferry" ? (
                           <FerryDestination name={row.destination} locale={locale} />
@@ -469,6 +499,7 @@ export function StopSheet({
                       {mode === "ferry" && row.time ? <span> · {t.clock(row.time)}</span> : null}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
+                    </>
                   ))}
                 </ul>
               )}
