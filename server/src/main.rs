@@ -196,7 +196,8 @@ async fn main() {
     let api = Router::new()
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
-        .route("/holidays", get(holidays_handler));
+        .route("/holidays", get(holidays_handler))
+        .route("/weather", get(weather_handler));
     // Vercel hands the service the /api prefix, so answer on both shapes.
     let router = Router::new()
         .merge(api.clone())
@@ -411,6 +412,42 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
         });
     }
     Json(json!({"stops": matched})).into_response()
+}
+
+async fn weather_handler(State(app): State<Arc<App>>) -> Response {
+    let mut redis = app.redis.clone();
+    if let Ok(Some(body)) = redis::cmd("GET")
+        .arg("weather:current")
+        .query_async::<Option<String>>(&mut redis)
+        .await
+    {
+        return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
+    }
+    let Ok(response) = app.http.get("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en").send().await else {
+        return (StatusCode::SERVICE_UNAVAILABLE, Json(json!({"error":"weather unavailable"}))).into_response();
+    };
+    let Ok(parsed) = response.json::<Value>().await else {
+        return (StatusCode::SERVICE_UNAVAILABLE, Json(json!({"error":"weather unavailable"}))).into_response();
+    };
+    let rain_by_value = parsed
+        .get("rainfall")
+        .and_then(|v| v.get("data"))
+        .and_then(|v| v.as_array())
+        .map(|arr| arr.iter().any(|d| d.get("max").and_then(|v| v.as_i64()).unwrap_or(0) > 0))
+        .unwrap_or(false);
+    let icons = parsed.get("icon").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+    let rain_by_icon = icons.iter().any(|v| v.as_i64().unwrap_or(0) >= 50 && v.as_i64().unwrap_or(0) <= 99);
+    let raining = rain_by_value || rain_by_icon;
+    let body = json!({"raining": raining}).to_string();
+    let mut redis = app.redis.clone();
+    let _: Result<(), _> = redis::cmd("SET")
+        .arg("weather:current")
+        .arg(&body)
+        .arg("EX")
+        .arg(600)
+        .query_async(&mut redis)
+        .await;
+    (StatusCode::OK, [("content-type", "application/json")], body).into_response()
 }
 
 async fn holidays_handler(State(app): State<Arc<App>>) -> Response {

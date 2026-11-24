@@ -89,6 +89,14 @@ const hkCenter: [number, number] = [114.1694, 22.3193];
 const hkZoom = 14;
 // Counted groups stand in for signs until this zoom. Closer than this, every
 // stop in the view is its own pin.
+const apiBase =
+  process.env.NEXT_PUBLIC_API_BASE ||
+  (process.env.NEXT_PUBLIC_BASE_PATH
+    ? ""
+    : process.env.NODE_ENV === "development"
+      ? "http://127.0.0.1:8787"
+      : "/api");
+
 const pinZoom = 16;
 
 // Locating only auto-selects a stop it is actually near. A station point sits in
@@ -1130,16 +1138,11 @@ export default function Page() {
           return;
         }
       } catch {}
-      fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en")
+      fetch(`${apiBase}/weather`)
         .then((r) => (r.ok ? r.json() : null))
         .then((body) => {
           if (cancelled || !body) return;
-          const rainByValue = Array.isArray(body.rainfall?.data)
-            ? body.rainfall.data.some((d: { value?: number }) => (d.value ?? 0) > 0)
-            : false;
-          const icons = Array.isArray(body.icon) ? body.icon : [];
-          const rainByIcon = icons.some((code: number) => code >= 50 && code <= 99);
-          const rain = rainByValue || rainByIcon;
+          const rain = Boolean(body?.raining);
           try {
             localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain }));
           } catch {}
