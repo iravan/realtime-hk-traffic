@@ -1137,7 +1137,8 @@ export default function Page() {
           try {
             localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain }));
           } catch {}
-          setRaining(rain);
+          const force = new URLSearchParams(window.location.search).get("rain");
+          setRaining(force === "1" ? true : rain);
         })
         .catch(() => {
           if (!cancelled) setTimeout(load, 2000);
