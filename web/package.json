@@ -3,11 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "packageManager": "bun@1.4.4",
   "scripts": {
-    "predev": "bun scripts/copy-maplibre-worker.mjs",
+    "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
-    "prebuild": "bun scripts/copy-maplibre-worker.mjs",
+    "prebuild": "node scripts/copy-maplibre-worker.mjs",
     "build": "next build",
     "split-stops": "bun scripts/split-stops.mjs",
     "start": "next start"
