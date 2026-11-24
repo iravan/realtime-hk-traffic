@@ -391,7 +391,7 @@ export function StopSheet({
                   <span
                     key={route}
                     className="station-chip"
-                    style={{ background: "#e52029", color: "#fff", fontWeight: 600 }}
+                    style={{ background: mode === "minibus" ? "#2f7d4f" : "#e52029", color: "#fff", fontWeight: 600 }}
                   >
                     {route}
                   </span>
