@@ -1126,7 +1126,7 @@ export default function Page() {
       mode === "minibus"
         ? "stops-minibus-bilingual"
         : mode === "bus"
-          ? "stops-bus-bilingual"
+          ? "stops-bus-routes"
           : mode === "ferry"
             ? "stops-ferry-timetable"
             : mode === "mtr"
