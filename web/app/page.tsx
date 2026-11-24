@@ -239,6 +239,7 @@ export default function Page() {
   const [selected, setSelected] = useState<Stop | null>(null);
   const [board, setBoard] = useState<Stop | null>(null);
   const [zoomLevel, setZoomLevel] = useState(0);
+  const [raining, setRaining] = useState(false);
   const [locateState, setLocateState] = useState<LocateState>("idle");
   // Set only when a manual locate fails: the platform decides which device steps
   // show, and the reason decides the intro.
@@ -1113,6 +1114,41 @@ export default function Page() {
     return () => popups.forEach((popup) => popup.remove());
   }, [stops, active, locale, zoomLevel]);
 
+  // Current weather from HK Observatory. Cached for 10 minutes with retry.
+  useEffect(() => {
+    const key = "hk-traffic.weather";
+    const ttl = 10 * 60 * 1000;
+    let cancelled = false;
+    const load = () => {
+      try {
+        const cached = JSON.parse(localStorage.getItem(key) || "null");
+        if (cached && Date.now() - cached.savedAt < ttl) {
+          if (!cancelled) setRaining(cached.raining);
+          return;
+        }
+      } catch {}
+      fetch("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((body) => {
+          if (cancelled || !body) return;
+          const rain = Array.isArray(body.rainfall?.data)
+            ? body.rainfall.data.some((d: { value?: number }) => (d.value ?? 0) > 0)
+            : false;
+          try {
+            localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain }));
+          } catch {}
+          setRaining(rain);
+        })
+        .catch(() => {
+          if (!cancelled) setTimeout(load, 2000);
+        });
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   function loadCatalogue(mode: Mode): Promise<Stop[]> {
     const cached = cataloguesRef.current[mode];
     if (cached) return Promise.resolve(cached);
@@ -1475,6 +1511,7 @@ export default function Page() {
     <div className={`visit${selected ? " sheet-open" : ""}`}>
       <div className="map-stage">
         <div ref={container} className="map-canvas" />
+        {raining ? <div className="weather-rain" aria-hidden="true" /> : null}
       </div>
       <div className="chrome">
         <div className="brand">
