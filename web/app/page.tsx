@@ -1134,9 +1134,12 @@ export default function Page() {
         .then((r) => (r.ok ? r.json() : null))
         .then((body) => {
           if (cancelled || !body) return;
-          const rain = Array.isArray(body.rainfall?.data)
+          const rainByValue = Array.isArray(body.rainfall?.data)
             ? body.rainfall.data.some((d: { value?: number }) => (d.value ?? 0) > 0)
             : false;
+          const icons = Array.isArray(body.icon) ? body.icon : [];
+          const rainByIcon = icons.some((code: number) => code >= 50 && code <= 99);
+          const rain = rainByValue || rainByIcon;
           try {
             localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain }));
           } catch {}
