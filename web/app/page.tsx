@@ -314,19 +314,7 @@ export default function Page() {
       dragRotate: false,
       pitchWithRotate: false,
       touchPitch: false,
-      style: {
-        version: 8,
-        glyphs: "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
-        sources: {
-          osm: {
-            type: "raster",
-            tiles: ["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"],
-            tileSize: 512,
-            attribution: "© OpenStreetMap contributors © CARTO",
-          },
-        },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
-      },
+      style: "https://tiles.openfreemap.org/styles/liberty",
     });
     map.addControl(new AttributionControl({ compact: false }), "bottom-left");
     map.addControl(new NavigationControl({ showCompass: false, showZoom: true }), "bottom-left");
