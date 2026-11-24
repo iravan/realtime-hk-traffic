@@ -286,7 +286,7 @@ export function StopSheet({
 
   const rows = snapshot ? soonestFirst(snapshot.rows) : [];
   const sortedRows =
-    mode === "mtr" || mode === "bus"
+    mode === "mtr" || mode === "bus" || mode === "minibus"
       ? [...rows].sort(
           (a, b) =>
             (a.route || "").localeCompare(b.route || "") ||
@@ -447,7 +447,7 @@ export function StopSheet({
                 <ul>
                   {sortedRows.map((row, index) => (
                     <>
-                    {(mode === "mtr" || mode === "bus") && (index === 0 || row.route !== sortedRows[index - 1]?.route) ? (
+                    {(mode === "mtr" || mode === "bus" || mode === "minibus") && (index === 0 || row.route !== sortedRows[index - 1]?.route) ? (
                       <li
                         key={`header-${row.route}`}
                         className="mtr-line-header"
@@ -455,7 +455,7 @@ export function StopSheet({
                       >
                         <span
                           style={{
-                            backgroundColor: mode === "bus" ? "#e52029" : MTR_LINE_COLOR[row.route] ?? "#11254a",
+                            backgroundColor: mode === "bus" ? "#e52029" : mode === "minibus" ? "#2f7d4f" : MTR_LINE_COLOR[row.route] ?? "#11254a",
                             display: "inline-block",
                             width: "0.8em",
                             height: "0.8em",
@@ -465,7 +465,7 @@ export function StopSheet({
                           }}
                           aria-hidden="true"
                         />
-                        {mode === "bus" ? row.route : locale === "en"
+                        {mode === "bus" || mode === "minibus" ? row.route : locale === "en"
                           ? MTR_LINE_NAME[row.route]?.en ?? row.route
                           : MTR_LINE_NAME[row.route]?.zh ?? row.route}
                       </li>
@@ -486,7 +486,7 @@ export function StopSheet({
                         </div>
                       ) : (
                         <>
-                          {row.route && mode !== "mtr" && mode !== "bus" ? (
+                          {row.route && mode !== "mtr" && mode !== "bus" && mode !== "minibus" ? (
                             <strong>{row.route}</strong>
                           ) : null}
                         </>
