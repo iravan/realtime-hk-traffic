@@ -602,7 +602,71 @@ fn citybus_row_key(item: &Value) -> String {
     )
 }
 
+async fn nlb_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
+    let stop_id: i64 = stop.id.strip_prefix("bus:nlb:")?.parse().ok()?;
+    let routes = http
+        .get("https://rt.data.gov.hk/v2/transport/nlb/route.php?action=list")
+        .send()
+        .await
+        .ok()?
+        .json::<Value>()
+        .await
+        .ok()?;
+    let route_list = routes.get("routes")?.as_array()?;
+    let tz = chrono::FixedOffset::east_opt(8 * 3600)?;
+    let mut rows = Vec::new();
+    for route in route_list {
+        let route_id = route.get("routeId").and_then(|v| v.as_i64()).or_else(|| route.get("routeId").and_then(|v| v.as_str()).and_then(|s| s.parse().ok()))?;
+        let route_no = route.get("routeNo").and_then(|v| v.as_str()).unwrap_or("").to_string();
+        // check if this stop is on the route
+        let stops_resp = http
+            .get(format!("https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=list&routeId={route_id}"))
+            .send()
+            .await
+            .ok()?;
+        let stops_json = stops_resp.json::<Value>().await.ok()?;
+        let stops = stops_json.get("stops")?.as_array()?;
+        if !stops.iter().any(|s| s.get("stopId").and_then(|v| v.as_i64()).or_else(|| s.get("stopId").and_then(|v| v.as_str()).and_then(|x| x.parse().ok())) == Some(stop_id)) {
+            continue;
+        }
+        let eta_resp = http
+            .get(format!("https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=estimatedArrivals&routeId={route_id}&stopId={stop_id}&language=en"))
+            .send()
+            .await
+            .ok()?;
+        let eta_json = eta_resp.json::<Value>().await.ok()?;
+        let arrivals = eta_json.get("estimatedArrivals")?.as_array()?;
+        for a in arrivals {
+            let time_str = a.get("estimatedArrivalTime").and_then(|v| v.as_str()).unwrap_or("");
+            let when = chrono::NaiveDateTime::parse_from_str(time_str, "%Y-%m-%d %H:%M:%S").ok()?;
+            let when = when.and_local_timezone(tz).single()?;
+            let seconds = when.with_timezone(&Utc).signed_duration_since(Utc::now()).num_seconds();
+            let minutes = (seconds / 60).max(0);
+            rows.push(Row {
+                route: route_no.clone(),
+                destination: String::new(),
+                minutes: Some(minutes),
+                time: None,
+                not_departed: a.get("departed").and_then(|v| v.as_i64()).unwrap_or(0) == 0,
+                operator: None,
+            });
+        }
+    }
+    rows.sort_by_key(|row| row.minutes.unwrap_or(i64::MAX));
+    rows.truncate(16);
+    Some(Snapshot {
+        fetched_at: Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+        live: true,
+        status: None,
+        note: None,
+        rows,
+    })
+}
+
 async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
+    if stop.id.starts_with("bus:nlb:") {
+        return nlb_arrivals(&app.http, stop).await;
+    }
     let raw = stop.id.split(':').nth(2)?;
     let citybus = stop.id.starts_with("bus:ctb:");
     let routes = if citybus {
