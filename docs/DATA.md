@@ -29,6 +29,7 @@ portal. Add new sources here when the service starts using them.
 | Bus route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_BUS.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Green minibus | data.gov.hk | `https://data.etagmb.gov.hk/...` | Stops, routes and live arrivals |
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
+| Tram route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_TRAM.zip` | Tram route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Green minibus route numbers | data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml` | Route id to route number labels |
 | Ferry pier names | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml` | Pier names in TC/SC/EN, joined to coordinates by stop id |
 | Ferry pier coordinates | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query` | Pier coordinates |
