@@ -417,7 +417,7 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
 async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let mut redis = app.redis.clone();
     if let Ok(Some(body)) = redis::cmd("GET")
-        .arg("weather:current:v2")
+        .arg("weather:current:v3")
         .query_async::<Option<String>>(&mut redis)
         .await
     {
@@ -436,7 +436,8 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
         .map(|arr| arr.iter().any(|d| d.get("max").and_then(|v| v.as_i64()).unwrap_or(0) > 0))
         .unwrap_or(false);
     let icons = parsed.get("icon").and_then(|v| v.as_array()).cloned().unwrap_or_default();
-    let rain_by_icon = icons.iter().any(|v| v.as_i64().unwrap_or(0) >= 50 && v.as_i64().unwrap_or(0) <= 99);
+    let rain_icons = [53_i64, 54, 62, 63, 64, 65];
+    let rain_by_icon = icons.iter().any(|v| rain_icons.contains(&v.as_i64().unwrap_or(0)));
     let raining = rain_by_value || rain_by_icon;
     let temperature = parsed
         .get("temperature")
@@ -456,7 +457,7 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     let body = json!({"raining": raining, "temperature": temperature, "icon": icon}).to_string();
     let mut redis = app.redis.clone();
     let _: Result<(), _> = redis::cmd("SET")
-        .arg("weather:current:v2")
+        .arg("weather:current:v3")
         .arg(&body)
         .arg("EX")
         .arg(600)

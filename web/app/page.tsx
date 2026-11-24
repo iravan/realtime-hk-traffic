@@ -1126,7 +1126,7 @@ export default function Page() {
 
   // Current weather from HK Observatory. Cached for 10 minutes with retry.
   useEffect(() => {
-    const key = "hk-traffic.weather4";
+    const key = "hk-traffic.weather5";
     const ttl = 10 * 60 * 1000;
     let cancelled = false;
     const load = () => {
@@ -1525,15 +1525,21 @@ export default function Page() {
       ? raining
         ? "🌧️"
         : "☀️"
-      : weatherIcon >= 50
+      : [53, 54, 62, 63, 64, 65].includes(weatherIcon)
         ? "🌧️"
-        : weatherIcon <= 4
-          ? "☀️"
-          : weatherIcon <= 9
+        : weatherIcon === 65
+          ? "⛈️"
+          : weatherIcon === 60 || weatherIcon === 61 || weatherIcon === 76
             ? "☁️"
-            : weatherIcon <= 24
+            : weatherIcon === 83 || weatherIcon === 84 || weatherIcon === 85
               ? "🌫️"
-              : "☀️";
+              : weatherIcon >= 70 && weatherIcon <= 77
+                ? "🌙"
+                : weatherIcon >= 90 && weatherIcon <= 93
+                  ? "🌡️"
+                  : weatherIcon === 80
+                    ? "💨"
+                    : "☀️";
   const mtrSchedule = hours?.modes?.mtr ?? [];
   const clock = now != null ? clockAt(now, hours?.timezone) : null;
   const mtrClosed =
