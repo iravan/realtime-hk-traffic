@@ -1686,6 +1686,7 @@ export default function Page() {
           name={selected.name}
           nameTc={selected.name_tc}
           nameEn={selected.name_en}
+          routes={selected.routes}
           latitude={selected.latitude}
           longitude={selected.longitude}
           taxi={selected.taxi}

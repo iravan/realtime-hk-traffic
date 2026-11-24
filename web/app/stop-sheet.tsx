@@ -126,6 +126,7 @@ export function StopSheet({
   name,
   nameTc,
   nameEn,
+  routes,
   latitude,
   longitude,
   taxi,
@@ -143,6 +144,7 @@ export function StopSheet({
   name: string;
   nameTc?: string;
   nameEn?: string;
+  routes?: string[];
   latitude: number;
   longitude: number;
   taxi?: TaxiKind;
@@ -344,9 +346,9 @@ export function StopSheet({
               <div className="stop-copy">
                 <h2>{localizeStopName(name, mode, locale, nameTc, nameEn)}</h2>
               </div>
-              {(mode === "bus" || mode === "minibus") && rows.length > 0 ? (
+              {(mode === "bus" || mode === "minibus") && ((routes && routes.length > 0) || rows.length > 0) ? (
                 <div style={{ width: "100%", marginTop: "0.25rem", display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
-                  {[...new Set(rows.map((r) => r.route).filter(Boolean))].map((route) => (
+                  {[...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))].map((route) => (
                     <span key={route} className="station-chip">
                       {route}
                     </span>
