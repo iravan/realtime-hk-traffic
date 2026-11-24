@@ -956,6 +956,11 @@ spells some names differently from the CSV, so a few aliases are listed in the
 script. A stop with no match keeps its KML id (`tram:{stopId}`), such as
 `tram:99140`.
 
+Each stop's `routes` lists the tram routes that call there. The labels are the
+bilingual route names from each KML file's `routeNameC` and `routeNameE`, for
+example `筲箕灣 - 跑馬地線 Shau Kei Wan - Happy Valley`. The map shows them as
+boards the same way as green minibus routes.
+
 Arrivals come from the Tramways endpoint that powers its website and app:
 
 ```text

@@ -77,10 +77,16 @@ def code_map(csv_bytes: bytes) -> dict[tuple[str, str], str]:
 def extract_stops(archive_bytes: bytes, codes: dict[tuple[str, str], str]) -> dict[str, dict]:
     by_stop: dict[str, dict] = {}
     with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
-        for name in archive.namelist():
+        for name in sorted(archive.namelist()):
             if not name.endswith(".kml"):
                 continue
             root = ET.fromstring(archive.read(name))
+
+            def route_data(key: str) -> str:
+                node = root.find(f".//k:Document/k:ExtendedData/k:Data[@name='{key}']/k:value", NS)
+                return (node.text or "").strip() if node is not None else ""
+
+            route_label = f"{route_data('routeNameC')} {route_data('routeNameE')}".strip()
             for placemark in root.findall(".//k:Placemark", NS):
 
                 def data(key: str) -> str:
@@ -96,17 +102,21 @@ def extract_stops(archive_bytes: bytes, codes: dict[tuple[str, str], str]) -> di
                 name_en = data("stopNameE")
                 code = codes.get((plain_name(name_en), direction_of(name_en)))
                 our_id = f"tram:{code or stop_id}"
-                if our_id in by_stop:
-                    continue
-                by_stop[our_id] = {
-                    "id": our_id,
-                    "latitude": lat,
-                    "longitude": lon,
-                    "mode": "tram",
-                    "name": f"{name_tc} {name_en}".strip(),
-                    "name_tc": name_tc,
-                    "name_en": name_en,
-                }
+                entry = by_stop.setdefault(
+                    our_id,
+                    {
+                        "id": our_id,
+                        "latitude": lat,
+                        "longitude": lon,
+                        "mode": "tram",
+                        "name": f"{name_tc} {name_en}".strip(),
+                        "name_tc": name_tc,
+                        "name_en": name_en,
+                        "routes": [],
+                    },
+                )
+                if route_label and route_label not in entry["routes"]:
+                    entry["routes"].append(route_label)
     return by_stop
 
 

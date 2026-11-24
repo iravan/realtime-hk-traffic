@@ -1031,12 +1031,14 @@ export default function Page() {
     routeMarkerRef.current?.remove();
     routeMarkerRef.current = null;
     const map = mapRef.current;
-    const routes = board?.mode === "minibus" || board?.mode === "bus" ? board.routes : undefined;
+    const routes = board?.mode === "minibus" || board?.mode === "bus" || board?.mode === "tram" ? board.routes : undefined;
     if (!map || !board || !routes || routes.length === 0) return;
-    // At street level every minibus stop already shows its board, so do not
-    // draw a second one for the tapped stop.
-    if (board.mode === "minibus" && map.getZoom() >= pinZoom) return;
-    const marker = new Marker({ element: routeBoard(routes, board?.mode === "bus" ? "#e52029" : undefined), anchor: "left", offset: [8, 0] })
+    // At street level every minibus and tram stop already shows its board, so do
+    // not draw a second one for the tapped stop.
+    if ((board.mode === "minibus" || board.mode === "tram") && map.getZoom() >= pinZoom) return;
+    const color = board.mode === "bus" ? "#e52029" : board.mode === "tram" ? modeColor.tram : undefined;
+    const labels = routes.map((route) => localizeBilingualName(route, locale));
+    const marker = new Marker({ element: routeBoard(labels, color), anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
       .addTo(map);
     routeMarkerRef.current = marker;
@@ -1044,7 +1046,7 @@ export default function Page() {
       marker.remove();
       if (routeMarkerRef.current === marker) routeMarkerRef.current = null;
     };
-  }, [board, zoomLevel]);
+  }, [board, zoomLevel, locale]);
 
   // Every ferry pin in view carries a board of the places it reaches, read
   // from the pier's `destinations` in the stop catalogue. Boards only appear
@@ -1085,12 +1087,12 @@ export default function Page() {
     };
   }, [stops, active, locale]);
 
-  // Bus and minibus pins carry their route boards at street level, so every
+  // Minibus and tram pins carry their route boards at street level, so every
   // stop in view shows its routes without a tap. Zoomed out, the board is shown
-  // only for the stop the user taps, as before.
+  // only for the stop the user taps. Bus boards stay tap-only.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || active !== "minibus") return;
+    if (!map || (active !== "minibus" && active !== "tram")) return;
     let markers: Marker[] = [];
     const clear = () => {
       markers.forEach((marker) => marker.remove());
@@ -1103,7 +1105,10 @@ export default function Page() {
         .filter((stop) => stop.routes && stop.routes.length > 0)
         .map((stop) =>
           new Marker({
-            element: routeBoard(stop.routes!, "#2f7d4f"),
+            element: routeBoard(
+              stop.routes!.map((route) => localizeBilingualName(route, locale)),
+              active === "tram" ? modeColor.tram : "#2f7d4f",
+            ),
             anchor: "left",
             offset: [8, 0],
           })
