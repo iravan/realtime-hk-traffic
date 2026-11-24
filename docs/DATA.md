@@ -2,7 +2,7 @@
 
 Realtime HK Traffic is built from official Hong Kong transport open data. The
 Rust service is the only component that calls these hosts. It fetches a stop
-when the map sheet asks, keeps that arrival snapshot in Redis for 90 seconds,
+when the map sheet asks, keeps that arrival snapshot in Redis for 60 seconds,
 and serves the page. The browser never calls the feeds directly.
 
 This page lists the sources this repository uses, the fields it reads, and the
@@ -112,11 +112,11 @@ map stop is opened, not on a timer.
 
 | Data | Refresh | Where it lives |
 | --- | --- | --- |
-| MTR next train | Publisher every 10 seconds; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
-| KMB and LWB stop ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
-| Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
-| GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
-| HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 90s |
+| MTR next train | Publisher every 10 seconds; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| KMB and LWB stop ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| Citybus ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| GMB stop ETA | Fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
+| HKKF and Sun Ferry ETA | Publisher about every minute; fetched on click if the snapshot is missing | Redis snapshot, TTL 60s |
 | MTR Bus and Feeder Bus ETA | Publisher says every 10s | Not integrated |
 | New Lantao Bus ETA | data.gov.hk v2 | Live NLB arrivals by route and stop |
 | Redis snapshots | Written on a successful click fetch; expire after 90s | Redis |
@@ -1153,7 +1153,7 @@ flowchart TB
   end
 
   subgraph Storage["Redis"]
-    Cache["Latest snapshot per stop, TTL 90s"]
+    Cache["Latest snapshot per stop, TTL 60s"]
   end
 
   subgraph Api["Rust API"]
@@ -1213,7 +1213,7 @@ sequenceDiagram
   else snapshot missing
     API->>Feed: request current arrivals
     Feed-->>API: feed rows
-    API->>Store: write snapshot TTL 90s
+    API->>Store: write snapshot TTL 60s
   end
   API-->>Page: JSON snapshot
   Page->>API: EventSource /stops/{id}/events

@@ -16,7 +16,7 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_http::cors::CorsLayer;
 
-const ETA_TTL_SECS: u64 = 90;
+const ETA_TTL_SECS: u64 = 60;
 
 #[derive(Clone)]
 struct Stop {
