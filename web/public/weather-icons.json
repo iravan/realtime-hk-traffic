@@ -24,8 +24,8 @@
   "83": { "caption": "Fog", "emoji": "🌫️" },
   "84": { "caption": "Mist", "emoji": "🌫️" },
   "85": { "caption": "Haze", "emoji": "🌫️" },
-  "90": { "caption": "Hot", "emoji": "🌡️" },
-  "91": { "caption": "Warm", "emoji": "🌡️" },
-  "92": { "caption": "Cool", "emoji": "🌡️" },
-  "93": { "caption": "Cold", "emoji": "🌡️" }
+  "90": { "caption": "Hot", "emoji": "🥵" },
+  "91": { "caption": "Warm", "emoji": "🙂" },
+  "92": { "caption": "Cool", "emoji": "😊" },
+  "93": { "caption": "Cold", "emoji": "🥶" }
 }

@@ -49,6 +49,7 @@ import {
   type TaxiKind,
 } from "./stop-icon";
 import { taxiStandInfo, type TaxiLabel } from "./taxi-stand";
+import weatherIcons from "../public/weather-icons.json";
 import {
   clockAt,
   isScheduleOpen,
@@ -1521,25 +1522,12 @@ export default function Page() {
   }, []);
 
   const weatherEmoji =
-    weatherIcon == null
-      ? raining
+    weatherIcon != null && (weatherIcons as Record<string, { emoji: string }>)[String(weatherIcon)]
+      ? (weatherIcons as Record<string, { emoji: string }>)[String(weatherIcon)].emoji
+      : raining
         ? "🌧️"
-        : "☀️"
-      : [53, 54, 62, 63, 64, 65].includes(weatherIcon)
-        ? "🌧️"
-        : weatherIcon === 65
-          ? "⛈️"
-          : weatherIcon === 60 || weatherIcon === 61 || weatherIcon === 76
-            ? "☁️"
-            : weatherIcon === 83 || weatherIcon === 84 || weatherIcon === 85
-              ? "🌫️"
-              : weatherIcon >= 70 && weatherIcon <= 77
-                ? "🌙"
-                : weatherIcon >= 90 && weatherIcon <= 93
-                  ? "🌡️"
-                  : weatherIcon === 80
-                    ? "💨"
-                    : "☀️";
+        : "☀️";
+
   const mtrSchedule = hours?.modes?.mtr ?? [];
   const clock = now != null ? clockAt(now, hours?.timezone) : null;
   const mtrClosed =
