@@ -336,6 +336,8 @@ export default function Page() {
       if (!map.hasImage("citybus-dot")) map.addImage("citybus-dot", stopDotImage("bus", false, "#FACC15"), {
         pixelRatio: stopIconPixelRatio,
       });
+      if (!map.hasImage("bus-stop")) map.addImage("bus-stop", stopIconImage("bus"), { pixelRatio: stopIconPixelRatio });
+      if (!map.hasImage("bus-stop-dot")) map.addImage("bus-stop-dot", stopDotImage("bus"), { pixelRatio: stopIconPixelRatio });
        if (!map.hasImage("light-rail")) map.addImage("light-rail", lightRailIconImage(), { pixelRatio: stopIconPixelRatio });
       for (const kind of taxiKinds) {
         if (!map.hasImage(`taxi-${kind}`)) map.addImage(`taxi-${kind}`, taxiIconImage(kind), { pixelRatio: stopIconPixelRatio });
@@ -1258,7 +1260,9 @@ export default function Page() {
                   ? "ferry-boat"
                   : stop.mode === "bus" && isCitybus(stop.id)
                     ? "citybus"
-                    : stop.mode,
+                    : stop.mode === "bus"
+                      ? "bus-stop"
+                      : stop.mode,
           open: isStopOpen(stop, hours, now),
         },
         geometry: { type: "Point", coordinates: [stop.longitude, stop.latitude] },
