@@ -249,6 +249,7 @@ export default function Page() {
   const [zoomLevel, setZoomLevel] = useState(0);
   const [raining, setRaining] = useState(false);
   const [temperature, setTemperature] = useState<number | null>(null);
+  const [weatherIcon, setWeatherIcon] = useState<number | null>(null);
   const [locateState, setLocateState] = useState<LocateState>("idle");
   // Set only when a manual locate fails: the platform decides which device steps
   // show, and the reason decides the intro.
@@ -1125,7 +1126,7 @@ export default function Page() {
 
   // Current weather from HK Observatory. Cached for 10 minutes with retry.
   useEffect(() => {
-    const key = "hk-traffic.weather3";
+    const key = "hk-traffic.weather4";
     const ttl = 10 * 60 * 1000;
     let cancelled = false;
     const load = () => {
@@ -1136,6 +1137,7 @@ export default function Page() {
             const force = new URLSearchParams(window.location.search).get("rain");
             setRaining(force === "1" ? true : cached.raining);
             setTemperature(cached.temperature ?? null);
+            setWeatherIcon(cached.icon ?? null);
           }
           return;
         }
@@ -1149,9 +1151,10 @@ export default function Page() {
           if (!cancelled) {
             setRaining(force === "1" ? true : rain);
             setTemperature(body?.temperature ?? null);
+            setWeatherIcon(body?.icon ?? null);
           }
           try {
-            localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain, temperature: body?.temperature ?? null }));
+            localStorage.setItem(key, JSON.stringify({ savedAt: Date.now(), raining: rain, temperature: body?.temperature ?? null, icon: body?.icon ?? null }));
           } catch {}
         })
         .catch(() => {
@@ -1517,6 +1520,20 @@ export default function Page() {
     return () => clearInterval(timer);
   }, []);
 
+  const weatherEmoji =
+    weatherIcon == null
+      ? raining
+        ? "🌧️"
+        : "☀️"
+      : weatherIcon <= 4
+        ? "☀️"
+        : weatherIcon <= 9
+          ? "☁️"
+          : weatherIcon <= 19
+            ? "🌧️"
+            : weatherIcon <= 24
+              ? "🌫️"
+              : "☀️";
   const mtrSchedule = hours?.modes?.mtr ?? [];
   const clock = now != null ? clockAt(now, hours?.timezone) : null;
   const mtrClosed =
@@ -1533,7 +1550,7 @@ export default function Page() {
           <div className="brand-head">
             <h1>{t.brand}</h1>
             <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
-              {raining ? "🌧️" : "☀️"}
+              {weatherEmoji}
               {temperature != null ? ` ${Math.round(temperature)}°C` : ""}
             </span>
             <button

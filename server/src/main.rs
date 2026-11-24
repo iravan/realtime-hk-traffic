@@ -452,7 +452,8 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
                 .and_then(|v| v.as_array())
                 .and_then(|arr| arr.iter().find_map(|d| d.get("value").and_then(|v| v.as_f64())))
         });
-    let body = json!({"raining": raining, "temperature": temperature}).to_string();
+    let icon = parsed.get("icon").and_then(|v| v.as_array()).and_then(|a| a.first()).and_then(|v| v.as_i64());
+    let body = json!({"raining": raining, "temperature": temperature, "icon": icon}).to_string();
     let mut redis = app.redis.clone();
     let _: Result<(), _> = redis::cmd("SET")
         .arg("weather:current")
