@@ -21,7 +21,7 @@ modes:
 
 | Mode | A stop is | What an arrival shows |
 | --- | --- | --- |
-| **MTR** | A station, or a Light Rail stop | The next train on each line that serves the station, plus line service status when the feed includes it. Light Rail stops are on this tab too, but do not show arrivals yet |
+| **MTR** | A station, or a Light Rail stop | The next train on each line that serves the station, plus line service status when the feed includes it. Light Rail stops show their arrivals too. MTR stations show facilities (toilet, water, babycare) and free Wi-Fi where available |
 | **Bus** | One stop for KMB, LWB, Citybus, or New Lantao Bus | Route, destination, minutes (or clock time), and the age of the estimate |
 | **Minibus** | A green minibus stop | The same arrival shape, where an official ETA feed exists; otherwise "No arrivals right now" |
 | **Ferry** | A ferry pier | Hong Kong & Kowloon Ferry and Sun Ferry show the clock time of the sailing and the minutes until departure, or until arrival once the boat has left. Other piers stay on the map and show that nothing is scheduled right now |
@@ -39,8 +39,8 @@ scope. Taxi stands are places, not vehicles.
   wins. A locate button re-asks the device, recentres the map, and reselects,
   so a visitor who panned away does not have to reload.
 - **Live arrivals.** The selected stop is ringed on the map. Its sheet loads the
-  latest snapshot, soonest first, and then listens on a server-sent event
-  (`/stops/{id}/events`) stream for newer snapshots. The page never computes an
+  latest snapshot, soonest first, then polls `/stops/{id}/arrivals` every 60
+  seconds. The page never computes an
   ETA and never calls a transport feed directly. A bus, minibus or ferry
   destination, and an MTR, ferry or minibus stop title, is shown in the language
   of the page. Citybus publishes one language per
