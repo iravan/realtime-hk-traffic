@@ -1231,7 +1231,7 @@ export default function Page() {
             : mode === "mtr"
               ? "stops-mtr-lrt2"
               : mode === "tram"
-                ? "stops-tram"
+                ? "stops-tram-routes"
                 : `stops-${mode}`;
     const promise = loadCachedJson<{ stops: Stop[] }>(catalogueKey, async () => {
       const response = await fetch(`${basePath}/stops-${mode}.json`);
@@ -2017,8 +2017,8 @@ function matchesFilter(stop: Stop, filter: StopFilter): boolean {
   return matchesQuery(stop, filter.query);
 }
 
-// Bus and minibus stops match by route number, ferry piers by destination, and
-// the rest by name. Matching ignores case and surrounding spaces, and an empty
+// Bus and minibus stops match by route number, ferry piers by destination, tram
+// stops by route name, and the rest by name. Matching ignores case and surrounding spaces, and an empty
 // filter keeps every stop.
 // A bookmark id is `mode:...`, so the mode prefix is enough to split the
 // total across the category tabs. A shared bookmark keeps its mode.
@@ -2033,6 +2033,7 @@ function filterPlaceholder(mode: Mode, locale: Locale): string {
   if (mode === "bus") return locale === "en" ? "Route, e.g. 86, 281A, 1" : "路線，例如 86、281A、1";
   if (mode === "minibus") return locale === "en" ? "Route, e.g. 804, 65M" : "路線，例如 804、65M";
   if (mode === "ferry") return locale === "en" ? "Destination, e.g. Central" : "目的地，例如 中環";
+  if (mode === "tram") return locale === "en" ? "Route or stop, e.g. Happy Valley" : "路線或站點，例如 跑馬地";
   return locale === "en" ? "Station or stop name" : "車站或站點名稱";
 }
 
@@ -2049,6 +2050,11 @@ function matchesQuery(stop: Stop, query: string): boolean {
     return (stop.destinations ?? []).some((destination) =>
       destination.toLowerCase().includes(needle),
     );
+  }
+  // Tram route names carry both languages and the terminus names, so a route
+  // matches on any part of its label.
+  if (stop.mode === "tram" && (stop.routes ?? []).some((route) => route.toLowerCase().includes(needle))) {
+    return true;
   }
   return [stop.name, stop.name_tc, stop.name_en].some((name) =>
     name?.toLowerCase().includes(needle),
