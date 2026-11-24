@@ -209,6 +209,10 @@ destinations. `scripts/build-mtr-catalogue.py` syncs the `mtr:` rows in
 CSV. Station coordinates are maintained in this file; refresh them from
 OpenStreetMap with `scripts/fetch-mtr-geolocation.py`, which runs:
 
+OpenStreetMap tends to carry more precise station locations than Google Maps
+because its station nodes are usually mapped at the physical entrance or
+platform centroid rather than the building centroid.
+
 ```sh
 curl -s -X POST "https://overpass-api.de/api/interpreter" \\
   -H "Accept: application/json" \\
