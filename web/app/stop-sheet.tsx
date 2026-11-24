@@ -346,15 +346,6 @@ export function StopSheet({
               <div className="stop-copy">
                 <h2>{localizeStopName(name, mode, locale, nameTc, nameEn)}</h2>
               </div>
-              {(mode === "bus" || mode === "minibus") && ((routes && routes.length > 0) || rows.length > 0) ? (
-                <div style={{ width: "100%", marginTop: "0.25rem", display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
-                  {[...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))].map((route) => (
-                    <span key={route} className="station-chip">
-                      {route}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
               <div className="sheet-actions">
 
                 <button
@@ -394,6 +385,15 @@ export function StopSheet({
                 </button>
               </div>
             </div>
+            {(mode === "bus" || mode === "minibus") && ((routes && routes.length > 0) || rows.length > 0) ? (
+              <div style={{ width: "100%", marginTop: "0.25rem", display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
+                {[...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))].map((route) => (
+                  <span key={route} className="station-chip">
+                    {route}
+                  </span>
+                ))}
+              </div>
+            ) : null}
             {description || toilet || water || babycare || mode === "mtr" ? (
               <section className={description ? "description" : "description icon-only"}>
                 {description}
