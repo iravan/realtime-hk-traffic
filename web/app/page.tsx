@@ -669,8 +669,9 @@ export default function Page() {
           const zh = stripParens(rawName)
             .replace(/[A-Za-z][A-Za-z0-9 .,:()\-/\u2192]*/g, "")
             .replace(/\s{2,}/g, " ")
-            .trim();
-          name.textContent = zh || stripParens(rawName);
+            .trim()
+            .replace(/^港鐵/, "");
+          name.textContent = zh || stripParens(rawName).replace(/^港鐵/, "");
         }
         text.appendChild(name);
 
