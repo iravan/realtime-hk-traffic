@@ -26,6 +26,19 @@ const apiBase =
       : "/api");
 const goneAfterMs = 12000;
 
+const MTR_LINE_COLOR: Record<string, string> = {
+  AEL: "#00888a",
+  DRL: "#f173ac",
+  EAL: "#53b7e8",
+  ISL: "#007dc5",
+  KTL: "#00ab4e",
+  SIL: "#B6BD00",
+  TCL: "#f7943e",
+  TKL: "#7d499d",
+  TML: "#923011",
+  TWL: "#ed1d24",
+};
+
 type Row = {
   route: string;
   destination: string;
@@ -423,7 +436,22 @@ export function StopSheet({
                         </>
                       )}
                       {mode === "mtr" ? (
-                        <StationChip name={row.destination} locale={locale} />
+                        <>
+                          <span
+                            className="mtr-line-dot"
+                            style={{
+                              backgroundColor: MTR_LINE_COLOR[row.route] ?? "#11254a",
+                              display: "inline-block",
+                              width: "0.7em",
+                              height: "0.7em",
+                              borderRadius: "999px",
+                              marginRight: "0.35em",
+                              verticalAlign: "middle",
+                            }}
+                            aria-hidden="true"
+                          />
+                          <StationChip name={row.destination} locale={locale} />
+                        </>
                       ) : row.destination ? (
                         mode === "ferry" ? (
                           <FerryDestination name={row.destination} locale={locale} />
