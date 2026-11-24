@@ -1017,7 +1017,7 @@ export default function Page() {
     routeMarkerRef.current?.remove();
     routeMarkerRef.current = null;
     const map = mapRef.current;
-    const routes = board?.mode === "minibus" ? board.routes : undefined;
+    const routes = board?.mode === "minibus" || board?.mode === "bus" ? board.routes : undefined;
     if (!map || !board || !routes || routes.length === 0) return;
     const marker = new Marker({ element: routeBoard(routes), anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
