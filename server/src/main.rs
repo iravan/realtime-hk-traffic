@@ -3,13 +3,11 @@ mod holidays;
 
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderValue, Method, StatusCode};
-use axum::response::sse::{Event, KeepAlive, Sse};
 use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use axum::{Json, Router};
 use chrono::{DateTime, Utc};
 use futures::future::join_all;
-use futures::stream::{self, Stream};
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -198,7 +196,6 @@ async fn main() {
     let api = Router::new()
         .route("/stops", get(list_stops))
         .route("/stops/{id}/arrivals", get(arrivals))
-        .route("/stops/{id}/events", get(events))
         .route("/holidays", get(holidays_handler));
     // Vercel hands the service the /api prefix, so answer on both shapes.
     let router = Router::new()
@@ -449,53 +446,6 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
         )
             .into_response(),
     }
-}
-
-async fn events(
-    State(app): State<Arc<App>>,
-    Path(id): Path<String>,
-) -> Result<Sse<impl Stream<Item = Result<Event, std::convert::Infallible>>>, Response> {
-    let id = owner_id(&app, &id).await;
-    let Some(stop) = app.by_id.read().await.get(&id).cloned() else {
-        return Err((
-            StatusCode::NOT_FOUND,
-            Json(json!({"error": "unknown stop"})),
-        )
-            .into_response());
-    };
-    if stop.mode == "taxi" {
-        return Err((StatusCode::NOT_FOUND, Json(json!({"error": "no arrivals"}))).into_response());
-    }
-    let (sender, receiver) = tokio::sync::mpsc::channel(8);
-    {
-        let mut watch = app.watch.lock().expect("watch lock");
-        watch.entry(id.clone()).or_default().push(sender);
-    }
-    if let Some(body) = read_snapshot(&app, &id).await {
-        publish(&app, &id, &body);
-    } else {
-        let app = app.clone();
-        tokio::spawn(async move { refresh(&app, &stop).await });
-    }
-    // Close the stream before Vercel's 300s runtime limit so the client's
-    // EventSource reconnects cleanly instead of hitting a hard timeout.
-    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(240);
-    let stream = stream::unfold((receiver, deadline), |(mut receiver, deadline)| async move {
-        if std::time::Instant::now() >= deadline {
-            return None;
-        }
-        let message = tokio::time::timeout_at(
-            tokio::time::Instant::from_std(deadline),
-            receiver.recv(),
-        )
-        .await
-        .ok()??;
-        Some((
-            Ok(Event::default().event("arrivals").data(message)),
-            (receiver, deadline),
-        ))
-    });
-    Ok(Sse::new(stream).keep_alive(KeepAlive::new().interval(std::time::Duration::from_secs(15))))
 }
 
 async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {

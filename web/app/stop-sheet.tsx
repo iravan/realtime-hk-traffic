@@ -232,19 +232,16 @@ export function StopSheet({
 
   useEffect(() => {
     if (!apiBase || mode === "taxi") return;
-    const source = new EventSource(`${apiBase}/stops/${encodeURIComponent(id)}/events`);
-    const onArrivals = (event: Event) => {
-      try {
-        setSnapshot(JSON.parse((event as MessageEvent<string>).data) as Snapshot);
-      } catch {
-        // A malformed push keeps the last good snapshot on screen.
-      }
+    const poll = () => {
+      fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
+        .then((response) => (response.ok ? response.json() : null))
+        .then((body) => {
+          if (body) setSnapshot(body as Snapshot);
+        })
+        .catch(() => {});
     };
-    source.addEventListener("arrivals", onArrivals);
-    return () => {
-      source.removeEventListener("arrivals", onArrivals);
-      source.close();
-    };
+    const timer = setInterval(poll, 60000);
+    return () => clearInterval(timer);
   }, [id, mode]);
 
   useEffect(() => {
