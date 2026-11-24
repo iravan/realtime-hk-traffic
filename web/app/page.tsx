@@ -660,16 +660,17 @@ export default function Page() {
           ref;
         const enName =
           (typeof properties["name:en"] === "string" && properties["name:en"]) || rawName;
+        // Drop parenthetical qualifiers such as "(Southbound)" or
+        // "(Admiralty → South Horizons)" so only the line name remains.
+        const stripParens = (value: string) => value.replace(/\s*\([^)]*\)/g, "").trim();
         if (localeRef.current === "en") {
-          name.textContent = enName;
+          name.textContent = stripParens(enName);
         } else {
-          // Strip the English half (and any embedded English words) so the
-          // Chinese name stands alone.
-          const zh = rawName
+          const zh = stripParens(rawName)
             .replace(/[A-Za-z][A-Za-z0-9 .,:()\-/\u2192]*/g, "")
             .replace(/\s{2,}/g, " ")
             .trim();
-          name.textContent = zh || rawName;
+          name.textContent = zh || stripParens(rawName);
         }
         text.appendChild(name);
 
