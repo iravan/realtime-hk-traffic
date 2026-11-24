@@ -1505,6 +1505,7 @@ export default function Page() {
   useEffect(() => {
     clearLineRef.current();
     hideStopNameRef.current();
+    clearStopParam();
     // Drop the previous mode's highlight before the catalogue for this tab
     // arrives. The refs have to change now; state alone waits for a render.
     selectedRef.current = null;
