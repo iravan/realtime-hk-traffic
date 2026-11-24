@@ -658,7 +658,19 @@ export default function Page() {
           (typeof properties.name === "string" && properties.name) ||
           (typeof properties["name:en"] === "string" && properties["name:en"]) ||
           ref;
-        name.textContent = localizeBilingualName(rawName, localeRef.current);
+        const enName =
+          (typeof properties["name:en"] === "string" && properties["name:en"]) || rawName;
+        if (localeRef.current === "en") {
+          name.textContent = enName;
+        } else {
+          // Strip the English half (and any embedded English words) so the
+          // Chinese name stands alone.
+          const zh = rawName
+            .replace(/[A-Za-z][A-Za-z0-9 .,:()\-/\u2192]*/g, "")
+            .replace(/\s{2,}/g, " ")
+            .trim();
+          name.textContent = zh || rawName;
+        }
         text.appendChild(name);
 
         if (terminals) {
