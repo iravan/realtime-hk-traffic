@@ -1019,7 +1019,7 @@ export default function Page() {
     const map = mapRef.current;
     const routes = board?.mode === "minibus" || board?.mode === "bus" ? board.routes : undefined;
     if (!map || !board || !routes || routes.length === 0) return;
-    const marker = new Marker({ element: routeBoard(routes), anchor: "left", offset: [8, 0] })
+    const marker = new Marker({ element: routeBoard(routes, board?.mode === "bus" ? "#e52029" : undefined), anchor: "left", offset: [8, 0] })
       .setLngLat([board.longitude, board.latitude])
       .addTo(map);
     routeMarkerRef.current = marker;
@@ -1840,7 +1840,7 @@ function uniqueStops(catalogue: Stop[], mode: Mode): Stop[] {
 
 type BoardItem = string | { label: string; color: StationColor | null };
 
-function routeBoard(items: BoardItem[]): HTMLDivElement {
+function routeBoard(items: BoardItem[], color?: string): HTMLDivElement {
   const node = document.createElement("div");
   if (items.some((item) => typeof item !== "string")) {
     node.className = "ferry-board";
@@ -1865,6 +1865,7 @@ function routeBoard(items: BoardItem[]): HTMLDivElement {
     const chip = document.createElement("span");
     chip.className = "route-chip";
     chip.textContent = typeof item === "string" ? item : item.label;
+    if (color) chip.style.background = color;
     node.appendChild(chip);
   }
   return node;
