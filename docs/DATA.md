@@ -1270,3 +1270,19 @@ sequenceDiagram
   Page->>API: EventSource /stops/{id}/events
   API-->>Page: SSE arrivals events
 ```
+
+## ETA flow
+
+```mermaid
+flowchart TD
+  Client[Client stop sheet] -->|GET /stops/:id/arrivals| API[Arrivals handler]
+  API -->|snapshot in Redis| OK[200 + JSON]
+  API -->|no snapshot| PENDING[202 + pending]
+  PENDING --> BG[tokio::spawn refresh]
+  BG --> INFLIGHT{in-flight set}
+  INFLIGHT -->|already running| SKIP[skip duplicate]
+  INFLIGHT -->|new| FETCH[fetch_arrivals]
+  FETCH --> REDIS[SET arrivals:id EX 60]
+  REDIS --> PUB[publish]
+  Client -->|retry 1s / backoff| API
+```
