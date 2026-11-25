@@ -938,7 +938,7 @@ export default function Page() {
         }
         const center = feature.geometry.coordinates as [number, number];
         void (source as GeoJSONSource).getClusterExpansionZoom(clusterId).then((zoom: number) => {
-          map.easeTo({ center, zoom: Math.max(zoom, map.getZoom() + 1) });
+          map.easeTo({ center, zoom: Math.max(zoom, pinZoom) });
         });
       };
       const zoomToPin = (event: { features?: MapGeoJSONFeature[] }) => {
