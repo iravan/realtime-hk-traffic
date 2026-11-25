@@ -31,7 +31,7 @@ portal. Add new sources here when the service starts using them.
 | GMB route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_GMB.zip` | Route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Tram route information | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-kml/KML_TRAM.zip` | Tram route names, origins, destinations, fares and stop sequences in TC/SC/EN |
 | Tram stop codes | Hong Kong Tramways / data.gov.hk | `https://static.data.gov.hk/tramways/datasets/tram_stops/summary_tram_stops_en.csv` | 3-character stop codes (for example `01E`, `08W`) matched to the KML stops |
-| Tram ETA | Hong Kong Tramways (unofficial) | `https://www.hktramways.com/nextTram/geteat.php?stop_code={stop_code}` | Live tram arrivals. Undocumented XML; not covered by a data.gov.hk SLA |
+| Tram ETA | Not supported | The app links to the Hong Kong Tramways website instead of showing arrivals | Live tram arrivals removed; unofficial endpoint no longer used |
 | Green minibus route numbers | data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/ROUTE_GMB.xml` | Route id to route number labels |
 | Ferry pier names | Transport Department / data.gov.hk | `https://static.data.gov.hk/td/routes-fares-xml/RSTOP_FERRY.xml` | Pier names in TC/SC/EN, joined to coordinates by stop id |
 | Ferry pier coordinates | data.gov.hk / CSDI | `https://portal.csdi.gov.hk/server/rest/services/common/td_rcd_1671692797539_19916/FeatureServer/0/query` | Pier coordinates |
@@ -77,7 +77,7 @@ are script-generated, web-only, or documented for future work.
 | Ferry pier names and coordinates | No | Yes | No | Bundled. The script joins `RSTOP_FERRY.xml` to the CSDI pier layer |
 | HKKF ferry ETA | Yes | No | No | Live departures for the piers in `ferry-departures.json` |
 | Sun Ferry ETA | Yes | No | No | Live arrival or departure for the piers in `ferry-departures.json` |
-| Tram ETA (hktramways `geteat.php`) | Yes | No | No | Live tram arrivals; unofficial endpoint, parsed from XML |
+| Tram ETA (hktramways `geteat.php`) | No | No | No | Not supported; the app links to the Hong Kong Tramways website instead |
 | Tram KML and stop-code CSV | No | Yes | No | `scripts/fetch-tram-stops.py` builds `stops-tram.json` and the server stop list |
 | Taxi stands | Optional | No | Yes | Locations are bundled. `web/public/taxi-stands.geojson` supplies the taxi type the map uses to tint each icon |
 | OpenStreetMap Overpass | No | Yes | Yes | Generates `mtr-lines.geojson`; map tiles are loaded by the page |
