@@ -1631,7 +1631,13 @@ export default function Page() {
             <button
               type="button"
               className="confirm-search"
-              onClick={() => setAppliedQuery(query)}
+              onClick={() => {
+                setAppliedQuery(query);
+                setSelected(null);
+                setBoard(null);
+                clearStopParam();
+                clearFocusPadding();
+              }}
               disabled={bookmarkOnly}
               aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
             >
