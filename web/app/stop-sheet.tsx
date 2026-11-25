@@ -239,7 +239,7 @@ export function StopSheet({
           if (response.status === 202 || response.status === 404) {
             // Server is preparing the snapshot; retry shortly.
             setState("waiting");
-            setTimeout(loadSnapshot, 2000);
+            setTimeout(loadSnapshot, 1000);
             return null;
           }
           if (!response.ok) {
@@ -270,7 +270,7 @@ export function StopSheet({
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
         .then((response) => {
           if (response.status === 202 || response.status === 404) {
-            setTimeout(poll, 2000);
+            setTimeout(poll, 1000);
             return null;
           }
           return response.ok ? response.json() : null;
