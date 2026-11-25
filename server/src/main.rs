@@ -117,6 +117,7 @@ struct App {
     http: reqwest::Client,
     watch: std::sync::Mutex<HashMap<String, Vec<tokio::sync::mpsc::Sender<String>>>>,
     inflight: std::sync::Mutex<HashSet<String>>,
+    weather_lock: tokio::sync::Mutex<()>,
 }
 
 #[derive(Deserialize)]
@@ -182,6 +183,7 @@ async fn main() {
         http,
         watch: std::sync::Mutex::new(HashMap::new()),
         inflight: std::sync::Mutex::new(HashSet::new()),
+        weather_lock: tokio::sync::Mutex::new(()),
     });
     let startup = app.clone();
     tokio::spawn(async move { load_catalogues(startup).await });
@@ -414,6 +416,7 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
 }
 
 async fn weather_handler(State(app): State<Arc<App>>) -> Response {
+    let _guard = app.weather_lock.lock().await;
     let mut redis = app.redis.clone();
     if let Ok(Some(body)) = redis::cmd("GET")
         .arg("weather:current:v6")
