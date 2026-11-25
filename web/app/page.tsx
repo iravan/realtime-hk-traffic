@@ -451,7 +451,7 @@ export default function Page() {
         data: { type: "FeatureCollection", features: [] },
         cluster: true,
         clusterRadius: 56,
-        clusterMaxZoom: pinZoom - 1,
+        clusterMaxZoom: 16,
       });
       map.addLayer({
         id: "clusters",
@@ -486,6 +486,7 @@ export default function Page() {
         type: "circle",
         source: "stops",
         filter: ["!", ["has", "point_count"]],
+        minzoom: 17,
         maxzoom: pinZoom,
         paint: {
           "circle-color": modeColor[activeRef.current],
@@ -499,6 +500,7 @@ export default function Page() {
         type: "symbol",
         source: "stops",
         filter: ["!", ["has", "point_count"]],
+        minzoom: 17,
         maxzoom: pinZoom,
         layout: {
           "text-field": "1",
