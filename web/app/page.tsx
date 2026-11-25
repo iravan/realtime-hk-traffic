@@ -213,6 +213,7 @@ export default function Page() {
   const [stops, setStops] = useState<Stop[]>([]);
   const [query, setQuery] = useState("");
   const [appliedQuery, setAppliedQuery] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [bookmarkOnly, setBookmarkOnly] = useState(false);
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
   const [bookmarkedStops, setBookmarkedStops] = useState<Stop[]>([]);
@@ -1628,6 +1629,7 @@ export default function Page() {
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setAppliedQuery(query);
+                  setSubmitted(true);
                   setSelected(null);
                   setBoard(null);
                   clearStopParam();
@@ -1639,25 +1641,36 @@ export default function Page() {
               }}
               placeholder={filterPlaceholder(active, locale)}
               aria-label={filterPlaceholder(active, locale)}
-              disabled={bookmarkOnly}
+              disabled={bookmarkOnly || submitted}
             />
             <button
               type="button"
               className="confirm-search"
               onClick={() => {
-                setAppliedQuery(query);
-                setSelected(null);
-                setBoard(null);
-                clearStopParam();
-                clearFocusPadding();
-                void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
-                  if (permission.state === "granted") locate(false);
-                }).catch(() => {});
+                if (submitted) {
+                  setQuery("");
+                  setAppliedQuery("");
+                  setSubmitted(false);
+                  setSelected(null);
+                  setBoard(null);
+                  clearStopParam();
+                  clearFocusPadding();
+                } else {
+                  setAppliedQuery(query);
+                  setSubmitted(true);
+                  setSelected(null);
+                  setBoard(null);
+                  clearStopParam();
+                  clearFocusPadding();
+                  void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
+                    if (permission.state === "granted") locate(false);
+                  }).catch(() => {});
+                }
               }}
               disabled={bookmarkOnly}
               aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
             >
-              {locale === "en" ? "Go" : "搜尋"}
+              {submitted ? (locale === "en" ? "Cancel" : "取消") : (locale === "en" ? "Go" : "搜尋")}
             </button>
             {bookmarks.size > 0 ? (
               <button
