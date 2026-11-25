@@ -449,17 +449,6 @@ export function StopSheet({
               </>
             ) : null}
               <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "flex-end" }}>
-                <button
-                  type="button"
-                  className="sheet-icon"
-                  aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
-                  aria-pressed={bookmarked}
-                  onClick={onToggleBookmark}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                    <path d="M6 3h12v18l-6-4.5L6 21z" />
-                  </svg>
-                </button>
                 <ShareStop
                   id={id}
                   label={t.sheet.share}
@@ -481,6 +470,17 @@ export function StopSheet({
                     ["osm", t.sheet.openStreetMap],
                   ]}
                 />
+                <button
+                  type="button"
+                  className="sheet-icon"
+                  aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
+                  aria-pressed={bookmarked}
+                  onClick={onToggleBookmark}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                    <path d="M6 3h12v18l-6-4.5L6 21z" />
+                  </svg>
+                </button>
               </div>
 
           </div>
