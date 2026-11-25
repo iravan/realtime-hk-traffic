@@ -1123,8 +1123,11 @@ function FerryTimetable({
                                   const nowKey = nowMinutes < 240 ? nowMinutes + 1440 : nowMinutes;
                                   const sessionKey = minutes < 240 ? minutes + 1440 : minutes;
                                   const isPast = sessionKey < nowKey;
+                    const destColor = (isFirst || index === lastIdx)
+                      ? ferryDestinationColor(destinations[active])
+                      : null;
                                   return (
-                                    <li key={`${session.time}-${index}`} className={[highlight, (session.operator === "sun" && (session.remark === "1" || session.remark === "4")) ? "ferry-session-bold" : "", isPast ? "past" : ""].filter(Boolean).join(" ")}>
+                                    <li key={`${session.time}-${index}`} className={[highlight, (session.operator === "sun" && (session.remark === "1" || session.remark === "4")) ? "ferry-session-bold" : "", isPast ? "past" : ""].filter(Boolean).join(" ")} style={destColor ? { background: destColor.color, color: destColor.font } : undefined}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
