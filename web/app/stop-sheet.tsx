@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
@@ -309,6 +309,10 @@ export function StopSheet({
   const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
   const station = mode === "mtr" ? mtrStationColor(id) : null;
+  const routeChips =
+    mode === "bus" || mode === "minibus"
+      ? [...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))]
+      : [];
   const description =
     mode === "taxi" ? (
       <>
@@ -321,13 +325,18 @@ export function StopSheet({
     ) : mode === "tram" ? (
       <>
         {routes && routes.length > 0 ? (
-          <div className="tram-routes">
+          <RouteChips
+            className="tram-routes"
+            measureKey={`${locale}|${routes.join("|")}`}
+            expandLabel={t.sheet.showAllRoutes}
+            collapseLabel={t.sheet.showFewerRoutes}
+          >
             {routes.map((route) => (
               <span key={route} className="station-chip" style={{ background: modeColor.tram, color: "#fff" }}>
                 {localizeBilingualName(route, locale)}
               </span>
             ))}
-          </div>
+          </RouteChips>
         ) : null}
         <button
           type="button"
@@ -399,17 +408,24 @@ export function StopSheet({
                 </button>
               </div>
             </div>
-            {(mode === "bus" || mode === "minibus") && ((routes && routes.length > 0) || rows.length > 0) ? (
-              <div style={{ width: "100%", marginTop: "0.25rem", display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
-                {[...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))].map((route) => (
-                  <span
-                    key={route}
-                    className="station-chip"
-                    style={{ background: mode === "minibus" ? "#2f7d4f" : "#e52029", color: "#fff", fontWeight: 600 }}
-                  >
-                    {route}
-                  </span>
-                ))}
+            {routeChips.length > 0 ? (
+              <div className="mt-1">
+                <RouteChips
+                  className="flex flex-wrap gap-1"
+                  measureKey={routeChips.join("|")}
+                  expandLabel={t.sheet.showAllRoutes}
+                  collapseLabel={t.sheet.showFewerRoutes}
+                >
+                  {routeChips.map((route) => (
+                    <span
+                      key={route}
+                      className="station-chip"
+                      style={{ background: mode === "minibus" ? "#2f7d4f" : "#e52029", color: "#fff", fontWeight: 600 }}
+                    >
+                      {route}
+                    </span>
+                  ))}
+                </RouteChips>
               </div>
             ) : null}
             {description || toilet || water || babycare || mode === "mtr" ? (
@@ -608,6 +624,83 @@ export function StopSheet({
         ) : null}
       </div>
     </aside>
+  );
+}
+
+// Collapsed, the list shows only its first row of chips. The toggle appears
+// only when the chips wrap onto a second row.
+function RouteChips({
+  measureKey,
+  expandLabel,
+  collapseLabel,
+  className,
+  children,
+}: {
+  measureKey: string;
+  expandLabel: string;
+  collapseLabel: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [wraps, setWraps] = useState(false);
+  const [firstRow, setFirstRow] = useState(0);
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const measure = () => {
+      const chips = Array.from(list.children) as HTMLElement[];
+      if (chips.length === 0) return;
+      const firstEnd = chips[0].offsetTop + chips[0].offsetHeight;
+      let bottom = 0;
+      let wrapped = false;
+      for (const chip of chips) {
+        if (chip.offsetTop >= firstEnd) wrapped = true;
+        else bottom = Math.max(bottom, chip.offsetTop + chip.offsetHeight);
+      }
+      setWraps(wrapped);
+      setFirstRow(bottom);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    for (const chip of Array.from(list.children)) observer.observe(chip);
+    return () => observer.disconnect();
+  }, [measureKey]);
+  return (
+    <div className="flex items-start gap-1">
+      <div
+        ref={listRef}
+        className={`relative min-w-0 flex-1 overflow-hidden ${className ?? ""}`}
+        style={wraps && !expanded ? { maxHeight: firstRow } : undefined}
+      >
+        {children}
+      </div>
+      {wraps ? (
+        <button
+          type="button"
+          className="-my-1.5 grid size-8 min-h-0! shrink-0 cursor-pointer place-items-center text-inherit"
+          aria-expanded={expanded}
+          aria-label={expanded ? collapseLabel : expandLabel}
+          title={expanded ? collapseLabel : expandLabel}
+          onClick={() => setExpanded((on) => !on)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className={`size-5 transition-transform ${expanded ? "rotate-180" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+      ) : null}
+    </div>
   );
 }
 
