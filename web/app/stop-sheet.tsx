@@ -380,6 +380,20 @@ export function StopSheet({
               </div>
               <div className="sheet-actions">
 
+                <MapMenu
+                  latitude={latitude}
+                  longitude={longitude}
+                  name={localizeStopName(name, mode, locale, nameTc, nameEn)}
+                  label={t.sheet.otherMaps}
+                  closeLabel={t.sheet.close}
+                  maps={[
+                    ["google", t.sheet.googleMaps],
+                    ["apple", t.sheet.appleMaps],
+                    ["baidu", t.sheet.baiduMaps],
+                    ["amap", t.sheet.amap],
+                    ["osm", t.sheet.openStreetMap],
+                  ]}
+                />
                 <button type="button" onClick={onClose}>
                   {t.sheet.close}
                 </button>
@@ -455,20 +469,6 @@ export function StopSheet({
                   copyLabel={t.sheet.copy}
                   copiedLabel={t.sheet.copied}
                   closeLabel={t.sheet.close}
-                />
-                <MapMenu
-                  latitude={latitude}
-                  longitude={longitude}
-                  name={localizeStopName(name, mode, locale, nameTc, nameEn)}
-                  label={t.sheet.otherMaps}
-                  closeLabel={t.sheet.close}
-                  maps={[
-                    ["google", t.sheet.googleMaps],
-                    ["apple", t.sheet.appleMaps],
-                    ["baidu", t.sheet.baiduMaps],
-                    ["amap", t.sheet.amap],
-                    ["osm", t.sheet.openStreetMap],
-                  ]}
                 />
                 <button
                   type="button"
