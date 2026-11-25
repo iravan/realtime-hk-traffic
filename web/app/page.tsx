@@ -1683,7 +1683,6 @@ export default function Page() {
                   setBookmarkOnly((on) => {
                     const next = !on;
                     if (next) {
-                      setQuery("");
                       setAppliedQuery("");
                       setSubmitted(false);
                     }
