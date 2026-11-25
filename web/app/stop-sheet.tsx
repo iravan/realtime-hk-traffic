@@ -448,7 +448,7 @@ export function StopSheet({
               </section>
               </>
             ) : null}
-              <div className="sheet-actions" style={{ marginTop: "0.5rem" }}>
+              <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "flex-end" }}>
                 <button
                   type="button"
                   className="sheet-icon"
