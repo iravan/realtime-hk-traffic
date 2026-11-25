@@ -1603,7 +1603,11 @@ export default function Page() {
             <h1>{t.brand}</h1>
             <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
               {weatherEmoji}
-              {temperature != null ? ` ${Math.round(temperature)}°C` : ""}
+              {temperature != null ? (
+                <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
+                  {` ${Math.round(temperature)}°C`}
+                </span>
+              ) : ""}
             </span>
             <button
               type="button"
