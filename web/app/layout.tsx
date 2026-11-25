@@ -119,9 +119,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Analytics />
         <SpeedInsights />
-        <meta {...{ itemprop: "name" }} content={title} />
-        <meta {...{ itemprop: "description" }} content={description} />
-        <meta {...{ itemprop: "image" }} content={image.url} />
+        <meta itemProp="name" content={title} />
+        <meta itemProp="description" content={description} />
+        <meta itemProp="image" content={image.url} />
         <link rel="image_src" href={image.url} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <I18nProvider>{children}</I18nProvider>
