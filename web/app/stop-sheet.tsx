@@ -583,7 +583,7 @@ export function StopSheet({
                         {mode === "bus" ? ` · ${busOperator(id, locale)}` : ""}
                       </li>
                     ) : null}
-                    <li key={`${row.route}-${index}`}>
+                    <li key={`${row.route}-${index}`} style={{ fontWeight: row.minutes !== undefined && row.minutes <= 5 ? 700 : undefined }}>
                       {mode === "ferry" ? (
                         <div className="ferry-arrival-head">
                           {row.operator ? (
