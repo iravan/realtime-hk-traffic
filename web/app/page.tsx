@@ -1624,6 +1624,15 @@ export default function Page() {
               className="stop-filter"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  setAppliedQuery(query);
+                  setSelected(null);
+                  setBoard(null);
+                  clearStopParam();
+                  clearFocusPadding();
+                }
+              }}
               placeholder={filterPlaceholder(active, locale)}
               aria-label={filterPlaceholder(active, locale)}
               disabled={bookmarkOnly}
