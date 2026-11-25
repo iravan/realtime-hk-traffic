@@ -5,7 +5,8 @@
 // that information ("...長洲渡輪碼頭..."), so we match the destination label
 // against every other pier name. When several piers match (Central has eight),
 // a reciprocal match -- the candidate also lists this pier as a destination --
-// breaks the tie. Ambiguous destinations are left out rather than guessed.
+// breaks the tie, preferring the main ferry pier over landing steps. Destinations
+// that are still ambiguous are left out rather than guessed.
 //
 // Run after refreshing public/stops-ferry.json:
 //   node scripts/build-ferry-links.mjs
@@ -39,10 +40,20 @@ for (const stop of stops) {
     const reciprocal = candidates.filter((other) =>
       (other.destinations ?? []).some((label) => matchesName(stop.name, label)),
     );
+    // When several piers serve the route, prefer the main ferry pier over
+    // landing steps and public piers, then keep the catalogue order so the
+    // result is stable.
+    reciprocal.sort((a, b) => pierRank(b) - pierRank(a));
     const target =
-      reciprocal.length === 1 ? reciprocal[0] : candidates.length === 1 ? candidates[0] : null;
+      reciprocal.length > 0 ? reciprocal[0] : candidates.length === 1 ? candidates[0] : null;
     if (target) links[`${stop.id}|${destination}`] = target.id;
   }
+}
+
+function pierRank(stop) {
+  if (stop.name.includes("渡輪碼頭")) return 2;
+  if (stop.name.includes("碼頭")) return 1;
+  return 0;
 }
 
 const sorted = Object.fromEntries(

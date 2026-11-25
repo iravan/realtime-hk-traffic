@@ -788,7 +788,7 @@ function FerryDestination({
           <button
             key={`${part}-${index}`}
             type="button"
-            className="station-chip ferry-chip ferry-chip-link"
+            className="station-chip ferry-chip"
             style={style}
             onClick={() => onOpenStop?.(link)}
             title={label}
