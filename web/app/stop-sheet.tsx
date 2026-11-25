@@ -9,9 +9,10 @@ import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
-import ferryLinks from "./ferry-links.json";
+import bundledFerryLinks from "./ferry-links.json";
 import type { TaxiLabel } from "./taxi-stand";
 // public holidays loaded in FerryTimetable via fetch
+let ferryLinks: Record<string, string> = bundledFerryLinks as unknown as Record<string, string>;
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 // On Vercel the API is same-origin behind the /api rewrite. A static host such
@@ -170,6 +171,24 @@ export function StopSheet({
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
+  const [linksRevision, setLinksRevision] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    loadCachedJson<Record<string, string>>("ferry-links", async () => {
+      const response = await fetch(`${basePath}/ferry-links.json`);
+      if (!response.ok) throw new Error("ferry-links");
+      return (await response.json()) as Record<string, string>;
+    })
+      .then((map) => {
+        if (cancelled) return;
+        ferryLinks = map;
+        setLinksRevision((revision) => revision + 1);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   const [sign, setSign] = useState<string | null>(null);
   const [facility, setFacility] = useState<Facility | null>(null);
   useEffect(() => {

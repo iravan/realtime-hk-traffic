@@ -414,7 +414,7 @@ button { cursor: pointer; }
   font-weight: 600;
   cursor: pointer;
 }
-.ferry-chip-link:hover { filter: brightness(0.94) }
+.ferry-chip-link:hover { filter: brightness(0.94); }
 .sheet.ferry-compact header, .sheet.ferry-compact .body { padding: 0.55rem 0.75rem; }
 .sheet.ferry-compact .ferry-tabs { margin: 0 0 0.4rem; }
 .sheet.ferry-compact .ferry-day { margin: 0 0 0.5rem; }

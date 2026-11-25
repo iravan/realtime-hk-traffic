@@ -16,7 +16,8 @@ import { fileURLToPath } from "node:url";
 
 const root = new URL("../", import.meta.url);
 const stopsPath = fileURLToPath(new URL("public/stops-ferry.json", root));
-const linksPath = fileURLToPath(new URL("app/ferry-links.json", root));
+const appLinksPath = fileURLToPath(new URL("app/ferry-links.json", root));
+const publicLinksPath = fileURLToPath(new URL("public/ferry-links.json", root));
 
 const stops = JSON.parse(await readFile(stopsPath, "utf8")).stops ?? [];
 
@@ -59,5 +60,6 @@ function pierRank(stop) {
 const sorted = Object.fromEntries(
   Object.entries(links).sort(([a], [b]) => a.localeCompare(b)),
 );
-await writeFile(linksPath, `${JSON.stringify(sorted, null, 2)}\n`);
-console.log(`wrote ${Object.keys(sorted).length} links to app/ferry-links.json`);
+await writeFile(appLinksPath, `${JSON.stringify(sorted, null, 2)}\n`);
+await writeFile(publicLinksPath, `${JSON.stringify(sorted, null, 2)}\n`);
+console.log(`wrote ${Object.keys(sorted).length} links to app/ferry-links.json and public/ferry-links.json`);
