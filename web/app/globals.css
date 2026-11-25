@@ -167,6 +167,20 @@ button { cursor: pointer; }
   color: var(--ink);
   cursor: pointer;
 }
+.confirm-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 36px;
+  padding: 0 0.7rem;
+  border: 1px solid rgba(28, 25, 21, 0.2);
+  border-radius: 0.45rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
 .bookmark-search svg { width: 18px; height: 18px; }
 .bookmark-search[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .lang-toggle {
