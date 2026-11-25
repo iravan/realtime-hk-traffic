@@ -380,38 +380,6 @@ export function StopSheet({
               </div>
               <div className="sheet-actions">
 
-                <button
-                  type="button"
-                  className="sheet-icon"
-                  aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
-                  aria-pressed={bookmarked}
-                  onClick={onToggleBookmark}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                    <path d="M6 3h12v18l-6-4.5L6 21z" />
-                  </svg>
-                </button>
-                <ShareStop
-                  id={id}
-                  label={t.sheet.share}
-                  copyLabel={t.sheet.copy}
-                  copiedLabel={t.sheet.copied}
-                  closeLabel={t.sheet.close}
-                />
-                <MapMenu
-                  latitude={latitude}
-                  longitude={longitude}
-                  name={localizeStopName(name, mode, locale, nameTc, nameEn)}
-                  label={t.sheet.otherMaps}
-                  closeLabel={t.sheet.close}
-                  maps={[
-                    ["google", t.sheet.googleMaps],
-                    ["apple", t.sheet.appleMaps],
-                    ["baidu", t.sheet.baiduMaps],
-                    ["amap", t.sheet.amap],
-                    ["osm", t.sheet.openStreetMap],
-                  ]}
-                />
                 <button type="button" onClick={onClose}>
                   {t.sheet.close}
                 </button>
@@ -431,6 +399,7 @@ export function StopSheet({
               </div>
             ) : null}
             {description || toilet || water || babycare || mode === "mtr" ? (
+              <>
               <section className={description ? "description" : "description icon-only"}>
                 {description}
                 <div className="icon-row">
@@ -477,6 +446,41 @@ export function StopSheet({
                   ) : null}
                 </div>
               </section>
+              <div className="sheet-actions" style={{ marginTop: "0.5rem" }}>
+                <button
+                  type="button"
+                  className="sheet-icon"
+                  aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
+                  aria-pressed={bookmarked}
+                  onClick={onToggleBookmark}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                    <path d="M6 3h12v18l-6-4.5L6 21z" />
+                  </svg>
+                </button>
+                <ShareStop
+                  id={id}
+                  label={t.sheet.share}
+                  copyLabel={t.sheet.copy}
+                  copiedLabel={t.sheet.copied}
+                  closeLabel={t.sheet.close}
+                />
+                <MapMenu
+                  latitude={latitude}
+                  longitude={longitude}
+                  name={localizeStopName(name, mode, locale, nameTc, nameEn)}
+                  label={t.sheet.otherMaps}
+                  closeLabel={t.sheet.close}
+                  maps={[
+                    ["google", t.sheet.googleMaps],
+                    ["apple", t.sheet.appleMaps],
+                    ["baidu", t.sheet.baiduMaps],
+                    ["amap", t.sheet.amap],
+                    ["osm", t.sheet.openStreetMap],
+                  ]}
+                />
+              </div>
+              </>
             ) : null}
           </div>
         </div>
