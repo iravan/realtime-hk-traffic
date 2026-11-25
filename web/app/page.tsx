@@ -2050,7 +2050,7 @@ function matchesQuery(stop: Stop, query: string): boolean {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
   if (stop.mode === "bus" || stop.mode === "minibus") {
-    if ((stop.routes ?? []).some((route) => route.toLowerCase().startsWith(needle))) return true;
+    if ((stop.routes ?? []).some((route) => route.trim().toLowerCase() === needle)) return true;
     return [stop.name, stop.name_tc, stop.name_en].some((name) =>
       name?.toLowerCase().includes(needle),
     );
