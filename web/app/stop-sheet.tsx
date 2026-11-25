@@ -1076,8 +1076,13 @@ function FerryTimetable({
                                   const highlight = [isFirst ? "first" : "", index === lastIdx ? "last" : ""]
                                     .filter(Boolean)
                                     .join(" ");
+                                  const now = new Date();
+                                  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                                  const nowKey = nowMinutes < 240 ? nowMinutes + 1440 : nowMinutes;
+                                  const sessionKey = minutes < 240 ? minutes + 1440 : minutes;
+                                  const isPast = sessionKey < nowKey;
                                   return (
-                                    <li key={`${session.time}-${index}`} className={[highlight, (session.operator === "sun" && (session.remark === "1" || session.remark === "4")) ? "ferry-session-bold" : ""].filter(Boolean).join(" ")}>
+                                    <li key={`${session.time}-${index}`} className={[highlight, (session.operator === "sun" && (session.remark === "1" || session.remark === "4")) ? "ferry-session-bold" : "", isPast ? "past" : ""].filter(Boolean).join(" ")}>
                                       {t.clock(session.time)}
                                     </li>
                                   );
