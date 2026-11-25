@@ -1286,3 +1286,9 @@ flowchart TD
   REDIS --> PUB[publish]
   Client -->|retry 1s / backoff| API
 ```
+
+## Map clustering
+
+- Stops are clustered by MapLibre with `clusterRadius: 56`.
+- Clusters render up to zoom 17 (`clusterMaxZoom`); individual pins render from zoom 17.
+- Full stop icons render from zoom 19 (`pinZoom`).
