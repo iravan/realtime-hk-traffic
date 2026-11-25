@@ -212,6 +212,7 @@ export default function Page() {
   const mtrLinesLoadingRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
   const [query, setQuery] = useState("");
+  const [appliedQuery, setAppliedQuery] = useState("");
   const [bookmarkOnly, setBookmarkOnly] = useState(false);
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
   const [bookmarkedStops, setBookmarkedStops] = useState<Stop[]>([]);
@@ -992,13 +993,13 @@ export default function Page() {
 
   const stopsRef = useRef<Stop[]>([]);
   stopsRef.current = stops;
-  filterRef.current = { query, bookmarkOnly, bookmarks };
+  filterRef.current = { query: appliedQuery, bookmarkOnly, bookmarks };
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
     drawStops(map);
-  }, [query, bookmarkOnly, bookmarks]);
+  }, [appliedQuery, bookmarkOnly, bookmarks]);
 
   function toggleBookmark(id: string) {
     const next = new Set(bookmarks);
@@ -1627,6 +1628,14 @@ export default function Page() {
               aria-label={filterPlaceholder(active, locale)}
               disabled={bookmarkOnly}
             />
+            <button
+              type="button"
+              className="confirm-search"
+              onClick={() => setAppliedQuery(query)}
+              aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
+            >
+              {locale === "en" ? "Go" : "搜尋"}
+            </button>
             {bookmarks.size > 0 ? (
               <button
                 type="button"
