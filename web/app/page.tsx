@@ -1688,6 +1688,7 @@ export default function Page() {
                 }
               }}
               disabled={bookmarkOnly}
+              style={{ background: modeColor[active], color: "#fff" }}
               aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
             >
               {submitted ? (locale === "en" ? "Cancel" : "取消") : (locale === "en" ? "Go" : "搜尋")}
