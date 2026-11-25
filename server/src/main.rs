@@ -11,7 +11,7 @@ use futures::future::join_all;
 use redis::aio::ConnectionManager;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tower_http::cors::CorsLayer;
@@ -116,6 +116,7 @@ struct App {
     redis: ConnectionManager,
     http: reqwest::Client,
     watch: std::sync::Mutex<HashMap<String, Vec<tokio::sync::mpsc::Sender<String>>>>,
+    inflight: std::sync::Mutex<HashSet<String>>,
 }
 
 #[derive(Deserialize)]
@@ -180,6 +181,7 @@ async fn main() {
         redis,
         http,
         watch: std::sync::Mutex::new(HashMap::new()),
+        inflight: std::sync::Mutex::new(HashSet::new()),
     });
     let startup = app.clone();
     tokio::spawn(async move { load_catalogues(startup).await });
@@ -512,9 +514,15 @@ async fn arrivals(State(app): State<Arc<App>>, Path(id): Path<String>) -> Respon
     }
     // Do not hold this request while fetching; kick off a background refresh
     // and let the client retry shortly. This keeps the API free under load.
-    let app = app.clone();
-    let stop = stop.clone();
-    tokio::spawn(async move { refresh(&app, &stop).await });
+    let spawned = {
+        let mut inflight = app.inflight.lock().unwrap();
+        inflight.insert(id.clone())
+    };
+    if spawned {
+        let app = app.clone();
+        let stop = stop.clone();
+        tokio::spawn(async move { refresh(&app, &stop).await });
+    }
     (
         StatusCode::ACCEPTED,
         Json(json!({"error": "snapshot pending"})),
@@ -586,9 +594,11 @@ async fn refresh(app: &App, stop: &Stop) {
     // has no field for that, so identical arrivals collapse into one.
     let snapshot = merge_snapshots(parts);
     let Some(snapshot) = snapshot else {
+        app.inflight.lock().unwrap().remove(&stop.id);
         return;
     };
     let Ok(body) = serde_json::to_string(&snapshot) else {
+        app.inflight.lock().unwrap().remove(&stop.id);
         return;
     };
     let mut redis = app.redis.clone();
@@ -601,8 +611,10 @@ async fn refresh(app: &App, stop: &Stop) {
         .await;
     if saved.is_err() {
         eprintln!("redis arrival write failed for {}", stop.id);
+        app.inflight.lock().unwrap().remove(&stop.id);
         return;
     }
+    app.inflight.lock().unwrap().remove(&stop.id);
     publish(app, &stop.id, &body);
 }
 
