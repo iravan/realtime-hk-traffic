@@ -1679,7 +1679,17 @@ export default function Page() {
                 aria-pressed={bookmarkOnly}
                 aria-label={locale === "en" ? `Show bookmarked stops only, ${bookmarks.size} total` : `只顯示收藏站點，共 ${bookmarks.size} 個`}
                 title={locale === "en" ? "Show bookmarked stops only" : "只顯示收藏站點"}
-                onClick={() => setBookmarkOnly((on) => !on)}
+                onClick={() => {
+                  setBookmarkOnly((on) => {
+                    const next = !on;
+                    if (next) {
+                      setQuery("");
+                      setAppliedQuery("");
+                      setSubmitted(false);
+                    }
+                    return next;
+                  });
+                }}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarkOnly ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
                   <path d="M6 3h12v18l-6-4.5L6 21z" />
