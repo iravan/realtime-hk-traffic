@@ -358,7 +358,7 @@ export function StopSheet({
     ) : null;
 
   return (
-    <aside className={mode === "ferry" ? "sheet ferry-compact" : "sheet"}
+    <aside className={mode === "ferry" ? "sheet ferry-compact" : "sheet"}>
       <header
         className={station ? ["station", station.badge].filter(Boolean).join(" ") : undefined}
         style={
