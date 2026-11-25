@@ -487,12 +487,11 @@ export function StopSheet({
                 ) : mode === "tram" ? (
                   <button
                     type="button"
-                    className="tram-timetable"
+                    className="ferry-timetable-btn"
                     aria-label={t.sheet.ferryTimetable}
                     onClick={() => window.open(locale === "en" ? "https://www.hktramways.com/en/schedules-fares/" : "https://www.hktramways.com/tc/schedules-fares/", "_blank", "noopener,noreferrer")}
-                    style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "2.75rem", height: "2.75rem", border: "none", background: "transparent", color: "var(--ink)", cursor: "pointer" }}
                   >
-                    <img src={`${basePath}/icons/ferry-timetable.svg`} alt="" width="20" height="20" />
+                    <img src={`${basePath}/icons/ferry-timetable.svg`} alt="" className="ferry-timetable-icon" />
                   </button>
                 ) : <span />}
                 <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
