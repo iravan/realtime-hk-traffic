@@ -338,17 +338,6 @@ export function StopSheet({
             ))}
           </RouteChips>
         ) : null}
-        <button
-          type="button"
-          className="tram-timetable"
-          aria-label={t.sheet.ferryTimetable}
-          onClick={() => window.open(locale === "en" ? "https://www.hktramways.com/en/schedules-fares/" : "https://www.hktramways.com/tc/schedules-fares/", "_blank", "noopener,noreferrer")}
-          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginTop: "0.5rem", width: "2.75rem", height: "2.75rem", border: "none", background: "transparent", color: "var(--ink)", cursor: "pointer" }}
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="currentColor">
-            <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7v-5z" />
-          </svg>
-        </button>
       </>
     ) : apiBase && serviceHours ? (
       <>
@@ -478,7 +467,21 @@ export function StopSheet({
               </section>
               </>
             ) : null}
-              <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "flex-end" }}>
+              <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "space-between" }}>
+                {mode === "tram" ? (
+                  <button
+                    type="button"
+                    className="tram-timetable"
+                    aria-label={t.sheet.ferryTimetable}
+                    onClick={() => window.open(locale === "en" ? "https://www.hktramways.com/en/schedules-fares/" : "https://www.hktramways.com/tc/schedules-fares/", "_blank", "noopener,noreferrer")}
+                    style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: "2.75rem", height: "2.75rem", border: "none", background: "transparent", color: "var(--ink)", cursor: "pointer" }}
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="currentColor">
+                      <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7v-5z" />
+                    </svg>
+                  </button>
+                ) : <span />}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
                 <ShareStop
                   id={id}
                   label={t.sheet.share}
@@ -497,6 +500,7 @@ export function StopSheet({
                     <path d="M6 3h12v18l-6-4.5L6 21z" />
                   </svg>
                 </button>
+                </div>
               </div>
 
           </div>
