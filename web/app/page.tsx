@@ -1632,6 +1632,7 @@ export default function Page() {
               type="button"
               className="confirm-search"
               onClick={() => setAppliedQuery(query)}
+              disabled={bookmarkOnly}
               aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
             >
               {locale === "en" ? "Go" : "搜尋"}

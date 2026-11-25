@@ -181,6 +181,10 @@ button { cursor: pointer; }
   font-size: 0.85rem;
   cursor: pointer;
 }
+.confirm-search:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .bookmark-search svg { width: 18px; height: 18px; }
 .bookmark-search[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 .lang-toggle {
