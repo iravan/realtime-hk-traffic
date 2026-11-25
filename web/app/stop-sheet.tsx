@@ -1033,29 +1033,31 @@ function FerryTimetable({
         <Modal title={t.sheet.ferryTimetable} closeLabel={t.sheet.close} onClose={() => setOpen(false)}>
           {current ? (
             <>
-              <div className="ferry-tabs" role="tablist">
-                {timetable.map((item, index) => {
-                  const color = ferryDestinationColor(item.destination);
-                  const selected = index === active;
-                  return (
-                    <button
-                      key={`${item.destination}-${index}`}
-                      type="button"
-                      role="tab"
-                      aria-selected={selected}
-                      className="ferry-tab"
-                      style={
-                        selected
-                          ? { background: color?.color ?? "var(--ink)", color: color?.font ?? "var(--paper)", borderColor: color?.color ?? "var(--ink)" }
-                          : undefined
-                      }
-                      onClick={() => setActive(index)}
-                    >
-                      {localizeBilingualName(item.destination, locale)}
-                    </button>
-                  );
-                })}
-              </div>
+              {timetable.length > 1 ? (
+                <div className="ferry-tabs" role="tablist">
+                  {timetable.map((item, index) => {
+                    const color = ferryDestinationColor(item.destination);
+                    const selected = index === active;
+                    return (
+                      <button
+                        key={`${item.destination}-${index}`}
+                        type="button"
+                        role="tab"
+                        aria-selected={selected}
+                        className="ferry-tab"
+                        style={
+                          selected
+                            ? { background: color?.color ?? "var(--ink)", color: color?.font ?? "var(--paper)", borderColor: color?.color ?? "var(--ink)" }
+                            : undefined
+                        }
+                        onClick={() => setActive(index)}
+                      >
+                        {localizeBilingualName(item.destination, locale)}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
               {current.days.some((day) => day.sessions.some((session) => session.operator === "sun" && (session.remark === "1" || session.remark === "4"))) ? (
                 <p className="ferry-timetable-legend muted">{t.sheet.ferryTimetableLegend}</p>
               ) : null}
