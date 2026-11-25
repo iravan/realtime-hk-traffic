@@ -321,7 +321,15 @@ export function StopSheet({
         <p>{taxiHours ? (locale === "en" ? taxiHours.en : taxiHours.tc) : t.sheet.taxiAllDay}</p>
       </>
     ) : mode === "ferry" ? (
-      <FerryTimetable destinations={destinations ?? []} timetable={ferryTimetable ?? []} locale={locale} t={t} />
+      <>
+        {(destinations ?? []).length > 0 ? (
+          <div className="ferry-destinations">
+            {(destinations ?? []).map((destination, index) => (
+              <FerryDestination key={`${destination}-${index}`} name={destination} locale={locale} />
+            ))}
+          </div>
+        ) : null}
+      </>
     ) : mode === "tram" ? (
       <>
         {routes && routes.length > 0 ? (
@@ -468,7 +476,15 @@ export function StopSheet({
               </>
             ) : null}
               <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "space-between" }}>
-                {mode === "tram" ? (
+                {mode === "ferry" ? (
+                  <FerryTimetable
+                    buttonOnly
+                    destinations={destinations ?? []}
+                    timetable={ferryTimetable ?? []}
+                    locale={locale}
+                    t={t}
+                  />
+                ) : mode === "tram" ? (
                   <button
                     type="button"
                     className="tram-timetable"
@@ -881,11 +897,13 @@ function FerryTimetable({
   timetable,
   locale,
   t,
+  buttonOnly = false,
 }: {
   destinations: string[];
   timetable: TimetableDestination[];
   locale: Locale;
   t: Messages;
+  buttonOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -905,7 +923,7 @@ function FerryTimetable({
   const current = timetable[active];
   return (
     <>
-      {destinations.length > 0 ? (
+      {!buttonOnly && destinations.length > 0 ? (
         <div className="ferry-destinations">
           {destinations.map((destination, index) => (
             <FerryDestination key={`${destination}-${index}`} name={destination} locale={locale} />
