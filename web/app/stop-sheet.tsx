@@ -9,6 +9,7 @@ import { loadTaxiKindImages, loadVehicleImages, citybusIconUrl, ferryBoatIconUrl
 import { loadCachedJson } from "./catalogue-cache";
 import { stopPath } from "./stop-link";
 import { localizeBilingualName, localizeStopName } from "./stop-name";
+import ferryLinks from "./ferry-links.json";
 import type { TaxiLabel } from "./taxi-stand";
 // public holidays loaded in FerryTimetable via fetch
 
@@ -146,6 +147,7 @@ export function StopSheet({
   serviceHours,
   bookmarked,
   onToggleBookmark,
+  onOpenStop,
   onClose,
 }: {
   id: string;
@@ -164,6 +166,7 @@ export function StopSheet({
   serviceHours?: string | null;
   bookmarked: boolean;
   onToggleBookmark: () => void;
+  onOpenStop?: (id: string) => void;
   onClose: () => void;
 }) {
   const { locale, t } = useI18n();
@@ -343,7 +346,7 @@ export function StopSheet({
         {(destinations ?? []).length > 0 ? (
           <div className="ferry-destinations">
             {(destinations ?? []).map((destination, index) => (
-              <FerryDestination key={`${destination}-${index}`} name={destination} locale={locale} />
+              <FerryDestination key={`${destination}-${index}`} name={destination} locale={locale} stopId={id} onOpenStop={onOpenStop} />
             ))}
           </div>
         ) : null}
@@ -650,7 +653,7 @@ export function StopSheet({
                         <StationChip name={row.destination} locale={locale} />
                       ) : row.destination ? (
                         mode === "ferry" ? (
-                          <FerryDestination name={row.destination} locale={locale} />
+                          <FerryDestination name={row.destination} locale={locale} stopId={id} onOpenStop={onOpenStop} />
                         ) : (
                           <span>
                             {mode === "bus" || mode === "minibus" || mode === "tram"
@@ -763,18 +766,38 @@ function RouteChips({
   );
 }
 
-function FerryDestination({ name, locale }: { name: string; locale: Locale }) {
+function FerryDestination({
+  name,
+  locale,
+  stopId,
+  onOpenStop,
+}: {
+  name: string;
+  locale: Locale;
+  stopId?: string;
+  onOpenStop?: (id: string) => void;
+}) {
+  const link = stopId && onOpenStop ? (ferryLinks as Record<string, string>)[`${stopId}|${name}`] : undefined;
   return (
     <>
       {name.split(" / ").map((part, index) => {
         const color = ferryDestinationColor(part);
-        return (
-          <span
+        const style = color ? { background: color.color, color: color.font } : undefined;
+        const label = localizeBilingualName(part, locale);
+        return link ? (
+          <button
             key={`${part}-${index}`}
-            className="station-chip ferry-chip"
-            style={color ? { background: color.color, color: color.font } : undefined}
+            type="button"
+            className="station-chip ferry-chip ferry-chip-link"
+            style={style}
+            onClick={() => onOpenStop?.(link)}
+            title={label}
           >
-            {localizeBilingualName(part, locale)}
+            {label}
+          </button>
+        ) : (
+          <span key={`${part}-${index}`} className="station-chip ferry-chip" style={style}>
+            {label}
           </span>
         );
       })}

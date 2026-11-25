@@ -1892,6 +1892,10 @@ export default function Page() {
           timetable={selected.timetable}
           bookmarked={bookmarks.has(selected.id)}
           onToggleBookmark={() => toggleBookmark(selected.id)}
+          onOpenStop={(nextId) => {
+            const stop = cataloguesRef.current.ferry?.find((entry) => entry.id === nextId);
+            if (stop) showStopRef.current(stop, true);
+          }}
           serviceHours={
             selected.mode === "ferry" && hours
               ? schedulesForStop(selected, hours)

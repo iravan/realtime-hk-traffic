@@ -405,6 +405,17 @@ button { cursor: pointer; }
 .ferry-sessions li.past { opacity: 0.35; text-decoration: line-through; }
 .sheet .station-chip + .station-chip { margin-left: 0.3rem; }
 .ferry-chip { display: inline-block; box-sizing: border-box; border-radius: 0.6rem; line-height: 1.25; text-align: left; max-width: 100%; white-space: normal; }
+.ferry-chip-link {
+  appearance: none;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ferry-chip-link:hover { filter: brightness(0.94); text-decoration: underline; }
+.ferry-chip-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .sheet.ferry-compact header, .sheet.ferry-compact .body { padding: 0.55rem 0.75rem; }
 .sheet.ferry-compact .ferry-tabs { margin: 0 0 0.4rem; }
 .sheet.ferry-compact .ferry-day { margin: 0 0 0.5rem; }
