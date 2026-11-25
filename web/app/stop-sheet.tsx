@@ -425,7 +425,7 @@ export function StopSheet({
                 </RouteChips>
               </div>
             ) : null}
-            {description || toilet || water || babycare || mode === "mtr" ? (
+            {true ? (
               <>
               <section className={description ? "description" : "description icon-only"}>
                 {description}
