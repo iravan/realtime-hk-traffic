@@ -2127,9 +2127,8 @@ function matchesQuery(stop: Stop, query: string): boolean {
     );
   }
   if (stop.mode === "ferry") {
-    return (stop.destinations ?? []).some((destination) =>
-      destination.toLowerCase().includes(needle),
-    );
+    if ((stop.destinations ?? []).some((destination) => destination.toLowerCase().includes(needle))) return true;
+    return [stop.name, stop.name_tc, stop.name_en].some((name) => name?.toLowerCase().includes(needle));
   }
   // Tram route names carry both languages and the terminus names, so a route
   // matches on any part of its label.
