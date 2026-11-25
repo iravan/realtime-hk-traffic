@@ -2058,6 +2058,9 @@ function matchesQuery(stop: Stop, query: string): boolean {
   if (!needle) return true;
   if (stop.mode === "bus" || stop.mode === "minibus") {
     if ((stop.routes ?? []).some((route) => route.trim().toLowerCase() === needle)) return true;
+    // A route-number query should not fall back to stop names, otherwise
+    // "1" would also match stops whose names merely contain "1".
+    if (/^[0-9]+[a-z]*$/i.test(needle)) return false;
     return [stop.name, stop.name_tc, stop.name_en].some((name) =>
       name?.toLowerCase().includes(needle),
     );
