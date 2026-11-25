@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useI18n, type Locale, type Messages } from "./i18n";
 import { mtrDestinationColor, mtrStationColor, type StationColor } from "./mtr-station-color";
@@ -525,7 +525,7 @@ export function StopSheet({
               ) : (
                 <ul>
                   {sortedRows.map((row, index) => (
-                    <>
+                    <Fragment key={`${row.route}-${index}`}>
                     {(mode === "mtr" || mode === "bus" || mode === "minibus") && (index === 0 || row.route !== sortedRows[index - 1]?.route) ? (
                       <li
                         key={`header-${row.route}`}
@@ -593,7 +593,7 @@ export function StopSheet({
                       {mode === "ferry" && row.time ? <span> · {t.clock(row.time)}</span> : null}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
-                    </>
+                    </Fragment>
                   ))}
                 </ul>
               )}
