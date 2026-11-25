@@ -104,7 +104,6 @@ struct Row {
 }
 
 struct App {
-    stops: RwLock<Vec<Stop>>,
     by_id: RwLock<HashMap<String, Stop>>,
     by_location: RwLock<HashMap<String, String>>,
     // Member id -> the id that owns that location, so any id the web app holds
@@ -172,7 +171,6 @@ async fn main() {
         .build()
         .expect("http client");
     let app = Arc::new(App {
-        stops: RwLock::new(Vec::new()),
         by_id: RwLock::new(HashMap::new()),
         by_location: RwLock::new(HashMap::new()),
         by_member: RwLock::new(HashMap::new()),
@@ -237,7 +235,7 @@ async fn load_catalogues(app: Arc<App>) {
     } else {
         eprintln!("live catalogue refresh disabled; using bundled stops");
     }
-    eprintln!("catalogue ready {}", app.stops.read().await.len());
+    eprintln!("catalogue ready {}", app.by_id.read().await.len());
 }
 
 // The bundled catalogue is complete enough to serve. Live catalogue crawls are
@@ -301,7 +299,6 @@ async fn remember_local(app: &App, stops: Vec<Stop>) -> (usize, usize) {
 }
 
 async fn index_stops(app: &App, stops: Vec<Stop>) -> (usize, usize) {
-    let mut all = app.stops.write().await;
     let mut index = app.by_id.write().await;
     let mut locations = app.by_location.write().await;
     let mut members = app.by_member.write().await;
@@ -346,7 +343,6 @@ async fn index_stops(app: &App, stops: Vec<Stop>) -> (usize, usize) {
         }
     }
     // One entry per location; a stop seen in two sources is refreshed, not doubled.
-    *all = index.values().cloned().collect();
     (added, updated)
 }
 
@@ -383,7 +379,8 @@ async fn list_stops(State(app): State<Arc<App>>, Query(bounds): Query<Bounds>) -
             .filter(|mode| !mode.is_empty())
             .collect()
     });
-    let stops = app.stops.read().await;
+    let by_id = app.by_id.read().await;
+    let stops: Vec<&Stop> = by_id.values().collect();
     let mut matched = Vec::new();
     for stop in stops.iter() {
         if let Some(modes) = &allowed {
@@ -423,21 +420,43 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     {
         return (StatusCode::OK, [("content-type", "application/json")], body).into_response();
     }
-    let Ok(response) = app.http.get("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en").send().await else {
-        return (StatusCode::SERVICE_UNAVAILABLE, Json(json!({"error":"weather unavailable"}))).into_response();
+    let Ok(response) = app
+        .http
+        .get("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=en")
+        .send()
+        .await
+    else {
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            Json(json!({"error":"weather unavailable"})),
+        )
+            .into_response();
     };
     let Ok(parsed) = response.json::<Value>().await else {
-        return (StatusCode::SERVICE_UNAVAILABLE, Json(json!({"error":"weather unavailable"}))).into_response();
+        return (
+            StatusCode::SERVICE_UNAVAILABLE,
+            Json(json!({"error":"weather unavailable"})),
+        )
+            .into_response();
     };
     let rain_by_value = parsed
         .get("rainfall")
         .and_then(|v| v.get("data"))
         .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().any(|d| d.get("max").and_then(|v| v.as_i64()).unwrap_or(0) > 0))
+        .map(|arr| {
+            arr.iter()
+                .any(|d| d.get("max").and_then(|v| v.as_i64()).unwrap_or(0) > 0)
+        })
         .unwrap_or(false);
-    let icons = parsed.get("icon").and_then(|v| v.as_array()).cloned().unwrap_or_default();
+    let icons = parsed
+        .get("icon")
+        .and_then(|v| v.as_array())
+        .cloned()
+        .unwrap_or_default();
     let rain_icons = [62_i64, 63, 64, 65];
-    let rain_by_icon = icons.iter().any(|v| rain_icons.contains(&v.as_i64().unwrap_or(0)));
+    let rain_by_icon = icons
+        .iter()
+        .any(|v| rain_icons.contains(&v.as_i64().unwrap_or(0)));
     let raining = rain_by_value || rain_by_icon;
     let temperature_values: Vec<f64> = parsed
         .get("temperature")
@@ -454,7 +473,11 @@ async fn weather_handler(State(app): State<Arc<App>>) -> Response {
     } else {
         Some(temperature_values.iter().sum::<f64>() / temperature_values.len() as f64)
     };
-    let icon = parsed.get("icon").and_then(|v| v.as_array()).and_then(|a| a.first()).and_then(|v| v.as_i64());
+    let icon = parsed
+        .get("icon")
+        .and_then(|v| v.as_array())
+        .and_then(|a| a.first())
+        .and_then(|v| v.as_i64());
     let body = json!({"raining": raining, "temperature": temperature, "icon": icon}).to_string();
     let mut redis = app.redis.clone();
     let _: Result<(), _> = redis::cmd("SET")
@@ -594,9 +617,9 @@ async fn read_snapshot(app: &App, id: &str) -> Option<String> {
 }
 
 async fn city_places(app: &App) -> Vec<(String, String)> {
-    let stops = app.stops.read().await;
-    stops
-        .iter()
+    let by_id = app.by_id.read().await;
+    by_id
+        .values()
         .filter(|stop| stop.id.starts_with("bus:ctb:"))
         .filter_map(|stop| match (&stop.name_tc, &stop.name_en) {
             (Some(tc), Some(en)) => Some((tc.clone(), en.clone())),
@@ -670,17 +693,34 @@ async fn nlb_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
     let tz = chrono::FixedOffset::east_opt(8 * 3600)?;
     let mut rows = Vec::new();
     for route in route_list {
-        let route_id = route.get("routeId").and_then(|v| v.as_i64()).or_else(|| route.get("routeId").and_then(|v| v.as_str()).and_then(|s| s.parse().ok()))?;
-        let route_no = route.get("routeNo").and_then(|v| v.as_str()).unwrap_or("").to_string();
+        let route_id = route.get("routeId").and_then(|v| v.as_i64()).or_else(|| {
+            route
+                .get("routeId")
+                .and_then(|v| v.as_str())
+                .and_then(|s| s.parse().ok())
+        })?;
+        let route_no = route
+            .get("routeNo")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .to_string();
         // check if this stop is on the route
         let stops_resp = http
-            .get(format!("https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=list&routeId={route_id}"))
+            .get(format!(
+                "https://rt.data.gov.hk/v2/transport/nlb/stop.php?action=list&routeId={route_id}"
+            ))
             .send()
             .await
             .ok()?;
         let stops_json = stops_resp.json::<Value>().await.ok()?;
         let stops = stops_json.get("stops")?.as_array()?;
-        if !stops.iter().any(|s| s.get("stopId").and_then(|v| v.as_i64()).or_else(|| s.get("stopId").and_then(|v| v.as_str()).and_then(|x| x.parse().ok())) == Some(stop_id)) {
+        if !stops.iter().any(|s| {
+            s.get("stopId").and_then(|v| v.as_i64()).or_else(|| {
+                s.get("stopId")
+                    .and_then(|v| v.as_str())
+                    .and_then(|x| x.parse().ok())
+            }) == Some(stop_id)
+        }) {
             continue;
         }
         let eta_resp = http
@@ -691,10 +731,16 @@ async fn nlb_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
         let eta_json = eta_resp.json::<Value>().await.ok()?;
         let arrivals = eta_json.get("estimatedArrivals")?.as_array()?;
         for a in arrivals {
-            let time_str = a.get("estimatedArrivalTime").and_then(|v| v.as_str()).unwrap_or("");
+            let time_str = a
+                .get("estimatedArrivalTime")
+                .and_then(|v| v.as_str())
+                .unwrap_or("");
             let when = chrono::NaiveDateTime::parse_from_str(time_str, "%Y-%m-%d %H:%M:%S").ok()?;
             let when = when.and_local_timezone(tz).single()?;
-            let seconds = when.with_timezone(&Utc).signed_duration_since(Utc::now()).num_seconds();
+            let seconds = when
+                .with_timezone(&Utc)
+                .signed_duration_since(Utc::now())
+                .num_seconds();
             let minutes = (seconds / 60).max(0);
             rows.push(Row {
                 route: route_no.clone(),
@@ -970,9 +1016,15 @@ async fn lrt_arrivals(http: &reqwest::Client, stop: &Stop) -> Option<Snapshot> {
         return None;
     };
     let mut rows = Vec::new();
-    if let Some(platforms) = parsed.get("platform_list").and_then(|value| value.as_array()) {
+    if let Some(platforms) = parsed
+        .get("platform_list")
+        .and_then(|value| value.as_array())
+    {
         for platform in platforms {
-            let Some(routes) = platform.get("route_list").and_then(|value| value.as_array()) else {
+            let Some(routes) = platform
+                .get("route_list")
+                .and_then(|value| value.as_array())
+            else {
                 continue;
             };
             for route in routes {

@@ -444,6 +444,11 @@ export and `server/` as a container built from `server/Dockerfile`. Requests to
 [docs/DEPLOY.md](docs/DEPLOY.md) for the required environment variables and the GitHub
 Pages setup.
 
+The server RSS is small (about 40 MB after catalogue load), so provisioning it
+at 256 MB and allowing it to scale to zero is usually enough. That keeps Fluid
+Provisioned Memory (provisioned MB × runtime hours) down without changing the
+binary.
+
 ## Documentation
 
 - [docs/DESIGN.md](docs/DESIGN.md) — product goal and behaviour
