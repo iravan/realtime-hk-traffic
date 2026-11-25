@@ -446,6 +446,8 @@ export function StopSheet({
                   ) : null}
                 </div>
               </section>
+              </>
+            ) : null}
               <div className="sheet-actions" style={{ marginTop: "0.5rem" }}>
                 <button
                   type="button"
@@ -480,8 +482,7 @@ export function StopSheet({
                   ]}
                 />
               </div>
-              </>
-            ) : null}
+
           </div>
         </div>
       </header>
