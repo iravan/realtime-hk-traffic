@@ -1631,6 +1631,9 @@ export default function Page() {
                   setBoard(null);
                   clearStopParam();
                   clearFocusPadding();
+                  void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
+                    if (permission.state === "granted") locate(false);
+                  }).catch(() => {});
                 }
               }}
               placeholder={filterPlaceholder(active, locale)}
@@ -1646,6 +1649,9 @@ export default function Page() {
                 setBoard(null);
                 clearStopParam();
                 clearFocusPadding();
+                void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
+                  if (permission.state === "granted") locate(false);
+                }).catch(() => {});
               }}
               disabled={bookmarkOnly}
               aria-label={locale === "en" ? "Confirm search" : "確認搜尋"}
