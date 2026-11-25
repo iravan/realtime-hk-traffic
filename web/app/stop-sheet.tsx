@@ -471,26 +471,28 @@ export function StopSheet({
                       closeLabel={t.sheet.close}
                     />
                   ) : null}
-                  <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.25rem" }}>
-                    <ShareStop
-                      id={id}
-                      label={t.sheet.share}
-                      copyLabel={t.sheet.copy}
-                      copiedLabel={t.sheet.copied}
-                      closeLabel={t.sheet.close}
-                    />
-                    <button
-                      type="button"
-                      className="sheet-icon"
-                      aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
-                      aria-pressed={bookmarked}
-                      onClick={onToggleBookmark}
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-                        <path d="M6 3h12v18l-6-4.5L6 21z" />
-                      </svg>
-                    </button>
-                  </div>
+                  {mode !== "ferry" && mode !== "tram" ? (
+                    <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                      <ShareStop
+                        id={id}
+                        label={t.sheet.share}
+                        copyLabel={t.sheet.copy}
+                        copiedLabel={t.sheet.copied}
+                        closeLabel={t.sheet.close}
+                      />
+                      <button
+                        type="button"
+                        className="sheet-icon"
+                        aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
+                        aria-pressed={bookmarked}
+                        onClick={onToggleBookmark}
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                          <path d="M6 3h12v18l-6-4.5L6 21z" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
               </section>
               </>
@@ -514,6 +516,28 @@ export function StopSheet({
                     <img src={`${basePath}/icons/ferry-timetable.svg`} alt="" className="ferry-timetable-icon" />
                   </button>
                 ) : <span />}
+                {(mode === "ferry" || mode === "tram") ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                    <ShareStop
+                      id={id}
+                      label={t.sheet.share}
+                      copyLabel={t.sheet.copy}
+                      copiedLabel={t.sheet.copied}
+                      closeLabel={t.sheet.close}
+                    />
+                    <button
+                      type="button"
+                      className="sheet-icon"
+                      aria-label={bookmarked ? (locale === "en" ? "Remove bookmark" : "取消收藏") : locale === "en" ? "Bookmark" : "收藏"}
+                      aria-pressed={bookmarked}
+                      onClick={onToggleBookmark}
+                    >
+                      <svg viewBox="0 0 24 24" aria-hidden="true" fill={bookmarked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+                        <path d="M6 3h12v18l-6-4.5L6 21z" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : null}
               </div>
 
           </div>
