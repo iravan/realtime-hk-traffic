@@ -1619,6 +1619,7 @@ export default function Page() {
           </div>
           <p>{t.stopsInView(stops.length)}</p>
           <div className="stop-filter-row">
+            <img className="stop-filter-mode-icon" src={categoryIcons[active]} alt="" />
             <input
               type="search"
               className="stop-filter"

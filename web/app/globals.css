@@ -65,6 +65,7 @@ button { cursor: pointer; }
   min-width: 12rem;
   margin-top: 0.5rem;
 }
+.stop-filter-mode-icon { width: 22px; height: 22px; flex: none; }
 .stop-filter {
   flex: 1;
   min-width: 0;
