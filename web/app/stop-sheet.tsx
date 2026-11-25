@@ -227,7 +227,7 @@ export function StopSheet({
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!apiBase || mode === "taxi") return;
+    if (!apiBase || mode === "taxi" || mode === "tram") return;
     let cancelled = false;
     setSnapshot(null);
     setState("loading");
@@ -265,7 +265,7 @@ export function StopSheet({
   }, [id, mode]);
 
   useEffect(() => {
-    if (!apiBase || mode === "taxi") return;
+    if (!apiBase || mode === "taxi" || mode === "tram") return;
     const poll = () => {
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
         .then((response) => {
@@ -318,14 +318,29 @@ export function StopSheet({
       </>
     ) : mode === "ferry" ? (
       <FerryTimetable destinations={destinations ?? []} timetable={ferryTimetable ?? []} locale={locale} t={t} />
-    ) : mode === "tram" && routes && routes.length > 0 ? (
-      <div className="tram-routes">
-        {routes.map((route) => (
-          <span key={route} className="station-chip" style={{ background: modeColor.tram, color: "#fff" }}>
-            {localizeBilingualName(route, locale)}
-          </span>
-        ))}
-      </div>
+    ) : mode === "tram" ? (
+      <>
+        {routes && routes.length > 0 ? (
+          <div className="tram-routes">
+            {routes.map((route) => (
+              <span key={route} className="station-chip" style={{ background: modeColor.tram, color: "#fff" }}>
+                {localizeBilingualName(route, locale)}
+              </span>
+            ))}
+          </div>
+        ) : null}
+        <button
+          type="button"
+          className="tram-timetable"
+          aria-label={t.sheet.ferryTimetable}
+          onClick={() => window.open(locale === "en" ? "https://www.hktramways.com/en/schedules-fares/" : "https://www.hktramways.com/tc/schedules-fares/", "_blank", "noopener,noreferrer")}
+          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginTop: "0.5rem", width: "2.75rem", height: "2.75rem", border: "none", background: "transparent", color: "var(--ink)", cursor: "pointer" }}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="currentColor">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7v-5z" />
+          </svg>
+        </button>
+      </>
     ) : apiBase && serviceHours ? (
       <>
         <p className="muted">{t.sheet.hours}</p>
@@ -467,7 +482,32 @@ export function StopSheet({
         </div>
       </header>
       <div className="body">
-        {mode !== "taxi" && apiBase ? (
+        {mode === "tram" ? (
+          <div style={{ padding: "0.5rem 0" }}>
+            <button
+              type="button"
+              className="tram-download-apps"
+              onClick={() => window.open("https://www.hktramways.com/download-app/", "_blank", "noopener,noreferrer")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.35rem",
+                padding: "0.35rem 0.75rem",
+                borderRadius: "999px",
+                border: "none",
+                background: modeColor.tram,
+                color: "#fff",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="currentColor">
+                <path d="M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-5 18a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm4-4H8V5h8v11z" />
+              </svg>
+              {t.sheet.tramDownloadApps}
+            </button>
+          </div>
+        ) : mode !== "taxi" && apiBase ? (
           <>
           {snapshot?.note === "no-arrivals" ? (
             <p className="muted">{t.sheet.taxiNote}</p>

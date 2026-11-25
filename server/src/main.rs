@@ -511,7 +511,6 @@ async fn fetch_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
         "bus" => bus_arrivals(app, stop).await,
         "minibus" => minibus_arrivals(app, stop).await,
         "ferry" => ferry_arrivals(&app.http, stop).await,
-        "tram" => tram_arrivals(&app.http, stop).await,
         _ => None,
     }
 }

@@ -59,7 +59,7 @@ export type Messages = {
     amap: string;
     openStreetMap: string;
     taxiNote: string;
-    hours: string;
+    tramDownloadApps: string;    hours: string;
     destination: string;
     firstBoat: string;
     lastBoat: string;
@@ -194,6 +194,7 @@ const en: Messages = {
     amap: "Amap",
     openStreetMap: "OpenStreetMap",
     taxiNote: "A taxi stand has no arrival list.",
+    tramDownloadApps: "Download apps",
     hours: "Working hours",
     destination: "Destination",
     firstBoat: "First",
@@ -283,6 +284,7 @@ const zhHant: Messages = {
     amap: "高德地圖",
     openStreetMap: "OpenStreetMap",
     taxiNote: "的士站沒有到站時間。",
+    tramDownloadApps: "下載應用程式",
     hours: "服務時間",
     destination: "目的地",
     firstBoat: "頭班",
