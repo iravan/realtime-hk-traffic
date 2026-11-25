@@ -8,7 +8,19 @@
     },
     "web": {
       "root": "web",
-      "framework": "nextjs"
+      "framework": "nextjs",
+      "routes": [
+        {
+          "src": "/(mtr|bus|minibus|ferry|taxi|tram)/.*",
+          "transforms": [
+            {
+              "type": "request.path",
+              "op": "set",
+              "args": "/"
+            }
+          ]
+        }
+      ]
     }
   },
   "rewrites": [
@@ -30,6 +42,10 @@
     },
     {
       "source": "/taxi/:path*",
+      "destination": { "service": "web", "path": "/" }
+    },
+    {
+      "source": "/tram/:path*",
       "destination": { "service": "web", "path": "/" }
     },
     {
