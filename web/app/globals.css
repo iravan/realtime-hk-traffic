@@ -495,6 +495,11 @@ button { cursor: pointer; }
       justify-content:flex-start;
   }
 }
+@media (min-width: 768px) and (max-width: 1023px) {
+  .chrome { flex-direction: column; align-items: stretch; }
+  .channel { align-items: stretch; }
+  .filters { justify-content: flex-start; }
+}
 @media (min-width: 768px) {
   .sheet { top: 0.75rem; right: 0.75rem; bottom: 0.75rem; width: 22rem; }
   /* The sheet occupies the right edge, so the tabs and the locate control
