@@ -223,12 +223,14 @@ export function StopSheet({
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const snapshotRef = useRef<Snapshot | null>(null);
   snapshotRef.current = snapshot;
+  const retryRef = useRef(0);
   const [state, setState] = useState<State>("loading");
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     if (!apiBase || mode === "taxi" || mode === "tram") return;
     let cancelled = false;
+    retryRef.current = 0;
     setSnapshot(null);
     setState("loading");
     const loadSnapshot = () => {
@@ -236,10 +238,18 @@ export function StopSheet({
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
         .then((response) => {
           if (cancelled) return null;
-          if (response.status === 202 || response.status === 404) {
+          if (response.status === 202) {
             // Server is preparing the snapshot; retry shortly.
             setState("waiting");
             setTimeout(loadSnapshot, 1000);
+            return null;
+          }
+          if (response.status === 404) {
+            // Stop not ready yet; back off exponentially up to 6s.
+            retryRef.current += 1;
+            const delay = Math.min(1000 * 2 ** (retryRef.current - 1), 6000);
+            setState("waiting");
+            setTimeout(loadSnapshot, delay);
             return null;
           }
           if (!response.ok) {
@@ -250,6 +260,7 @@ export function StopSheet({
         })
         .then((body) => {
           if (!cancelled && body) {
+            retryRef.current = 0;
             setSnapshot(body);
             setState("loading");
           }
@@ -269,10 +280,17 @@ export function StopSheet({
     const poll = () => {
       fetch(`${apiBase}/stops/${encodeURIComponent(id)}/arrivals`)
         .then((response) => {
-          if (response.status === 202 || response.status === 404) {
+          if (response.status === 202) {
             setTimeout(poll, 1000);
             return null;
           }
+          if (response.status === 404) {
+            retryRef.current += 1;
+            const delay = Math.min(1000 * 2 ** (retryRef.current - 1), 6000);
+            setTimeout(poll, delay);
+            return null;
+          }
+          retryRef.current = 0;
           return response.ok ? response.json() : null;
         })
         .then((body) => {
