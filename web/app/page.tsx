@@ -1350,8 +1350,10 @@ export default function Page() {
     // the edge does not split when the map moves.
     (source as GeoJSONSource).setData({
       type: "FeatureCollection",
-      features: uniqueStops(catalogue, mode)
-        .filter((stop) => matchesFilter(stop, filter))
+      features: uniqueStops(
+        catalogue.filter((stop) => matchesFilter(stop, filter)),
+        mode,
+      )
         .map((stop) => ({
         type: "Feature",
         properties: {
@@ -1638,7 +1640,7 @@ export default function Page() {
                   const catalogue = cataloguesRef.current[active];
                   if (map && catalogue) {
                     const filter = { query, bookmarkOnly, bookmarks };
-                    const hits = uniqueStops(catalogue, active).filter((stop) => matchesFilter(stop, filter));
+                    const hits = uniqueStops(catalogue.filter((stop) => matchesFilter(stop, filter)), active);
                     if (hits.length > 0) {
                       map.easeTo({ center: [hits[0].longitude, hits[0].latitude], zoom: pinZoom });
                     }
@@ -1675,7 +1677,7 @@ export default function Page() {
                   const catalogue2 = cataloguesRef.current[active];
                   if (map2 && catalogue2) {
                     const filter2 = { query, bookmarkOnly, bookmarks };
-                    const hits2 = uniqueStops(catalogue2, active).filter((stop) => matchesFilter(stop, filter2));
+                    const hits2 = uniqueStops(catalogue2.filter((stop) => matchesFilter(stop, filter2)), active);
                     if (hits2.length > 0) {
                       map2.easeTo({ center: [hits2[0].longitude, hits2[0].latitude], zoom: pinZoom });
                     }
@@ -2072,13 +2074,15 @@ function stopsInView(map: MlMap, catalogue: Stop[], mode: Mode, filter: StopFilt
   const north = bounds.getNorth();
   const west = bounds.getWest();
   const east = bounds.getEast();
-  return uniqueStops(catalogue, mode).filter(
+  return uniqueStops(
+    catalogue.filter((stop) => matchesFilter(stop, filter)),
+    mode,
+  ).filter(
     (stop) =>
       stop.latitude >= south &&
       stop.latitude <= north &&
       stop.longitude >= west &&
-      stop.longitude <= east &&
-      matchesFilter(stop, filter),
+      stop.longitude <= east,
   );
 }
 
