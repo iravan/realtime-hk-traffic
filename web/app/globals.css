@@ -714,3 +714,5 @@ button { cursor: pointer; }
   from { transform: translateY(-10%); }
   to { transform: translateY(10%); }
 }
+
+.brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; white-space: nowrap; }
