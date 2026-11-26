@@ -1663,18 +1663,21 @@ export default function Page() {
                   setBoard(null);
                   clearStopParam();
                   clearFocusPadding();
-                  const map = mapRef.current;
-                  const catalogue = cataloguesRef.current[active];
-                  if (map && catalogue) {
-                    const filter = { query, bookmarkOnly, bookmarks };
-                    const hits = uniqueStops(catalogue.filter((stop) => matchesFilter(stop, filter)), active);
-                    if (hits.length > 0) {
-                      map.easeTo({ center: [hits[0].longitude, hits[0].latitude], zoom: pinZoom });
+                  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+                  if (!isMobile) {
+                    const map = mapRef.current;
+                    const catalogue = cataloguesRef.current[active];
+                    if (map && catalogue) {
+                      const filter = { query, bookmarkOnly, bookmarks };
+                      const hits = uniqueStops(catalogue.filter((stop) => matchesFilter(stop, filter)), active);
+                      if (hits.length > 0) {
+                        map.easeTo({ center: [hits[0].longitude, hits[0].latitude], zoom: pinZoom });
+                      }
                     }
+                    void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
+                      if (permission.state === "granted") locate(false);
+                    }).catch(() => {});
                   }
-                  void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
-                    if (permission.state === "granted") locate(false);
-                  }).catch(() => {});
                 }
               }}
               placeholder={filterPlaceholder(active, locale)}
@@ -1700,18 +1703,21 @@ export default function Page() {
                   setBoard(null);
                   clearStopParam();
                   clearFocusPadding();
-                  const map2 = mapRef.current;
-                  const catalogue2 = cataloguesRef.current[active];
-                  if (map2 && catalogue2) {
-                    const filter2 = { query, bookmarkOnly, bookmarks };
-                    const hits2 = uniqueStops(catalogue2.filter((stop) => matchesFilter(stop, filter2)), active);
-                    if (hits2.length > 0) {
-                      map2.easeTo({ center: [hits2[0].longitude, hits2[0].latitude], zoom: pinZoom });
+                  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+                  if (!isMobile) {
+                    const map2 = mapRef.current;
+                    const catalogue2 = cataloguesRef.current[active];
+                    if (map2 && catalogue2) {
+                      const filter2 = { query, bookmarkOnly, bookmarks };
+                      const hits2 = uniqueStops(catalogue2.filter((stop) => matchesFilter(stop, filter2)), active);
+                      if (hits2.length > 0) {
+                        map2.easeTo({ center: [hits2[0].longitude, hits2[0].latitude], zoom: pinZoom });
+                      }
                     }
+                    void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
+                      if (permission.state === "granted") locate(false);
+                    }).catch(() => {});
                   }
-                  void navigator.permissions?.query({ name: "geolocation" }).then((permission) => {
-                    if (permission.state === "granted") locate(false);
-                  }).catch(() => {});
                 }
               }}
               disabled={bookmarkOnly}
