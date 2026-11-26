@@ -1615,33 +1615,36 @@ export default function Page() {
         <div className="brand">
           <div className="brand-head">
             <h1>{t.brand}</h1>
-            <button
-              type="button"
-              className="lang-toggle"
-              onClick={toggleLocale}
-              aria-label={t.switchLanguage}
-              title={t.switchLanguage}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M3 12h18" />
-                <path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
-              </svg>
-              {locale === "en" ? "中文" : "EN"}
-            </button>
-          </div>
-          <div className="brand-weather" aria-hidden="true">
-            <span style={{ fontSize: "0.85rem", marginRight: "0.35rem" }}>
-              {locale === "en"
-                ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()]
-                : ["日", "一", "二", "三", "四", "五", "六"][new Date().getDay()]}
-            </span>
-            <span style={{ fontSize: "1.2rem" }}>{weatherEmoji}</span>
-            {temperature != null ? (
-              <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
-                {` ${Math.round(temperature)}°C`}
-              </span>
-            ) : ""}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", alignSelf: "flex-end" }}>
+              <div className="brand-weather" aria-hidden="true">
+                <span style={{ fontSize: "0.85rem", marginRight: "0.35rem" }}>
+                  {locale === "en"
+                    ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()]
+                    : ["日", "一", "二", "三", "四", "五", "六"][new Date().getDay()]}
+                </span>
+                <span style={{ fontSize: "1.2rem" }}>{weatherEmoji}</span>
+                {temperature != null ? (
+                  <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
+                    {` ${Math.round(temperature)}°C`}
+                  </span>
+                ) : ""}
+              </div>
+
+              <button
+                type="button"
+                className="lang-toggle"
+                onClick={toggleLocale}
+                aria-label={t.switchLanguage}
+                title={t.switchLanguage}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M3 12h18" />
+                  <path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
+                </svg>
+                {locale === "en" ? "中文" : "EN"}
+              </button>
+            </div>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
           <div className="stop-filter-row">
