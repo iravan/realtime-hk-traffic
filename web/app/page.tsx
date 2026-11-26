@@ -1843,6 +1843,9 @@ export default function Page() {
                   holdSharedViewRef.current = remembered !== null;
                   clearFocusPadding();
                   setQuery("");
+                  setAppliedQuery("");
+                  setSubmitted(false);
+                  setSuggestionsOpen(false);
                   setActive(mode);
                 }}
               >
