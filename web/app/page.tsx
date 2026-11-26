@@ -1616,8 +1616,8 @@ export default function Page() {
       <div className="chrome">
         <div className="brand">
           <div className="brand-head">
-            <h1>{t.brand}</h1>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", alignSelf: "flex-end" }}>
+            <div className="brand-head-left">
+              <h1>{t.brand}</h1>
               <div className="brand-weather" aria-hidden="true">
                 <span style={{ fontSize: "0.85rem", marginRight: "0.35rem" }}>
                   {locale === "en"
@@ -1631,22 +1631,21 @@ export default function Page() {
                   </span>
                 ) : ""}
               </div>
-
-              <button
-                type="button"
-                className="lang-toggle"
-                onClick={toggleLocale}
-                aria-label={t.switchLanguage}
-                title={t.switchLanguage}
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M3 12h18" />
-                  <path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
-                </svg>
-                {locale === "en" ? "中文" : "EN"}
-              </button>
             </div>
+            <button
+              type="button"
+              className="lang-toggle"
+              onClick={toggleLocale}
+              aria-label={t.switchLanguage}
+              title={t.switchLanguage}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18" />
+                <path d="M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z" />
+              </svg>
+              {locale === "en" ? "中文" : "EN"}
+            </button>
           </div>
           <p>{t.stopsInView(stops.length)}</p>
           <div className="stop-filter-row">

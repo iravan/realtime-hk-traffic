@@ -744,3 +744,5 @@ button { cursor: pointer; }
 }
 
 .search-suggestion-icon { width: 1.4em; height: 1.4em; flex: none; align-self: center; }
+
+.brand-head-left { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
