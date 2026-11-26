@@ -537,7 +537,7 @@ export function StopSheet({
               </section>
               </>
             ) : null}
-              <div className="sheet-actions" style={{ marginTop: "0.5rem", justifyContent: "space-between" }}>
+              <div className="sheet-actions" style={{ marginTop: "0.25rem", justifyContent: "space-between" }}>
                 {mode === "ferry" ? (
                   <FerryTimetable
                     buttonOnly
