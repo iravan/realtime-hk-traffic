@@ -54,8 +54,8 @@ scope. Taxi stands are places, not vehicles.
   the MTR lines, taxi-stand types, and ferry timetables stay in that same
   store. The IndexedDB keys and a ferry check are in
   [docs/DATA.md](docs/DATA.md#caching). Panning does not
-  ask the server for stops. Below zoom 16 those stops are counted groups; a tap
-  on a count zooms in, and at zoom 16 each stop is its own pin. The bus tab and the KMB, LWB, and New Lantao pins
+  ask the server for stops. Below zoom 17 those stops are counted groups; a tap
+  on a count zooms in, and at zoom 17 each stop is its own pin. The bus tab and the KMB, LWB, and New Lantao pins
   use the red bus. A Citybus stop (`bus:ctb:`) uses the yellow double-decker
   in `web/public/icons/citybus.svg`, on the map and in the sheet.
 - **Freshness is visible.** Every snapshot carries the time the server fetched
@@ -77,6 +77,15 @@ scope. Taxi stands are places, not vehicles.
   it matches destinations (`Central`, `中環`). On MTR and taxi it matches the
   stop name. Changing tab clears the filter. The filter is described in
   [docs/DATA.md](docs/DATA.md#searchable-routes-and-destinations).
+- **Search suggestions.** Typing in the filter box shows up to 8 matching
+  stops; bus and minibus suggestions also show matching route chips. Selecting
+  one opens that stop and zooms to it (desktop only, to keep the mobile view).
+- **Ferry destination links.** Destination chips in a ferry sheet link to the
+  corresponding pier stop when one can be resolved.
+- **Weather.** The header shows the weekday, weather icon and temperature;
+  temperature is coloured blue below 18°C and red above 27°C.
+- **Map clustering.** Stops cluster until zoom 17, then draw individually;
+  full stop icons appear from zoom 19. A tap on a count zooms in.
 - **Station facilities.** An MTR station sheet shows an icon for each facility
   it has: toilet, water dispenser, babycare room, and Wi-Fi. The toilet, water
   dispenser and babycare icons open a modal with the exact location and a
