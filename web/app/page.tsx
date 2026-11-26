@@ -1616,6 +1616,9 @@ export default function Page() {
           <div className="brand-head">
             <h1>{t.brand}</h1>
             <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
+              {locale === "en"
+                ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()]
+                : ["日", "一", "二", "三", "四", "五", "六"][new Date().getDay()]}{" "}
               {weatherEmoji}
               {temperature != null ? (
                 <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
