@@ -57,7 +57,7 @@ button { cursor: pointer; }
 .brand { flex: none; padding: 0.65rem 0.8rem; }
 .brand h1 { margin: 0; font-size: 1.15rem; letter-spacing: 0.08em; }
 .brand p { margin: 0.25rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6f675e; }
-.brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; }
+.brand-weather { display: flex; align-items: center; justify-content: flex-end; gap: 0.2rem; margin-top: 0.25rem; font-size: 0.85rem; }
 .stop-filter-row {
   position: relative;
   display: flex;

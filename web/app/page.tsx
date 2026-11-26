@@ -1615,17 +1615,6 @@ export default function Page() {
         <div className="brand">
           <div className="brand-head">
             <h1>{t.brand}</h1>
-            <span aria-hidden="true" style={{ fontSize: "1.2rem", marginLeft: "0.35rem" }}>
-              {locale === "en"
-                ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()]
-                : ["日", "一", "二", "三", "四", "五", "六"][new Date().getDay()]}{" "}
-              {weatherEmoji}
-              {temperature != null ? (
-                <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
-                  {` ${Math.round(temperature)}°C`}
-                </span>
-              ) : ""}
-            </span>
             <button
               type="button"
               className="lang-toggle"
@@ -1640,6 +1629,19 @@ export default function Page() {
               </svg>
               {locale === "en" ? "中文" : "EN"}
             </button>
+          </div>
+          <div className="brand-weather" aria-hidden="true">
+            <span style={{ fontSize: "0.85rem", marginRight: "0.35rem" }}>
+              {locale === "en"
+                ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()]
+                : ["日", "一", "二", "三", "四", "五", "六"][new Date().getDay()]}
+            </span>
+            <span style={{ fontSize: "1.2rem" }}>{weatherEmoji}</span>
+            {temperature != null ? (
+              <span style={{ color: temperature < 18 ? "#2563eb" : temperature > 27 ? "#dc2626" : undefined }}>
+                {` ${Math.round(temperature)}°C`}
+              </span>
+            ) : ""}
           </div>
           <p>{t.stopsInView(stops.length)}</p>
           <div className="stop-filter-row">
