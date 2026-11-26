@@ -94,7 +94,16 @@ button { cursor: pointer; }
   cursor: pointer;
 }
 .search-suggestion:hover { background: rgba(28, 25, 21, 0.06); }
-.search-suggestion-icon { width: 18px; height: 18px; flex: none; }
+.search-suggestion-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.search-suggestion-routes { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.search-suggestion-chip {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(28, 25, 21, 0.08);
+  color: var(--ink);
+}
 .stop-filter-mode-icon { width: 22px; height: 22px; flex: none; }
 .stop-filter {
   flex: 1;

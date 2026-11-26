@@ -1764,7 +1764,20 @@ export default function Page() {
                   }}
                 >
                   <img src={categoryIcons[stop.mode]} alt="" className="search-suggestion-icon" />
-                  <span>{localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}</span>
+                  <span className="search-suggestion-name">{localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}</span>
+                  {(stop.mode === "bus" || stop.mode === "minibus") && (stop.routes ?? []).length > 0 ? (
+                    <span className="search-suggestion-routes">
+                      {(stop.routes ?? [])
+                        .filter((route) => {
+                          const needle = query.trim().toLowerCase();
+                          return !needle || route.toLowerCase().includes(needle);
+                        })
+                        .slice(0, 4)
+                        .map((route) => (
+                          <span key={route} className="search-suggestion-chip">{route}</span>
+                        ))}
+                    </span>
+                  ) : null}
                 </button>
               ))}
             </div>
