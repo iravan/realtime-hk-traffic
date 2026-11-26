@@ -716,3 +716,8 @@ button { cursor: pointer; }
 }
 
 .brand-head { display: flex; align-items: center; justify-content: space-between; gap: 0.9rem; white-space: nowrap; }
+@media (max-width: 480px) {
+  .brand-head { flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+  .brand-head h1 { width: 100%; text-align: center; }
+  .brand-head .brand-head-right { width: 100%; justify-content: center; }
+}
