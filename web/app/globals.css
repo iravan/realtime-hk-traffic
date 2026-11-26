@@ -721,3 +721,5 @@ button { cursor: pointer; }
   .brand-head h1 { width: 100%; text-align: left; }
   .brand-head .brand-head-right { width: 100%; justify-content: right;}
 }
+
+.search-suggestion-icon { width: 1em; height: 1em; flex: none; }
