@@ -33,12 +33,14 @@ import {
   lightRailIconImage,
   lightRailSignHighlight,
   citybusIconImage,
+  citybusIconUrl,
   citybusSignHighlight,
   isCitybus,
   isLantauBus,
   isLightRail,
   isStarFerry,
   modeColor,
+  stopIconUrl,
   taxiDotHighlight,
   taxiSignHighlight,
   stopIconPixelRatio,
@@ -1777,7 +1779,7 @@ export default function Page() {
                     setSuggestionsOpen(false);
                   }}
                 >
-                  <img src={categoryIcons[stop.mode]} alt="" className="search-suggestion-icon" />
+                  <img src={stop.mode === "bus" && isCitybus(stop.id) ? citybusIconUrl() : stopIconUrl(stop.mode)} alt="" className="search-suggestion-icon" />
                   <span className="search-suggestion-name">{localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}</span>
                   {(stop.mode === "bus" || stop.mode === "minibus") && (stop.routes ?? []).length > 0 ? (
                     <span className="search-suggestion-routes">
