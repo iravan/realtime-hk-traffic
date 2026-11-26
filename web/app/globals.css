@@ -80,16 +80,22 @@ button { cursor: pointer; }
   background: var(--paper);
   box-shadow: 0 6px 18px rgba(28, 25, 21, 0.18);
 }
-.search-suggestions-hide {
+.search-suggestions-head {
   position: sticky;
   top: 0;
-  float: right;
-  margin: 0.25rem 0.4rem 0 0;
+  z-index: 1;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.25rem 0.4rem;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(28, 25, 21, 0.08);
+}
+.search-suggestions-hide {
   width: 1.6rem;
   height: 1.6rem;
   border: 0;
   border-radius: 50%;
-  background: var(--paper);
+  background: rgba(28, 25, 21, 0.08);
   color: var(--ink);
   font-size: 1rem;
   line-height: 1;
