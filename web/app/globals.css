@@ -71,7 +71,7 @@ button { cursor: pointer; }
   top: 100%;
   left: 0;
   right: 0;
-  z-index: 5;
+  z-index: 100;
   margin-top: 0.35rem;
   max-height: 16rem;
   overflow-y: auto;
@@ -79,6 +79,21 @@ button { cursor: pointer; }
   border-radius: 0.6rem;
   background: var(--paper);
   box-shadow: 0 6px 18px rgba(28, 25, 21, 0.18);
+}
+.search-suggestions-hide {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin: 0.25rem 0.4rem 0 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(28, 25, 21, 0.08);
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
 }
 .search-suggestion {
   display: flex;

@@ -1760,6 +1760,15 @@ export default function Page() {
           </div>
           {suggestions.length > 0 ? (
             <div className="search-suggestions">
+              <button
+                type="button"
+                className="search-suggestions-hide"
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => setSuggestionsOpen(false)}
+                aria-label={locale === "en" ? "Hide suggestions" : "隱藏建議"}
+              >
+                ×
+              </button>
               {suggestions.map((stop) => (
                 <button
                   key={stop.id}
