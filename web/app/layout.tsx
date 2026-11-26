@@ -27,6 +27,8 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
 };
+
+export const metadata: Metadata = {
   metadataBase: new URL(origin),
   title: "Realtime HK Traffic",
   description,
