@@ -856,7 +856,7 @@ async fn bus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
             route: route.to_string(),
             destination,
             minutes: Some(minutes),
-            time: None,
+            time: Some(arrival_clock(minutes)),
             not_departed: false,
             operator: None,
         });
@@ -908,7 +908,7 @@ async fn minibus_arrivals(app: &App, stop: &Stop) -> Option<Snapshot> {
                 route: route.clone(),
                 destination: destination.clone(),
                 minutes,
-                time: None,
+                time: minutes.map(arrival_clock),
                 not_departed: gmb_not_departed(remark),
                 operator: None,
             });
@@ -1356,6 +1356,14 @@ fn minutes_from(when: DateTime<chrono::FixedOffset>) -> Option<i64> {
         return None;
     }
     Some((seconds / 60).max(0))
+}
+
+fn arrival_clock(minutes: i64) -> String {
+    let offset = chrono::FixedOffset::east_opt(8 * 3600).expect("hk offset");
+    (Utc::now() + chrono::Duration::minutes(minutes))
+        .with_timezone(&offset)
+        .format("%H:%M")
+        .to_string()
 }
 
 fn minutes_until(eta: &str) -> Option<i64> {

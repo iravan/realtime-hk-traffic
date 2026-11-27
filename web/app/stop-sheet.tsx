@@ -674,7 +674,16 @@ export function StopSheet({
                         mode === "ferry" ? (
                           <FerryDestination name={row.destination} locale={locale} stopId={id} onOpenStop={onOpenStop} />
                         ) : (
-                          <span>
+                          <span
+                            style={
+                              (mode === "bus" || mode === "minibus") &&
+                              index > 0 &&
+                              sortedRows[index - 1]?.destination === row.destination &&
+                              sortedRows[index - 1]?.route === row.route
+                                ? { visibility: "hidden" }
+                                : undefined
+                            }
+                          >
                             {mode === "bus" || mode === "minibus" || mode === "tram"
                               ? localizeBilingualName(row.destination, locale)
                               : row.destination}
@@ -687,7 +696,7 @@ export function StopSheet({
                           · {t.sheet.origin} {t.sheet.notDeparted}
                         </span>
                       ) : null}
-                      {mode === "ferry" && row.time ? <span> · {t.clock(row.time)}</span> : null}
+                      {(mode === "ferry" || mode === "bus" || mode === "minibus") && row.time ? <span> · {t.clock(row.time)}</span> : null}
                       <span> · {row.minutes !== undefined ? t.sheet.minutes(row.minutes) : row.time}</span>
                     </li>
                     </Fragment>
