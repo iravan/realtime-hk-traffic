@@ -4,6 +4,12 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "symbols"
+panic = "abort"
+
 [dependencies]
 axum = { version = "0.8", features = ["json"] }
 chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
