@@ -238,13 +238,13 @@ export default function Page() {
       const cachedRaw = localStorage.getItem(cacheKey);
       if (cachedRaw) {
         const cached = JSON.parse(cachedRaw);
-        if (Date.now() - cached.savedAt < 24 * 60 * 60 * 1000) {
-          setRouteInfoDirections(cached.directions ?? null);
-          setRouteInfoTab((prev) => Math.min(prev, Math.max(0, (cached.directions?.length ?? 1) - 1)));
+        if (cached.directions && cached.directions.length && Date.now() - cached.savedAt < 24 * 60 * 60 * 1000) {
+          setRouteInfoDirections(cached.directions);
+          setRouteInfoTab((prev) => Math.min(prev, Math.max(0, cached.directions.length - 1)));
           setRouteInfoLoading(false);
           return;
         }
-        if (cached.directions) setRouteInfoDirections(cached.directions);
+        try { localStorage.removeItem(cacheKey); } catch {}
       }
     } catch {}
     (async () => {
@@ -307,14 +307,27 @@ export default function Page() {
           }
         } catch {}
       }
+      if (dirs.length === 0) {
+        const needle = route.toLowerCase();
+        const matched = catalogue.filter((stop) =>
+          (stop.routes ?? []).some((r) => r.trim().toLowerCase() === needle),
+        );
+        if (matched.length) {
+          dirs.push({ label: route, stops: matched });
+        }
+      }
       if (cancelled) return;
       const next = dirs.length ? dirs : null;
       setRouteInfoDirections(next);
       setRouteInfoTab((prev) => Math.min(prev, Math.max(0, (next?.length ?? 1) - 1)));
       setRouteInfoLoading(false);
-      try {
-        localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), directions: next }));
-      } catch {}
+      if (next && next.length) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), directions: next }));
+        } catch {}
+      } else {
+        try { localStorage.removeItem(cacheKey); } catch {}
+      }
     })();
     return () => { cancelled = true; };
   }, [routeInfoOpen, appliedQuery, active, locale]);
