@@ -216,10 +216,108 @@ export default function Page() {
   const [query, setQuery] = useState("");
   const [appliedQuery, setAppliedQuery] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [routeInfoOpen, setRouteInfoOpen] = useState(false);
+  const [routeInfoDirections, setRouteInfoDirections] = useState<{ label: string; stops: Stop[] }[] | null>(null);
+  const [routeInfoTab, setRouteInfoTab] = useState(0);
+  const [routeInfoLoading, setRouteInfoLoading] = useState(false);
+  const kmbRouteStopCacheRef = useRef<any>(null);
   const [bookmarkOnly, setBookmarkOnly] = useState(false);
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
   const [bookmarkedStops, setBookmarkedStops] = useState<Stop[]>([]);
   const filterRef = useRef<StopFilter>({ query: "", bookmarkOnly: false, bookmarks: new Set() });
+
+  useEffect(() => {
+    if (!routeInfoOpen) return;
+    const route = appliedQuery.trim();
+    if (!route) return;
+    let cancelled = false;
+    setRouteInfoLoading(true);
+    setRouteInfoDirections(null);
+    const cacheKey = `route-details:${active}:${route}`;
+    try {
+      const cachedRaw = localStorage.getItem(cacheKey);
+      if (cachedRaw) {
+        const cached = JSON.parse(cachedRaw);
+        if (Date.now() - cached.savedAt < 24 * 60 * 60 * 1000) {
+          setRouteInfoDirections(cached.directions ?? null);
+          setRouteInfoTab((prev) => Math.min(prev, Math.max(0, (cached.directions?.length ?? 1) - 1)));
+          setRouteInfoLoading(false);
+          return;
+        }
+        if (cached.directions) setRouteInfoDirections(cached.directions);
+      }
+    } catch {}
+    (async () => {
+      const catalogue = cataloguesRef.current[active] ?? [];
+      const byId = new Map(catalogue.map((stop) => [stop.id, stop]));
+      const dirs: { label: string; stops: Stop[] }[] = [];
+      if (active === "bus") {
+        try {
+          if (!kmbRouteStopCacheRef.current) {
+            kmbRouteStopCacheRef.current = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route-stop/").then((r) => r.json());
+          }
+          const bulk = kmbRouteStopCacheRef.current;
+          const variants = new Map<string, any[]>();
+          for (const row of bulk?.data ?? []) {
+            if (String(row.route) !== route) continue;
+            const key = `${row.bound}|${row.service_type}`;
+            if (!variants.has(key)) variants.set(key, []);
+            variants.get(key)!.push(row);
+          }
+          for (const [key, rows] of variants.entries()) {
+            const [bound] = key.split("|");
+            const serviceType = key.split("|")[1];
+            const direction = bound === "O" ? "outbound" : "inbound";
+            let orig = "", dest = "";
+            try {
+              const detail = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route/${encodeURIComponent(route)}/${direction}/${serviceType}`).then((r) => r.json());
+              const d = detail?.data;
+              orig = (locale === "en" ? d?.orig_en : d?.orig_tc) || d?.orig_tc || d?.orig_en || "";
+              dest = (locale === "en" ? d?.dest_en : d?.dest_tc) || d?.dest_tc || d?.dest_en || "";
+            } catch {}
+            const ordered = rows
+              .slice()
+              .sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
+            const stops = ordered
+              .map((row) => byId.get(`bus:kmb:${row.stop}`))
+              .filter(Boolean) as Stop[];
+            if (stops.length) {
+              dirs.push({ label: orig && dest ? `${orig} → ${dest}` : (bound === "O" ? (locale === "en" ? "Outbound" : "去程") : (locale === "en" ? "Inbound" : "回程")), stops });
+            }
+          }
+        } catch {}
+        // Citybus directions
+        try {
+          const routeList = await fetch("https://rt.data.gov.hk/v2/transport/citybus/route/CTB").then((r) => r.json());
+          const meta = (routeList?.data ?? []).find((r: any) => String(r.route) === route);
+          const orig = (locale === "en" ? meta?.orig_en : meta?.orig_tc) || meta?.orig_tc || meta?.orig_en || "";
+          const dest = (locale === "en" ? meta?.dest_en : meta?.dest_tc) || meta?.dest_tc || meta?.dest_en || "";
+          for (const direction of ["outbound", "inbound"]) {
+            const body = await fetch(`https://rt.data.gov.hk/v2/transport/citybus/route-stop/CTB/${encodeURIComponent(route)}/${direction}`).then((r) => r.json());
+            const ordered = body?.data ?? [];
+            const stops = ordered
+              .map((row: any) => byId.get(`bus:ctb:${row.stop}`))
+              .filter(Boolean) as Stop[];
+            if (stops.length) {
+              const label = direction === "outbound"
+                ? (orig && dest ? `${orig} → ${dest}` : (locale === "en" ? "Outbound" : "去程"))
+                : (orig && dest ? `${dest} → ${orig}` : (locale === "en" ? "Inbound" : "回程"));
+              dirs.push({ label, stops });
+            }
+          }
+        } catch {}
+      }
+      if (cancelled) return;
+      const next = dirs.length ? dirs : null;
+      setRouteInfoDirections(next);
+      setRouteInfoTab((prev) => Math.min(prev, Math.max(0, (next?.length ?? 1) - 1)));
+      setRouteInfoLoading(false);
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), directions: next }));
+      } catch {}
+    })();
+    return () => { cancelled = true; };
+  }, [routeInfoOpen, appliedQuery, active, locale]);
   useEffect(() => {
     setBookmarks(readBookmarks());
   }, []);
@@ -1648,6 +1746,7 @@ export default function Page() {
                 if (event.key === "Enter") {
                   setAppliedQuery(query);
                   setSubmitted(true);
+                  setRouteInfoOpen(false);
                   setSelected(null);
                   setBoard(null);
                   clearStopParam();
@@ -1673,6 +1772,34 @@ export default function Page() {
               aria-label={filterPlaceholder(active, locale)}
               disabled={bookmarkOnly || submitted}
             />
+            {submitted ? (
+              <button
+                type="button"
+                className="route-info"
+                aria-label={locale === "en" ? "Route details" : "路線詳情"}
+                title={locale === "en" ? "Route details" : "路線詳情"}
+                onClick={() => setRouteInfoOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flex: "none",
+                  width: "2rem",
+                  height: "2rem",
+                  border: "1px solid rgba(28, 25, 21, 0.2)",
+                  borderRadius: "0.45rem",
+                  background: "transparent",
+                  color: "var(--ink)",
+                  cursor: "pointer",
+                }}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 11v5" />
+                  <circle cx="12" cy="8" r="0.8" fill="currentColor" stroke="none" />
+                </svg>
+              </button>
+            ) : null}
             <button
               type="button"
               className="confirm-search"
@@ -1681,6 +1808,7 @@ export default function Page() {
                   setQuery("");
                   setAppliedQuery("");
                   setSubmitted(false);
+                  setRouteInfoOpen(false);
                   setSelected(null);
                   setBoard(null);
                   clearStopParam();
@@ -1789,6 +1917,7 @@ export default function Page() {
                   setQuery("");
                   setAppliedQuery("");
                   setSubmitted(false);
+                  setRouteInfoOpen(false);
                   setActive(mode);
                 }}
               >
@@ -1898,6 +2027,72 @@ export default function Page() {
           </svg>
         </a>
       </div>
+      {routeInfoOpen ? (
+        <Modal
+          title={locale === "en" ? "Route details" : "路線詳情"}
+          closeLabel={locale === "en" ? "Close" : "關閉"}
+          onClose={() => setRouteInfoOpen(false)}
+        >
+          {routeInfoLoading ? (
+            <p>{locale === "en" ? "Loading…" : "載入中…"}</p>
+          ) : routeInfoDirections && routeInfoDirections.length ? (
+            <div style={{ display: "grid", gap: "0.75rem" }}>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+                {routeInfoDirections.map((dir, index) => (
+                  <button
+                    key={dir.label}
+                    type="button"
+                    onClick={() => setRouteInfoTab(index)}
+                    aria-pressed={routeInfoTab === index}
+                    style={{
+                      border: "1px solid rgba(28, 25, 21, 0.2)",
+                      borderRadius: "0.45rem",
+                      padding: "0.35rem 0.6rem",
+                      cursor: "pointer",
+                      background: routeInfoTab === index ? (active === "bus" ? "var(--bus)" : "var(--minibus)") : "transparent",
+                      color: routeInfoTab === index ? "var(--paper)" : "inherit",
+                      font: "inherit",
+                    }}
+                  >
+                    {dir.label}
+                  </button>
+                ))}
+              </div>
+              <ol style={{ margin: 0, paddingLeft: "1.2rem", display: "grid", gap: "0.35rem", listStyle: "none" }}>
+                {(routeInfoDirections[routeInfoTab]?.stops ?? []).map((stop, index) => (
+                  <li key={stop.id} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                    <span style={{ fontVariantNumeric: "tabular-nums", minWidth: "1.2rem" }}>{index + 1}.</span>
+                    <button
+                      type="button"
+                      className="route-chip"
+                      onClick={() => {
+                        setSelected(stop);
+                        setBoard(stop);
+                        setRouteInfoOpen(false);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontWeight: selected?.id === stop.id ? 700 : 400,
+                        textAlign: "left",
+                        fontSize: "1rem",
+                        background: selected?.id === stop.id ? (active === "bus" ? "var(--bus)" : "var(--minibus)") : "transparent",
+                        color: selected?.id === stop.id ? "var(--paper)" : "inherit",
+                        border: "1px solid rgba(28, 25, 21, 0.2)",
+                        borderRadius: "0.4rem",
+                        padding: "0.1rem 0.45rem",
+                      }}
+                    >
+                      {locale === "en" ? stop.name_en ?? stop.name : stop.name_tc ?? stop.name}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ) : (
+            <p>{locale === "en" ? "No stop sequence available." : "未有站序資料。"}</p>
+          )}
+        </Modal>
+      ) : null}
       {selected ? (
         <StopSheet
           key={selected.id}
