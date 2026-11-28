@@ -217,6 +217,7 @@ export default function Page() {
   const [appliedQuery, setAppliedQuery] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [routeInfoOpen, setRouteInfoOpen] = useState(false);
+  const [routeInfoRoute, setRouteInfoRoute] = useState("");
   const [routeInfoDirections, setRouteInfoDirections] = useState<{ label: string; stops: Stop[] }[] | null>(null);
   const [routeInfoTab, setRouteInfoTab] = useState(0);
   const [routeInfoLoading, setRouteInfoLoading] = useState(false);
@@ -228,7 +229,7 @@ export default function Page() {
 
   useEffect(() => {
     if (!routeInfoOpen) return;
-    const route = appliedQuery.trim();
+    const route = (routeInfoRoute || appliedQuery).trim();
     if (!route) return;
     const routeCode = route.toUpperCase();
     let cancelled = false;
@@ -1827,7 +1828,10 @@ export default function Page() {
                 className="route-info"
                 aria-label={locale === "en" ? "Route details" : "路線詳情"}
                 title={locale === "en" ? "Route details" : "路線詳情"}
-                onClick={() => setRouteInfoOpen(true)}
+                onClick={() => {
+                  setRouteInfoRoute(appliedQuery);
+                  setRouteInfoOpen(true);
+                }}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -2159,6 +2163,10 @@ export default function Page() {
           destinations={selected.destinations}
           timetable={selected.timetable}
           prioritizeRoute={appliedQuery}
+          onOpenRoute={(route) => {
+            setRouteInfoRoute(route);
+            setRouteInfoOpen(true);
+          }}
           bookmarked={bookmarks.has(selected.id)}
           onToggleBookmark={() => toggleBookmark(selected.id)}
           onOpenStop={(nextId) => {

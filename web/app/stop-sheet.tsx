@@ -151,6 +151,7 @@ export function StopSheet({
   onOpenStop,
   onClose,
   prioritizeRoute,
+  onOpenRoute,
 }: {
   id: string;
   mode: Mode;
@@ -171,6 +172,7 @@ export function StopSheet({
   onOpenStop?: (id: string) => void;
   onClose: () => void;
   prioritizeRoute?: string;
+  onOpenRoute?: (route: string) => void;
 }) {
   const { locale, t } = useI18n();
   const [linksRevision, setLinksRevision] = useState(0);
@@ -470,9 +472,10 @@ export function StopSheet({
                     <span
                       key={route}
                       className="station-chip"
-                      style={{ background: mode === "minibus" ? "#2f7d4f" : "#e52029", color: "#fff", fontWeight: 600 }}
+                      onClick={() => onOpenRoute?.(route)}
+                      style={{ background: mode === "minibus" ? "#2f7d4f" : "#e52029", color: "#fff", fontWeight: 600, cursor: onOpenRoute ? "pointer" : "default" }}
                     >
-                      {route}
+                      {localizeBilingualName(route, locale)}
                     </span>
                   ))}
                 </RouteChips>
