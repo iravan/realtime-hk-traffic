@@ -251,7 +251,42 @@ export default function Page() {
       const catalogue = cataloguesRef.current[active] ?? [];
       const byId = new Map(catalogue.map((stop) => [stop.id, stop]));
       const dirs: { label: string; stops: Stop[] }[] = [];
-      if (active === "bus") {
+      if (active === "minibus") {
+        const regions = ["HKI", "KLN", "NT"];
+        for (const region of regions) {
+          let routeBody: any = null;
+          try {
+            routeBody = await fetch(`https://data.etagmb.gov.hk/route/${region}/${encodeURIComponent(route)}`).then((r) => r.json());
+          } catch {}
+          const routeRow = (routeBody?.data ?? [])[0];
+          if (!routeRow) continue;
+          for (const dir of routeRow.directions ?? []) {
+            const routeId = routeRow.route_id;
+            const routeSeq = dir.route_seq;
+            const label = (locale === "en" ? (dir.orig_en && dir.dest_en ? `${dir.orig_en} → ${dir.dest_en}` : null) : (dir.orig_tc && dir.dest_tc ? `${dir.orig_tc} → ${dir.dest_tc}` : null)) || route;
+            let stops: Stop[] = [];
+            try {
+              const body = await fetch(`https://data.etagmb.gov.hk/route-stop/${routeId}/${routeSeq}`).then((r) => r.json());
+              stops = (body?.data?.route_stops ?? []).map((row: any) => {
+                const id = `minibus:${row.stop_id}`;
+                const fromCatalogue = byId.get(id);
+                if (fromCatalogue) return fromCatalogue;
+                return {
+                  id,
+                  mode: "minibus" as Mode,
+                  name: (locale === "en" ? row.name_en : row.name_tc) || row.name_tc || row.name_en || "",
+                  name_tc: row.name_tc,
+                  name_en: row.name_en,
+                  latitude: 0,
+                  longitude: 0,
+                };
+              });
+            } catch {}
+            if (stops.length) dirs.push({ label, stops });
+          }
+          if (dirs.length) break;
+        }
+      } else if (active === "bus") {
         try {
           if (!kmbRouteStopCacheRef.current) {
             kmbRouteStopCacheRef.current = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route-stop/").then((r) => r.json());
