@@ -214,7 +214,6 @@ export default function Page() {
   const mtrLinesLoadingRef = useRef(false);
   const [stops, setStops] = useState<Stop[]>([]);
   const [query, setQuery] = useState("");
-  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
   const [appliedQuery, setAppliedQuery] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [bookmarkOnly, setBookmarkOnly] = useState(false);
@@ -1001,17 +1000,6 @@ export default function Page() {
   stopsRef.current = stops;
   filterRef.current = { query: appliedQuery, bookmarkOnly, bookmarks };
 
-  const suggestions =
-    suggestionsOpen && query.trim().length > 0
-      ? uniqueStops(
-          (cataloguesRef.current[active] ?? []).filter((stop) => {
-            if (bookmarkOnly && !bookmarks.has(stop.id)) return false;
-            return matchesQuery(stop, query);
-          }),
-          active,
-        ).slice(0, 8)
-      : [];
-
   useEffect(() => {
     const map = mapRef.current;
     if (!map?.isStyleLoaded()) return;
@@ -1655,9 +1643,7 @@ export default function Page() {
               value={query}
               onChange={(event) => {
                 setQuery(event.target.value);
-                setSuggestionsOpen(true);
               }}
-              onBlur={() => setTimeout(() => setSuggestionsOpen(false), 150)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setAppliedQuery(query);
@@ -1756,57 +1742,6 @@ export default function Page() {
               </button>
             ) : null}
           </div>
-          {suggestions.length > 0 ? (
-            <div className="search-suggestions">
-              <div className="search-suggestions-head">
-                <button
-                  type="button"
-                  className="search-suggestions-hide"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => setSuggestionsOpen(false)}
-                  aria-label={locale === "en" ? "Hide suggestions" : "隱藏建議"}
-                >
-                  ×
-                </button>
-              </div>
-              {suggestions.map((stop) => (
-                <button
-                  key={stop.id}
-                  type="button"
-                  className="search-suggestion"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => {
-                    const name = localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en);
-                    setQuery(name);
-                    setAppliedQuery(name);
-                    setSubmitted(true);
-                    setSelected(null);
-                    setBoard(null);
-                    clearStopParam();
-                    clearFocusPadding();
-                    showStopRef.current(stop, true);
-                    setSuggestionsOpen(false);
-                  }}
-                >
-                  <img src={stop.mode === "bus" && isCitybus(stop.id) ? citybusIconUrl() : stopIconUrl(stop.mode)} alt="" className="search-suggestion-icon" />
-                  <span className="search-suggestion-name">{localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}</span>
-                  {(stop.mode === "bus" || stop.mode === "minibus") && (stop.routes ?? []).length > 0 ? (
-                    <span className="search-suggestion-routes">
-                      {(stop.routes ?? [])
-                        .filter((route) => {
-                          const needle = query.trim().toLowerCase();
-                          return !needle || route.toLowerCase().includes(needle);
-                        })
-                        .slice(0, 4)
-                        .map((route) => (
-                          <span key={route} className="search-suggestion-chip">{route}</span>
-                        ))}
-                    </span>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          ) : null}
           {bookmarkOnly ? (
             <div className="bookmark-list">
               {bookmarkedStops.length === 0 ? (
@@ -1854,7 +1789,6 @@ export default function Page() {
                   setQuery("");
                   setAppliedQuery("");
                   setSubmitted(false);
-                  setSuggestionsOpen(false);
                   setActive(mode);
                 }}
               >

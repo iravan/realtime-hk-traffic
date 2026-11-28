@@ -77,9 +77,7 @@ scope. Taxi stands are places, not vehicles.
   it matches destinations (`Central`, `中環`). On MTR and taxi it matches the
   stop name. Changing tab clears the filter. The filter is described in
   [docs/DATA.md](docs/DATA.md#searchable-routes-and-destinations).
-- **Search suggestions.** Typing in the filter box shows up to 8 matching
-  stops; bus and minibus suggestions also show matching route chips. Selecting
-  one opens that stop and zooms to it (desktop only, to keep the mobile view).
+
 - **Ferry destination links.** Destination chips in a ferry sheet link to the
   corresponding pier stop when one can be resolved.
 - **Weather.** The header shows the weekday, weather icon and temperature;
