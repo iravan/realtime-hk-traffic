@@ -2116,8 +2116,7 @@ export default function Page() {
                       type="button"
                       className="route-chip"
                       onClick={() => {
-                        setSelected(stop);
-                        setBoard(stop);
+                        showStopRef.current?.(stop, true);
                         setRouteInfoOpen(false);
                       }}
                       style={{
