@@ -89,6 +89,14 @@ The checked-in stop catalogue is canonical in `server/data/stops.json`; the page
 reads generated per-mode files under `web/public`. The server loads the bundled
 stops first and only refreshes the live catalogues when `LIVE_CATALOGUES=1`.
 
+## Route details modal
+
+The route details modal uses live route-stop endpoints to build ordered stop
+lists: KMB/KMB route-stop, Citybus route-stop, and GMB route/route-stop.
+Results are cached in the browser for 24 hours per mode and route.
+Stop display names come from the bundled `server/data/stops.json` catalogue; live
+route-stop IDs are matched against those catalogue IDs.
+
 ## Static and dynamic data
 
 **Static** data is checked in, or is publisher catalogue data that changes only

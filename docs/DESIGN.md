@@ -62,8 +62,8 @@ There is no sign-in. Anyone can pan and open stops.
 
 After a search is submitted, an info button appears after the search bar. Opening it
 shows each direction of the matched route as a numbered stop list. Direction labels
-and stop sequences come from the KMB and Citybus route-stop open-data feeds and
-are cached in the browser for 24 hours per route.
+and stop sequences come from the KMB, Citybus and GMB (GMB route + route-stop)
+open-data feeds and are cached in the browser for 24 hours per route.
 
 ## What this does not do yet
 

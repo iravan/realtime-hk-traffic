@@ -230,10 +230,11 @@ export default function Page() {
     if (!routeInfoOpen) return;
     const route = appliedQuery.trim();
     if (!route) return;
+    const routeCode = route.toUpperCase();
     let cancelled = false;
     setRouteInfoLoading(true);
     setRouteInfoDirections(null);
-    const cacheKey = `route-details:${active}:${route}`;
+    const cacheKey = `route-details:v2:${active}:${route}`;
     try {
       const cachedRaw = localStorage.getItem(cacheKey);
       if (cachedRaw) {
@@ -256,14 +257,14 @@ export default function Page() {
         for (const region of regions) {
           let routeBody: any = null;
           try {
-            routeBody = await fetch(`https://data.etagmb.gov.hk/route/${region}/${encodeURIComponent(route)}`).then((r) => r.json());
+            routeBody = await fetch(`https://data.etagmb.gov.hk/route/${region}/${encodeURIComponent(routeCode)}`).then((r) => r.json());
           } catch {}
           const routeRow = (routeBody?.data ?? [])[0];
           if (!routeRow) continue;
           for (const dir of routeRow.directions ?? []) {
             const routeId = routeRow.route_id;
             const routeSeq = dir.route_seq;
-            const label = (locale === "en" ? (dir.orig_en && dir.dest_en ? `${dir.orig_en} → ${dir.dest_en}` : null) : (dir.orig_tc && dir.dest_tc ? `${dir.orig_tc} → ${dir.dest_tc}` : null)) || route;
+            const label = (locale === "en" ? (dir.orig_en && dir.dest_en ? `${dir.orig_en} → ${dir.dest_en}` : null) : (dir.orig_tc && dir.dest_tc ? `${dir.orig_tc} → ${dir.dest_tc}` : null)) || routeCode;
             let stops: Stop[] = [];
             try {
               const body = await fetch(`https://data.etagmb.gov.hk/route-stop/${routeId}/${routeSeq}`).then((r) => r.json());
@@ -294,7 +295,7 @@ export default function Page() {
           const bulk = kmbRouteStopCacheRef.current;
           const variants = new Map<string, any[]>();
           for (const row of bulk?.data ?? []) {
-            if (String(row.route) !== route) continue;
+            if (String(row.route).toUpperCase() !== routeCode) continue;
             const key = `${row.bound}|${row.service_type}`;
             if (!variants.has(key)) variants.set(key, []);
             variants.get(key)!.push(row);
@@ -305,7 +306,7 @@ export default function Page() {
             const direction = bound === "O" ? "outbound" : "inbound";
             let orig = "", dest = "";
             try {
-              const detail = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route/${encodeURIComponent(route)}/${direction}/${serviceType}`).then((r) => r.json());
+              const detail = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route/${encodeURIComponent(routeCode)}/${direction}/${serviceType}`).then((r) => r.json());
               const d = detail?.data;
               orig = (locale === "en" ? d?.orig_en : d?.orig_tc) || d?.orig_tc || d?.orig_en || "";
               dest = (locale === "en" ? d?.dest_en : d?.dest_tc) || d?.dest_tc || d?.dest_en || "";
@@ -324,11 +325,11 @@ export default function Page() {
         // Citybus directions
         try {
           const routeList = await fetch("https://rt.data.gov.hk/v2/transport/citybus/route/CTB").then((r) => r.json());
-          const meta = (routeList?.data ?? []).find((r: any) => String(r.route) === route);
+          const meta = (routeList?.data ?? []).find((r: any) => String(r.route).toUpperCase() === routeCode);
           const orig = (locale === "en" ? meta?.orig_en : meta?.orig_tc) || meta?.orig_tc || meta?.orig_en || "";
           const dest = (locale === "en" ? meta?.dest_en : meta?.dest_tc) || meta?.dest_tc || meta?.dest_en || "";
           for (const direction of ["outbound", "inbound"]) {
-            const body = await fetch(`https://rt.data.gov.hk/v2/transport/citybus/route-stop/CTB/${encodeURIComponent(route)}/${direction}`).then((r) => r.json());
+            const body = await fetch(`https://rt.data.gov.hk/v2/transport/citybus/route-stop/CTB/${encodeURIComponent(routeCode)}/${direction}`).then((r) => r.json());
             const ordered = body?.data ?? [];
             const stops = ordered
               .map((row: any) => byId.get(`bus:ctb:${row.stop}`))
@@ -2100,6 +2101,7 @@ export default function Page() {
                       background: routeInfoTab === index ? (active === "bus" ? "var(--bus)" : "var(--minibus)") : "transparent",
                       color: routeInfoTab === index ? "var(--paper)" : "inherit",
                       font: "inherit",
+                      textAlign: "left",
                     }}
                   >
                     {dir.label}
@@ -2108,7 +2110,7 @@ export default function Page() {
               </div>
               <ol style={{ margin: 0, paddingLeft: "1.2rem", display: "grid", gap: "0.35rem", listStyle: "none" }}>
                 {(routeInfoDirections[routeInfoTab]?.stops ?? []).map((stop, index) => (
-                  <li key={stop.id} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                  <li key={`${stop.id}-${index}`} style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
                     <span style={{ fontVariantNumeric: "tabular-nums", minWidth: "1.2rem" }}>{index + 1}.</span>
                     <button
                       type="button"
@@ -2130,7 +2132,7 @@ export default function Page() {
                         padding: "0.1rem 0.45rem",
                       }}
                     >
-                      {locale === "en" ? stop.name_en ?? stop.name : stop.name_tc ?? stop.name}
+                      {localizeStopName(stop.name, stop.mode, locale, stop.name_tc, stop.name_en)}
                     </button>
                   </li>
                 ))}
@@ -2157,6 +2159,7 @@ export default function Page() {
           taxiHours={selected.taxiHours}
           destinations={selected.destinations}
           timetable={selected.timetable}
+          prioritizeRoute={appliedQuery}
           bookmarked={bookmarks.has(selected.id)}
           onToggleBookmark={() => toggleBookmark(selected.id)}
           onOpenStop={(nextId) => {

@@ -150,6 +150,7 @@ export function StopSheet({
   onToggleBookmark,
   onOpenStop,
   onClose,
+  prioritizeRoute,
 }: {
   id: string;
   mode: Mode;
@@ -169,6 +170,7 @@ export function StopSheet({
   onToggleBookmark: () => void;
   onOpenStop?: (id: string) => void;
   onClose: () => void;
+  prioritizeRoute?: string;
 }) {
   const { locale, t } = useI18n();
   const [linksRevision, setLinksRevision] = useState(0);
@@ -338,21 +340,32 @@ export function StopSheet({
   }, []);
 
   const rows = snapshot ? soonestFirst(snapshot.rows) : [];
+  const prioritize = (prioritizeRoute || "").trim().toLowerCase();
   const sortedRows =
     mode === "mtr" || mode === "bus" || mode === "minibus"
-      ? [...rows].sort(
-          (a, b) =>
+      ? [...rows].sort((a, b) => {
+          const aMatch = prioritize && (a.route || "").toLowerCase() === prioritize ? 0 : 1;
+          const bMatch = prioritize && (b.route || "").toLowerCase() === prioritize ? 0 : 1;
+          if (aMatch !== bMatch) return aMatch - bMatch;
+          return (
             (a.route || "").localeCompare(b.route || "") ||
-            (a.minutes ?? 0) - (b.minutes ?? 0),
-        )
+            (a.minutes ?? 0) - (b.minutes ?? 0)
+          );
+        })
       : rows;
   const age = snapshot ? ageOf(snapshot.fetched_at, now, t) : "";
   const timetable = snapshot ? !snapshot.live && snapshot.note !== "no-arrivals" : false;
   const station = mode === "mtr" ? mtrStationColor(id) : null;
-  const routeChips =
+  const routeChipsRaw =
     mode === "bus" || mode === "minibus"
       ? [...new Set((routes && routes.length ? routes : rows.map((r) => r.route)).filter(Boolean))]
       : [];
+  const routeChips = prioritize
+    ? [
+        ...routeChipsRaw.filter((r) => (r || "").toLowerCase() === prioritize),
+        ...routeChipsRaw.filter((r) => (r || "").toLowerCase() !== prioritize),
+      ]
+    : routeChipsRaw;
   const description =
     mode === "taxi" ? (
       <>
