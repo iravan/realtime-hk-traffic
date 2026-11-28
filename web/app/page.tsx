@@ -235,7 +235,7 @@ export default function Page() {
     let cancelled = false;
     setRouteInfoLoading(true);
     setRouteInfoDirections(null);
-    const cacheKey = `route-details:v2:${active}:${route}`;
+    const cacheKey = `route-details:v3:${active}:${route}`;
     try {
       const cachedRaw = localStorage.getItem(cacheKey);
       if (cachedRaw) {
@@ -269,7 +269,10 @@ export default function Page() {
             let stops: Stop[] = [];
             try {
               const body = await fetch(`https://data.etagmb.gov.hk/route-stop/${routeId}/${routeSeq}`).then((r) => r.json());
-              stops = (body?.data?.route_stops ?? []).map((row: any) => {
+              stops = (body?.data?.route_stops ?? [])
+                .slice()
+                .sort((a: any, b: any) => (a.stop_seq ?? 0) - (b.stop_seq ?? 0))
+                .map((row: any) => {
                 const id = `minibus:${row.stop_id}`;
                 const fromCatalogue = byId.get(id);
                 if (fromCatalogue) return fromCatalogue;
