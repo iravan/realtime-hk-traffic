@@ -603,6 +603,14 @@ button { cursor: pointer; }
   font-size: 0.8rem;
   font-weight: 700;
 }
+
+@keyframes route-info-bg {
+  from { background-color: var(--route-info-color, var(--minibus)); }
+  to { background-color: transparent; }
+}
+.route-info {
+  animation: route-info-bg 2s ease forwards;
+}
 .ferry-board {
   display: flex;
   flex-direction: column;

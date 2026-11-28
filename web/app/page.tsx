@@ -1847,7 +1847,8 @@ export default function Page() {
                   background: "transparent",
                   color: "var(--ink)",
                   cursor: "pointer",
-                }}
+                  "--route-info-color": active === "bus" ? "var(--bus)" : "var(--minibus)",
+                } as React.CSSProperties}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="9" />
